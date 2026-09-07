@@ -54,7 +54,7 @@ export const en: Messages = {
     learnMore: "Details",
   },
   home: {
-    h1: "Your site stays up. Your email keeps working.",
+    h1: "Your site stays\u00a0up. Your email keeps\u00a0working.",
     lede: "Web hosting, websites and care plans on servers we manage ourselves. Backups every night, SSL and a firewall on every plan, and a person who answers your email.",
     ctaPlans: "See plans and prices",
     ctaBuild: "Build me a website",

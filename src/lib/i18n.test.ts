@@ -13,8 +13,8 @@ describe("i18n paths", () => {
 
   it("links sections of the home page with the locale prefix", () => {
     expect(anchorFor("contact", "en")).toBe("/#contact");
-    expect(anchorFor("about", "ar")).toBe("/ar/#about");
-    expect(anchorFor("domains", "ar-eg")).toBe("/ar-eg/#domains");
+    expect(anchorFor("domains", "ar")).toBe("/ar/#domains");
+    expect(anchorFor("contact", "ar-eg")).toBe("/ar-eg/#contact");
   });
 
   it("lists every language for the menu, marking the current one, on the same page", () => {

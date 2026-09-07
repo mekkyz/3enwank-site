@@ -9,7 +9,7 @@ import { localizedSummary, summaryWithoutDelivery } from "@/lib/format";
 import { pageMetadata } from "@/lib/metadata";
 import { anchorFor, pathFor, type Locale } from "@/lib/i18n";
 import { WHATSAPP_NUMBER } from "@/lib/site";
-import { fill, messagesFor, type Messages } from "@/messages";
+import { messagesFor, type Messages } from "@/messages";
 import type { Catalogue, Product } from "@/lib/catalogue";
 import { HIGHLIGHT, assistantOn, domainSearchLabels, loc, screenContext, storeApi, vatLine } from "./shared";
 
@@ -84,7 +84,7 @@ export const home = {
         {featured.length ? (
           <Section>
             <SectionHeader kicker={t.nav.hosting} title={t.home.pricingTitle} lede={t.home.pricingLede} right={<ArrowLink href={pathFor("hosting", locale)}>{t.home.compareLink}</ArrowLink>} />
-            <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+            <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
               <p className="text-sm text-muted">{vatLine(t, catalogue)}</p>
               <CurrencyToggle label={t.common.currency} hint={t.common.currencyHint} />
             </div>
@@ -99,7 +99,7 @@ export const home = {
         ) : null}
 
         {catalogue.products.build.length || catalogue.products.care.length ? (
-          <Section tone="alt" className="pt-0 sm:pt-0">
+          <Section tone="alt">
             <SectionHeader title={t.home.glanceTitle} lede={t.home.glanceLede} />
             <div data-reveal-stagger className="grid gap-5 md:grid-cols-2">
               {catalogue.products.build.length ? <Glance title={t.home.products.websites.title} items={catalogue.products.build} cycle={t.common.oneTime} link={[pathFor("websites", locale), t.home.products.websites.link]} locale={locale} t={t} /> : null}
@@ -126,18 +126,6 @@ export const home = {
             </ButtonLink>
           </div>
         </Container>
-
-        <Section id="about">
-          <SectionHeader kicker={t.about.title} title={t.about.h2} lede={fill(t.about.lede, { legalName: company.legalName })} />
-          <ul data-reveal-stagger className="grid gap-x-8 gap-y-7 sm:grid-cols-2 lg:grid-cols-4">
-            {t.about.principles.map((p) => (
-              <li key={p.title} className="border-t border-line pt-5">
-                <h3 className="text-lg font-extrabold text-ink">{p.title}</h3>
-                <p className="mt-2 text-[15px] leading-relaxed text-muted">{p.body}</p>
-              </li>
-            ))}
-          </ul>
-        </Section>
 
         <Section id="contact" tone="alt">
           <SectionHeader kicker={t.contact.title} title={t.contact.h2} lede={t.contact.lede} />

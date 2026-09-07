@@ -15,13 +15,12 @@ export function Shell({ locale, page, storeUrl, legalName, address, supportEmail
   const languages = languageLinks(page, locale);
   const current = languages.find((l) => l.current)!;
   const store = (storeUrl ?? STORE_URL).replace(/\/+$/, "");
-  // The bar sells; about lives in the footer and contact is a section of the home page.
+  // The bar sells; About and Contact live in the footer (Contact is a section of the home page).
   const items: Array<[string, string, boolean]> = [
     [pathFor("hosting", locale), t.nav.hosting, page === "hosting"],
     [pathFor("websites", locale), t.nav.websites, page === "websites"],
     [pathFor("care", locale), t.nav.care, page === "care"],
     [pathFor("domains", locale), t.nav.domains, page === "domains"],
-    [anchorFor("contact", locale), t.nav.contact, false],
   ];
   return (
     <>
@@ -54,8 +53,13 @@ export function Shell({ locale, page, storeUrl, legalName, address, supportEmail
               <ul className="absolute end-0 z-50 mt-1 min-w-40 rounded-lg border border-line bg-panel p-1 text-sm shadow-lg">
                 {languages.map((l) => (
                   <li key={l.code}>
-                    <a href={l.path} hrefLang={l.lang} lang={l.lang} dir={l.dir} aria-current={l.current ? "true" : undefined} className={`block rounded-md px-3 py-2 font-semibold hover:bg-brand-soft ${l.current ? "text-brand-strong" : "text-ink"}`}>
+                    <a href={l.path} hrefLang={l.lang} lang={l.lang} dir={l.dir} aria-current={l.current ? "true" : undefined} className={`flex items-center justify-between gap-3 rounded-md px-3 py-2 font-semibold hover:bg-brand-soft ${l.current ? "bg-brand-soft text-brand-strong" : "text-ink"}`}>
                       {l.name}
+                      {l.current ? (
+                        <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M20 6L9 17l-5-5" />
+                        </svg>
+                      ) : null}
                     </a>
                   </li>
                 ))}
@@ -83,7 +87,7 @@ export function Shell({ locale, page, storeUrl, legalName, address, supportEmail
       <footer className="mt-16 border-t border-line bg-surface-alt">
         <div className="mx-auto grid max-w-6xl gap-10 px-5 py-12 sm:px-8 md:grid-cols-[1.6fr_repeat(3,minmax(0,1fr))]">
           <div className="text-sm text-muted">
-            <LogoFull className="h-14" />
+            <LogoFull className="h-20" />
             {legalName ? (
               <p className="mt-4">
                 {t.footer.operatedBy} {legalName}
@@ -110,7 +114,7 @@ export function Shell({ locale, page, storeUrl, legalName, address, supportEmail
           <FooterColumn
             title={t.footer.company}
             links={[
-              [anchorFor("about", locale), t.nav.about],
+              [pathFor("about", locale), t.nav.about],
               [anchorFor("contact", locale), t.nav.contact],
               [pathFor("terms", locale), t.terms.title],
               [pathFor("privacy", locale), t.privacy.title],

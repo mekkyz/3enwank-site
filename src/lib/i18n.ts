@@ -57,12 +57,12 @@ export function localeParams(): Array<{ locale: Locale }> {
   return prefixedLocales().map((locale) => ({ locale }));
 }
 
-export type PageKey = "home" | "hosting" | "websites" | "care" | "domains" | "terms" | "privacy";
+export type PageKey = "home" | "hosting" | "websites" | "care" | "domains" | "about" | "terms" | "privacy";
 
 /** Sections of the home page that other pages link into. */
-export type SectionKey = "domains" | "about" | "contact";
+export type SectionKey = "domains" | "contact";
 
-export const pageKeys: readonly PageKey[] = ["home", "hosting", "websites", "care", "domains", "terms", "privacy"];
+export const pageKeys: readonly PageKey[] = ["home", "hosting", "websites", "care", "domains", "about", "terms", "privacy"];
 
 const SLUGS: Record<PageKey, string> = {
   home: "",
@@ -70,6 +70,7 @@ const SLUGS: Record<PageKey, string> = {
   websites: "websites",
   care: "care",
   domains: "domains",
+  about: "about",
   terms: "terms",
   privacy: "privacy",
 };

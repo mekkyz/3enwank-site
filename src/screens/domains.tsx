@@ -27,7 +27,7 @@ export const domains = {
         <Section>
           {open ? (
             <>
-              <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+              <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
                 <p className="text-sm text-muted">{vatLine(t, catalogue)}</p>
                 <CurrencyToggle label={t.common.currency} hint={t.common.currencyHint} />
               </div>

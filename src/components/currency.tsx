@@ -92,7 +92,7 @@ export function Price({ prices, locale, className = "", fallback, normal }: { pr
 export function CurrencyToggle({ label, hint }: { label: string; hint: string }) {
   const { currency, setCurrency } = useCurrency();
   return (
-    <div className="flex flex-col items-start gap-1.5">
+    <div className="flex flex-col items-end gap-1.5">
       <div role="group" aria-label={label} className="inline-flex rounded-lg border border-line bg-panel p-0.5 text-sm font-bold">
         {currencies.map((c) => (
           <button key={c} type="button" aria-pressed={currency === c} onClick={() => setCurrency(c)} className={`min-h-9 rounded-md px-3.5 transition ${currency === c ? "bg-brand text-white" : "text-muted hover:text-ink"}`}>
@@ -100,7 +100,7 @@ export function CurrencyToggle({ label, hint }: { label: string; hint: string })
           </button>
         ))}
       </div>
-      <p className="max-w-sm text-xs text-muted">{hint}</p>
+      <p className="max-w-xs text-end text-xs text-muted">{hint}</p>
     </div>
   );
 }

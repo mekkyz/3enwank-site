@@ -19,7 +19,7 @@ export const care = {
       <Shell locale={locale} page="care" storeUrl={catalogue.store.url} legalName={company.legalName} address={company.address} supportEmail={company.supportEmail} assistantEnabled={catalogue.assistant.enabled}>
         <PageIntro kicker={t.care.title} title={t.care.h2} lede={t.care.lede} />
         <Section>
-          <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+          <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
             <p className="text-sm text-muted">{vatLine(t, catalogue)}</p>
             <CurrencyToggle label={t.common.currency} hint={t.common.currencyHint} />
           </div>

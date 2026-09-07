@@ -27,7 +27,7 @@ export function SectionHeader({ kicker, title, lede, right, light = false }: { k
       <div className="max-w-2xl">
         {kicker ? <Kicker tone={light ? "light" : "brand"}>{kicker}</Kicker> : null}
         <h2 className={`text-3xl font-extrabold tracking-tight sm:text-4xl ${light ? "text-white" : "text-ink"}`}>{title}</h2>
-        {lede ? <p className={`mt-3 text-base sm:text-lg ${light ? "text-dark-muted" : "text-muted"}`}>{lede}</p> : null}
+        {lede ? <p className={`mt-3 text-balance text-base sm:text-lg ${light ? "text-dark-muted" : "text-muted"}`}>{lede}</p> : null}
       </div>
       {right ? <div className="shrink-0">{right}</div> : null}
     </header>

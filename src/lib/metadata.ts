@@ -1,0 +1,29 @@
+import type { Metadata } from "next";
+import { alternatesFor, langTag, pathFor, type Locale, type PageKey } from "./i18n";
+import { SITE_URL } from "./site";
+import { messagesFor } from "@/messages";
+
+/** Title, description, canonical, hreflang and OpenGraph for one page in one locale. */
+export function pageMetadata(page: PageKey, locale: Locale, title: string, description: string): Metadata {
+  const t = messagesFor(locale);
+  const path = pathFor(page, locale);
+  const fullTitle = page === "home" ? `${t.meta.siteName} | ${title}` : `${title} · ${t.meta.titleSuffix}`;
+  return {
+    title: fullTitle,
+    description,
+    alternates: { canonical: `${SITE_URL}${path}`, languages: alternatesFor(page, SITE_URL) },
+    openGraph: {
+      type: "website",
+      siteName: t.meta.siteName,
+      title: fullTitle,
+      description,
+      url: `${SITE_URL}${path}`,
+      locale: locale === "ar" ? "ar_EG" : "en_US",
+      alternateLocale: locale === "ar" ? ["en_US"] : ["ar_EG"],
+      images: [{ url: `${SITE_URL}/og.png`, width: 1200, height: 630, alt: t.meta.siteName }],
+    },
+    twitter: { card: "summary_large_image", title: fullTitle, description },
+    robots: { index: true, follow: true },
+    other: { "content-language": langTag(locale) },
+  };
+}

@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+/* The platform's brand tokens (3enwank-platform/src/app/globals.css) so store and site look like one thing. */
+:root {
+  --color-surface: #f7f7f5;
+  --color-panel: #ffffff;
+  --color-ink: #16181d;
+  --color-muted: #5f6673;
+  --color-line: #e3e5ea;
+  --color-brand: #0f6d5a;
+  --color-brand-strong: #0b5646;
+  --color-brand-soft: #e3f2ee;
+  --color-danger: #b42318;
+  --color-danger-soft: #fdecea;
+  --color-warn: #b54708;
+  --color-warn-soft: #fef3e6;
+  --color-ok: #067647;
+  --color-ok-soft: #e6f4ec;
+}
+
+@theme inline {
+  --color-surface: var(--color-surface);
+  --color-panel: var(--color-panel);
+  --color-ink: var(--color-ink);
+  --color-muted: var(--color-muted);
+  --color-line: var(--color-line);
+  --color-brand: var(--color-brand);
+  --color-brand-strong: var(--color-brand-strong);
+  --color-brand-soft: var(--color-brand-soft);
+  --color-danger: var(--color-danger);
+  --color-danger-soft: var(--color-danger-soft);
+  --color-warn: var(--color-warn);
+  --color-warn-soft: var(--color-warn-soft);
+  --color-ok: var(--color-ok);
+  --color-ok-soft: var(--color-ok-soft);
+  --font-sans: "Inter Variable", "Noto Naskh Arabic Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-arabic: "Noto Naskh Arabic Variable", "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  font-family: var(--font-sans);
+  scroll-behavior: smooth;
+}
+
+html[dir="rtl"] {
+  font-family: var(--font-arabic);
+}
+
+html[dir="rtl"] body {
+  line-height: 1.8;
+}
+
+body {
+  background: var(--color-surface);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Latin digits inside Arabic pages keep numbers aligned with the invoices. */
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Keyboard users always see where they are; pointer users are not shouted at. */
+:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

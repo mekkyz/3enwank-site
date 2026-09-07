@@ -1,0 +1,7 @@
+packages:
+  - "."
+# Dependencies whose install scripts may run (pnpm blocks all others by default).
+allowBuilds:
+  unrs-resolver: true
+onlyBuiltDependencies:
+  - unrs-resolver

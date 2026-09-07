@@ -115,12 +115,34 @@ token is a password: rotate it in the env file and the admin settings together.
 
 ### Going live (HANDOFF H11)
 
-1. Point `3enwank.com` and `www.3enwank.com` (A and AAAA records in PowerDNS on srv1) at this box.
-2. Install the `:80` server block from `ops/nginx/enwank-site.conf`, then `certbot --nginx -d 3enwank.com -d www.3enwank.com`.
-3. Install the whole file, `nginx -t`, reload. Set `STORE_URL=https://my.3enwank.com` and `SITE_URL=https://3enwank.com` in the env file and restart the service.
-4. Paste the production hook URL into the platform admin. Retire the review listener when it is no longer needed.
+The old site on srv1 sends `Strict-Transport-Security: max-age=31536000`, so every browser that has
+visited `https://3enwank.com` in the past year refuses plain HTTP and refuses to click past a
+certificate error. The certificate therefore has to exist on this box **before** the name moves.
+srv1 already serves `/.well-known/acme-challenge/` over HTTP without redirecting, so it can proxy
+that one path here while it still owns the name.
 
-Until then the old HTML on srv1 stays as the emergency page.
+1. **Lower the TTL** on the apex `A` record (and leave `www` as a CNAME to the apex) to 300 on srv1,
+   bump the SOA serial, and wait for the old 14400 s TTL to age out of resolver caches.
+2. **Pin `mail.3enwank.com`**: it is a CNAME to the apex, so it would follow the move. Give it its
+   own `A` record to srv1 first. `www` is meant to follow and stays a CNAME.
+3. **Prepare this box**: `install -d -m 0755 /var/www/letsencrypt`, install
+   `ops/nginx/enwank-site-acme.conf`, `nginx -t`, reload. It only answers to `Host: 3enwank.com`,
+   which still reaches srv1, so it changes nothing yet.
+4. **srv1 proxies the challenge**: `/.well-known/acme-challenge/` on the apex and www vhosts to
+   `http://159.195.68.162/`, ahead of its own webroot alias and without redirecting to HTTPS.
+5. **Issue the certificate** here:
+   `certbot certonly --webroot -w /var/www/letsencrypt -d 3enwank.com -d www.3enwank.com`.
+6. **Install the real vhost**: remove `enwank-site-acme.conf`, install `ops/nginx/enwank-site.conf`,
+   `nginx -t`, reload. Set `SITE_URL=https://3enwank.com` and `STORE_URL=https://my.3enwank.com` in
+   `/etc/enwank-site/env` and restart `enwank-site`.
+7. **Move the name**: srv1 changes the apex `A` to `159.195.68.162` and bumps the serial. Check the
+   secondaries (`ns1.first-ns.de`, `robotns2.second-ns.de`, `robotns3.second-ns.com`) have it.
+8. **Afterwards**: paste the production hook URL into the platform admin, raise the TTL back to
+   14400 once the move is settled, and retire the review listener on `:8444`. Leave the old site on
+   srv1 in place for a day as the rollback target: putting the apex `A` back is a 300 s change.
+
+Do not touch `MX`, `SPF`, `DKIM`, `_dmarc`, the `ns1`/`ns2` records or `my.3enwank.com`, and do not
+add an `AAAA` record: this box has no IPv6 address.
 
 ## Adding a page or a locale
 

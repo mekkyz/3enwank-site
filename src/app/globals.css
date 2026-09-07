@@ -22,6 +22,10 @@
   --color-accent: #5fbde8;
   --color-accent-strong: #8fd3f2;
   --color-accent-soft: #163a52;
+  --color-ok: #6fd3a2;
+  --color-ok-soft: #123a2c;
+  --color-warn: #f0b35a;
+  --color-warn-soft: #3d2c12;
   --color-dark: #080a17;
   --color-dark-line: #2a2f52;
   --color-dark-muted: #c4c8dc;
@@ -55,6 +59,10 @@
   --color-accent: #2a95c5;
   --color-accent-strong: #1f6f92;
   --color-accent-soft: #e6f3f9;
+  --color-ok: #067647;
+  --color-ok-soft: #e6f4ec;
+  --color-warn: #b54708;
+  --color-warn-soft: #fef3e6;
   --color-dark: #14172b;
   --color-dark-line: #2c3050;
   --color-dark-muted: #c4c8dc;
@@ -87,6 +95,10 @@
   --color-accent: var(--color-accent);
   --color-accent-strong: var(--color-accent-strong);
   --color-accent-soft: var(--color-accent-soft);
+  --color-ok: var(--color-ok);
+  --color-ok-soft: var(--color-ok-soft);
+  --color-warn: var(--color-warn);
+  --color-warn-soft: var(--color-warn-soft);
   --color-dark: var(--color-dark);
   --color-dark-line: var(--color-dark-line);
   --color-dark-muted: var(--color-dark-muted);
@@ -246,4 +258,9 @@ li {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
   }
+}
+
+/* Anchored sections stop below the sticky header. */
+section[id] {
+  scroll-margin-top: 4.5rem;
 }

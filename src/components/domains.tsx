@@ -4,38 +4,6 @@ import { fill, messagesFor } from "@/messages";
 import { Ltr } from "./bidi";
 import { Price } from "./currency";
 
-/** Plain GET form: the store's search page reads ?q= and does the availability check. No JavaScript needed. */
-export function DomainSearchForm({ action, locale }: { action: string; locale: Locale }) {
-  const t = messagesFor(locale);
-  return (
-    <form action={action} method="get" className="max-w-xl">
-      <label htmlFor="domain-q" className="mb-2 block text-sm font-semibold text-ink">
-        {t.domains.searchLabel}
-      </label>
-      <div className="flex flex-col gap-2 sm:flex-row">
-        <input
-          id="domain-q"
-          name="q"
-          type="text"
-          inputMode="url"
-          autoComplete="off"
-          autoCapitalize="none"
-          spellCheck={false}
-          maxLength={253}
-          required
-          placeholder={t.domains.searchPlaceholder}
-          dir="ltr"
-          className="block min-h-11 w-full rounded-lg border border-line bg-panel px-3.5 text-base text-ink placeholder:text-faint focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand-soft"
-        />
-        <button type="submit" className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-lg bg-brand px-6 text-sm font-bold text-white hover:bg-brand-strong">
-          {t.domains.searchButton}
-        </button>
-      </div>
-      <p className="mt-2 text-xs text-muted">{t.domains.searchHint}</p>
-    </form>
-  );
-}
-
 export function TldTable({ tlds, locale }: { tlds: Tld[]; locale: Locale }) {
   const t = messagesFor(locale);
   const hasTransfer = tlds.some((x) => x.prices.EGP?.transfer || x.prices.USD?.transfer);

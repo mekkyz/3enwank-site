@@ -1,7 +1,8 @@
 import type { ReactNode } from "react";
-import { BUILD_YEAR, STORE_URL } from "@/lib/site";
-import { languageLinks, pathFor, type Locale, type PageKey } from "@/lib/i18n";
+import { ASSISTANT_PREVIEW, BUILD_YEAR, STORE_URL } from "@/lib/site";
+import { anchorFor, languageLinks, pathFor, type Locale, type PageKey } from "@/lib/i18n";
 import { messagesFor } from "@/messages";
+import { Assistant } from "./assistant";
 import { Logo, LogoFull } from "./logo";
 import { ThemeSwitch } from "./theme";
 
@@ -9,17 +10,18 @@ import { ThemeSwitch } from "./theme";
  * Header, navigation and footer shared by every page. Server-rendered, no JavaScript: the language
  * menu is a <details> element and every store link is a plain anchor.
  */
-export function Shell({ locale, page, storeUrl, legalName, address, supportEmail, children }: { locale: Locale; page: PageKey; storeUrl?: string; legalName?: string; address?: string; supportEmail?: string; children: ReactNode }) {
+export function Shell({ locale, page, storeUrl, legalName, address, supportEmail, assistantEnabled = false, children }: { locale: Locale; page: PageKey; storeUrl?: string; legalName?: string; address?: string; supportEmail?: string; assistantEnabled?: boolean; children: ReactNode }) {
   const t = messagesFor(locale);
   const languages = languageLinks(page, locale);
   const current = languages.find((l) => l.current)!;
   const store = (storeUrl ?? STORE_URL).replace(/\/+$/, "");
-  // The bar sells; the company pages live in the footer.
-  const items: Array<[PageKey, string]> = [
-    ["hosting", t.nav.hosting],
-    ["websites", t.nav.websites],
-    ["care", t.nav.care],
-    ["domains", t.nav.domains],
+  // The bar sells; about lives in the footer and contact is a section of the home page.
+  const items: Array<[string, string, boolean]> = [
+    [pathFor("hosting", locale), t.nav.hosting, page === "hosting"],
+    [pathFor("websites", locale), t.nav.websites, page === "websites"],
+    [pathFor("care", locale), t.nav.care, page === "care"],
+    [pathFor("domains", locale), t.nav.domains, page === "domains"],
+    [anchorFor("contact", locale), t.nav.contact, false],
   ];
   return (
     <>
@@ -32,8 +34,8 @@ export function Shell({ locale, page, storeUrl, legalName, address, supportEmail
             <Logo className="h-7 sm:h-8" />
           </a>
           <nav aria-label={t.nav.menu} className="hidden items-center gap-6 text-[15px] font-semibold text-muted lg:flex">
-            {items.map(([key, label]) => (
-              <a key={key} href={pathFor(key, locale)} aria-current={key === page ? "page" : undefined} className={`hover:text-ink ${key === page ? "text-ink" : ""}`}>
+            {items.map(([href, label, active]) => (
+              <a key={href} href={href} aria-current={active ? "page" : undefined} className={`hover:text-ink ${active ? "text-ink" : ""}`}>
                 {label}
               </a>
             ))}
@@ -68,8 +70,8 @@ export function Shell({ locale, page, storeUrl, legalName, address, supportEmail
           </div>
         </div>
         <nav aria-label={t.nav.menu} className="mx-auto flex max-w-6xl gap-5 overflow-x-auto px-5 pb-2.5 text-sm font-semibold sm:px-8 lg:hidden">
-          {items.map(([key, label]) => (
-            <a key={key} href={pathFor(key, locale)} aria-current={key === page ? "page" : undefined} className={`whitespace-nowrap ${key === page ? "text-ink" : "text-muted"}`}>
+          {items.map(([href, label, active]) => (
+            <a key={href} href={href} aria-current={active ? "page" : undefined} className={`whitespace-nowrap ${active ? "text-ink" : "text-muted"}`}>
               {label}
             </a>
           ))}
@@ -108,8 +110,8 @@ export function Shell({ locale, page, storeUrl, legalName, address, supportEmail
           <FooterColumn
             title={t.footer.company}
             links={[
-              [pathFor("about", locale), t.nav.about],
-              [pathFor("contact", locale), t.nav.contact],
+              [anchorFor("about", locale), t.nav.about],
+              [anchorFor("contact", locale), t.nav.contact],
               [pathFor("terms", locale), t.terms.title],
               [pathFor("privacy", locale), t.privacy.title],
             ]}
@@ -124,6 +126,7 @@ export function Shell({ locale, page, storeUrl, legalName, address, supportEmail
           </div>
         </div>
       </footer>
+      {assistantEnabled || ASSISTANT_PREVIEW ? <Assistant url={`${store}/api/public/assistant`} locale={locale} labels={t.assistant} supportEmail={supportEmail} /> : null}
     </>
   );
 }

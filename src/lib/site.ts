@@ -16,5 +16,7 @@ export const CATALOGUE_SOURCE = (process.env.CATALOGUE_SOURCE ?? "remote").trim(
 export const CATALOGUE_AUTH = (process.env.CATALOGUE_AUTH ?? "").trim();
 /** International format without "+", e.g. 201000000000. Empty hides WhatsApp everywhere. */
 export const WHATSAPP_NUMBER = (process.env.WHATSAPP_NUMBER ?? "").replace(/[^0-9]/g, "");
+/** "1" renders the assistant widget even when the store reports it off, so the design can be reviewed before the key exists. */
+export const ASSISTANT_PREVIEW = (process.env.ASSISTANT_PREVIEW ?? "").trim() === "1";
 /** Year printed in the footer; fixed at build time like everything else. */
 export const BUILD_YEAR = new Date().getUTCFullYear();

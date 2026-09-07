@@ -1,0 +1,263 @@
+"use client";
+
+import { useCallback, useEffect, useId, useRef, useState, type FormEvent } from "react";
+import type { Currency } from "@/lib/catalogue";
+import { formatPrice } from "@/lib/format";
+import type { Locale } from "@/lib/i18n";
+import { useCurrency } from "./currency";
+
+/** Every string the widget shows; passed from the server so the dictionaries stay out of the browser bundle. */
+export type DomainSearchLabels = {
+  label: string;
+  placeholder: string;
+  button: string;
+  hint: string;
+  available: string;
+  taken: string;
+  unknown: string;
+  premium: string;
+  notOffered: string;
+  register: string;
+  askUs: string;
+  checking: string;
+  error: string;
+  rateLimited: string;
+  otherExtensions: string;
+  perYear: string;
+  ideasTitle: string;
+  ideasHint: string;
+  ideasPlaceholder: string;
+  ideasButton: string;
+  ideasWorking: string;
+  ideasEmpty: string;
+  ideasUnavailable: string;
+};
+
+/** Shape of GET {store}/api/public/domains/search and of each idea from POST {store}/api/public/domains/ideas. */
+type Result = {
+  name: string;
+  tld: string;
+  available: boolean | null;
+  premium: boolean;
+  sellable: boolean;
+  price: { gross: number; formatted: string; currency: Currency } | null;
+  reason?: "not_offered" | "unknown";
+};
+type SearchResponse = { query: string; currency: Currency; invalid: boolean; enabled: boolean; primary: Result | null; suggestions: Result[] };
+type IdeasResponse = { ideas: Result[]; checked: boolean };
+
+type Status = "idle" | "loading" | "done" | "invalid" | "error" | "limited";
+type IdeasStatus = "idle" | "loading" | "done" | "error" | "limited" | "unavailable";
+
+const TONE = {
+  ok: "bg-ok-soft text-ok",
+  muted: "bg-surface-alt text-muted",
+  warn: "bg-warn-soft text-warn",
+  brand: "bg-brand-soft text-brand-strong",
+} as const;
+
+function statusOf(r: Result, l: DomainSearchLabels): { text: string; tone: keyof typeof TONE } {
+  if (r.available === null) return r.reason === "not_offered" ? { text: l.notOffered, tone: "muted" } : { text: l.unknown, tone: "warn" };
+  if (r.premium) return { text: l.premium, tone: "brand" };
+  return r.available ? { text: l.available, tone: "ok" } : { text: l.taken, tone: "muted" };
+}
+
+function Row({ r, primary = false, enabled, locale, storeSearchUrl, contactHref, labels }: { r: Result; primary?: boolean; enabled: boolean; locale: Locale; storeSearchUrl: string; contactHref: string; labels: DomainSearchLabels }) {
+  const s = statusOf(r, labels);
+  const price = r.price ? formatPrice({ gross: r.price.gross, formatted: r.price.formatted }, r.price.currency, locale) : null;
+  const free = r.available === true && !r.premium;
+  return (
+    <li className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-t border-line py-3.5 first:border-t-0">
+      <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
+        <bdi dir="ltr" className={`break-all font-extrabold text-ink ${primary ? "text-xl sm:text-2xl" : "text-base"}`}>
+          {r.name}
+        </bdi>
+        <span className={`whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-bold ${TONE[s.tone]}`}>{s.text}</span>
+      </div>
+      <div className="flex items-center gap-4">
+        {price ? (
+          <span className="whitespace-nowrap text-sm text-muted">
+            <bdi dir="ltr" className="tabular font-bold text-ink">
+              {price}
+            </bdi>{" "}
+            {labels.perYear}
+          </span>
+        ) : null}
+        {free ? (
+          r.sellable && enabled ? (
+            <a href={`${storeSearchUrl}?q=${encodeURIComponent(r.name)}`} className="btn-gradient inline-flex min-h-10 items-center whitespace-nowrap rounded-lg px-4 text-sm font-bold">
+              {labels.register}
+            </a>
+          ) : (
+            <a href={contactHref} className="whitespace-nowrap text-sm font-bold text-brand-strong hover:text-brand">
+              {labels.askUs}
+            </a>
+          )
+        ) : null}
+      </div>
+    </li>
+  );
+}
+
+/**
+ * Availability search rendered on the site itself. Without JavaScript the form is a plain GET to the
+ * store's search page; with it, the store's public API answers in place and "Register" hands the
+ * name to the store. Prices follow the visitor's currency choice.
+ */
+export function DomainSearch({ locale, storeSearchUrl, apiUrl, ideasUrl, contactHref, labels, ideas }: { locale: Locale; storeSearchUrl: string; apiUrl: string; ideasUrl: string; contactHref: string; labels: DomainSearchLabels; ideas: boolean }) {
+  const { currency } = useCurrency();
+  const id = useId();
+  const [query, setQuery] = useState("");
+  const [status, setStatus] = useState<Status>("idle");
+  const [data, setData] = useState<SearchResponse | null>(null);
+  const abort = useRef<AbortController | null>(null);
+  const searched = useRef("");
+
+  const run = useCallback(
+    async (q: string, c: Currency) => {
+      abort.current?.abort();
+      const ctl = new AbortController();
+      abort.current = ctl;
+      setStatus("loading");
+      try {
+        const res = await fetch(`${apiUrl}?q=${encodeURIComponent(q)}&currency=${c}`, { signal: ctl.signal, headers: { Accept: "application/json" } });
+        if (res.status === 429) return setStatus("limited");
+        if (!res.ok) return setStatus("error");
+        const body = (await res.json()) as SearchResponse;
+        searched.current = q;
+        setData(body);
+        setStatus(body.invalid ? "invalid" : "done");
+      } catch (e) {
+        if ((e as Error).name !== "AbortError") setStatus("error");
+      }
+    },
+    [apiUrl],
+  );
+
+  // A currency flip re-prices the names already on screen.
+  useEffect(() => {
+    if (!searched.current || !data || data.currency === currency) return;
+    const t = setTimeout(() => void run(searched.current, currency), 0);
+    return () => clearTimeout(t);
+  }, [currency, data, run]);
+
+  function submit(e: FormEvent<HTMLFormElement>) {
+    const q = query.trim();
+    if (!q) return;
+    e.preventDefault();
+    void run(q, currency);
+  }
+
+  const [desc, setDesc] = useState("");
+  const [ideasStatus, setIdeasStatus] = useState<IdeasStatus>("idle");
+  const [ideasData, setIdeasData] = useState<IdeasResponse | null>(null);
+
+  async function suggest(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const d = desc.trim();
+    if (d.length < 10 || ideasStatus === "loading") return;
+    setIdeasStatus("loading");
+    try {
+      const res = await fetch(ideasUrl, { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify({ description: d, locale, currency }) });
+      if (res.status === 503) return setIdeasStatus("unavailable");
+      if (res.status === 429) return setIdeasStatus("limited");
+      if (!res.ok) return setIdeasStatus("error");
+      setIdeasData((await res.json()) as IdeasResponse);
+      setIdeasStatus("done");
+    } catch {
+      setIdeasStatus("error");
+    }
+  }
+
+  const enabled = data?.enabled ?? false;
+  const rowProps = { enabled, locale, storeSearchUrl, contactHref, labels };
+  const freeIdeas = ideasData?.ideas.filter((r) => r.available !== false) ?? [];
+  return (
+    <div>
+      <form action={storeSearchUrl} method="get" onSubmit={submit} role="search">
+        <label htmlFor={`${id}-q`} className="mb-2 block text-sm font-semibold text-ink">
+          {labels.label}
+        </label>
+        <div className="flex flex-col gap-2 sm:flex-row">
+          <input
+            id={`${id}-q`}
+            name="q"
+            type="text"
+            inputMode="url"
+            autoComplete="off"
+            autoCapitalize="none"
+            spellCheck={false}
+            maxLength={253}
+            required
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder={labels.placeholder}
+            dir="ltr"
+            className="block min-h-12 w-full rounded-lg border border-line bg-surface px-4 text-lg text-ink placeholder:text-faint focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand-soft"
+          />
+          <button type="submit" disabled={status === "loading"} className="btn-gradient inline-flex min-h-12 shrink-0 items-center justify-center rounded-lg px-7 text-sm font-bold disabled:opacity-70">
+            {status === "loading" ? labels.checking : labels.button}
+          </button>
+        </div>
+        <p className="mt-2 text-xs text-muted">{labels.hint}</p>
+      </form>
+
+      <div aria-live="polite">
+        {status === "error" ? <p className="mt-4 text-sm text-warn">{labels.error}</p> : null}
+        {status === "limited" ? <p className="mt-4 text-sm text-warn">{labels.rateLimited}</p> : null}
+        {status === "invalid" ? <p className="mt-4 text-sm text-warn">{labels.error}</p> : null}
+        {data && (status === "done" || status === "loading") ? (
+          <div className={`mt-6 ${status === "loading" ? "opacity-60" : ""}`}>
+            {data.primary ? (
+              <ul>
+                <Row r={data.primary} primary {...rowProps} />
+              </ul>
+            ) : null}
+            {data.suggestions.length ? (
+              <>
+                <h3 className="mt-4 text-xs font-extrabold uppercase tracking-[0.14em] text-muted">{labels.otherExtensions}</h3>
+                <ul className="mt-1">
+                  {data.suggestions.map((r) => (
+                    <Row key={r.name} r={r} {...rowProps} />
+                  ))}
+                </ul>
+              </>
+            ) : null}
+          </div>
+        ) : null}
+      </div>
+
+      {ideas ? (
+        <div className="mt-8 border-t border-line pt-6">
+          <h3 className="text-base font-extrabold text-ink">{labels.ideasTitle}</h3>
+          <p className="mt-1 text-sm text-muted">{labels.ideasHint}</p>
+          <form onSubmit={suggest} className="mt-3 flex flex-col gap-2 sm:flex-row">
+            <label htmlFor={`${id}-desc`} className="sr-only">
+              {labels.ideasHint}
+            </label>
+            <input id={`${id}-desc`} type="text" maxLength={300} minLength={10} required value={desc} onChange={(e) => setDesc(e.target.value)} placeholder={labels.ideasPlaceholder} className="block min-h-11 w-full rounded-lg border border-line bg-surface px-4 text-base text-ink placeholder:text-faint focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand-soft" />
+            <button type="submit" disabled={ideasStatus === "loading"} className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-lg border-[1.5px] border-brand px-5 text-sm font-bold text-brand-strong hover:bg-brand-soft disabled:opacity-70">
+              {ideasStatus === "loading" ? labels.ideasWorking : labels.ideasButton}
+            </button>
+          </form>
+          <div aria-live="polite">
+            {ideasStatus === "unavailable" ? <p className="mt-3 text-sm text-muted">{labels.ideasUnavailable}</p> : null}
+            {ideasStatus === "limited" ? <p className="mt-3 text-sm text-warn">{labels.rateLimited}</p> : null}
+            {ideasStatus === "error" ? <p className="mt-3 text-sm text-warn">{labels.error}</p> : null}
+            {ideasStatus === "done" ? (
+              freeIdeas.length ? (
+                <ul className="mt-3">
+                  {freeIdeas.map((r) => (
+                    <Row key={r.name} r={r} {...rowProps} enabled={enabled || r.sellable} />
+                  ))}
+                </ul>
+              ) : (
+                <p className="mt-3 text-sm text-muted">{labels.ideasEmpty}</p>
+              )
+            ) : null}
+          </div>
+        </div>
+      ) : null}
+    </div>
+  );
+}

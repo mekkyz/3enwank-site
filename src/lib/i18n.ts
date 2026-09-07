@@ -57,9 +57,12 @@ export function localeParams(): Array<{ locale: Locale }> {
   return prefixedLocales().map((locale) => ({ locale }));
 }
 
-export type PageKey = "home" | "hosting" | "websites" | "care" | "domains" | "about" | "contact" | "terms" | "privacy";
+export type PageKey = "home" | "hosting" | "websites" | "care" | "domains" | "terms" | "privacy";
 
-export const pageKeys: readonly PageKey[] = ["home", "hosting", "websites", "care", "domains", "about", "contact", "terms", "privacy"];
+/** Sections of the home page that other pages link into. */
+export type SectionKey = "domains" | "about" | "contact";
+
+export const pageKeys: readonly PageKey[] = ["home", "hosting", "websites", "care", "domains", "terms", "privacy"];
 
 const SLUGS: Record<PageKey, string> = {
   home: "",
@@ -67,8 +70,6 @@ const SLUGS: Record<PageKey, string> = {
   websites: "websites",
   care: "care",
   domains: "domains",
-  about: "about",
-  contact: "contact",
   terms: "terms",
   privacy: "privacy",
 };
@@ -78,6 +79,11 @@ export function pathFor(page: PageKey, locale: Locale): string {
   const prefix = locale === defaultLocale ? "" : `/${locale}`;
   const slug = SLUGS[page];
   return `${prefix}/${slug ? `${slug}/` : ""}` || "/";
+}
+
+/** Anchor into a section of the home page, e.g. "/ar/#contact". */
+export function anchorFor(section: SectionKey, locale: Locale): string {
+  return `${pathFor("home", locale)}#${section}`;
 }
 
 /** The same page in every locale, for the language menu (current one included, marked). */

@@ -34,6 +34,7 @@ checked in, set `CATALOGUE_SOURCE=fallback`.
 |---|---|---|
 | `CATALOGUE_URL` | `https://my.3enwank.com/api/public/catalogue` | Where the catalogue is fetched from |
 | `CATALOGUE_SOURCE` | `remote` | `fallback` skips the network and uses `catalogue.fallback.json` |
+| `ASSISTANT_PREVIEW` | empty | `1` renders the chat widget and domain name ideas even while the store reports the assistant off |
 | `CATALOGUE_AUTH` | empty | `user:password` sent as basic auth (staging behind nginx auth) |
 | `STORE_URL` | `https://my.3enwank.com` | Store origin for Log in links when the catalogue has none |
 | `SITE_URL` | `https://3enwank.com` | Canonical origin for sitemap, hreflang, OpenGraph |

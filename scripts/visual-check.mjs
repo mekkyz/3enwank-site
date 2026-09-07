@@ -23,7 +23,7 @@ const server = createServer((req, res) => {
 }).listen(port, "127.0.0.1");
 
 const locales = ["", "ar", "ar-eg"];
-const pages = ["", "hosting", "websites", "care", "domains", "about", "contact", "terms", "privacy"];
+const pages = ["", "hosting", "websites", "care", "domains", "terms", "privacy"];
 const widths = [{ name: "desktop", width: 1440, height: 900 }, { name: "phone", width: 390, height: 844 }];
 const arabic = /[؀-ۿݐ-ݿࢠ-ࣿﭐ-﷿ﹰ-﻿]/;
 mkdirSync("shots", { recursive: true });

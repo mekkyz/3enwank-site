@@ -4,7 +4,7 @@ import { FeatureList } from "@/components/plans";
 import { Shell } from "@/components/shell";
 import { deliveryFrom, depositSplit, localizedFeatures, localizedSummary, summaryWithoutDelivery } from "@/lib/format";
 import { pageMetadata } from "@/lib/metadata";
-import { pathFor, type Locale } from "@/lib/i18n";
+import { anchorFor, type Locale } from "@/lib/i18n";
 import { fill, messagesFor } from "@/messages";
 import { HIGHLIGHT, loc, screenContext, vatLine } from "./shared";
 
@@ -17,7 +17,7 @@ export const websites = {
     const { t, catalogue, company } = await screenContext(locale);
     const packages = catalogue.products.build;
     return (
-      <Shell locale={locale} page="websites" storeUrl={catalogue.store.url} legalName={company.legalName} address={company.address} supportEmail={company.supportEmail}>
+      <Shell locale={locale} page="websites" storeUrl={catalogue.store.url} legalName={company.legalName} address={company.address} supportEmail={company.supportEmail} assistantEnabled={catalogue.assistant.enabled}>
         <PageIntro kicker={t.websites.title} title={t.websites.h2} lede={t.websites.lede} />
         <Section>
           <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
@@ -74,7 +74,7 @@ export const websites = {
               <p className="mt-2 text-muted">{t.websites.customBody}</p>
               <p className="mt-2 text-sm font-semibold text-ink">{t.websites.customMeta}</p>
             </div>
-            <ButtonLink href={pathFor("contact", locale)}>{t.websites.customCta}</ButtonLink>
+            <ButtonLink href={anchorFor("contact", locale)}>{t.websites.customCta}</ButtonLink>
           </Card>
         </Section>
       </Shell>

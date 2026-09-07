@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { alternatesFor, catalogueLocale, dirFor, langTag, languageLinks, localeParams, pathFor } from "./i18n";
+import { alternatesFor, anchorFor, catalogueLocale, dirFor, langTag, languageLinks, localeParams, pathFor } from "./i18n";
 
 describe("i18n paths", () => {
   it("puts English at the root and the Arabic locales under their prefixes", () => {
@@ -9,6 +9,12 @@ describe("i18n paths", () => {
     expect(pathFor("hosting", "en")).toBe("/hosting/");
     expect(pathFor("hosting", "ar")).toBe("/ar/hosting/");
     expect(pathFor("hosting", "ar-eg")).toBe("/ar-eg/hosting/");
+  });
+
+  it("links sections of the home page with the locale prefix", () => {
+    expect(anchorFor("contact", "en")).toBe("/#contact");
+    expect(anchorFor("about", "ar")).toBe("/ar/#about");
+    expect(anchorFor("domains", "ar-eg")).toBe("/ar-eg/#domains");
   });
 
   it("lists every language for the menu, marking the current one, on the same page", () => {

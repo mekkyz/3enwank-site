@@ -67,6 +67,11 @@ export type Messages = {
     pricingTitle: string;
     pricingLede: string;
     compareLink: string;
+    /** Websites and care plans at a glance, between the hosting plans and the domain search. */
+    glanceTitle: string;
+    glanceLede: string;
+    domainsTitle: string;
+    domainsLede: string;
     moveTitle: string;
     moveBody: string;
     moveCta: string;
@@ -121,7 +126,29 @@ export type Messages = {
     notYet: string;
     ask: string;
     fine: string;
+    /** Inline availability results. */
+    available: string;
+    taken: string;
+    unknown: string;
+    premium: string;
+    notOffered: string;
+    registerCta: string;
+    askUs: string;
+    checking: string;
+    error: string;
+    rateLimited: string;
+    otherExtensions: string;
+    /** Name suggestions from the assistant. */
+    ideasTitle: string;
+    ideasHint: string;
+    ideasPlaceholder: string;
+    ideasButton: string;
+    ideasWorking: string;
+    ideasEmpty: string;
+    ideasUnavailable: string;
   };
+  /** The chat widget in the corner of every page. */
+  assistant: { open: string; close: string; title: string; intro: string; placeholder: string; send: string; thinking: string; error: string; unavailable: string; note: string };
   about: {
     title: string;
     h2: string;

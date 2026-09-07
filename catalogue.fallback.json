@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-09-07T10:50:58.153Z",
+  "generatedAt": "2026-09-07T12:41:50.148Z",
   "currencies": [
     "EGP",
     "USD"
@@ -30,9 +30,56 @@
     "loginUrl": "https://my.3enwank.com/login",
     "registerUrl": "https://my.3enwank.com/register"
   },
-  "domains": {
-    "enabled": false
-  },
+  "groups": [
+    {
+      "slug": "hosting",
+      "kind": "hosting",
+      "name": {
+        "ar": "Web Hosting",
+        "en": "Web Hosting"
+      },
+      "headline": {
+        "ar": "cPanel web hosting",
+        "en": "cPanel web hosting"
+      },
+      "tagline": {
+        "ar": "Hosted on 3enwank servers in Egypt. Prices in EGP per year, VAT included.",
+        "en": "Hosted on 3enwank servers in Egypt. Prices in EGP per year, VAT included."
+      }
+    },
+    {
+      "slug": "web-design",
+      "kind": "build",
+      "name": {
+        "ar": "Web Design",
+        "en": "Web Design"
+      },
+      "headline": {
+        "ar": "Website builds",
+        "en": "Website builds"
+      },
+      "tagline": {
+        "ar": "One-time projects delivered ready to launch. Prices in EGP, VAT included.",
+        "en": "One-time projects delivered ready to launch. Prices in EGP, VAT included."
+      }
+    },
+    {
+      "slug": "care",
+      "kind": "care",
+      "name": {
+        "ar": "Website Care",
+        "en": "Website Care"
+      },
+      "headline": {
+        "ar": "Website Care plans",
+        "en": "Website Care plans"
+      },
+      "tagline": {
+        "ar": "Annual maintenance with a first-response SLA. Prices in EGP per year, VAT included.",
+        "en": "Annual maintenance with a first-response SLA. Prices in EGP per year, VAT included."
+      }
+    }
+  ],
   "products": {
     "hosting": [
       {
@@ -73,6 +120,7 @@
           "ar": "<p><strong>XS</strong> - One small website.</p><ul><li>Storage: 1 GB NVMe</li><li>Bandwidth: 8 GB / month</li><li>Email accounts: 20</li><li>Databases: 2</li><li>Domains: 1</li><li>FTP accounts: 2</li><li>Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · nightly backups to Europe</li><li>Billed once a year. Normal price <s>2,499 EGP</s> - you pay 1,999 EGP per year, VAT included</li></ul>",
           "en": "<p><strong>XS</strong> - One small website.</p><ul><li>Storage: 1 GB NVMe</li><li>Bandwidth: 8 GB / month</li><li>Email accounts: 20</li><li>Databases: 2</li><li>Domains: 1</li><li>FTP accounts: 2</li><li>Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · nightly backups to Europe</li><li>Billed once a year. Normal price <s>2,499 EGP</s> - you pay 1,999 EGP per year, VAT included</li></ul>"
         },
+        "depositBp": null,
         "prices": {
           "EGP": {
             "gross": 199900,
@@ -124,6 +172,7 @@
           "ar": "<p><strong>S</strong> - Small business website.</p><ul><li>Storage: 2 GB NVMe</li><li>Bandwidth: 15 GB / month</li><li>Email accounts: 50</li><li>Databases: 5</li><li>Domains: 1</li><li>FTP accounts: 5</li><li>Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · nightly backups to Europe</li><li>Billed once a year. Normal price <s>2,999 EGP</s> - you pay 2,499 EGP per year, VAT included</li></ul>",
           "en": "<p><strong>S</strong> - Small business website.</p><ul><li>Storage: 2 GB NVMe</li><li>Bandwidth: 15 GB / month</li><li>Email accounts: 50</li><li>Databases: 5</li><li>Domains: 1</li><li>FTP accounts: 5</li><li>Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · nightly backups to Europe</li><li>Billed once a year. Normal price <s>2,999 EGP</s> - you pay 2,499 EGP per year, VAT included</li></ul>"
         },
+        "depositBp": null,
         "prices": {
           "EGP": {
             "gross": 249900,
@@ -175,6 +224,7 @@
           "ar": "<p><strong>M</strong> - Growing website, two domains.</p><ul><li>Storage: 5 GB NVMe</li><li>Bandwidth: 40 GB / month</li><li>Email accounts: 100</li><li>Databases: 10</li><li>Domains: 2</li><li>FTP accounts: 10</li><li>Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · nightly backups to Europe</li><li>Billed once a year. Normal price <s>3,999 EGP</s> - you pay 2,999 EGP per year, VAT included</li></ul>",
           "en": "<p><strong>M</strong> - Growing website, two domains.</p><ul><li>Storage: 5 GB NVMe</li><li>Bandwidth: 40 GB / month</li><li>Email accounts: 100</li><li>Databases: 10</li><li>Domains: 2</li><li>FTP accounts: 10</li><li>Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · nightly backups to Europe</li><li>Billed once a year. Normal price <s>3,999 EGP</s> - you pay 2,999 EGP per year, VAT included</li></ul>"
         },
+        "depositBp": null,
         "prices": {
           "EGP": {
             "gross": 299900,
@@ -226,6 +276,7 @@
           "ar": "<p><strong>L</strong> - Busy website or small store.</p><ul><li>Storage: 10 GB NVMe</li><li>Bandwidth: 80 GB / month</li><li>Email accounts: 200</li><li>Databases: 15</li><li>Domains: 3</li><li>FTP accounts: 20</li><li>Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · nightly backups to Europe</li><li>Billed once a year. Normal price <s>4,999 EGP</s> - you pay 3,999 EGP per year, VAT included</li></ul>",
           "en": "<p><strong>L</strong> - Busy website or small store.</p><ul><li>Storage: 10 GB NVMe</li><li>Bandwidth: 80 GB / month</li><li>Email accounts: 200</li><li>Databases: 15</li><li>Domains: 3</li><li>FTP accounts: 20</li><li>Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · nightly backups to Europe</li><li>Billed once a year. Normal price <s>4,999 EGP</s> - you pay 3,999 EGP per year, VAT included</li></ul>"
         },
+        "depositBp": null,
         "prices": {
           "EGP": {
             "gross": 399900,
@@ -277,6 +328,7 @@
           "ar": "<p><strong>XL</strong> - High-traffic site or online store.</p><ul><li>Storage: 50 GB NVMe</li><li>Bandwidth: 400 GB / month</li><li>Email accounts: Unlimited</li><li>Databases: 20</li><li>Domains: 6</li><li>FTP accounts: 50</li><li>Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · nightly backups to Europe</li><li>Billed once a year. Normal price <s>14,999 EGP</s> - you pay 9,999 EGP per year, VAT included</li></ul>",
           "en": "<p><strong>XL</strong> - High-traffic site or online store.</p><ul><li>Storage: 50 GB NVMe</li><li>Bandwidth: 400 GB / month</li><li>Email accounts: Unlimited</li><li>Databases: 20</li><li>Domains: 6</li><li>FTP accounts: 50</li><li>Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · nightly backups to Europe</li><li>Billed once a year. Normal price <s>14,999 EGP</s> - you pay 9,999 EGP per year, VAT included</li></ul>"
         },
+        "depositBp": null,
         "prices": {
           "EGP": {
             "gross": 999900,
@@ -330,6 +382,7 @@
           "ar": "<p><strong>XXL</strong> - Multi-site: 2 domains included, up to 10.</p><ul><li>Storage: 150 GB NVMe</li><li>Bandwidth: 1.2 TB / month</li><li>Email accounts: Unlimited</li><li>Databases: Unlimited</li><li>Domains: 2 included (up to 10)</li><li>FTP accounts: Unlimited</li><li>Add up to 8 more domains at 999 EGP per domain per year (choose below)</li><li>Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · nightly backups to Europe</li><li>Billed once a year. Normal price <s>29,999 EGP</s> - you pay 19,999 EGP per year, VAT included</li></ul>",
           "en": "<p><strong>XXL</strong> - Multi-site: 2 domains included, up to 10.</p><ul><li>Storage: 150 GB NVMe</li><li>Bandwidth: 1.2 TB / month</li><li>Email accounts: Unlimited</li><li>Databases: Unlimited</li><li>Domains: 2 included (up to 10)</li><li>FTP accounts: Unlimited</li><li>Add up to 8 more domains at 999 EGP per domain per year (choose below)</li><li>Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · nightly backups to Europe</li><li>Billed once a year. Normal price <s>29,999 EGP</s> - you pay 19,999 EGP per year, VAT included</li></ul>"
         },
+        "depositBp": null,
         "prices": {
           "EGP": {
             "gross": 1999900,
@@ -551,6 +604,7 @@
           "ar": "<p><strong>Landing Page Lite</strong> - One page, up to six sections. Delivery: 7 working days.</p><ul><li>One page, up to six sections</li><li>Contact form and WhatsApp button</li><li>Analytics and Meta Pixel</li><li>Two rounds of changes</li><li>Price 9,500 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.</li><li>Hosting and Care plans are separate.</li></ul>",
           "en": "<p><strong>Landing Page Lite</strong> - One page, up to six sections. Delivery: 7 working days.</p><ul><li>One page, up to six sections</li><li>Contact form and WhatsApp button</li><li>Analytics and Meta Pixel</li><li>Two rounds of changes</li><li>Price 9,500 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.</li><li>Hosting and Care plans are separate.</li></ul>"
         },
+        "depositBp": 5000,
         "prices": {
           "EGP": {
             "gross": 950000,
@@ -594,6 +648,7 @@
           "ar": "<p><strong>Landing Page Pro</strong> - One or two pages designed from scratch. Delivery: 10 working days.</p><ul><li>One or two pages designed from scratch</li><li>Leads land in your inbox, a Google Sheet and WhatsApp</li><li>Price 15,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.</li><li>Hosting and Care plans are separate.</li></ul>",
           "en": "<p><strong>Landing Page Pro</strong> - One or two pages designed from scratch. Delivery: 10 working days.</p><ul><li>One or two pages designed from scratch</li><li>Leads land in your inbox, a Google Sheet and WhatsApp</li><li>Price 15,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.</li><li>Hosting and Care plans are separate.</li></ul>"
         },
+        "depositBp": 5000,
         "prices": {
           "EGP": {
             "gross": 1500000,
@@ -639,6 +694,7 @@
           "ar": "<p><strong>Business Website</strong> - Up to five pages on WordPress. Delivery: 3 weeks.</p><ul><li>Up to five pages on WordPress, paid theme licence included</li><li>Forms, Google Maps, WhatsApp</li><li>Google Business Profile connected</li><li>Price 22,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.</li><li>Hosting and Care plans are separate.</li></ul>",
           "en": "<p><strong>Business Website</strong> - Up to five pages on WordPress. Delivery: 3 weeks.</p><ul><li>Up to five pages on WordPress, paid theme licence included</li><li>Forms, Google Maps, WhatsApp</li><li>Google Business Profile connected</li><li>Price 22,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.</li><li>Hosting and Care plans are separate.</li></ul>"
         },
+        "depositBp": 5000,
         "prices": {
           "EGP": {
             "gross": 2200000,
@@ -684,6 +740,7 @@
           "ar": "<p><strong>Business Plus</strong> - Up to ten pages and a blog, in two languages. Delivery: 4 to 5 weeks.</p><ul><li>Up to ten pages and a blog, in two languages</li><li>Custom sections, optimised images</li><li>Structured data for search engines, newsletter signup</li><li>Price 38,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.</li><li>Hosting and Care plans are separate.</li></ul>",
           "en": "<p><strong>Business Plus</strong> - Up to ten pages and a blog, in two languages. Delivery: 4 to 5 weeks.</p><ul><li>Up to ten pages and a blog, in two languages</li><li>Custom sections, optimised images</li><li>Structured data for search engines, newsletter signup</li><li>Price 38,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.</li><li>Hosting and Care plans are separate.</li></ul>"
         },
+        "depositBp": 5000,
         "prices": {
           "EGP": {
             "gross": 3800000,
@@ -729,6 +786,7 @@
           "ar": "<p><strong>Online Store</strong> - WooCommerce with up to fifty products. Delivery: 6 weeks.</p><ul><li>WooCommerce with up to fifty products</li><li>Local or international payment gateways, cash on delivery</li><li>Shipping zones and order emails</li><li>Price 55,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.</li><li>Hosting and Care plans are separate.</li></ul>",
           "en": "<p><strong>Online Store</strong> - WooCommerce with up to fifty products. Delivery: 6 weeks.</p><ul><li>WooCommerce with up to fifty products</li><li>Local or international payment gateways, cash on delivery</li><li>Shipping zones and order emails</li><li>Price 55,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.</li><li>Hosting and Care plans are separate.</li></ul>"
         },
+        "depositBp": 5000,
         "prices": {
           "EGP": {
             "gross": 5500000,
@@ -780,6 +838,7 @@
           "ar": "<p><strong>Care Basic</strong> - reply time <strong>72 hours</strong> on Care Requests.</p><ul><li>Updates: Monthly</li><li>Content changes: 2 a year (a content change is one clear edit that takes half an hour or less)</li><li>Reply time: 72 hours</li><li>Malware: Monthly scan</li><li>Emergency restores: 1</li><li>Reports: Yearly</li><li>4,200 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online.</li></ul>",
           "en": "<p><strong>Care Basic</strong> - reply time <strong>72 hours</strong> on Care Requests.</p><ul><li>Updates: Monthly</li><li>Content changes: 2 a year (a content change is one clear edit that takes half an hour or less)</li><li>Reply time: 72 hours</li><li>Malware: Monthly scan</li><li>Emergency restores: 1</li><li>Reports: Yearly</li><li>4,200 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online.</li></ul>"
         },
+        "depositBp": null,
         "prices": {
           "EGP": {
             "gross": 420000,
@@ -829,6 +888,7 @@
           "ar": "<p><strong>Care Standard</strong> - reply time <strong>48 hours</strong> on Care Requests.</p><ul><li>Updates: Every 2 weeks, tested</li><li>Content changes: 12 a year (a content change is one clear edit that takes half an hour or less)</li><li>Reply time: 48 hours</li><li>Malware: Scan and cleanup</li><li>Emergency restores: 3</li><li>Reports: Quarterly</li><li>10,800 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online.</li></ul>",
           "en": "<p><strong>Care Standard</strong> - reply time <strong>48 hours</strong> on Care Requests.</p><ul><li>Updates: Every 2 weeks, tested</li><li>Content changes: 12 a year (a content change is one clear edit that takes half an hour or less)</li><li>Reply time: 48 hours</li><li>Malware: Scan and cleanup</li><li>Emergency restores: 3</li><li>Reports: Quarterly</li><li>10,800 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online.</li></ul>"
         },
+        "depositBp": null,
         "prices": {
           "EGP": {
             "gross": 1080000,
@@ -878,6 +938,7 @@
           "ar": "<p><strong>Care Pro</strong> - reply time <strong>24 hours</strong> on Care Requests.</p><ul><li>Updates: Weekly, tested</li><li>Content changes: 36 a year (a content change is one clear edit that takes half an hour or less)</li><li>Reply time: 24 hours</li><li>Malware: Scan, cleanup, hardening</li><li>Emergency restores: Unlimited</li><li>Reports: Monthly</li><li>21,600 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online.</li></ul>",
           "en": "<p><strong>Care Pro</strong> - reply time <strong>24 hours</strong> on Care Requests.</p><ul><li>Updates: Weekly, tested</li><li>Content changes: 36 a year (a content change is one clear edit that takes half an hour or less)</li><li>Reply time: 24 hours</li><li>Malware: Scan, cleanup, hardening</li><li>Emergency restores: Unlimited</li><li>Reports: Monthly</li><li>21,600 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online.</li></ul>"
         },
+        "depositBp": null,
         "prices": {
           "EGP": {
             "gross": 2160000,
@@ -927,6 +988,7 @@
           "ar": "<p><strong>Store Care</strong> - reply time <strong>4 hours</strong> on Care Requests.</p><ul><li>Updates: Weekly, plus payments</li><li>Content changes: 36 a year (a content change is one clear edit that takes half an hour or less)</li><li>Reply time: 4 hours</li><li>Malware: Weekly scan and cleanup</li><li>Emergency restores: Unlimited</li><li>Reports: Monthly</li><li>32,000 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online.</li></ul>",
           "en": "<p><strong>Store Care</strong> - reply time <strong>4 hours</strong> on Care Requests.</p><ul><li>Updates: Weekly, plus payments</li><li>Content changes: 36 a year (a content change is one clear edit that takes half an hour or less)</li><li>Reply time: 4 hours</li><li>Malware: Weekly scan and cleanup</li><li>Emergency restores: Unlimited</li><li>Reports: Monthly</li><li>32,000 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online.</li></ul>"
         },
+        "depositBp": null,
         "prices": {
           "EGP": {
             "gross": 3200000,
@@ -941,6 +1003,9 @@
         "storeUrl": "https://my.3enwank.com/plans/store-care"
       }
     ]
+  },
+  "domains": {
+    "enabled": false
   },
   "tlds": []
 }

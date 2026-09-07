@@ -23,6 +23,8 @@ const product = z.object({
   summary: localized.nullable(),
   features: z.object({ en: z.array(z.string()), ar: z.array(z.string()) }),
   description: localized.nullable().optional(),
+  /** Builds: share invoiced up front in basis points (5000 = 50%), what checkout charges; null elsewhere. */
+  depositBp: z.number().int().min(0).max(10000).nullable().optional(),
   prices,
   options: z.array(
     z.object({
@@ -79,6 +81,18 @@ export function fallbackCatalogue(): Catalogue {
 export type FetchLike = (url: string, init?: RequestInit) => Promise<Response>;
 
 /**
+ * The URL a build actually fetches: the endpoint URL plus a `build=<id>` query the platform ignores.
+ * nginx caches /api/public/ for five minutes keyed on the request URI, so a unique query makes every
+ * build reach the application and carry the catalogue as it is now, not as it was when the cache
+ * last filled. Without it, a publish pressed right after a price change could rebuild old prices.
+ */
+export function buildFetchUrl(url: string, buildId: string): string {
+  const target = new URL(url);
+  target.searchParams.set("build", buildId);
+  return target.toString();
+}
+
+/**
  * Fetch and validate the remote catalogue, else fall back. Pure with respect to configuration so
  * the decision can be tested; the build calls it with the environment (see loadCatalogue).
  */
@@ -89,6 +103,8 @@ export async function resolveCatalogue(opts: {
   fetch?: FetchLike;
   fallback?: () => Catalogue;
   timeoutMs?: number;
+  /** Cache-busting id sent as `?build=`; defaults to the current time. */
+  buildId?: string;
 }): Promise<LoadedCatalogue> {
   const fallback = opts.fallback ?? fallbackCatalogue;
   if (opts.source === "fallback") return { catalogue: fallback(), source: "fallback", reason: "CATALOGUE_SOURCE=fallback" };
@@ -96,7 +112,7 @@ export async function resolveCatalogue(opts: {
   try {
     const headers: Record<string, string> = { accept: "application/json" };
     if (opts.auth) headers.authorization = `Basic ${Buffer.from(opts.auth, "utf8").toString("base64")}`;
-    const res = await doFetch(opts.url, { headers, signal: AbortSignal.timeout(opts.timeoutMs ?? 15_000) });
+    const res = await doFetch(buildFetchUrl(opts.url, opts.buildId ?? String(Date.now())), { headers, signal: AbortSignal.timeout(opts.timeoutMs ?? 15_000) });
     if (!res.ok) return { catalogue: fallback(), source: "fallback", reason: `${opts.url} answered HTTP ${res.status}` };
     const parsed = catalogueSchema.safeParse(await res.json());
     if (!parsed.success) {

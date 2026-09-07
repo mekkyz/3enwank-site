@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { fallbackCatalogue } from "./catalogue";
-import { cardFeatures, compareRows, deliveryFrom, formatPrice, localizedFeatures, localizedSummary, noteFeatures, parseFeature, summaryWithoutDelivery } from "./format";
+import { cardFeatures, compareRows, deliveryFrom, depositSplit, formatPrice, localizedFeatures, localizedSummary, localizedValue, noteFeatures, parseFeature, summaryWithoutDelivery } from "./format";
 import { messagesFor } from "@/messages";
 
 describe("prices", () => {
@@ -68,5 +68,46 @@ describe("features", () => {
     expect(summaryWithoutDelivery("Up to five pages on WordPress. Delivery: 3 weeks.")).toBe("Up to five pages on WordPress.");
     expect(deliveryFrom("No delivery here")).toBeNull();
     expect(summaryWithoutDelivery(null)).toBe("");
+  });
+});
+
+describe("catalogue option strings", () => {
+  it("translates the XXL option name and every value label on the Arabic page", () => {
+    const ar = messagesFor("ar");
+    const xxl = fallbackCatalogue().products.hosting.find((p) => p.slug === "hosting-xxl")!;
+    const option = xxl.options.find((o) => o.key === "max_addon_domains")!;
+    expect(localizedValue(option.name, "ar", ar)).toBe("عدد المواقع (النطاقات) على هذا الحساب");
+    for (const v of option.values) {
+      const label = localizedValue(v.label, "ar", ar);
+      expect(label, v.label.en).not.toBe(v.label.en);
+      expect(label, v.label.en).toMatch(/نطاق/);
+    }
+    expect(localizedValue(option.values[0]!.label, "ar", ar)).toBe("نطاقان (مشمولان)");
+    expect(localizedValue(option.values[1]!.label, "ar", ar)).toBe("3 نطاقات");
+  });
+
+  it("keeps English as it is and prefers a real Arabic translation over the map", () => {
+    const en = messagesFor("en");
+    const ar = messagesFor("ar");
+    expect(localizedValue({ en: "3 domains", ar: "3 domains" }, "en", en)).toBe("3 domains");
+    expect(localizedValue({ en: "3 domains", ar: "ثلاثة نطاقات" }, "ar", ar)).toBe("ثلاثة نطاقات");
+    expect(localizedValue({ en: "Unknown", ar: "Unknown" }, "ar", ar)).toBe("Unknown");
+    expect(localizedValue({ en: "Only English", ar: "" }, "ar", ar)).toBe("Only English");
+    expect(localizedValue(null, "ar", ar)).toBe("");
+  });
+});
+
+describe("build deposit", () => {
+  it("comes from the catalogue's depositBp, with the platform default when absent", () => {
+    expect(depositSplit({ depositBp: 5000 })).toEqual({ deposit: 50, rest: 50 });
+    expect(depositSplit({ depositBp: 3000 })).toEqual({ deposit: 30, rest: 70 });
+    expect(depositSplit({ depositBp: 10000 })).toEqual({ deposit: 100, rest: 0 });
+    expect(depositSplit({ depositBp: 3333 })).toEqual({ deposit: 33.33, rest: 66.67 });
+    expect(depositSplit({ depositBp: null })).toEqual({ deposit: 50, rest: 50 });
+    expect(depositSplit({})).toEqual({ deposit: 50, rest: 50 });
+  });
+
+  it("is present on every build package of the fallback", () => {
+    for (const p of fallbackCatalogue().products.build) expect(p.depositBp, p.slug).toBeTypeOf("number");
   });
 });

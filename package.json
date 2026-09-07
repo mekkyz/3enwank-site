@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "preview": "node scripts/serve-out.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },

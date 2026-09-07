@@ -40,7 +40,9 @@ checked in, set `CATALOGUE_SOURCE=fallback`.
 
 ## The catalogue and the fallback
 
-`src/lib/catalogue.ts` validates the endpoint's JSON against the contract (zod). When the fetch fails,
+`src/lib/catalogue.ts` fetches the endpoint with a unique `?build=<timestamp>` (nginx caches
+`/api/public/` for five minutes keyed on the request URI, so this makes every build reach the
+application and see prices as they are now) and validates its JSON against the contract (zod). When the fetch fails,
 times out (15 s), answers a non-200 or does not validate, the build prints
 `[catalogue] using catalogue.fallback.json: <reason>` and continues with the checked-in copy, so a
 platform outage never blocks a copy change. Refresh the fallback from the platform checkout whenever
@@ -75,7 +77,7 @@ src/screens/*             one module per page: metadata(locale) + render(locale)
 src/components/*          shell (header, nav, footer), plan cards, tables, currency switch
 src/messages/{en,ar}.ts   all copy, one typed shape (types.ts)
 src/lib/catalogue.ts      fetch + validate + fallback;  format.ts prices and feature lines;  i18n.ts paths
-catalogue.fallback.json   last exported catalogue, used when the endpoint is unreachable
+catalogue.fallback.json   full export of the endpoint (scripts/export-catalogue.ts), used when it is unreachable
 public/_headers           Cloudflare Pages security and cache headers;  public/og.png share image
 ```
 

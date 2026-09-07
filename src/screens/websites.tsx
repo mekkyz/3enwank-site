@@ -1,10 +1,10 @@
 import { ButtonLink, Card, Check, Empty, Fine, PageIntro, Section } from "@/components/blocks";
 import { CurrencyToggle, Price } from "@/components/currency";
 import { Shell } from "@/components/shell";
-import { deliveryFrom, localizedFeatures, localizedSummary, summaryWithoutDelivery } from "@/lib/format";
+import { deliveryFrom, depositSplit, localizedFeatures, localizedSummary, summaryWithoutDelivery } from "@/lib/format";
 import { pageMetadata } from "@/lib/metadata";
 import { pathFor, type Locale } from "@/lib/i18n";
-import { messagesFor } from "@/messages";
+import { fill, messagesFor } from "@/messages";
 import { HIGHLIGHT, loc, screenContext, vatLine } from "./shared";
 
 export const websites = {
@@ -56,7 +56,7 @@ export const websites = {
                             <p className="mt-1 font-medium text-ink">{delivery}</p>
                           </>
                         ) : null}
-                        <p className="mt-3 text-xs">{t.websites.deposit}</p>
+                        <p className="mt-3 text-xs">{fill(t.websites.deposit, depositSplit(p))}</p>
                       </div>
                       <div className="flex flex-col items-start gap-3 md:items-end">
                         <Price prices={p.prices} locale={locale} className="text-3xl font-bold text-ink" />

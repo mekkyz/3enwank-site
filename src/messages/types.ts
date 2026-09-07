@@ -66,6 +66,7 @@ export type Messages = {
     perYear: string;
     fine: string;
     addonTitle: string;
+    /** Must contain exactly one {price}; the hosting page renders the live price in its place. */
     addonBody: string;
     runsOn: string;
     empty: string;
@@ -75,6 +76,7 @@ export type Messages = {
     num: string;
     h2: string;
     lede: string;
+    /** Template with {deposit} and {rest} percentages, filled from the catalogue's depositBp. */
     deposit: string;
     delivery: string;
     fine: string;

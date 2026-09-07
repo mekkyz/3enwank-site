@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { catalogueSchema, fallbackCatalogue, resolveCatalogue, type FetchLike } from "./catalogue";
+import { buildFetchUrl, catalogueSchema, fallbackCatalogue, resolveCatalogue, type FetchLike } from "./catalogue";
 
 const URL = "https://my.3enwank.com/api/public/catalogue";
 
@@ -20,14 +20,26 @@ describe("catalogue fallback", () => {
     }
   });
 
+  it("carries the catalogue's depositBp for build packages", () => {
+    const c = fallbackCatalogue();
+    for (const p of c.products.build) expect(p.depositBp, p.slug).toBe(5000);
+    for (const p of c.products.hosting) expect(p.depositBp, p.slug).toBeNull();
+    const bad = structuredClone(c) as unknown as { products: { build: Array<{ depositBp: unknown }> } };
+    bad.products.build[0]!.depositBp = 12000;
+    expect(catalogueSchema.safeParse(bad).success).toBe(false);
+  });
+
   it("uses the remote catalogue when it validates", async () => {
     const remote = { ...fallbackCatalogue(), generatedAt: "2030-01-01T00:00:00.000Z" };
     let seen: RequestInit | undefined;
+    let seenUrl: string | undefined;
     const loaded = await resolveCatalogue({
       url: URL,
       source: "remote",
       auth: "staging:secret",
-      fetch: fetchWith((_url, init) => {
+      buildId: "1700000000000",
+      fetch: fetchWith((url, init) => {
+        seenUrl = url;
         seen = init;
         return Response.json(remote);
       }),
@@ -35,6 +47,28 @@ describe("catalogue fallback", () => {
     expect(loaded.source).toBe("remote");
     expect(loaded.catalogue.generatedAt).toBe("2030-01-01T00:00:00.000Z");
     expect((seen?.headers as Record<string, string>).authorization).toBe(`Basic ${Buffer.from("staging:secret").toString("base64")}`);
+    expect(seenUrl).toBe(`${URL}?build=1700000000000`);
+  });
+
+  it("fetches a URL no earlier build used, so the platform's 5-minute nginx cache never serves a build stale prices", async () => {
+    const urls: string[] = [];
+    const fetch = fetchWith((url) => {
+      urls.push(url);
+      return Response.json(fallbackCatalogue());
+    });
+    await resolveCatalogue({ url: URL, source: "remote", fetch });
+    await new Promise((r) => setTimeout(r, 2));
+    await resolveCatalogue({ url: URL, source: "remote", fetch });
+    expect(urls).toHaveLength(2);
+    for (const u of urls) expect(u).toMatch(/^https:\/\/my\.3enwank\.com\/api\/public\/catalogue\?build=\d+$/);
+    expect(urls[0]).not.toBe(urls[1]);
+    // The reason shown in the build log names the configured URL, not the cache-busted one.
+    const failed = await resolveCatalogue({ url: URL, source: "remote", fetch: fetchWith(() => new Response("", { status: 503 })) });
+    expect(failed.reason).toBe(`${URL} answered HTTP 503`);
+  });
+
+  it("keeps any query the configured URL already has", () => {
+    expect(buildFetchUrl("https://staging.example/api/public/catalogue?x=1", "42")).toBe("https://staging.example/api/public/catalogue?x=1&build=42");
   });
 
   it("falls back on HTTP errors, network errors, invalid JSON and contract drift", async () => {

@@ -42,6 +42,24 @@ export function localizedFeatures(product: Product, locale: Locale, messages: Me
   });
 }
 
+/** One catalogue string (an option name, a value label) for a locale, with the same untranslated-copy fallback. */
+export function localizedValue(value: { en: string; ar: string } | null | undefined, locale: Locale, messages: Messages): string {
+  if (!value) return "";
+  const text = value[locale] || value.en;
+  if (locale === "en" || value[locale] !== value.en) return text;
+  return messages.features.values[value.en] ?? text;
+}
+
+/** Default deposit share when a build product carries none (the platform's own default, 50%). */
+const DEFAULT_DEPOSIT_BP = 5000;
+
+/** The up-front and on-approval percentages of a build package, from the catalogue's `depositBp`. */
+export function depositSplit(product: Pick<Product, "depositBp">): { deposit: number; rest: number } {
+  const bp = product.depositBp ?? DEFAULT_DEPOSIT_BP;
+  const deposit = Math.round(bp) / 100;
+  return { deposit, rest: Math.round(10000 - bp) / 100 };
+}
+
 /** The summary for a locale, with the same untranslated-copy fallback as the feature lines. */
 export function localizedSummary(product: Product, locale: Locale, messages: Messages): string {
   const summary = product.summary;

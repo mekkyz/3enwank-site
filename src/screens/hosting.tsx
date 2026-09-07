@@ -19,7 +19,8 @@ export const hosting = {
     const xxl = plans.find((p) => p.options.some((o) => o.key === "max_addon_domains"));
     const addonOption = xxl?.options.find((o) => o.key === "max_addon_domains");
     const addon = addonOption?.values.find((v) => !v.isDefault && (v.prices.EGP?.gross ?? 0) > 0);
-    const runsOn = plans[0] ? plans[0].features.en.find((f) => f.startsWith("Runs on:"))?.replace(/^Runs on:\s*/, "") : null;
+    // The same list the home page shows, in the page's language (the catalogue only carries the English sentence).
+    const runsOn = plans.length ? t.home.stack.join(" · ") : null;
     // The price sits mid-sentence and is a client component (currency toggle), so the copy is split around it.
     const [addonBefore, addonAfter] = t.hosting.addonBody.split("{price}");
     return (
@@ -43,7 +44,7 @@ export const hosting = {
           )}
           {runsOn ? (
             <p className="mt-8 text-sm text-muted">
-              <span className="font-semibold text-ink">{t.hosting.runsOn}:</span> <bdi dir="ltr">{runsOn}</bdi>
+              <span className="font-semibold text-ink">{t.hosting.runsOn}:</span> {runsOn}
             </p>
           ) : null}
         </Section>

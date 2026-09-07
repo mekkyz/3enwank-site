@@ -1,4 +1,4 @@
-import { ButtonLink, Card, Chips, PageIntro, Section, SectionHeader } from "@/components/blocks";
+import { ButtonLink, Card, PageIntro, Section, SectionHeader } from "@/components/blocks";
 import { Shell } from "@/components/shell";
 import { pageMetadata } from "@/lib/metadata";
 import { pathFor, type Locale } from "@/lib/i18n";
@@ -26,11 +26,6 @@ export const about = {
             ))}
           </ul>
         </Section>
-        <div className="border-y border-line">
-          <div className="mx-auto max-w-6xl px-5 py-5 sm:px-8">
-            <Chips title={t.about.stackTitle} items={t.home.stack} />
-          </div>
-        </div>
         <Section>
           <div className="grid gap-6 md:grid-cols-2">
             <Card>

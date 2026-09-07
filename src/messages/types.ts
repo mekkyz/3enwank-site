@@ -27,6 +27,9 @@ export type Messages = {
     login: string;
     invoices: string;
     tickets: string;
+    theme: string;
+    themeDark: string;
+    themeLight: string;
     operatedBy: string;
     copyright: string;
   };
@@ -55,7 +58,7 @@ export type Messages = {
     ctaPlans: string;
     ctaBuild: string;
     facts: string[];
-    stackTitle: string;
+    /** What every account runs on; the hosting page prints it as one line. */
     stack: string[];
     productsTitle: string;
     products: { hosting: ProductTeaser; websites: ProductTeaser; care: ProductTeaser; domains: ProductTeaser };
@@ -126,7 +129,6 @@ export type Messages = {
     lede: string;
     principlesTitle: string;
     principles: Fact[];
-    stackTitle: string;
     companyTitle: string;
     address: string;
     email: string;

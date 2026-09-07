@@ -2,7 +2,8 @@ import type { ReactNode } from "react";
 import { BUILD_YEAR, STORE_URL } from "@/lib/site";
 import { languageLinks, pathFor, type Locale, type PageKey } from "@/lib/i18n";
 import { messagesFor } from "@/messages";
-import { Logo } from "./logo";
+import { Logo, LogoFull } from "./logo";
+import { ThemeSwitch } from "./theme";
 
 /**
  * Header, navigation and footer shared by every page. Server-rendered, no JavaScript: the language
@@ -13,13 +14,12 @@ export function Shell({ locale, page, storeUrl, legalName, address, supportEmail
   const languages = languageLinks(page, locale);
   const current = languages.find((l) => l.current)!;
   const store = (storeUrl ?? STORE_URL).replace(/\/+$/, "");
+  // The bar sells; the company pages live in the footer.
   const items: Array<[PageKey, string]> = [
     ["hosting", t.nav.hosting],
     ["websites", t.nav.websites],
     ["care", t.nav.care],
     ["domains", t.nav.domains],
-    ["about", t.nav.about],
-    ["contact", t.nav.contact],
   ];
   return (
     <>
@@ -62,7 +62,7 @@ export function Shell({ locale, page, storeUrl, legalName, address, supportEmail
             <a href={`${store}/login`} className="hidden min-h-11 items-center px-2 text-sm font-bold text-brand-strong hover:text-brand sm:inline-flex">
               {t.nav.login}
             </a>
-            <a href={pathFor("hosting", locale)} className="inline-flex min-h-11 items-center whitespace-nowrap rounded-lg bg-brand px-3 text-[13px] font-bold text-white hover:bg-brand-strong sm:px-4 sm:text-sm">
+            <a href={pathFor("hosting", locale)} className="btn-gradient inline-flex min-h-11 items-center whitespace-nowrap rounded-lg px-3 text-[13px] font-bold sm:px-4 sm:text-sm">
               {t.nav.plans}
             </a>
           </div>
@@ -78,10 +78,10 @@ export function Shell({ locale, page, storeUrl, legalName, address, supportEmail
       <main id="main" className="flex-1">
         {children}
       </main>
-      <footer className="mt-16 border-t border-line bg-surface">
+      <footer className="mt-16 border-t border-line bg-surface-alt">
         <div className="mx-auto grid max-w-6xl gap-10 px-5 py-12 sm:px-8 md:grid-cols-[1.6fr_repeat(3,minmax(0,1fr))]">
           <div className="text-sm text-muted">
-            <Logo className="h-7" />
+            <LogoFull className="h-14" />
             {legalName ? (
               <p className="mt-4">
                 {t.footer.operatedBy} {legalName}
@@ -116,9 +116,12 @@ export function Shell({ locale, page, storeUrl, legalName, address, supportEmail
           />
         </div>
         <div className="border-t border-line">
-          <p className="mx-auto max-w-6xl px-5 py-4 text-xs text-faint sm:px-8">
-            © <span className="tabular">{BUILD_YEAR}</span> {t.meta.siteName}. {t.footer.copyright}
-          </p>
+          <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5 py-4 text-xs text-faint sm:px-8">
+            <p>
+              © <span className="tabular">{BUILD_YEAR}</span> {t.meta.siteName}. {t.footer.copyright}
+            </p>
+            <ThemeSwitch label={t.footer.theme} dark={t.footer.themeDark} light={t.footer.themeLight} />
+          </div>
         </div>
       </footer>
     </>

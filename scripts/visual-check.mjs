@@ -32,17 +32,20 @@ mkdirSync("shots", { recursive: true });
 const candidates = [process.env.CHROME_PATH, "/usr/lib64/chromium-browser/headless_shell", "/usr/lib64/chromium-browser/chromium-browser", "/usr/bin/chromium-browser"].filter(Boolean);
 const executablePath = candidates.find((c) => existsSync(c));
 const browser = await chromium.launch(executablePath ? { executablePath } : {});
+// THEME=light checks the light theme; the default run checks the dark default.
+const theme = process.env.THEME === "light" ? "light" : "dark";
 const problems = [];
 let checked = 0;
 for (const w of widths) {
   const ctx = await browser.newContext({ viewport: { width: w.width, height: w.height }, deviceScaleFactor: 1 });
   const page = await ctx.newPage();
+  await page.addInitScript((t) => { try { localStorage.setItem("3enwank.theme", t); } catch {} }, theme);
   for (const loc of locales) {
     for (const p of pages) {
       const path = `/${[loc, p].filter(Boolean).join("/")}${loc || p ? "/" : ""}`;
       await page.goto(`http://127.0.0.1:${port}${path}`, { waitUntil: "load" });
       await page.evaluate(() => document.fonts.ready);
-      const name = `${w.name}-${loc || "en"}-${p || "home"}`;
+      const name = `${theme === "light" ? "light-" : ""}${w.name}-${loc || "en"}-${p || "home"}`;
       const result = await page.evaluate((arabicSource) => {
         const arabicRe = new RegExp(arabicSource);
         const out = [];

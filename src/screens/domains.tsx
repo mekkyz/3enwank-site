@@ -18,11 +18,9 @@ export const domains = {
     return (
       <Shell locale={locale} page="domains" storeUrl={catalogue.store.url} legalName={company.legalName} address={company.address} supportEmail={company.supportEmail}>
         <PageIntro kicker={t.domains.title} title={t.domains.h2} lede={t.domains.lede}>
-          {open ? (
-            <div className="mt-8">
-              <DomainSearchForm action={catalogue.store.domainSearchUrl} locale={locale} />
-            </div>
-          ) : null}
+          <div className="mt-8">
+            <DomainSearchForm action={catalogue.store.domainSearchUrl} locale={locale} />
+          </div>
         </PageIntro>
         <Section>
           {open ? (

@@ -157,9 +157,17 @@ Egyptian text, and formal Arabic that is not a copy of the Egyptian or the Engli
 are isolated left-to-right with `<bdi dir="ltr">` (`src/components/bidi.tsx`); text that contains
 Arabic is never forced LTR. Table labels never wrap (`.nowrap`); the table scrolls inside its box.
 
+## Theme
+
+Dark is the default; the footer switch stores "light" in `localStorage` (`3enwank.theme`) and an
+inline script in `<head>` applies the stored theme before the first paint. Every colour is a token
+in `src/app/globals.css` with a value per theme; components never hard-code a colour except the two
+brand hues in gradients.
+
 ## Render check before a review
 
 `pnpm check` (`scripts/visual-check.mjs`) serves `./out`, opens every page in every language at
 desktop and phone width with the box's Chromium, and fails on horizontal scroll, elements wider
 than the viewport, wrapped table labels, empty sections, or Arabic text inside an LTR isolate.
-Screenshots land in `./shots/`. Run it after every build that goes to a reviewer.
+Screenshots land in `./shots/`. `THEME=light pnpm check` repeats it for the light theme. Run both
+after every build that goes to a reviewer.

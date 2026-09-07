@@ -48,7 +48,7 @@ export function PageIntro({ kicker, title, lede, children }: { kicker?: string; 
 }
 
 export function Card({ children, className = "", highlight = false, as: Tag = "div" }: { children: ReactNode; className?: string; highlight?: boolean; as?: "div" | "li" | "article" }) {
-  return <Tag className={`relative rounded-xl border bg-panel p-6 sm:p-7 ${highlight ? "border-2 border-brand shadow-[0_24px_50px_-30px_rgba(124,95,165,0.6)]" : "border-line"} ${className}`}>{children}</Tag>;
+  return <Tag className={`lift relative rounded-xl border bg-panel p-6 sm:p-7 ${highlight ? "border-2 border-brand shadow-[0_24px_50px_-30px_rgba(124,95,165,0.6)]" : "border-line"} ${className}`}>{children}</Tag>;
 }
 
 export function Fine({ children }: { children: ReactNode }) {
@@ -57,7 +57,7 @@ export function Fine({ children }: { children: ReactNode }) {
 
 type ButtonVariant = "primary" | "secondary" | "white" | "outline";
 const VARIANTS: Record<ButtonVariant, string> = {
-  primary: "bg-brand text-white hover:bg-brand-strong shadow-[0_10px_24px_-12px_rgba(124,95,165,0.7)]",
+  primary: "btn-gradient shadow-[0_12px_28px_-12px_rgba(124,95,165,0.75)]",
   secondary: "border-[1.5px] border-line bg-panel text-ink hover:border-brand hover:text-brand-strong",
   white: "bg-white text-brand-strong hover:bg-brand-soft",
   outline: "border-[1.5px] border-brand text-brand-strong hover:bg-brand-soft",
@@ -107,19 +107,5 @@ export function Facts({ items, className = "" }: { items: string[]; className?: 
         </li>
       ))}
     </ul>
-  );
-}
-
-/** Pill row of the technology every account runs on. */
-export function Chips({ title, items }: { title: string; items: string[] }) {
-  return (
-    <div className="flex flex-wrap items-center justify-center gap-2.5 text-[13px] font-bold text-muted">
-      <span className="me-1 font-semibold text-faint">{title}</span>
-      {items.map((s) => (
-        <span key={s} className="rounded-full border border-line bg-panel px-3 py-1.5">
-          {s}
-        </span>
-      ))}
-    </div>
   );
 }

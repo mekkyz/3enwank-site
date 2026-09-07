@@ -1,10 +1,49 @@
 @import "tailwindcss";
 
-/* Brand: the logo's purple and blue on white, dark ink for text (3enwank-logo/palette.json). */
-:root {
+/*
+ * Brand: the logo's purple and blue (3enwank-logo/palette.json). Dark is the default theme; the
+ * footer switch stores "light" in localStorage and a tiny script in <head> applies it before paint.
+ */
+:root,
+[data-theme="dark"] {
+  color-scheme: dark;
+  --color-surface: #0e1020;
+  --color-surface-alt: #141731;
+  --color-panel: #171a33;
+  --color-panel-raised: #1d2140;
+  --color-ink: #f2f3f9;
+  --color-muted: #b4b9d0;
+  --color-faint: #8b90ab;
+  --color-line: #2a2f52;
+  --color-brand: #9b7fc9;
+  --color-brand-strong: #c3addf;
+  --color-brand-soft: #2b2450;
+  --color-brand-ink: #7c5fa5;
+  --color-accent: #5fbde8;
+  --color-accent-strong: #8fd3f2;
+  --color-accent-soft: #163a52;
+  --color-dark: #080a17;
+  --color-dark-line: #2a2f52;
+  --color-dark-muted: #c4c8dc;
+  --color-danger: #f28b82;
+  --illus-bg: #1e1f47;
+  --illus-ring: #3a3a7a;
+  --illus-link: #2b4a63;
+  --illus-node: #0e1020;
+  --illus-node-line: #f2f3f9;
+  --illus-bar: #3a3f6b;
+  --illus-bar-2: #2a2f52;
+  --illus-label: #d7dbeb;
+  --glow-a: rgba(124, 95, 165, 0.35);
+  --glow-b: rgba(42, 149, 197, 0.28);
+}
+
+[data-theme="light"] {
+  color-scheme: light;
   --color-surface: #ffffff;
-  --color-surface-alt: #f7f5fb;
+  --color-surface-alt: #f6f4fb;
   --color-panel: #ffffff;
+  --color-panel-raised: #ffffff;
   --color-ink: #1c1f2e;
   --color-muted: #4b5169;
   --color-faint: #6f7681;
@@ -12,6 +51,7 @@
   --color-brand: #7c5fa5;
   --color-brand-strong: #5f4685;
   --color-brand-soft: #f1ecf7;
+  --color-brand-ink: #7c5fa5;
   --color-accent: #2a95c5;
   --color-accent-strong: #1f6f92;
   --color-accent-soft: #e6f3f9;
@@ -19,12 +59,23 @@
   --color-dark-line: #2c3050;
   --color-dark-muted: #c4c8dc;
   --color-danger: #b42318;
+  --illus-bg: #f3effa;
+  --illus-ring: #dcd3ea;
+  --illus-link: #cfe7f2;
+  --illus-node: #ffffff;
+  --illus-node-line: #231f20;
+  --illus-bar: #dcd3ea;
+  --illus-bar-2: #e8e9ee;
+  --illus-label: #2a2f45;
+  --glow-a: rgba(124, 95, 165, 0.18);
+  --glow-b: rgba(42, 149, 197, 0.14);
 }
 
 @theme inline {
   --color-surface: var(--color-surface);
   --color-surface-alt: var(--color-surface-alt);
   --color-panel: var(--color-panel);
+  --color-panel-raised: var(--color-panel-raised);
   --color-ink: var(--color-ink);
   --color-muted: var(--color-muted);
   --color-faint: var(--color-faint);
@@ -32,6 +83,7 @@
   --color-brand: var(--color-brand);
   --color-brand-strong: var(--color-brand-strong);
   --color-brand-soft: var(--color-brand-soft);
+  --color-brand-ink: var(--color-brand-ink);
   --color-accent: var(--color-accent);
   --color-accent-strong: var(--color-accent-strong);
   --color-accent-soft: var(--color-accent-soft);
@@ -46,6 +98,7 @@
 html {
   font-family: var(--font-sans);
   scroll-behavior: smooth;
+  background: var(--color-surface);
 }
 
 /* Arabic pages: the Arabic face first, more line height, no letter-spacing tricks. */
@@ -67,6 +120,17 @@ body {
   overflow-x: hidden;
 }
 
+/* Headlines balance their lines (no orphan word), paragraphs avoid a lone last word. */
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+p,
+li {
+  text-wrap: pretty;
+}
+
 /* Latin digits in every language; numbers line up in tables and prices. */
 .tabular {
   font-variant-numeric: tabular-nums;
@@ -75,6 +139,89 @@ body {
 /* Table labels never wrap: the table scrolls inside its box instead. */
 .nowrap {
   white-space: nowrap;
+}
+
+/* The primary action: the two brand colours, brighter on hover. */
+.btn-gradient {
+  background-image: linear-gradient(105deg, var(--color-brand-ink) 0%, #2a95c5 100%);
+  color: #ffffff;
+  transition:
+    filter 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.btn-gradient:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+/* Cards rise slightly under the pointer. */
+.lift {
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+.lift:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 24px 48px -28px rgba(0, 0, 0, 0.55);
+  border-color: color-mix(in oklab, var(--color-brand) 55%, var(--color-line));
+}
+
+/* Hero entrance and the drawing's slow drift. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes drift {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.rise {
+  animation: rise 0.6s ease-out both;
+}
+.rise-2 {
+  animation: rise 0.6s 0.12s ease-out both;
+}
+.rise-3 {
+  animation: rise 0.6s 0.24s ease-out both;
+}
+.rise-4 {
+  animation: rise 0.6s 0.36s ease-out both;
+}
+.drift {
+  animation: drift 6s ease-in-out infinite;
+  transform-origin: center;
+}
+.drift-2 {
+  animation: drift 7s 1.2s ease-in-out infinite;
+}
+.spin-slow {
+  animation: spin-slow 60s linear infinite;
+  transform-origin: 300px 220px;
+}
+
+/* Soft brand glow behind the hero. */
+.glow {
+  background:
+    radial-gradient(60% 55% at 78% 30%, var(--glow-a) 0%, transparent 70%),
+    radial-gradient(45% 50% at 12% 70%, var(--glow-b) 0%, transparent 70%);
 }
 
 :focus-visible {
@@ -91,5 +238,6 @@ body {
   *::after {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
   }
 }

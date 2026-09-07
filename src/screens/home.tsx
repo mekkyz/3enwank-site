@@ -1,4 +1,4 @@
-import { ArrowLink, ButtonLink, Chips, Container, Facts, Section, SectionHeader } from "@/components/blocks";
+import { ArrowLink, ButtonLink, Container, Facts, Section, SectionHeader } from "@/components/blocks";
 import { CurrencyToggle } from "@/components/currency";
 import { HeroIllustration } from "@/components/illustration";
 import { PlanCard } from "@/components/plans";
@@ -24,15 +24,14 @@ export const home = {
       const cheapest = list.reduce<(typeof list)[number] | null>((min, p) => (!min || (p.prices.EGP?.gross ?? Infinity) < (min.prices.EGP?.gross ?? Infinity) ? p : min), null);
       return cheapest?.prices.EGP ? `${t.common.from} ${cheapest.prices.EGP.formatted.replace(/\.00$/, "")}` : undefined;
     };
-    const stack = t.home.stack;
     return (
       <Shell locale={locale} page="home" storeUrl={catalogue.store.url} legalName={company.legalName} address={company.address} supportEmail={company.supportEmail}>
-        <section className="bg-gradient-to-b from-surface-alt to-surface">
-          <Container className="grid items-center gap-12 py-14 lg:grid-cols-2 lg:py-24">
+        <section className="glow relative overflow-hidden border-b border-line">
+          <Container className="grid items-center gap-12 py-16 lg:grid-cols-2 lg:py-24">
             <div>
-              <h1 className="max-w-xl text-4xl font-extrabold leading-[1.08] tracking-tight text-ink sm:text-5xl lg:text-[3.6rem]">{t.home.h1}</h1>
-              <p className="mt-6 max-w-xl text-lg text-muted sm:text-xl">{t.home.lede}</p>
-              <div className="mt-8 flex flex-wrap gap-3">
+              <h1 className="rise max-w-xl text-4xl font-extrabold leading-[1.08] tracking-tight text-ink sm:text-5xl lg:text-[3.6rem]">{t.home.h1}</h1>
+              <p className="rise-2 mt-6 max-w-xl text-lg text-muted sm:text-xl">{t.home.lede}</p>
+              <div className="rise-3 mt-8 flex flex-wrap gap-3">
                 <ButtonLink href={pathFor("hosting", locale)} size="lg">
                   {t.home.ctaPlans}
                 </ButtonLink>
@@ -40,19 +39,13 @@ export const home = {
                   {t.home.ctaBuild}
                 </ButtonLink>
               </div>
-              <Facts items={t.home.facts} className="mt-8" />
+              <Facts items={t.home.facts} className="rise-4 mt-8" />
             </div>
-            <div className="hidden justify-center lg:flex">
+            <div className="rise-2 hidden justify-center lg:flex">
               <HeroIllustration labels={[t.nav.websites, t.home.why[2]!.title, t.contact.email, t.home.why[0]!.title]} title={t.home.h1} />
             </div>
           </Container>
         </section>
-
-        <div className="border-y border-line bg-surface">
-          <Container className="py-5">
-            <Chips title={t.home.stackTitle} items={stack} />
-          </Container>
-        </div>
 
         <Section>
           <SectionHeader title={t.home.productsTitle} />

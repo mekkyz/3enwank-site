@@ -47,6 +47,9 @@ type SearchResponse = { query: string; currency: Currency; invalid: boolean; ena
 type IdeasResponse = { ideas: Result[]; checked: boolean };
 
 type Status = "idle" | "loading" | "done" | "invalid" | "error" | "limited";
+
+/** Names typed into the empty field one letter at a time, so the box shows what goes in it. */
+const EXAMPLES = ["yourbrand.com", "cafe-cairo.net", "studio-name.org", "myshop.com"];
 type IdeasStatus = "idle" | "loading" | "done" | "error" | "limited" | "unavailable";
 
 const TONE = {
@@ -62,12 +65,12 @@ function statusOf(r: Result, l: DomainSearchLabels): { text: string; tone: keyof
   return r.available ? { text: l.available, tone: "ok" } : { text: l.taken, tone: "muted" };
 }
 
-function Row({ r, primary = false, enabled, locale, storeSearchUrl, contactHref, labels }: { r: Result; primary?: boolean; enabled: boolean; locale: Locale; storeSearchUrl: string; contactHref: string; labels: DomainSearchLabels }) {
+function Row({ r, primary = false, index = 0, enabled, locale, storeSearchUrl, contactHref, labels }: { r: Result; primary?: boolean; index?: number; enabled: boolean; locale: Locale; storeSearchUrl: string; contactHref: string; labels: DomainSearchLabels }) {
   const s = statusOf(r, labels);
   const price = r.price ? formatPrice({ gross: r.price.gross, formatted: r.price.formatted }, r.price.currency, locale) : null;
   const free = r.available === true && !r.premium;
   return (
-    <li className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-t border-line py-3.5 first:border-t-0">
+    <li className="row-in flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-t border-line py-3.5 first:border-t-0" style={{ animationDelay: `${Math.min(index, 8) * 50}ms` }}>
       <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
         <bdi dir="ltr" className={`break-all font-extrabold text-ink ${primary ? "text-xl sm:text-2xl" : "text-base"}`}>
           {r.name}
@@ -112,6 +115,28 @@ export function DomainSearch({ locale, storeSearchUrl, apiUrl, ideasUrl, contact
   const [data, setData] = useState<SearchResponse | null>(null);
   const abort = useRef<AbortController | null>(null);
   const searched = useRef("");
+  const [focused, setFocused] = useState(false);
+  const [typed, setTyped] = useState<string | null>(null);
+
+  // The empty field types example names by itself; a focus or a keystroke stops it.
+  useEffect(() => {
+    if (query || focused || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let example = 0;
+    let chars = 0;
+    let direction = 1;
+    const id = window.setInterval(() => {
+      const word = EXAMPLES[example]!;
+      chars += direction;
+      if (chars > word.length + 14) direction = -1;
+      if (chars < 0) {
+        direction = 1;
+        chars = 0;
+        example = (example + 1) % EXAMPLES.length;
+      }
+      setTyped(word.slice(0, Math.max(0, Math.min(chars, word.length))));
+    }, 85);
+    return () => window.clearInterval(id);
+  }, [query, focused]);
 
   const run = useCallback(
     async (q: string, c: Currency) => {
@@ -191,7 +216,9 @@ export function DomainSearch({ locale, storeSearchUrl, apiUrl, ideasUrl, contact
             required
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder={labels.placeholder}
+            placeholder={typed ?? labels.placeholder}
+            onFocus={() => setFocused(true)}
+            onBlur={() => setFocused(false)}
             dir="ltr"
             className="block min-h-12 w-full rounded-lg border border-line bg-surface px-4 text-lg text-ink placeholder:text-faint focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand-soft"
           />
@@ -217,8 +244,8 @@ export function DomainSearch({ locale, storeSearchUrl, apiUrl, ideasUrl, contact
               <>
                 <h3 className="mt-4 text-xs font-extrabold uppercase tracking-[0.14em] text-muted">{labels.otherExtensions}</h3>
                 <ul className="mt-1">
-                  {data.suggestions.map((r) => (
-                    <Row key={r.name} r={r} {...rowProps} />
+                  {data.suggestions.map((r, i) => (
+                    <Row key={r.name} r={r} index={i + 1} {...rowProps} />
                   ))}
                 </ul>
               </>
@@ -247,8 +274,8 @@ export function DomainSearch({ locale, storeSearchUrl, apiUrl, ideasUrl, contact
             {ideasStatus === "done" ? (
               freeIdeas.length ? (
                 <ul className="mt-3">
-                  {freeIdeas.map((r) => (
-                    <Row key={r.name} r={r} {...rowProps} enabled={enabled || r.sellable} />
+                  {freeIdeas.map((r, i) => (
+                    <Row key={r.name} r={r} index={i} {...rowProps} enabled={enabled || r.sellable} />
                   ))}
                 </ul>
               ) : (

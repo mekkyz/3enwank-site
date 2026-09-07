@@ -3,7 +3,7 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import { CATALOGUE_TAG } from "@/lib/catalogue";
 
 /**
- * Refresh every page at once: the platform's "Publish website" button posts here (the hook URL
+ * Refresh every page at once: the platform's "Publish website" button posts to /api/revalidate/ (the hook URL
  * carries the token, like a Cloudflare deploy hook did), and so can a shell script after a catalogue
  * change. Pages refresh on their own every five minutes anyway; this is for "I changed a price and
  * want to see it now". The answer mimics the shape the admin page already knows how to read.

@@ -32,7 +32,10 @@ function getServerSnapshot(): Theme {
 }
 function apply(theme: Theme) {
   current = theme;
-  document.documentElement.setAttribute("data-theme", theme);
+  const root = document.documentElement;
+  root.classList.add("theme-switching");
+  root.setAttribute("data-theme", theme);
+  window.setTimeout(() => root.classList.remove("theme-switching"), 450);
   try {
     window.localStorage.setItem(THEME_KEY, theme);
   } catch {

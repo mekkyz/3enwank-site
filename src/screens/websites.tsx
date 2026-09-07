@@ -25,7 +25,7 @@ export const websites = {
             <CurrencyToggle label={t.common.currency} hint={t.common.currencyHint} />
           </div>
           {packages.length ? (
-            <ol className="grid gap-5 pt-3 sm:grid-cols-2 lg:grid-cols-3">
+            <ol data-reveal-stagger className="grid gap-5 pt-3 sm:grid-cols-2 lg:grid-cols-3">
               {packages.map((p) => {
                 const summary = localizedSummary(p, locale, t);
                 const delivery = deliveryFrom(summary) ?? deliveryFrom(p.summary?.en);

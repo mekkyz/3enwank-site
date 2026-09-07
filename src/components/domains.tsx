@@ -9,7 +9,7 @@ export function TldTable({ tlds, locale }: { tlds: Tld[]; locale: Locale }) {
   const hasTransfer = tlds.some((x) => x.prices.EGP?.transfer || x.prices.USD?.transfer);
   const pick = (x: Tld, kind: "register" | "renew" | "transfer") => ({ EGP: x.prices.EGP?.[kind] ?? undefined, USD: x.prices.USD?.[kind] ?? undefined });
   return (
-    <div className="overflow-x-auto rounded-xl border border-line bg-panel">
+    <div data-reveal className="overflow-x-auto rounded-xl border border-line bg-panel">
       <table className="w-full min-w-[28rem] text-sm">
         <caption className="sr-only">{t.domains.tableCaption}</caption>
         <thead>

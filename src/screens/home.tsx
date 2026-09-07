@@ -61,7 +61,7 @@ export const home = {
 
         <Section>
           <SectionHeader title={t.home.productsTitle} />
-          <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <ul data-reveal-stagger className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             <ProductCard kind="hosting" title={t.home.products.hosting.title} body={t.home.products.hosting.body} link={t.home.products.hosting.link} href={pathFor("hosting", locale)} meta={fromPrice("hosting")} />
             <ProductCard kind="websites" title={t.home.products.websites.title} body={t.home.products.websites.body} link={t.home.products.websites.link} href={pathFor("websites", locale)} meta={fromPrice("build")} />
             <ProductCard kind="care" title={t.home.products.care.title} body={t.home.products.care.body} link={t.home.products.care.link} href={pathFor("care", locale)} meta={fromPrice("care")} />
@@ -71,7 +71,7 @@ export const home = {
 
         <Section tone="dark">
           <SectionHeader title={t.home.whyTitle} light />
-          <ul className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <ul data-reveal-stagger className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {t.home.why.map((f) => (
               <li key={f.title} className="border-t border-dark-line pt-5">
                 <h3 className="text-xl font-extrabold text-white">{f.title}</h3>
@@ -88,7 +88,7 @@ export const home = {
               <p className="text-sm text-muted">{vatLine(t, catalogue)}</p>
               <CurrencyToggle label={t.common.currency} hint={t.common.currencyHint} />
             </div>
-            <ul className="grid gap-5 md:grid-cols-3">
+            <ul data-reveal-stagger className="grid gap-5 md:grid-cols-3">
               {featured.map((p) => (
                 <li key={p.slug}>
                   <PlanCard product={p} locale={locale} highlight={p.slug === HIGHLIGHT.hosting} cycleLabel={t.common.perYear} cta={t.common.order} compact />
@@ -101,7 +101,7 @@ export const home = {
         {catalogue.products.build.length || catalogue.products.care.length ? (
           <Section tone="alt" className="pt-0 sm:pt-0">
             <SectionHeader title={t.home.glanceTitle} lede={t.home.glanceLede} />
-            <div className="grid gap-5 md:grid-cols-2">
+            <div data-reveal-stagger className="grid gap-5 md:grid-cols-2">
               {catalogue.products.build.length ? <Glance title={t.home.products.websites.title} items={catalogue.products.build} cycle={t.common.oneTime} link={[pathFor("websites", locale), t.home.products.websites.link]} locale={locale} t={t} /> : null}
               {catalogue.products.care.length ? <Glance title={t.home.products.care.title} items={catalogue.products.care} cycle={t.common.perYear} link={[pathFor("care", locale), t.home.products.care.link]} locale={locale} t={t} /> : null}
             </div>
@@ -129,7 +129,7 @@ export const home = {
 
         <Section id="about">
           <SectionHeader kicker={t.about.title} title={t.about.h2} lede={fill(t.about.lede, { legalName: company.legalName })} />
-          <ul className="grid gap-x-8 gap-y-7 sm:grid-cols-2 lg:grid-cols-4">
+          <ul data-reveal-stagger className="grid gap-x-8 gap-y-7 sm:grid-cols-2 lg:grid-cols-4">
             {t.about.principles.map((p) => (
               <li key={p.title} className="border-t border-line pt-5">
                 <h3 className="text-lg font-extrabold text-ink">{p.title}</h3>
@@ -141,7 +141,7 @@ export const home = {
 
         <Section id="contact" tone="alt">
           <SectionHeader kicker={t.contact.title} title={t.contact.h2} lede={t.contact.lede} />
-          <ul className="grid gap-5 md:grid-cols-[repeat(auto-fit,minmax(16rem,1fr))]">
+          <ul data-reveal-stagger className="grid gap-5 md:grid-cols-[repeat(auto-fit,minmax(16rem,1fr))]">
             <Card as="li" className="h-full">
               <h3 className={label}>{t.contact.email}</h3>
               <a href={`mailto:${company.supportEmail}`} className="mt-3 block break-all text-xl font-extrabold text-brand-strong hover:underline" dir="ltr">

@@ -33,7 +33,7 @@ switch_current() {
 wait_healthy() {
   local i
   for i in $(seq 1 30); do
-    if curl -fsS -o /dev/null http://127.0.0.1:3001/api/health; then return 0; fi
+    if curl -fsS -o /dev/null http://127.0.0.1:3001/api/health/; then return 0; fi
     sleep 1
   done
   return 1

@@ -23,7 +23,7 @@ export function Kicker({ children, tone = "brand" }: { children: ReactNode; tone
 
 export function SectionHeader({ kicker, title, lede, right, light = false }: { kicker?: string; title: string; lede?: string; right?: ReactNode; light?: boolean }) {
   return (
-    <header className="mb-8 flex flex-wrap items-end justify-between gap-5 sm:mb-10">
+    <header data-reveal className="mb-8 flex flex-wrap items-end justify-between gap-5 sm:mb-10">
       <div className="max-w-2xl">
         {kicker ? <Kicker tone={light ? "light" : "brand"}>{kicker}</Kicker> : null}
         <h2 className={`text-3xl font-extrabold tracking-tight sm:text-4xl ${light ? "text-white" : "text-ink"}`}>{title}</h2>
@@ -38,17 +38,21 @@ export function PageIntro({ kicker, title, lede, children }: { kicker?: string; 
   return (
     <header className="bg-gradient-to-b from-surface-alt to-surface pt-14 pb-10 sm:pt-20 sm:pb-14">
       <Container>
-        {kicker ? <Kicker>{kicker}</Kicker> : null}
-        <h1 className="max-w-3xl text-4xl font-extrabold tracking-tight text-ink sm:text-5xl">{title}</h1>
-        {lede ? <p className="mt-4 max-w-2xl text-lg text-muted sm:text-xl">{lede}</p> : null}
-        {children}
+        {kicker ? (
+          <div className="rise">
+            <Kicker>{kicker}</Kicker>
+          </div>
+        ) : null}
+        <h1 className="rise max-w-3xl text-4xl font-extrabold tracking-tight text-ink sm:text-5xl">{title}</h1>
+        {lede ? <p className="rise-2 mt-4 max-w-2xl text-lg text-muted sm:text-xl">{lede}</p> : null}
+        <div className="rise-3">{children}</div>
       </Container>
     </header>
   );
 }
 
 export function Card({ children, className = "", highlight = false, as: Tag = "div" }: { children: ReactNode; className?: string; highlight?: boolean; as?: "div" | "li" | "article" }) {
-  return <Tag className={`lift relative rounded-xl border bg-panel p-6 sm:p-7 ${highlight ? "border-2 border-brand shadow-[0_24px_50px_-30px_rgba(124,95,165,0.6)]" : "border-line"} ${className}`}>{children}</Tag>;
+  return <Tag className={`lift relative rounded-xl border bg-panel p-6 sm:p-7 ${highlight ? "pulse-glow border-2 border-brand shadow-[0_24px_50px_-30px_rgba(124,95,165,0.6)]" : "border-line"} ${className}`}>{children}</Tag>;
 }
 
 export function Fine({ children }: { children: ReactNode }) {
@@ -75,7 +79,7 @@ export function ButtonLink({ href, children, variant = "primary", className = ""
 /** A text link with a direction-aware chevron. */
 export function ArrowLink({ href, children, className = "" }: { href: string; children: ReactNode; className?: string }) {
   return (
-    <a href={href} className={`inline-flex items-center gap-1.5 text-sm font-bold text-brand-strong hover:text-brand ${className}`}>
+    <a href={href} className={`arrow-link inline-flex items-center gap-1.5 text-sm font-bold text-brand-strong hover:text-brand ${className}`}>
       {children}
       <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4 rtl:-scale-x-100" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M9 6l6 6-6 6" />

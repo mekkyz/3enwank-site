@@ -24,7 +24,7 @@ export const care = {
             <CurrencyToggle label={t.common.currency} hint={t.common.currencyHint} />
           </div>
           {plans.length ? (
-            <ul className="grid gap-5 pt-3 sm:grid-cols-2 lg:grid-cols-4">
+            <ul data-reveal-stagger className="grid gap-5 pt-3 sm:grid-cols-2 lg:grid-cols-4">
               {plans.map((p) => (
                 <li key={p.slug}>
                   <PlanCard product={p} locale={locale} highlight={p.slug === HIGHLIGHT.care} cycleLabel={t.common.perYear} cta={t.common.choose} />

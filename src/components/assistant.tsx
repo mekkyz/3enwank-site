@@ -142,7 +142,7 @@ export function Assistant({ url, locale, labels, supportEmail }: { url: string; 
           <p className="px-4 pb-3 text-[11px] leading-snug text-faint">{labels.note}</p>
         </section>
       ) : null}
-      <button type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open} aria-label={open ? labels.close : labels.open} title={open ? labels.close : labels.open} className="btn-gradient flex h-14 w-14 items-center justify-center rounded-full shadow-[0_16px_32px_-12px_rgba(124,95,165,0.9)]">
+      <button type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open} aria-label={open ? labels.close : labels.open} title={open ? labels.close : labels.open} className="btn-gradient pulse-once flex h-14 w-14 items-center justify-center rounded-full shadow-[0_16px_32px_-12px_rgba(124,95,165,0.9)]">
         {open ? (
           <svg aria-hidden="true" viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
             <path d="M6 9l6 6 6-6" />

@@ -28,7 +28,7 @@ export function Shell({ locale, page, storeUrl, legalName, address, supportEmail
       <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-panel focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:shadow">
         {t.nav.skip}
       </a>
-      <header className="sticky top-0 z-40 border-b border-line bg-panel/95 backdrop-blur">
+      <header data-bar className="sticky top-0 z-40 border-b border-line bg-panel/95 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3 sm:px-8">
           <a href={pathFor("home", locale)} className="flex shrink-0 items-center" aria-label={t.meta.siteName}>
             <Logo className="h-7 sm:h-8" />

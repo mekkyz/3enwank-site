@@ -15,7 +15,7 @@ if (!base) {
   const deadline = Date.now() + 30_000;
   for (;;) {
     try {
-      const res = await fetch(`http://127.0.0.1:${port}/api/health`);
+      const res = await fetch(`http://127.0.0.1:${port}/api/health/`);
       if (res.ok) break;
     } catch {}
     if (Date.now() > deadline) { child.kill(); throw new Error("next start did not answer within 30 s"); }
@@ -77,8 +77,9 @@ for (const w of widths) {
         for (const cell of document.querySelectorAll("th.nowrap, td.nowrap")) {
           const range = document.createRange();
           range.selectNodeContents(cell);
-          const tops = new Set([...range.getClientRects()].filter((r) => r.width > 0).map((r) => Math.round(r.top / 4)));
-          if (tops.size > 1) out.push(`table cell wrapped: "${cell.textContent.trim().slice(0, 40)}"`);
+          // Nested inline boxes report one rect each at the same line; a real wrap moves a rect down by a line.
+          const tops = [...range.getClientRects()].filter((r) => r.width > 0).map((r) => r.top);
+          if (tops.length && Math.max(...tops) - Math.min(...tops) > 8) out.push(`table cell wrapped: "${cell.textContent.trim().slice(0, 40)}"`);
         }
         // Every section on the page is visible and has height.
         for (const s of document.querySelectorAll("main section, main header")) {

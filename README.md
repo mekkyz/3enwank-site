@@ -9,7 +9,7 @@ next to the store but in a separate process and user, with no database (platform
 Plans and prices are not typed into this repo. The site reads the platform's public catalogue
 (`GET /api/public/catalogue`, over loopback on the box), renders every page once at build time and
 re-renders it in the background at most every five minutes, so a price change reaches the site on its
-own. **Publish website** in the platform admin refreshes every page at once (`POST /api/revalidate`).
+own. **Publish website** in the platform admin refreshes every page at once (`POST /api/revalidate/`).
 Every "Order" button deep-links to the store, and the domain search, chat and name ideas call the
 store's public API from the browser.
 
@@ -108,7 +108,7 @@ headers and the content security policy live in those files.
 
 ### Publish from the platform admin
 
-The hook URL to paste at **Admin → Website** is `https://<site>/api/revalidate?token=<SITE_REVALIDATE_SECRET>`
+The hook URL to paste at **Admin → Website** is `https://<site>/api/revalidate/?token=<SITE_REVALIDATE_SECRET>`
 (the token is in `/etc/enwank-site/env`). Publish posts to it and every page re-renders from the
 current catalogue within seconds; without it, pages refresh on their own within five minutes. The
 token is a password: rotate it in the env file and the admin settings together.

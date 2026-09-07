@@ -8,7 +8,7 @@ import { LOCALES, pathFor } from "@/lib/i18n";
 import { messagesFor } from "@/messages";
 
 /**
- * The site's 404 (out/404.html, which the static host serves for any unknown path). It bypasses the
+ * The site's 404, served for any unknown path in every language. It bypasses the
  * layouts, so it carries its own <html> and speaks every language: a wrong URL has no locale.
  */
 export const metadata: Metadata = { title: "404 · 3enwank", robots: { index: false, follow: false } };

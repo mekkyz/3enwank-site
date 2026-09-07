@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { ASSISTANT_PREVIEW, BUILD_YEAR, STORE_URL } from "@/lib/site";
+import { ASSISTANT_PREVIEW, STORE_URL, currentYear } from "@/lib/site";
 import { anchorFor, languageLinks, pathFor, type Locale, type PageKey } from "@/lib/i18n";
 import { messagesFor } from "@/messages";
 import { Assistant } from "./assistant";
@@ -120,7 +120,7 @@ export function Shell({ locale, page, storeUrl, legalName, address, supportEmail
         <div className="border-t border-line">
           <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5 py-4 text-xs text-faint sm:px-8">
             <p>
-              © <span className="tabular">{BUILD_YEAR}</span> {t.meta.siteName}. {t.footer.copyright}
+              © <span className="tabular">{currentYear()}</span> {t.meta.siteName}. {t.footer.copyright}
             </p>
             <ThemeSwitch label={t.footer.theme} dark={t.footer.themeDark} light={t.footer.themeLight} />
           </div>

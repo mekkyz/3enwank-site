@@ -128,14 +128,42 @@ export async function resolveCatalogue(opts: {
   }
 }
 
-let loading: Promise<LoadedCatalogue> | undefined;
+const REVALIDATE_SECONDS = 300;
+const CATALOGUE_TAG = "catalogue";
 
-/** One fetch per build process; every page shares the result. */
-export function loadCatalogue(): Promise<LoadedCatalogue> {
-  loading ??= resolveCatalogue({ url: CATALOGUE_URL, source: CATALOGUE_SOURCE, auth: CATALOGUE_AUTH }).then((loaded) => {
-    if (loaded.source === "fallback") console.warn(`[catalogue] using catalogue.fallback.json: ${loaded.reason}`);
-    else console.info(`[catalogue] loaded ${CATALOGUE_URL} (generated ${loaded.catalogue.generatedAt})`);
-    return loaded;
-  });
-  return loading;
+/** The last catalogue the store answered with in this process; stands in when a refresh fails. */
+let lastGood: Catalogue | undefined;
+
+function building(): boolean {
+  return process.env.NEXT_PHASE === "phase-production-build" || process.env.NODE_ENV !== "production";
 }
+
+/**
+ * The catalogue behind every page. Next caches the response and refreshes it in the background at
+ * most every five minutes, or at once when /api/revalidate is called, so pages stay static between
+ * refreshes and every page shares one request. A refresh that fails keeps the previous catalogue:
+ * the last good one in this process, or, when there is none yet, the error makes Next keep the
+ * page it already has. Only a build (or `next dev`) falls back to catalogue.fallback.json, so the
+ * site always builds.
+ */
+export async function loadCatalogue(): Promise<LoadedCatalogue> {
+  const loaded = await resolveCatalogue({
+    url: CATALOGUE_URL,
+    source: CATALOGUE_SOURCE,
+    auth: CATALOGUE_AUTH,
+    // One URL for every page, so the cached response is shared; the store is reached over loopback, no nginx cache in between.
+    buildId: "live",
+    fetch: (url, init) => fetch(url, { ...init, next: { revalidate: REVALIDATE_SECONDS, tags: [CATALOGUE_TAG] } }),
+    fallback: () => lastGood ?? fallbackCatalogue(),
+  });
+  if (loaded.source === "remote") {
+    lastGood = loaded.catalogue;
+    return loaded;
+  }
+  if (lastGood) return { catalogue: lastGood, source: "remote", reason: null };
+  if (!building()) throw new Error(`[catalogue] ${loaded.reason}`);
+  console.warn(`[catalogue] using catalogue.fallback.json: ${loaded.reason}`);
+  return loaded;
+}
+
+export { CATALOGUE_TAG };

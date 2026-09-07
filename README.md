@@ -1,15 +1,17 @@
 # 3enwank.com
 
 The marketing site for 3enwank: hosting plans, website packages, care plans, domain prices, contact
-and legal pages, in English (`/`), formal Arabic (`/ar/`) and Egyptian Arabic (`/ar-eg/`). It is a **fully static** Next.js 16 export:
-`pnpm build` writes plain HTML, CSS, JS and fonts to `out/`, and nothing runs at request time. It
-lives on Cloudflare Pages, deliberately off the billing box (platform repo: `docs/DECISIONS.md`,
-"The public website stays off the billing box"; design: `docs/design/website.md`).
+and legal pages, in English (`/`), formal Arabic (`/ar/`) and Egyptian Arabic (`/ar-eg/`). A Next.js 16
+app that runs as its own service on the platform box (`enwank-site.service`, port 3001, behind nginx),
+next to the store but in a separate process and user, with no database (platform repo: `docs/DECISIONS.md`,
+"The public website runs on the box"; design: `docs/design/website.md`).
 
-Plans and prices are not typed into this repo. At build time the site reads the platform's public
-catalogue endpoint (`GET https://my.3enwank.com/api/public/catalogue`) and every "Order" button
-deep-links to the store on `my.3enwank.com`. A price change on the platform reaches the site by
-pressing **Publish website** in the platform admin, which triggers a Pages build.
+Plans and prices are not typed into this repo. The site reads the platform's public catalogue
+(`GET /api/public/catalogue`, over loopback on the box), renders every page once at build time and
+re-renders it in the background at most every five minutes, so a price change reaches the site on its
+own. **Publish website** in the platform admin refreshes every page at once (`POST /api/revalidate`).
+Every "Order" button deep-links to the store, and the domain search, chat and name ideas call the
+store's public API from the browser.
 
 ## Local development
 
@@ -21,24 +23,28 @@ cp .env.example .env            # optional; the defaults point at production
 pnpm dev                        # http://localhost:3000, Arabic at /ar/, Egyptian at /ar-eg/
 pnpm test                       # vitest: catalogue loading, formatting, paths
 pnpm lint && pnpm typecheck
-pnpm build && pnpm preview      # static export in ./out served on http://127.0.0.1:8788
-pnpm check                      # render every page in every language at 1440 and 390 px and check it
+pnpm build && pnpm start        # production server on http://127.0.0.1:3001
+pnpm check                      # build first; starts the server itself and renders every page in every language at 1440 and 390 px
 ```
 
 `pnpm dev` and `pnpm build` both fetch the catalogue. Without network, or to build exactly what is
 checked in, set `CATALOGUE_SOURCE=fallback`.
 
-## Configuration (environment, build time only)
+## Configuration (environment)
+
+On the box the values live in `/etc/enwank-site/env` (`ops/env.example`); they are read when the
+server starts and during `next build`.
 
 | Variable | Default | Meaning |
 |---|---|---|
-| `CATALOGUE_URL` | `https://my.3enwank.com/api/public/catalogue` | Where the catalogue is fetched from |
+| `CATALOGUE_URL` | `https://my.3enwank.com/api/public/catalogue` | Where the catalogue is fetched from (on the box: `http://127.0.0.1:3000/api/public/catalogue`) |
 | `CATALOGUE_SOURCE` | `remote` | `fallback` skips the network and uses `catalogue.fallback.json` |
 | `ASSISTANT_PREVIEW` | empty | `1` renders the chat widget and domain name ideas even while the store reports the assistant off |
 | `CATALOGUE_AUTH` | empty | `user:password` sent as basic auth (staging behind nginx auth) |
 | `STORE_URL` | `https://my.3enwank.com` | Store origin for Log in links when the catalogue has none |
 | `SITE_URL` | `https://3enwank.com` | Canonical origin for sitemap, hreflang, OpenGraph |
 | `WHATSAPP_NUMBER` | empty | International format without `+`; empty hides the WhatsApp card |
+| `SITE_REVALIDATE_SECRET` | empty | Token for `POST /api/revalidate?token=…`; empty disables the endpoint |
 
 ## The catalogue and the fallback
 
@@ -73,60 +79,48 @@ The EGP/USD switch is client-side only: the HTML carries EGP, the visitor's choi
 ```
 src/app/(en)/…            English routes at the root, one thin page.tsx per screen
 src/app/[locale]/…        prefixed locales (generateStaticParams → ar), same screens
-src/app/global-not-found  out/404.html, bilingual
+src/app/global-not-found  the 404 page, three languages
 src/app/sitemap.ts        sitemap.xml with hreflang alternates; robots.ts
 src/screens/*             one module per page: metadata(locale) + render(locale)
 src/components/*          shell (header, nav, footer), plan cards, tables, currency switch
 src/messages/{en,ar}.ts   all copy, one typed shape (types.ts)
 src/lib/catalogue.ts      fetch + validate + fallback;  format.ts prices and feature lines;  i18n.ts paths
 catalogue.fallback.json   full export of the endpoint (scripts/export-catalogue.ts), used when it is unreachable
-public/_headers           Cloudflare Pages security and cache headers;  public/og.png share image
+public/og.png             share image;  ops/                      systemd unit, nginx vhosts, env example
 ```
 
 Design: Tailwind 4 with the platform's colour tokens (`src/app/globals.css`), Inter and Noto Naskh
 Arabic bundled from `@fontsource-variable` (no font CDN), inline SVG logo, no UI kit, no analytics,
 no third-party requests. Arabic pages render with `dir="rtl"` and logical CSS properties.
 
-## Cloudflare Pages
+## Hosting on the box
 
-Create a Pages project connected to this repository (any git host Cloudflare supports; the site
-has no `.github` workflow on purpose).
+```bash
+sudo scripts/box-setup.sh     # once: user enwank-site, /srv/3enwank-site, /etc/enwank-site/env, systemd unit
+sudo scripts/deploy.sh        # every release: git archive → pnpm install → next build → switch → restart → health check (rollback on failure)
+```
 
-| Setting | Value |
-|---|---|
-| Production branch | `main` |
-| Build command | `pnpm build` |
-| Build output directory | `out` |
-| Root directory | `/` |
-| Environment variables | `NODE_VERSION=22`, `PNPM_VERSION=12.3.4`, `CATALOGUE_URL`, `STORE_URL`, `SITE_URL`, optionally `WHATSAPP_NUMBER` |
+`ops/systemd/enwank-site.service` runs `next start -p 3001 -H 127.0.0.1` as `enwank-site` with the
+same hardening as the platform's unit; it can write only its own page cache under `/srv/3enwank-site`.
+nginx fronts it: `ops/nginx/enwank-site-preview.conf` is the password-protected review listener on
+`my.3enwank.com:8444`, `ops/nginx/enwank-site.conf` the production vhost for `3enwank.com`. Security
+headers and the content security policy live in those files.
 
-Every push to `main` builds and deploys. Preview deployments for other branches are fine: they build
-from the same catalogue endpoint.
+### Publish from the platform admin
 
-### Deploy hook (publish from the platform admin)
+The hook URL to paste at **Admin → Website** is `https://<site>/api/revalidate?token=<SITE_REVALIDATE_SECRET>`
+(the token is in `/etc/enwank-site/env`). Publish posts to it and every page re-renders from the
+current catalogue within seconds; without it, pages refresh on their own within five minutes. The
+token is a password: rotate it in the env file and the admin settings together.
 
-Pages project → Settings → Builds & deployments → **Deploy hooks** → add one for `main`. Paste the
-hook URL into the platform at **Admin → Website** (it is stored masked). "Publish website" POSTs to
-the hook with a 10 s timeout, records the outcome in the audit log, and Pages rebuilds from the
-current catalogue, usually live within a minute or two. Anyone holding the hook URL can trigger
-builds, so treat it like a password; rotate it in Cloudflare if it leaks.
+### Going live (HANDOFF H11)
 
-### DNS (HANDOFF H11)
+1. Point `3enwank.com` and `www.3enwank.com` (A and AAAA records in PowerDNS on srv1) at this box.
+2. Install the `:80` server block from `ops/nginx/enwank-site.conf`, then `certbot --nginx -d 3enwank.com -d www.3enwank.com`.
+3. Install the whole file, `nginx -t`, reload. Set `STORE_URL=https://my.3enwank.com` and `SITE_URL=https://3enwank.com` in the env file and restart the service.
+4. Paste the production hook URL into the platform admin. Retire the review listener when it is no longer needed.
 
-`3enwank.com` is currently served from srv1 (PowerDNS, one static page). Two options:
-
-1. **Move the zone to Cloudflare DNS** (recommended by Cloudflare for Pages): add the zone, copy
-   every existing record, keep `my.3enwank.com` as a plain **DNS-only (grey cloud) A record** to the
-   billing box so the platform keeps its own TLS and sees real client IPs, then change the
-   nameservers at the registrar. Add `3enwank.com` and `www.3enwank.com` as custom domains of the
-   Pages project (Cloudflare creates the records). Mail records (MX, SPF, DKIM, DMARC for
-   `@3enwank.com`) must be copied exactly.
-2. **Keep PowerDNS on srv1**: add the custom domains to the Pages project, then point the apex with
-   an `ALIAS` record (PowerDNS supports it with `expand-alias=yes`) and `www` with a `CNAME` to
-   `<project>.pages.dev`. Cloudflare validates the domain by hostname; the apex needs the ALIAS
-   because a CNAME is not allowed there.
-
-Until the new site is live, the old HTML on srv1 stays as the emergency page.
+Until then the old HTML on srv1 stays as the emergency page.
 
 ## Adding a page or a locale
 

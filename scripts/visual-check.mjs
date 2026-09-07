@@ -1,26 +1,28 @@
-// Render every page in every language at desktop and phone width from ./out and check what a
-// reviewer would check: no horizontal scroll, nothing wider than the viewport, no wrapped table
-// labels, every section visible, LTR isolation only on Latin text. Screenshots go to ./shots.
-//   pnpm build && node scripts/visual-check.mjs        (serves ./out itself on 127.0.0.1:8790)
-import { createReadStream, existsSync, mkdirSync, statSync } from "node:fs";
-import { createServer } from "node:http";
-import { extname, join, normalize } from "node:path";
+// Render every page in every language at desktop and phone width and check what a reviewer would
+// check: no horizontal scroll, nothing wider than the viewport, no wrapped table labels, every
+// section visible, LTR isolation only on Latin text. Screenshots go to ./shots.
+//   pnpm build && node scripts/visual-check.mjs      (starts `next start` itself on 127.0.0.1:8790)
+//   BASE_URL=http://127.0.0.1:3001 node scripts/visual-check.mjs   (checks a running server instead)
+import { spawn } from "node:child_process";
+import { existsSync, mkdirSync } from "node:fs";
 import { chromium } from "playwright";
 
-const root = join(process.cwd(), "out");
 const port = 8790;
-const types = { ".html": "text/html; charset=utf-8", ".css": "text/css", ".js": "text/javascript", ".json": "application/json", ".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg", ".xml": "application/xml", ".txt": "text/plain", ".woff2": "font/woff2", ".ico": "image/x-icon" };
-const server = createServer((req, res) => {
-  const url = decodeURIComponent((req.url ?? "/").split("?")[0]);
-  let file = normalize(join(root, url));
-  if (!file.startsWith(root)) return res.writeHead(403).end();
-  if (existsSync(file) && statSync(file).isDirectory()) file = join(file, "index.html");
-  if (!existsSync(file) && existsSync(`${file}.html`)) file = `${file}.html`;
-  const status = existsSync(file) ? 200 : 404;
-  if (status === 404) file = join(root, "404.html");
-  res.writeHead(status, { "content-type": types[extname(file)] ?? "application/octet-stream" });
-  createReadStream(file).pipe(res);
-}).listen(port, "127.0.0.1");
+const base = (process.env.BASE_URL ?? "").replace(/\/+$/, "");
+let child;
+if (!base) {
+  child = spawn(process.execPath, ["node_modules/next/dist/bin/next", "start", "-p", String(port), "-H", "127.0.0.1"], { stdio: ["ignore", "ignore", "inherit"], env: { ...process.env, NODE_ENV: "production", NEXT_TELEMETRY_DISABLED: "1" } });
+  const deadline = Date.now() + 30_000;
+  for (;;) {
+    try {
+      const res = await fetch(`http://127.0.0.1:${port}/api/health`);
+      if (res.ok) break;
+    } catch {}
+    if (Date.now() > deadline) { child.kill(); throw new Error("next start did not answer within 30 s"); }
+    await new Promise((r) => setTimeout(r, 300));
+  }
+}
+const origin = base || `http://127.0.0.1:${port}`;
 
 const locales = ["", "ar", "ar-eg"];
 const pages = ["", "hosting", "websites", "care", "domains", "terms", "privacy"];
@@ -43,8 +45,17 @@ for (const w of widths) {
   for (const loc of locales) {
     for (const p of pages) {
       const path = `/${[loc, p].filter(Boolean).join("/")}${loc || p ? "/" : ""}`;
-      await page.goto(`http://127.0.0.1:${port}${path}`, { waitUntil: "load" });
+      await page.goto(`${origin}${path}`, { waitUntil: "load" });
       await page.evaluate(() => document.fonts.ready);
+      // Scroll through once so sections that reveal on scroll are shown, then back to the top.
+      await page.evaluate(async () => {
+        const step = window.innerHeight * 0.8;
+        for (let y = 0; y < document.body.scrollHeight; y += step) {
+          window.scrollTo(0, y);
+          await new Promise((r) => setTimeout(r, 60));
+        }
+        window.scrollTo(0, 0);
+      });
       // Entrance animations finish before anything is measured or captured.
       await page.evaluate(() => Promise.all(document.getAnimations().filter((a) => !(a.effect && a.effect.getTiming().iterations === Infinity)).map((a) => a.finished.catch(() => {}))));
       const name = `${theme === "light" ? "light-" : ""}${w.name}-${loc || "en"}-${p || "home"}`;
@@ -93,7 +104,7 @@ for (const w of widths) {
   await ctx.close();
 }
 await browser.close();
-server.close();
+child?.kill();
 const unique = [...new Set(problems)];
 console.log(`${checked} renders checked; ${unique.length} problem(s)`);
 for (const p of unique) console.log(" -", p);

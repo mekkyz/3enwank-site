@@ -1,0 +1,41 @@
+[Unit]
+Description=3enwank marketing website (Next.js)
+After=network-online.target enwank-web.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=enwank-site
+Group=enwank-site
+WorkingDirectory=/srv/3enwank-site/current
+EnvironmentFile=/etc/enwank-site/env
+Environment=NODE_ENV=production
+Environment=NEXT_TELEMETRY_DISABLED=1
+ExecStart=/usr/bin/node node_modules/next/dist/bin/next start -p 3001 -H 127.0.0.1
+Restart=always
+RestartSec=3
+KillSignal=SIGTERM
+SuccessExitStatus=143
+TimeoutStopSec=20
+LimitNOFILE=65536
+MemoryMax=768M
+
+# Hardening: the same set as the platform's unit. The site has no database and no secrets beyond
+# its refresh token; it reads the store's public catalogue over loopback and writes only its own
+# page cache under /srv/3enwank-site.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/srv/3enwank-site
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=true
+LockPersonality=true
+RestrictRealtime=true
+SystemCallArchitectures=native
+
+[Install]
+WantedBy=multi-user.target

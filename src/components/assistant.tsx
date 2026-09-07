@@ -115,7 +115,7 @@ export function Assistant({ url, locale, labels, supportEmail }: { url: string; 
           <div ref={listRef} className="flex-1 space-y-3 overflow-y-auto px-4 py-4 text-sm">
             <p className="me-auto max-w-[88%] rounded-2xl rounded-es-sm bg-surface-alt px-3.5 py-2.5 leading-relaxed text-ink">{labels.intro}</p>
             {messages.map((m, i) => (
-              <p key={i} className={m.role === "user" ? "ms-auto max-w-[88%] whitespace-pre-wrap rounded-2xl rounded-ee-sm bg-brand px-3.5 py-2.5 leading-relaxed text-white" : "me-auto max-w-[88%] whitespace-pre-wrap rounded-2xl rounded-es-sm bg-surface-alt px-3.5 py-2.5 leading-relaxed text-ink"}>
+              <p key={i} dir="auto" className={m.role === "user" ? "ms-auto max-w-[88%] whitespace-pre-wrap rounded-2xl rounded-ee-sm bg-brand px-3.5 py-2.5 leading-relaxed text-white" : "me-auto max-w-[88%] whitespace-pre-wrap rounded-2xl rounded-es-sm bg-surface-alt px-3.5 py-2.5 leading-relaxed text-ink"}>
                 {m.content || (status === "streaming" ? labels.thinking : "")}
               </p>
             ))}
@@ -134,7 +134,7 @@ export function Assistant({ url, locale, labels, supportEmail }: { url: string; 
             <label htmlFor="assistant-input" className="sr-only">
               {labels.placeholder}
             </label>
-            <textarea id="assistant-input" ref={inputRef} rows={1} value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={keys} maxLength={2000} placeholder={labels.placeholder} className="block max-h-32 min-h-11 w-full resize-none rounded-lg border border-line bg-surface px-3 py-2.5 text-sm text-ink placeholder:text-faint focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand-soft" />
+            <textarea id="assistant-input" ref={inputRef} rows={1} dir="auto" value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={keys} maxLength={2000} placeholder={labels.placeholder} className="block max-h-32 min-h-11 w-full resize-none rounded-lg border border-line bg-surface px-3 py-2.5 text-sm text-ink placeholder:text-faint focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand-soft" />
             <button type="submit" disabled={status === "streaming" || !input.trim()} className="btn-gradient inline-flex h-11 shrink-0 items-center justify-center rounded-lg px-4 text-sm font-bold disabled:opacity-60">
               {labels.send}
             </button>

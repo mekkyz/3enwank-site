@@ -34,13 +34,13 @@ describe("features", () => {
   it("translates untranslated summaries and free-text lines, and reads Arabic delivery times", () => {
     const ar = messagesFor("ar");
     const build = fallbackCatalogue().products.build.find((p) => p.slug === "business-website")!;
-    expect(localizedSummary(build, "ar", ar)).toBe("حتى خمس صفحات على ووردبريس. التسليم: 3 أسابيع.");
+    expect(localizedSummary(build, "ar", ar)).toBe("حتى خمس صفحات على WordPress. التسليم: 3 أسابيع.");
     expect(localizedSummary(build, "en", messagesFor("en"))).toBe("Up to five pages on WordPress. Delivery: 3 weeks.");
     expect(localizedSummary({ ...build, summary: { en: "X", ar: "س" } }, "ar", ar)).toBe("س");
     expect(localizedSummary({ ...build, summary: { en: "Unknown", ar: "Unknown" } }, "ar", ar)).toBe("Unknown");
-    expect(localizedFeatures(build, "ar", ar)[0]).toEqual({ text: "حتى خمس صفحات على ووردبريس، مع رخصة قالب مدفوعة" });
-    expect(deliveryFrom("حتى خمس صفحات على ووردبريس. التسليم: 3 أسابيع.")).toBe("3 أسابيع");
-    expect(summaryWithoutDelivery("حتى خمس صفحات على ووردبريس. التسليم: 3 أسابيع.")).toBe("حتى خمس صفحات على ووردبريس.");
+    expect(localizedFeatures(build, "ar", ar)[0]).toEqual({ text: "حتى خمس صفحات على WordPress، مع رخصة قالب مدفوعة" });
+    expect(deliveryFrom("حتى خمس صفحات على WordPress. التسليم: 3 أسابيع.")).toBe("3 أسابيع");
+    expect(summaryWithoutDelivery("حتى خمس صفحات على WordPress. التسليم: 3 أسابيع.")).toBe("حتى خمس صفحات على WordPress.");
   });
 
   it("picks card lines and notes", () => {
@@ -60,7 +60,7 @@ describe("features", () => {
     expect(rows.map((r) => r.label)).toEqual(["Storage", "Bandwidth", "Email accounts", "Databases", "Domains", "FTP accounts"]);
     expect(rows[0]!.values).toEqual(["1 GB NVMe", "2 GB NVMe", "5 GB NVMe", "10 GB NVMe", "50 GB NVMe", "150 GB NVMe"]);
     const arRows = compareRows(fallbackCatalogue().products.care, "ar", messagesFor("ar"));
-    expect(arRows[0]).toEqual({ label: "التحديثات", values: ["شهرياً", "كل أسبوعين، بعد اختبارها", "أسبوعياً، بعد اختبارها", "أسبوعياً، ومعها إضافات الدفع"] });
+    expect(arRows[0]).toEqual({ label: "التحديثات", values: ["شهريًا", "كل أسبوعين، بعد اختبارها", "أسبوعيًا، بعد اختبارها", "أسبوعيًا، مع إضافات الدفع"] });
   });
 
   it("extracts the delivery time from a build summary", () => {
@@ -109,5 +109,19 @@ describe("build deposit", () => {
 
   it("is present on every build package of the fallback", () => {
     for (const p of fallbackCatalogue().products.build) expect(p.depositBp, p.slug).toBeTypeOf("number");
+  });
+});
+
+describe("value normalisation", () => {
+  it("drops a bracketed explanation from a long value and keeps short brackets", () => {
+    expect(parseFeature("Content changes: 2 a year (a content change is one clear edit that takes half an hour or less)")).toEqual({ label: "Content changes", value: "2 a year" });
+    expect(parseFeature("Domains: 2 included (up to 10)")).toEqual({ label: "Domains", value: "2 included (up to 10)" });
+  });
+
+  it("drops '/ month' from Arabic bandwidth values, whose label already says monthly", () => {
+    const product = { ...fallbackCatalogue().products.hosting[0]!, features: { en: ["Bandwidth: 8 GB / month", "Storage: 1 GB NVMe"], ar: ["Bandwidth: 8 GB / month", "Storage: 1 GB NVMe"] } };
+    expect(localizedFeatures(product, "ar", messagesFor("ar"))[0]).toEqual({ label: "نقل البيانات شهريًا", value: "8 GB" });
+    expect(localizedFeatures(product, "ar-eg", messagesFor("ar-eg"))[0]).toEqual({ label: "الترافيك في الشهر", value: "8 GB" });
+    expect(localizedFeatures(product, "en", messagesFor("en"))[0]).toEqual({ label: "Bandwidth", value: "8 GB / month" });
   });
 });

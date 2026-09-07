@@ -13,21 +13,21 @@ export const care = {
     return pageMetadata("care", locale, t.care.title, `${t.care.h2} ${t.care.lede}`);
   },
   async render(locale: Locale) {
-    const { t, catalogue } = await screenContext(locale);
+    const { t, catalogue, company } = await screenContext(locale);
     const plans = catalogue.products.care;
     return (
-      <Shell locale={locale} page="care" storeUrl={catalogue.store.url} legalName={catalogue.company.legalName[locale]}>
-        <PageIntro num={t.care.num} title={t.care.h2} lede={t.care.lede} />
+      <Shell locale={locale} page="care" storeUrl={catalogue.store.url} legalName={company.legalName} address={company.address} supportEmail={company.supportEmail}>
+        <PageIntro kicker={t.care.title} title={t.care.h2} lede={t.care.lede} />
         <Section>
-          <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+          <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
             <p className="text-sm text-muted">{vatLine(t, catalogue)}</p>
             <CurrencyToggle label={t.common.currency} hint={t.common.currencyHint} />
           </div>
           {plans.length ? (
-            <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <ul className="grid gap-5 pt-3 sm:grid-cols-2 lg:grid-cols-4">
               {plans.map((p) => (
                 <li key={p.slug}>
-                  <PlanCard product={p} locale={locale} highlight={p.slug === HIGHLIGHT.care} cycleLabel={t.common.perYear} cta={t.common.order} />
+                  <PlanCard product={p} locale={locale} highlight={p.slug === HIGHLIGHT.care} cycleLabel={t.common.perYear} cta={t.common.choose} />
                 </li>
               ))}
             </ul>
@@ -36,9 +36,9 @@ export const care = {
           )}
         </Section>
         {plans.length > 1 ? (
-          <Section alt>
+          <Section tone="alt">
             <SectionHeader title={t.care.compareTitle} />
-            <CompareTable products={plans} locale={locale} caption={t.care.compareCaption} perYear={t.hosting.perYear} cta={t.common.choose} />
+            <CompareTable products={plans} locale={locale} caption={t.care.compareCaption} perYear={t.common.perYear} cta={t.common.choose} />
             <Fine>{t.care.fine}</Fine>
           </Section>
         ) : null}

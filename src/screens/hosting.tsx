@@ -14,24 +14,24 @@ export const hosting = {
     return pageMetadata("hosting", locale, t.hosting.title, `${t.hosting.h2} ${t.hosting.lede}`);
   },
   async render(locale: Locale) {
-    const { t, catalogue } = await screenContext(locale);
+    const { t, catalogue, company } = await screenContext(locale);
     const plans = catalogue.products.hosting;
     const xxl = plans.find((p) => p.options.some((o) => o.key === "max_addon_domains"));
-    const addon = xxl?.options.find((o) => o.key === "max_addon_domains")?.values.find((v) => !v.isDefault && (v.prices.EGP?.gross ?? 0) > 0);
+    const addonOption = xxl?.options.find((o) => o.key === "max_addon_domains");
+    const addon = addonOption?.values.find((v) => !v.isDefault && (v.prices.EGP?.gross ?? 0) > 0);
     const runsOn = plans[0] ? plans[0].features.en.find((f) => f.startsWith("Runs on:"))?.replace(/^Runs on:\s*/, "") : null;
     // The price sits mid-sentence and is a client component (currency toggle), so the copy is split around it.
     const [addonBefore, addonAfter] = t.hosting.addonBody.split("{price}");
-    const addonOption = xxl?.options.find((o) => o.key === "max_addon_domains");
     return (
-      <Shell locale={locale} page="hosting" storeUrl={catalogue.store.url} legalName={catalogue.company.legalName[locale]}>
-        <PageIntro num={t.hosting.num} title={t.hosting.h2} lede={t.hosting.lede} />
+      <Shell locale={locale} page="hosting" storeUrl={catalogue.store.url} legalName={company.legalName} address={company.address} supportEmail={company.supportEmail}>
+        <PageIntro kicker={t.hosting.title} title={t.hosting.h2} lede={t.hosting.lede} />
         <Section>
-          <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+          <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
             <p className="text-sm text-muted">{vatLine(t, catalogue)}</p>
             <CurrencyToggle label={t.common.currency} hint={t.common.currencyHint} />
           </div>
           {plans.length ? (
-            <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <ul className="grid gap-5 pt-3 sm:grid-cols-2 lg:grid-cols-3">
               {plans.map((p) => (
                 <li key={p.slug}>
                   <PlanCard product={p} locale={locale} highlight={p.slug === HIGHLIGHT.hosting} cycleLabel={t.common.perYear} cta={t.common.order} />
@@ -42,32 +42,30 @@ export const hosting = {
             <Empty>{t.hosting.empty}</Empty>
           )}
           {runsOn ? (
-            <p className="mt-6 text-sm text-muted">
-              <span className="font-medium text-ink">{t.hosting.runsOn}:</span> <span dir="ltr">{runsOn}</span>
+            <p className="mt-8 text-sm text-muted">
+              <span className="font-semibold text-ink">{t.hosting.runsOn}:</span> <bdi dir="ltr">{runsOn}</bdi>
             </p>
           ) : null}
         </Section>
         {plans.length > 1 ? (
-          <Section alt>
+          <Section tone="alt">
             <SectionHeader title={t.hosting.compareTitle} />
             <CompareTable products={plans} locale={locale} caption={t.hosting.compareCaption} exclude={["Runs on"]} perYear={t.hosting.perYear} cta={t.common.choose} />
             <Fine>{t.hosting.fine}</Fine>
           </Section>
         ) : null}
-        {xxl && addon ? (
+        {xxl && addon && addonOption ? (
           <Section>
             <Container className="max-w-3xl px-0">
-              <h2 className="text-xl font-bold text-ink">{t.hosting.addonTitle}</h2>
-              <p className="mt-2 text-muted">
+              <h2 className="text-2xl font-extrabold text-ink">{t.hosting.addonTitle}</h2>
+              <p className="mt-3 text-muted">
                 {addonBefore}
-                <Price prices={addon.prices} locale={locale} className="font-semibold text-ink" />
+                <Price prices={addon.prices} locale={locale} fallback={t.common.notAvailable} className="font-bold text-ink" />
                 {addonAfter}
               </p>
-              {addonOption ? (
-                <p className="mt-2 text-sm text-muted">
-                  {localizedValue(addonOption.name, locale, t)}: {addonOption.values.map((v) => localizedValue(v.label, locale, t)).join(" · ")}
-                </p>
-              ) : null}
+              <p className="mt-2 text-sm text-muted">
+                {localizedValue(addonOption.name, locale, t)}: {addonOption.values.map((v) => localizedValue(v.label, locale, t)).join(", ")}
+              </p>
             </Container>
           </Section>
         ) : null}

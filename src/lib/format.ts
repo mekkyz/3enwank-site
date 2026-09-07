@@ -1,5 +1,5 @@
 import type { Currency, Money, Product } from "./catalogue";
-import type { Locale } from "./i18n";
+import { catalogueLocale, dirFor, type Locale } from "./i18n";
 import type { Messages } from "@/messages";
 
 /**
@@ -10,20 +10,39 @@ import type { Messages } from "@/messages";
 export function formatPrice(money: Money, currency: Currency, locale: Locale): string {
   const major = money.gross / 100;
   const whole = Number.isInteger(major);
-  const formatter = new Intl.NumberFormat(locale === "ar" ? "ar-EG-u-nu-latn" : "en-EG", {
+  const formatter = new Intl.NumberFormat(dirFor(locale) === "rtl" ? "ar-EG-u-nu-latn" : "en-EG", {
     minimumFractionDigits: whole ? 0 : 2,
     maximumFractionDigits: 2,
   });
   const number = formatter.format(major).replace(/[‏‎]/g, "");
-  return locale === "ar" ? `${number} ${currency}` : `${currency} ${number}`;
+  return dirFor(locale) === "rtl" ? `${number} ${currency}` : `${currency} ${number}`;
 }
 
 export type FeatureLine = { label: string; value: string } | { text: string };
 
-/** "Storage: 1 GB NVMe" → label/value; anything without a short label stays free text. */
+/**
+ * "Storage: 1 GB NVMe" → label/value; anything without a short label stays free text. A long value
+ * that ends in an explanation in brackets ("2 a year (a content change is one clear edit …)") keeps
+ * the value only: the explanation belongs to the page's fine print, not to a table cell.
+ */
 export function parseFeature(line: string): FeatureLine {
   const m = /^([^:]{1,40}):\s+(.+)$/.exec(line.trim());
-  return m ? { label: m[1]!.trim(), value: m[2]!.trim() } : { text: line.trim() };
+  if (!m) return { text: line.trim() };
+  let value = m[2]!.trim();
+  const bracket = /^(.{1,40}?)\s*\((.{20,})\)$/.exec(value);
+  if (bracket) value = bracket[1]!.trim();
+  return { label: m[1]!.trim(), value };
+}
+
+/** Arabic pages label bandwidth as "per month" already, so the value drops its own "/ month". */
+function localizeValue(value: string, key: "en" | "ar", messages: Messages): string {
+  const mapped = messages.features.values[value];
+  if (mapped) return mapped;
+  if (key === "ar") {
+    const monthly = /^(.+?)\s*\/\s*month$/i.exec(value);
+    if (monthly) return monthly[1]!.trim();
+  }
+  return value;
 }
 
 /**
@@ -32,21 +51,23 @@ export function parseFeature(line: string): FeatureLine {
  * A line the admin did translate is used as it is.
  */
 export function localizedFeatures(product: Product, locale: Locale, messages: Messages): FeatureLine[] {
-  const source = product.features[locale].length ? product.features[locale] : product.features.en;
+  const key = catalogueLocale(locale);
+  const source = product.features[key].length ? product.features[key] : product.features.en;
   return source.map((line, i) => {
     const parsed = parseFeature(line);
-    const untranslated = locale !== "en" && line === product.features.en[i];
+    const untranslated = key !== "en" && line === product.features.en[i];
     if (!untranslated) return parsed;
     if ("text" in parsed) return { text: messages.features.texts[parsed.text] ?? parsed.text };
-    return { label: messages.features.labels[parsed.label] ?? parsed.label, value: messages.features.values[parsed.value] ?? parsed.value };
+    return { label: messages.features.labels[parsed.label] ?? parsed.label, value: localizeValue(parsed.value, key, messages) };
   });
 }
 
 /** One catalogue string (an option name, a value label) for a locale, with the same untranslated-copy fallback. */
 export function localizedValue(value: { en: string; ar: string } | null | undefined, locale: Locale, messages: Messages): string {
   if (!value) return "";
-  const text = value[locale] || value.en;
-  if (locale === "en" || value[locale] !== value.en) return text;
+  const key = catalogueLocale(locale);
+  const text = value[key] || value.en;
+  if (key === "en" || value[key] !== value.en) return text;
   return messages.features.values[value.en] ?? text;
 }
 
@@ -64,8 +85,9 @@ export function depositSplit(product: Pick<Product, "depositBp">): { deposit: nu
 export function localizedSummary(product: Product, locale: Locale, messages: Messages): string {
   const summary = product.summary;
   if (!summary) return "";
-  const text = summary[locale] || summary.en;
-  if (locale === "en" || summary[locale] !== summary.en) return text;
+  const key = catalogueLocale(locale);
+  const text = summary[key] || summary.en;
+  if (key === "en" || summary[key] !== summary.en) return text;
   return messages.features.summaries[summary.en] ?? text;
 }
 
@@ -109,4 +131,16 @@ export function deliveryFrom(summary: string | null | undefined): string | null 
 /** The summary without the delivery sentence. */
 export function summaryWithoutDelivery(summary: string | null | undefined): string {
   return (summary ?? "").replace(DELIVERY_RE, "").trim();
+}
+
+/** The list price a plan advertises in its billing note ("Normal price 2,499 EGP - you pay 1,999 EGP"), per currency, in minor units. */
+export function normalPrices(product: Pick<Product, "features">): Partial<Record<Currency, Money>> {
+  const out: Partial<Record<Currency, Money>> = {};
+  for (const line of product.features.en) {
+    for (const m of line.matchAll(/Normal price ([\d,]+(?:\.\d{1,2})?) (EGP|USD)/g)) {
+      const gross = Math.round(Number(m[1]!.replace(/,/g, "")) * 100);
+      if (Number.isFinite(gross)) out[m[2] as Currency] = { gross, formatted: `${m[2]} ${m[1]}` };
+    }
+  }
+  return out;
 }

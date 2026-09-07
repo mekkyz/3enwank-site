@@ -1,7 +1,7 @@
 # 3enwank.com
 
 The marketing site for 3enwank: hosting plans, website packages, care plans, domain prices, contact
-and legal pages, in English (`/`) and Arabic (`/ar/`). It is a **fully static** Next.js 16 export:
+and legal pages, in English (`/`), formal Arabic (`/ar/`) and Egyptian Arabic (`/ar-eg/`). It is a **fully static** Next.js 16 export:
 `pnpm build` writes plain HTML, CSS, JS and fonts to `out/`, and nothing runs at request time. It
 lives on Cloudflare Pages, deliberately off the billing box (platform repo: `docs/DECISIONS.md`,
 "The public website stays off the billing box"; design: `docs/design/website.md`).
@@ -18,10 +18,11 @@ Requirements: Node 22 and pnpm 12 (`corepack enable` picks the version from `pac
 ```bash
 pnpm install
 cp .env.example .env            # optional; the defaults point at production
-pnpm dev                        # http://localhost:3000, Arabic at /ar/
+pnpm dev                        # http://localhost:3000, Arabic at /ar/, Egyptian at /ar-eg/
 pnpm test                       # vitest: catalogue loading, formatting, paths
 pnpm lint && pnpm typecheck
 pnpm build && pnpm preview      # static export in ./out served on http://127.0.0.1:8788
+pnpm check                      # render every page in every language at 1440 and 390 px and check it
 ```
 
 `pnpm dev` and `pnpm build` both fetch the catalogue. Without network, or to build exactly what is
@@ -142,3 +143,23 @@ A locale: add it to `locales` in `src/lib/i18n.ts` and a dictionary in `src/mess
 tax authority, in both languages. They are a starting point for HANDOFF H2 (the operator's own terms,
 refund and privacy policies) and should be reviewed before go-live; the version string is
 `TERMS_VERSION` in `src/screens/legal.tsx` and matches `settings.legal.termsVersion` on the platform.
+
+## Languages and copy
+
+Each language is its own dictionary in `src/messages/` with the same shape (`types.ts`): `en.ts`,
+`ar.ts` (formal Arabic, written as its own text) and `ar-eg.ts` (Egyptian Arabic throughout: إيميل,
+دومين, باقة, مفتوح, اطلبها). Adding a language is one entry in `LOCALES` (`src/lib/i18n.ts`) plus a
+dictionary. `messages.test.ts` enforces the writing rules: no em dashes, no exclamation marks, none
+of the words that read as generated copy, a non-breaking space after a sentence-initial و in the
+Egyptian text, and formal Arabic that is not a copy of the Egyptian or the English.
+
+`dir` and `lang` on `<html>` switch with the language. Latin-only values ("1 GB", prices, ".com")
+are isolated left-to-right with `<bdi dir="ltr">` (`src/components/bidi.tsx`); text that contains
+Arabic is never forced LTR. Table labels never wrap (`.nowrap`); the table scrolls inside its box.
+
+## Render check before a review
+
+`pnpm check` (`scripts/visual-check.mjs`) serves `./out`, opens every page in every language at
+desktop and phone width with the box's Chromium, and fails on horizontal scroll, elements wider
+than the viewport, wrapped table labels, empty sections, or Arabic text inside an LTR isolate.
+Screenshots land in `./shots/`. Run it after every build that goes to a reviewer.

@@ -1,5 +1,6 @@
-import { ButtonLink, Card, Check, Empty, Fine, PageIntro, Section } from "@/components/blocks";
+import { ButtonLink, Card, Empty, Fine, PageIntro, Section } from "@/components/blocks";
 import { CurrencyToggle, Price } from "@/components/currency";
+import { FeatureList } from "@/components/plans";
 import { Shell } from "@/components/shell";
 import { deliveryFrom, depositSplit, localizedFeatures, localizedSummary, summaryWithoutDelivery } from "@/lib/format";
 import { pageMetadata } from "@/lib/metadata";
@@ -13,54 +14,46 @@ export const websites = {
     return pageMetadata("websites", locale, t.websites.title, `${t.websites.h2} ${t.websites.lede}`);
   },
   async render(locale: Locale) {
-    const { t, catalogue } = await screenContext(locale);
+    const { t, catalogue, company } = await screenContext(locale);
     const packages = catalogue.products.build;
     return (
-      <Shell locale={locale} page="websites" storeUrl={catalogue.store.url} legalName={catalogue.company.legalName[locale]}>
-        <PageIntro num={t.websites.num} title={t.websites.h2} lede={t.websites.lede} />
+      <Shell locale={locale} page="websites" storeUrl={catalogue.store.url} legalName={company.legalName} address={company.address} supportEmail={company.supportEmail}>
+        <PageIntro kicker={t.websites.title} title={t.websites.h2} lede={t.websites.lede} />
         <Section>
-          <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+          <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
             <p className="text-sm text-muted">{vatLine(t, catalogue)}</p>
             <CurrencyToggle label={t.common.currency} hint={t.common.currencyHint} />
           </div>
           {packages.length ? (
-            <ol className="space-y-4">
+            <ol className="grid gap-5 pt-3 sm:grid-cols-2 lg:grid-cols-3">
               {packages.map((p) => {
                 const summary = localizedSummary(p, locale, t);
                 const delivery = deliveryFrom(summary) ?? deliveryFrom(p.summary?.en);
                 // Bullets are the free-text lines; price and billing notes are shown from the price fields instead.
-                const features = localizedFeatures(p, locale, t).filter((f, i) => "text" in f && !/\b(EGP|USD|VAT)\b|Hosting and Care/.test(p.features.en[i] ?? f.text));
+                const features = localizedFeatures(p, locale, t).flatMap((f, i) => ("text" in f && !/\b(EGP|USD|VAT)\b|Hosting and Care/.test(p.features.en[i] ?? f.text) ? [f.text] : []));
                 const highlight = p.slug === HIGHLIGHT.build;
                 return (
                   <li key={p.slug}>
-                    <Card highlight={highlight} className="grid gap-5 md:grid-cols-[1fr_auto_auto] md:items-start">
-                      <div>
-                        {highlight ? <p className="mb-2 inline-block rounded-full bg-brand-soft px-2.5 py-0.5 text-xs font-semibold text-brand-strong">{t.common.mostPopular}</p> : null}
-                        <h2 className="text-xl font-bold text-ink">{loc(p.name, locale)}</h2>
-                        {summary ? <p className="mt-1 text-muted">{summaryWithoutDelivery(summary) || summary}</p> : null}
-                        {features.length ? (
-                          <ul className="mt-3 grid gap-1.5 text-sm text-ink sm:grid-cols-2">
-                            {features.map((f) => ("text" in f ? (
-                              <li key={f.text} className="flex gap-2">
-                                <Check />
-                                <span>{f.text}</span>
-                              </li>
-                            ) : null))}
-                          </ul>
-                        ) : null}
-                      </div>
-                      <div className="text-sm text-muted md:w-36">
+                    <Card highlight={highlight} className="flex h-full flex-col" as="article">
+                      {highlight ? <p className="absolute -top-3.5 start-6 rounded-full bg-brand px-2.5 py-1 text-[11px] font-extrabold uppercase tracking-wider text-white">{t.common.mostChosen}</p> : null}
+                      <h2 className="text-2xl font-extrabold text-ink">{loc(p.name, locale)}</h2>
+                      {summary ? <p className="mt-1 text-sm text-muted">{summaryWithoutDelivery(summary) || summary}</p> : null}
+                      <p className="mt-5 flex flex-wrap items-baseline gap-x-2">
+                        <Price prices={p.prices} locale={locale} fallback={t.common.notAvailable} className="text-[2rem] font-extrabold leading-none tracking-tight text-ink" />
+                        <span className="text-sm text-muted">{t.common.oneTime}</span>
+                      </p>
+                      <p className="mt-1.5 text-sm text-muted">
+                        {fill(t.websites.deposit, depositSplit(p))}
                         {delivery ? (
                           <>
-                            <p className="text-xs uppercase tracking-widest">{t.websites.delivery}</p>
-                            <p className="mt-1 font-medium text-ink">{delivery}</p>
+                            {" "}
+                            · {t.websites.delivery}: {delivery}
                           </>
                         ) : null}
-                        <p className="mt-3 text-xs">{fill(t.websites.deposit, depositSplit(p))}</p>
-                      </div>
-                      <div className="flex flex-col items-start gap-3 md:items-end">
-                        <Price prices={p.prices} locale={locale} className="text-3xl font-bold text-ink" />
-                        <ButtonLink href={p.storeUrl} variant={highlight ? "primary" : "secondary"} external>
+                      </p>
+                      {features.length ? <FeatureList items={features} /> : null}
+                      <div className="mt-auto pt-6">
+                        <ButtonLink href={p.storeUrl} variant={highlight ? "primary" : "outline"} className="w-full" external>
                           {t.common.order}
                         </ButtonLink>
                       </div>
@@ -74,12 +67,12 @@ export const websites = {
           )}
           <Fine>{t.websites.fine}</Fine>
         </Section>
-        <Section alt>
-          <Card className="grid gap-5 md:grid-cols-[1fr_auto] md:items-center">
+        <Section tone="alt">
+          <Card className="grid gap-6 md:grid-cols-[1fr_auto] md:items-center">
             <div>
-              <h2 className="text-xl font-bold text-ink">{t.websites.customTitle}</h2>
+              <h2 className="text-2xl font-extrabold text-ink">{t.websites.customTitle}</h2>
               <p className="mt-2 text-muted">{t.websites.customBody}</p>
-              <p className="mt-2 text-sm font-medium text-ink">{t.websites.customMeta}</p>
+              <p className="mt-2 text-sm font-semibold text-ink">{t.websites.customMeta}</p>
             </div>
             <ButtonLink href={pathFor("contact", locale)}>{t.websites.customCta}</ButtonLink>
           </Card>

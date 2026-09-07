@@ -1,40 +1,46 @@
 @import "tailwindcss";
 
-/* The platform's brand tokens (3enwank-platform/src/app/globals.css) so store and site look like one thing. */
+/* Brand: the logo's purple and blue on white, dark ink for text (3enwank-logo/palette.json). */
 :root {
-  --color-surface: #f7f7f5;
+  --color-surface: #ffffff;
+  --color-surface-alt: #f7f5fb;
   --color-panel: #ffffff;
-  --color-ink: #16181d;
-  --color-muted: #5f6673;
-  --color-line: #e3e5ea;
-  --color-brand: #0f6d5a;
-  --color-brand-strong: #0b5646;
-  --color-brand-soft: #e3f2ee;
+  --color-ink: #1c1f2e;
+  --color-muted: #4b5169;
+  --color-faint: #6f7681;
+  --color-line: #e8e9ee;
+  --color-brand: #7c5fa5;
+  --color-brand-strong: #5f4685;
+  --color-brand-soft: #f1ecf7;
+  --color-accent: #2a95c5;
+  --color-accent-strong: #1f6f92;
+  --color-accent-soft: #e6f3f9;
+  --color-dark: #14172b;
+  --color-dark-line: #2c3050;
+  --color-dark-muted: #c4c8dc;
   --color-danger: #b42318;
-  --color-danger-soft: #fdecea;
-  --color-warn: #b54708;
-  --color-warn-soft: #fef3e6;
-  --color-ok: #067647;
-  --color-ok-soft: #e6f4ec;
 }
 
 @theme inline {
   --color-surface: var(--color-surface);
+  --color-surface-alt: var(--color-surface-alt);
   --color-panel: var(--color-panel);
   --color-ink: var(--color-ink);
   --color-muted: var(--color-muted);
+  --color-faint: var(--color-faint);
   --color-line: var(--color-line);
   --color-brand: var(--color-brand);
   --color-brand-strong: var(--color-brand-strong);
   --color-brand-soft: var(--color-brand-soft);
+  --color-accent: var(--color-accent);
+  --color-accent-strong: var(--color-accent-strong);
+  --color-accent-soft: var(--color-accent-soft);
+  --color-dark: var(--color-dark);
+  --color-dark-line: var(--color-dark-line);
+  --color-dark-muted: var(--color-dark-muted);
   --color-danger: var(--color-danger);
-  --color-danger-soft: var(--color-danger-soft);
-  --color-warn: var(--color-warn);
-  --color-warn-soft: var(--color-warn-soft);
-  --color-ok: var(--color-ok);
-  --color-ok-soft: var(--color-ok-soft);
-  --font-sans: "Inter Variable", "Noto Naskh Arabic Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-arabic: "Noto Naskh Arabic Variable", "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Manrope Variable", "IBM Plex Sans Arabic", ui-sans-serif, system-ui, sans-serif;
+  --font-arabic: "IBM Plex Sans Arabic", "Manrope Variable", ui-sans-serif, system-ui, sans-serif;
 }
 
 html {
@@ -42,26 +48,35 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Arabic pages: the Arabic face first, more line height, no letter-spacing tricks. */
 html[dir="rtl"] {
   font-family: var(--font-arabic);
 }
-
 html[dir="rtl"] body {
-  line-height: 1.8;
+  line-height: 1.75;
+}
+html[dir="rtl"] .tracking-tight,
+html[dir="rtl"] .tracking-tighter {
+  letter-spacing: 0;
 }
 
 body {
   background: var(--color-surface);
   color: var(--color-ink);
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
-/* Latin digits inside Arabic pages keep numbers aligned with the invoices. */
+/* Latin digits in every language; numbers line up in tables and prices. */
 .tabular {
   font-variant-numeric: tabular-nums;
 }
 
-/* Keyboard users always see where they are; pointer users are not shouted at. */
+/* Table labels never wrap: the table scrolls inside its box instead. */
+.nowrap {
+  white-space: nowrap;
+}
+
 :focus-visible {
   outline: 2px solid var(--color-brand);
   outline-offset: 2px;

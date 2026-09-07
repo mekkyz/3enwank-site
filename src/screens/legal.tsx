@@ -12,32 +12,32 @@ function legalScreen(page: "terms" | "privacy") {
   return {
     metadata(locale: Locale) {
       const t = messagesFor(locale);
-      return pageMetadata(page, locale, t[page].title, t[page].intro.replace(/\{legalName\}/g, "3enwank").replace(/\{version\}/g, TERMS_VERSION).slice(0, 160));
+      return pageMetadata(page, locale, t[page].title, fill(t[page].intro, { legalName: "3enwank", version: TERMS_VERSION }).slice(0, 160));
     },
     async render(locale: Locale) {
-      const { t, catalogue } = await screenContext(locale);
-      const legalName = catalogue.company.legalName[locale] || catalogue.company.legalName.en;
+      const { t, catalogue, company } = await screenContext(locale);
       const copy = t[page];
       return (
-        <Shell locale={locale} page={page} storeUrl={catalogue.store.url} legalName={legalName}>
-          <PageIntro title={copy.title} lede={fill(copy.intro, { legalName, version: TERMS_VERSION })} />
+        <Shell locale={locale} page={page} storeUrl={catalogue.store.url} legalName={company.legalName} address={company.address} supportEmail={company.supportEmail}>
+          <PageIntro title={copy.title} lede={fill(copy.intro, { legalName: company.legalName, version: TERMS_VERSION })} />
           <Container className="max-w-3xl py-12">
-            <div className="space-y-8">
+            <div className="space-y-9">
               {copy.sections.map((s) => (
                 <section key={s.title}>
-                  <h2 className="text-lg font-semibold text-ink">{s.title}</h2>
+                  <h2 className="text-xl font-extrabold text-ink">{s.title}</h2>
                   {s.body.map((p) => (
-                    <p key={p} className="mt-2 leading-relaxed text-ink/90">
+                    <p key={p} className="mt-3 leading-relaxed text-ink/90">
                       {p}
                     </p>
                   ))}
                 </section>
               ))}
               <p className="text-sm text-muted">
-                <a href={`mailto:${catalogue.company.supportEmail}`} className="text-brand hover:underline" dir="ltr">
-                  {catalogue.company.supportEmail}
-                </a>{" "}
-                · {catalogue.company.address[locale] || catalogue.company.address.en}
+                <a href={`mailto:${company.supportEmail}`} className="text-brand-strong hover:underline" dir="ltr">
+                  {company.supportEmail}
+                </a>
+                <span> · </span>
+                {company.address}
               </p>
             </div>
           </Container>

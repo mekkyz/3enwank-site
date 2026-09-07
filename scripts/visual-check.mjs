@@ -50,11 +50,12 @@ for (const w of widths) {
       // Scroll through once so sections that reveal on scroll are shown, then back to the top.
       await page.evaluate(async () => {
         const step = window.innerHeight * 0.8;
-        for (let y = 0; y < document.body.scrollHeight; y += step) {
-          window.scrollTo(0, y);
-          await new Promise((r) => setTimeout(r, 60));
+        // Instant, not smooth: a smooth scroll would still be moving when the next step starts.
+        for (let y = 0; y < document.documentElement.scrollHeight; y += step) {
+          window.scrollTo({ top: y, behavior: "instant" });
+          await new Promise((r) => setTimeout(r, 90));
         }
-        window.scrollTo(0, 0);
+        window.scrollTo({ top: 0, behavior: "instant" });
       });
       // Entrance animations finish before anything is measured or captured.
       await page.evaluate(() => Promise.all(document.getAnimations().filter((a) => !(a.effect && a.effect.getTiming().iterations === Infinity)).map((a) => a.finished.catch(() => {}))));

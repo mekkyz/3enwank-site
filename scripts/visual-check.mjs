@@ -45,6 +45,8 @@ for (const w of widths) {
       const path = `/${[loc, p].filter(Boolean).join("/")}${loc || p ? "/" : ""}`;
       await page.goto(`http://127.0.0.1:${port}${path}`, { waitUntil: "load" });
       await page.evaluate(() => document.fonts.ready);
+      // Entrance animations finish before anything is measured or captured.
+      await page.evaluate(() => Promise.all(document.getAnimations().filter((a) => !(a.effect && a.effect.getTiming().iterations === Infinity)).map((a) => a.finished.catch(() => {}))));
       const name = `${theme === "light" ? "light-" : ""}${w.name}-${loc || "en"}-${p || "home"}`;
       const result = await page.evaluate((arabicSource) => {
         const arabicRe = new RegExp(arabicSource);

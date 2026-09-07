@@ -155,6 +155,12 @@ li {
   transform: translateY(-1px);
 }
 
+/* Bands in the two brand hues, the same in both themes, so white text keeps its contrast. */
+.band-gradient {
+  background-image: linear-gradient(100deg, #7c5fa5 0%, #2a95c5 100%);
+  color: #ffffff;
+}
+
 /* Cards rise slightly under the pointer. */
 .lift {
   transition:

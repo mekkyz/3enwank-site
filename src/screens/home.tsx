@@ -87,7 +87,7 @@ export const home = {
         ) : null}
 
         <Container className="pb-4">
-          <div className="flex flex-wrap items-center justify-between gap-6 rounded-2xl bg-gradient-to-r from-brand to-accent px-7 py-9 text-white sm:px-10">
+          <div className="band-gradient flex flex-wrap items-center justify-between gap-6 rounded-2xl px-7 py-9 sm:px-10">
             <div>
               <h2 className="text-2xl font-extrabold tracking-tight sm:text-3xl">{t.home.moveTitle}</h2>
               <p className="mt-2 max-w-xl text-white/90">{t.home.moveBody}</p>

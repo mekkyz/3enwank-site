@@ -59,7 +59,7 @@ type ButtonVariant = "primary" | "secondary" | "white" | "outline";
 const VARIANTS: Record<ButtonVariant, string> = {
   primary: "btn-gradient shadow-[0_12px_28px_-12px_rgba(124,95,165,0.75)]",
   secondary: "border-[1.5px] border-line bg-panel text-ink hover:border-brand hover:text-brand-strong",
-  white: "bg-white text-brand-strong hover:bg-brand-soft",
+  white: "bg-white text-[#5f4685] hover:bg-[#f1ecf7]",
   outline: "border-[1.5px] border-brand text-brand-strong hover:bg-brand-soft",
 };
 

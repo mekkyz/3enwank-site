@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
 import type { Locale } from "@/lib/i18n";
 import { turnstileToken } from "@/lib/turnstile";
+import { parseRichText, type Inline } from "@/lib/rich-text";
 
 export type AssistantLabels = { open: string; close: string; title: string; intro: string; placeholder: string; send: string; thinking: string; error: string; unavailable: string; note: string };
 type Msg = { role: "user" | "assistant"; content: string };
@@ -20,6 +21,50 @@ function restore(): Msg[] {
   } catch {
     return [];
   }
+}
+
+/** Renders the small Markdown subset the assistant writes, as React nodes rather than HTML. */
+function Rich({ text }: { text: string }) {
+  const inline = (parts: Inline[], key: number) => (
+    <span key={key}>
+      {parts.map((part, i) =>
+        part.type === "bold" ? (
+          <strong key={i} className="font-bold">
+            {part.value}
+          </strong>
+        ) : part.type === "link" ? (
+          <a key={i} href={part.href} className="underline underline-offset-2 hover:text-brand" target="_blank" rel="noopener noreferrer">
+            {part.value}
+          </a>
+        ) : (
+          <span key={i}>{part.value}</span>
+        ),
+      )}
+    </span>
+  );
+  return (
+    <>
+      {parseRichText(text).map((block, b) =>
+        block.type === "ul" ? (
+          <ul key={b} className="my-1.5 space-y-1 ps-4">
+            {block.items.map((item, i) => (
+              <li key={i} className="list-disc">
+                {inline(item, i)}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <span key={b} className="block [&:not(:first-child)]:mt-2">
+            {block.lines.map((line, i) => (
+              <span key={i} className="block">
+                {inline(line, i)}
+              </span>
+            ))}
+          </span>
+        ),
+      )}
+    </>
+  );
 }
 
 /**
@@ -118,7 +163,7 @@ export function Assistant({ url, locale, labels, supportEmail, turnstileSiteKey 
             <p className="me-auto max-w-[88%] rounded-2xl rounded-es-sm bg-surface-alt px-3.5 py-2.5 leading-relaxed text-ink">{labels.intro}</p>
             {messages.map((m, i) => (
               <p key={i} dir="auto" className={m.role === "user" ? "ms-auto max-w-[88%] whitespace-pre-wrap rounded-2xl rounded-ee-sm bg-brand px-3.5 py-2.5 leading-relaxed text-white" : "me-auto max-w-[88%] whitespace-pre-wrap rounded-2xl rounded-es-sm bg-surface-alt px-3.5 py-2.5 leading-relaxed text-ink"}>
-                {m.content || (status === "streaming" ? labels.thinking : "")}
+                {m.role === "assistant" && m.content ? <Rich text={m.content} /> : m.content || (status === "streaming" ? labels.thinking : "")}
               </p>
             ))}
             {status === "error" ? (

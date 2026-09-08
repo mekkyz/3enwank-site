@@ -102,8 +102,10 @@ sudo scripts/deploy.sh        # every release: git archive → pnpm install → 
 
 `ops/systemd/enwank-site.service` runs `next start -p 3001 -H 127.0.0.1` as `enwank-site` with the
 same hardening as the platform's unit; it can write only its own page cache under `/srv/3enwank-site`.
-nginx fronts it: `ops/nginx/enwank-site-preview.conf` is the password-protected review listener on
-`my.3enwank.com:8444`, `ops/nginx/enwank-site.conf` the production vhost for `3enwank.com`. Security
+nginx fronts it: `ops/nginx/enwank-site.conf` is the production vhost for `3enwank.com`, live since
+2026-09-08. `ops/nginx/enwank-site-preview.conf` was the password-protected review listener on
+`my.3enwank.com:8444`; it is retired and its port is closed, and it is kept only in case a staging
+copy is ever wanted again. Security
 headers and the content security policy live in those files.
 
 ### Publish from the platform admin

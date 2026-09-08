@@ -99,3 +99,20 @@ export function alternatesFor(page: PageKey, siteUrl: string): Record<string, st
   out["x-default"] = `${siteUrl}${pathFor(page, defaultLocale)}`;
   return out;
 }
+
+/**
+ * A link that leaves this site for the customer area, carrying the language the reader is on.
+ *
+ * The two applications share one origin but not one idea of language: this site puts the locale in
+ * the path (/ar/hosting/), the customer area keeps it in a cookie. Without this, an Arabic visitor
+ * who pressed Order landed in an English store, which is the moment the shop stopped feeling like
+ * the same company. `lang` is read by the customer area's proxy, which sets its cookie from it, so
+ * the whole journey stays in one language. ar-eg reads the same catalogue copy as ar, and the
+ * customer area has no Egyptian variant, so both send "ar".
+ */
+export function storeLink(url: string, locale: Locale): string {
+  const lang = localeInfo(locale).catalogue;
+  const [path, hash] = url.split("#");
+  const joined = `${path}${path!.includes("?") ? "&" : "?"}lang=${lang}`;
+  return hash ? `${joined}#${hash}` : joined;
+}

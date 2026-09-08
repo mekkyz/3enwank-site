@@ -4,7 +4,7 @@ import { FeatureList } from "@/components/plans";
 import { Shell } from "@/components/shell";
 import { deliveryFrom, depositSplit, localizedFeatures, localizedSummary, summaryWithoutDelivery } from "@/lib/format";
 import { pageMetadata } from "@/lib/metadata";
-import { anchorFor, type Locale } from "@/lib/i18n";
+import { anchorFor, storeLink, type Locale } from "@/lib/i18n";
 import { fill, messagesFor } from "@/messages";
 import { HIGHLIGHT, loc, screenContext, vatLine } from "./shared";
 
@@ -53,7 +53,7 @@ export const websites = {
                       </p>
                       {features.length ? <FeatureList items={features} /> : null}
                       <div className="mt-auto pt-6">
-                        <ButtonLink href={p.storeUrl} variant={highlight ? "primary" : "outline"} className="w-full" external>
+                        <ButtonLink href={storeLink(p.storeUrl, locale)} variant={highlight ? "primary" : "outline"} className="w-full" external>
                           {t.common.order}
                         </ButtonLink>
                       </div>

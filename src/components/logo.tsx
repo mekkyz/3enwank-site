@@ -8,5 +8,5 @@ export function Logo({ className = "" }: { className?: string }) {
 /** The full logo with the Arabic tagline (public/logo.png, from 3enwank_logo.png). */
 export function LogoFull({ className = "" }: { className?: string }) {
   // eslint-disable-next-line @next/next/no-img-element
-  return <img src="/logo.png" alt="3enwank.com مايبقعش" width={720} height={226} className={`block w-auto ${className || "h-12"}`} decoding="async" loading="lazy" />;
+  return <img src="/logo.png" alt="3enwank.com مابيقعش" width={720} height={226} className={`block w-auto ${className || "h-12"}`} decoding="async" loading="lazy" />;
 }

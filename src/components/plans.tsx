@@ -1,6 +1,6 @@
 import type { Product } from "@/lib/catalogue";
 import { cardFeatures, compareRows, localizedFeatures, localizedSummary, normalPrices, type CompareRow } from "@/lib/format";
-import type { Locale } from "@/lib/i18n";
+import { storeLink, type Locale } from "@/lib/i18n";
 import { messagesFor } from "@/messages";
 import { Val } from "./bidi";
 import { ButtonLink, Card, Check } from "./blocks";
@@ -37,7 +37,7 @@ export function PlanCard({ product, locale, highlight = false, cycleLabel, cta, 
         </ul>
       ) : null}
       <div className="mt-auto pt-6">
-        <ButtonLink href={product.storeUrl} variant={highlight ? "primary" : "outline"} className="w-full" external>
+        <ButtonLink href={storeLink(product.storeUrl, locale)} variant={highlight ? "primary" : "outline"} className="w-full" external>
           {cta}
         </ButtonLink>
       </div>
@@ -94,7 +94,7 @@ export function CompareTable({ products, locale, caption, exclude = [], perYear,
             <td className="px-4 py-3" />
             {products.map((p) => (
               <td key={p.slug} className="px-3 py-3 text-center">
-                <ButtonLink href={p.storeUrl} variant="outline" className="w-full" external>
+                <ButtonLink href={storeLink(p.storeUrl, locale)} variant="outline" className="w-full" external>
                   {cta}
                 </ButtonLink>
               </td>

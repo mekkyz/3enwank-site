@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { alternatesFor, anchorFor, catalogueLocale, dirFor, langTag, languageLinks, localeParams, pathFor } from "./i18n";
+import { alternatesFor, anchorFor, catalogueLocale, dirFor, langTag, languageLinks, localeParams, pathFor, storeLink } from "./i18n";
 
 describe("i18n paths", () => {
   it("puts English at the root and the Arabic locales under their prefixes", () => {
@@ -44,5 +44,24 @@ describe("i18n paths", () => {
       "ar-EG": "https://3enwank.com/ar-eg/domains/",
       "x-default": "https://3enwank.com/domains/",
     });
+  });
+});
+
+describe("storeLink", () => {
+  it("carries the reader's language across to the customer area", () => {
+    expect(storeLink("https://3enwank.com/account/plans/hosting-xs", "ar")).toBe("https://3enwank.com/account/plans/hosting-xs?lang=ar");
+    expect(storeLink("https://3enwank.com/account/login", "en")).toBe("https://3enwank.com/account/login?lang=en");
+  });
+
+  it("sends the Egyptian variant as Arabic, which is all the customer area has", () => {
+    expect(storeLink("https://3enwank.com/account/login", "ar-eg")).toBe("https://3enwank.com/account/login?lang=ar");
+  });
+
+  it("joins onto a query string that already exists", () => {
+    expect(storeLink("https://3enwank.com/account/domains/search?q=example.com", "ar")).toBe("https://3enwank.com/account/domains/search?q=example.com&lang=ar");
+  });
+
+  it("keeps a fragment at the end where a browser expects it", () => {
+    expect(storeLink("https://3enwank.com/account/cart#items", "ar")).toBe("https://3enwank.com/account/cart?lang=ar#items");
   });
 });

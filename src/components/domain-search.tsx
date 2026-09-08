@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useId, useRef, useState, type FormEvent } from "react";
 import type { Currency } from "@/lib/catalogue";
 import { formatPrice } from "@/lib/format";
-import type { Locale } from "@/lib/i18n";
+import { storeLink, type Locale } from "@/lib/i18n";
 import { useCurrency } from "./currency";
 
 /** Every string the widget shows; passed from the server so the dictionaries stay out of the browser bundle. */
@@ -88,7 +88,7 @@ function Row({ r, primary = false, index = 0, enabled, locale, storeSearchUrl, c
         ) : null}
         {free ? (
           r.sellable && enabled ? (
-            <a href={`${storeSearchUrl}?q=${encodeURIComponent(r.name)}`} className="btn-gradient inline-flex min-h-10 items-center whitespace-nowrap rounded-lg px-4 text-sm font-bold">
+            <a href={storeLink(`${storeSearchUrl}?q=${encodeURIComponent(r.name)}`, locale)} className="btn-gradient inline-flex min-h-10 items-center whitespace-nowrap rounded-lg px-4 text-sm font-bold">
               {labels.register}
             </a>
           ) : (
@@ -199,7 +199,7 @@ export function DomainSearch({ locale, storeSearchUrl, apiUrl, ideasUrl, contact
   const freeIdeas = ideasData?.ideas.filter((r) => r.available !== false) ?? [];
   return (
     <div>
-      <form action={storeSearchUrl} method="get" onSubmit={submit} role="search">
+      <form action={storeLink(storeSearchUrl, locale)} method="get" onSubmit={submit} role="search">
         <label htmlFor={`${id}-q`} className="mb-2 block text-sm font-semibold text-ink">
           {labels.label}
         </label>

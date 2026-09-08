@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { ASSISTANT_PREVIEW, STORE_URL, currentYear } from "@/lib/site";
-import { anchorFor, languageLinks, pathFor, type Locale, type PageKey } from "@/lib/i18n";
+import { anchorFor, languageLinks, pathFor, storeLink, type Locale, type PageKey } from "@/lib/i18n";
 import { messagesFor } from "@/messages";
 import { Assistant } from "./assistant";
 import { Logo, LogoFull } from "./logo";
@@ -65,7 +65,7 @@ export function Shell({ locale, page, storeUrl, legalName, address, supportEmail
                 ))}
               </ul>
             </details>
-            <a href={`${store}/login`} className="hidden min-h-11 items-center px-2 text-sm font-bold text-brand-strong hover:text-brand sm:inline-flex">
+            <a href={storeLink(`${store}/login`, locale)} className="hidden min-h-11 items-center px-2 text-sm font-bold text-brand-strong hover:text-brand sm:inline-flex">
               {t.nav.login}
             </a>
             <a href={pathFor("hosting", locale)} className="btn-gradient inline-flex min-h-11 items-center whitespace-nowrap rounded-lg px-3 text-[13px] font-bold sm:px-4 sm:text-sm">
@@ -106,9 +106,9 @@ export function Shell({ locale, page, storeUrl, legalName, address, supportEmail
           <FooterColumn
             title={t.footer.account}
             links={[
-              [`${store}/login`, t.footer.login],
-              [`${store}/invoices`, t.footer.invoices],
-              [`${store}/tickets`, t.footer.tickets],
+              [storeLink(`${store}/login`, locale), t.footer.login],
+              [storeLink(`${store}/invoices`, locale), t.footer.invoices],
+              [storeLink(`${store}/tickets`, locale), t.footer.tickets],
             ]}
           />
           <FooterColumn

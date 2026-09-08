@@ -2,13 +2,14 @@
  * Process configuration, read from the environment when the server starts (ops/env.example). The
  * same values are read during `next build`, which pre-renders every page once.
  */
-function origin(value: string | undefined, fallback: string): string {
+/** Trailing slashes trimmed; a path segment is kept, because the store lives under one. */
+function base(value: string | undefined, fallback: string): string {
   const v = (value ?? "").trim().replace(/\/+$/, "");
   return v || fallback;
 }
 
-export const SITE_URL = origin(process.env.SITE_URL, "https://3enwank.com");
-export const STORE_URL = origin(process.env.STORE_URL, "https://my.3enwank.com");
+export const SITE_URL = base(process.env.SITE_URL, "https://3enwank.com");
+export const STORE_URL = base(process.env.STORE_URL, "https://3enwank.com/account");
 export const CATALOGUE_URL = (process.env.CATALOGUE_URL ?? "").trim() || `${STORE_URL}/api/public/catalogue`;
 /** "fallback" skips the network; anything else (default "remote") tries CATALOGUE_URL first. */
 export const CATALOGUE_SOURCE = (process.env.CATALOGUE_SOURCE ?? "remote").trim();

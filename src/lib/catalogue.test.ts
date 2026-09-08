@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { buildFetchUrl, catalogueSchema, fallbackCatalogue, resolveCatalogue, type FetchLike } from "./catalogue";
 
-const URL = "https://my.3enwank.com/api/public/catalogue";
+const URL = "https://3enwank.com/account/api/public/catalogue";
 
 function fetchWith(handler: (url: string, init?: RequestInit) => Response | Promise<Response>): FetchLike {
   return async (url, init) => handler(url, init);
@@ -16,7 +16,7 @@ describe("catalogue fallback", () => {
     expect(c.products.care.length).toBeGreaterThan(0);
     for (const p of [...c.products.hosting, ...c.products.build, ...c.products.care]) {
       expect(p.prices.EGP?.gross).toBeGreaterThan(0);
-      expect(p.storeUrl).toMatch(/^https:\/\/my\.3enwank\.com\/plans\//);
+      expect(p.storeUrl).toMatch(/^https:\/\/3enwank\.com\/account\/plans\//);
     }
   });
 
@@ -60,7 +60,7 @@ describe("catalogue fallback", () => {
     await new Promise((r) => setTimeout(r, 2));
     await resolveCatalogue({ url: URL, source: "remote", fetch });
     expect(urls).toHaveLength(2);
-    for (const u of urls) expect(u).toMatch(/^https:\/\/my\.3enwank\.com\/api\/public\/catalogue\?build=\d+$/);
+    for (const u of urls) expect(u).toMatch(/^https:\/\/3enwank\.com\/account\/api\/public\/catalogue\?build=\d+$/);
     expect(urls[0]).not.toBe(urls[1]);
     // The reason shown in the build log names the configured URL, not the cache-busted one.
     const failed = await resolveCatalogue({ url: URL, source: "remote", fetch: fetchWith(() => new Response("", { status: 503 })) });

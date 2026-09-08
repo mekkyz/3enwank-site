@@ -14,8 +14,8 @@ touch /etc/enwank-site/env && chown root:enwank-site /etc/enwank-site/env && chm
 
 add_var() { grep -q "^$1=" /etc/enwank-site/env || printf '%s=%s\n' "$1" "$2" >> /etc/enwank-site/env; }
 add_var NODE_ENV production
-add_var CATALOGUE_URL http://127.0.0.1:3000/api/public/catalogue
-add_var STORE_URL https://my.3enwank.com
+add_var CATALOGUE_URL http://127.0.0.1:3000/account/api/public/catalogue
+add_var STORE_URL https://3enwank.com/account
 add_var SITE_URL https://3enwank.com
 add_var WHATSAPP_NUMBER ""
 add_var ASSISTANT_PREVIEW ""

@@ -33,7 +33,10 @@ export const home = {
       return cheapest?.prices.EGP ? `${t.common.from} ${cheapest.prices.EGP.formatted.replace(/\.00$/, "")}` : undefined;
     };
     const api = storeApi(catalogue);
-    const whatsapp = WHATSAPP_NUMBER || (catalogue.company.phone ?? "").replace(/[^0-9]/g, "");
+    // A telephone number is not a WhatsApp number. WHATSAPP_NUMBER is the only thing that puts a
+    // "message us on WhatsApp" card on the page; the company's phone number gets a phone card, and
+    // both can be shown, because they are two different ways to reach the same people.
+    const whatsapp = WHATSAPP_NUMBER;
     const phone = catalogue.company.phone;
     const label = "text-xs font-extrabold uppercase tracking-[0.14em] text-brand";
     return (
@@ -152,14 +155,16 @@ export const home = {
                   </ButtonLink>
                 </div>
               </Card>
-            ) : phone ? (
+            ) : null}
+            {phone ? (
               <Card as="li" className="h-full">
                 <h3 className={label}>{t.contact.phone}</h3>
-                <a href={`tel:${phone.replace(/\s+/g, "")}`} className="mt-3 block text-xl font-extrabold text-ink">
+                <a href={`tel:${phone.replace(/[^0-9+]/g, "")}`} className="mt-3 block text-xl font-extrabold text-ink hover:text-brand-strong">
                   <bdi dir="ltr" className="tabular">
                     {phone}
                   </bdi>
                 </a>
+                <p className="mt-2 text-sm text-muted">{t.contact.whatsappBody}</p>
               </Card>
             ) : null}
             <Card as="li" className="h-full">

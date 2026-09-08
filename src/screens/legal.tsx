@@ -18,7 +18,7 @@ function legalScreen(page: "terms" | "privacy") {
       const { t, catalogue, company } = await screenContext(locale);
       const copy = t[page];
       return (
-        <Shell locale={locale} page={page} storeUrl={catalogue.store.url} legalName={company.legalName} address={company.address} supportEmail={company.supportEmail} assistantEnabled={catalogue.assistant.enabled}>
+        <Shell locale={locale} page={page} storeUrl={catalogue.store.url} legalName={company.legalName} address={company.address} supportEmail={company.supportEmail} assistantEnabled={catalogue.assistant.enabled} turnstileSiteKey={catalogue.assistant.turnstileSiteKey}>
           <PageIntro title={copy.title} lede={fill(copy.intro, { legalName: company.legalName, version: TERMS_VERSION })} />
           <Container className="max-w-3xl py-12">
             <div className="space-y-9">

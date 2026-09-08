@@ -24,7 +24,7 @@ export const hosting = {
     // The price sits mid-sentence and is a client component (currency toggle), so the copy is split around it.
     const [addonBefore, addonAfter] = t.hosting.addonBody.split("{price}");
     return (
-      <Shell locale={locale} page="hosting" storeUrl={catalogue.store.url} legalName={company.legalName} address={company.address} supportEmail={company.supportEmail} assistantEnabled={catalogue.assistant.enabled}>
+      <Shell locale={locale} page="hosting" storeUrl={catalogue.store.url} legalName={company.legalName} address={company.address} supportEmail={company.supportEmail} assistantEnabled={catalogue.assistant.enabled} turnstileSiteKey={catalogue.assistant.turnstileSiteKey}>
         <PageIntro kicker={t.hosting.title} title={t.hosting.h2} lede={t.hosting.lede} />
         <Section>
           <div className="mb-8 flex flex-wrap items-center justify-between gap-4">

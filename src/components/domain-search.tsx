@@ -5,6 +5,7 @@ import type { Currency } from "@/lib/catalogue";
 import { formatPrice } from "@/lib/format";
 import { storeLink, type Locale } from "@/lib/i18n";
 import { useCurrency } from "./currency";
+import { turnstileToken } from "@/lib/turnstile";
 
 /** Every string the widget shows; passed from the server so the dictionaries stay out of the browser bundle. */
 export type DomainSearchLabels = {
@@ -107,7 +108,7 @@ function Row({ r, primary = false, index = 0, enabled, locale, storeSearchUrl, c
  * store's search page; with it, the store's public API answers in place and "Register" hands the
  * name to the store. Prices follow the visitor's currency choice.
  */
-export function DomainSearch({ locale, storeSearchUrl, apiUrl, ideasUrl, contactHref, labels, ideas }: { locale: Locale; storeSearchUrl: string; apiUrl: string; ideasUrl: string; contactHref: string; labels: DomainSearchLabels; ideas: boolean }) {
+export function DomainSearch({ locale, storeSearchUrl, apiUrl, ideasUrl, contactHref, labels, ideas, turnstileSiteKey = null }: { locale: Locale; storeSearchUrl: string; apiUrl: string; ideasUrl: string; contactHref: string; labels: DomainSearchLabels; ideas: boolean; turnstileSiteKey?: string | null }) {
   const { currency } = useCurrency();
   const id = useId();
   const [query, setQuery] = useState("");
@@ -183,7 +184,8 @@ export function DomainSearch({ locale, storeSearchUrl, apiUrl, ideasUrl, contact
     if (d.length < 10 || ideasStatus === "loading") return;
     setIdeasStatus("loading");
     try {
-      const res = await fetch(ideasUrl, { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify({ description: d, locale, currency }) });
+      const token = await turnstileToken(turnstileSiteKey);
+      const res = await fetch(ideasUrl, { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify({ description: d, locale, currency, ...(token ? { turnstileToken: token } : {}) }) });
       if (res.status === 503) return setIdeasStatus("unavailable");
       if (res.status === 429) return setIdeasStatus("limited");
       if (!res.ok) return setIdeasStatus("error");

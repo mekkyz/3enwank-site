@@ -10,7 +10,7 @@ import { ThemeSwitch } from "./theme";
  * Header, navigation and footer shared by every page. Server-rendered, no JavaScript: the language
  * menu is a <details> element and every store link is a plain anchor.
  */
-export function Shell({ locale, page, storeUrl, legalName, address, supportEmail, assistantEnabled = false, children }: { locale: Locale; page: PageKey; storeUrl?: string; legalName?: string; address?: string; supportEmail?: string; assistantEnabled?: boolean; children: ReactNode }) {
+export function Shell({ locale, page, storeUrl, legalName, address, supportEmail, assistantEnabled = false, turnstileSiteKey = null, children }: { locale: Locale; page: PageKey; storeUrl?: string; legalName?: string; address?: string; supportEmail?: string; assistantEnabled?: boolean; turnstileSiteKey?: string | null; children: ReactNode }) {
   const t = messagesFor(locale);
   const languages = languageLinks(page, locale);
   const current = languages.find((l) => l.current)!;
@@ -130,7 +130,7 @@ export function Shell({ locale, page, storeUrl, legalName, address, supportEmail
           </div>
         </div>
       </footer>
-      {assistantEnabled || ASSISTANT_PREVIEW ? <Assistant url={`${store}/api/public/assistant`} locale={locale} labels={t.assistant} supportEmail={supportEmail} /> : null}
+      {assistantEnabled || ASSISTANT_PREVIEW ? <Assistant url={`${store}/api/public/assistant`} locale={locale} labels={t.assistant} supportEmail={supportEmail} turnstileSiteKey={turnstileSiteKey} /> : null}
     </>
   );
 }

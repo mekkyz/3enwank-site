@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
 import type { Locale } from "@/lib/i18n";
+import { turnstileToken } from "@/lib/turnstile";
 
 export type AssistantLabels = { open: string; close: string; title: string; intro: string; placeholder: string; send: string; thinking: string; error: string; unavailable: string; note: string };
 type Msg = { role: "user" | "assistant"; content: string };
@@ -26,7 +27,7 @@ function restore(): Msg[] {
  * plain text; the conversation lives in this tab only. The panel is closed on the server render,
  * so restoring the conversation on the client changes no markup.
  */
-export function Assistant({ url, locale, labels, supportEmail }: { url: string; locale: Locale; labels: AssistantLabels; supportEmail?: string }) {
+export function Assistant({ url, locale, labels, supportEmail, turnstileSiteKey = null }: { url: string; locale: Locale; labels: AssistantLabels; supportEmail?: string; turnstileSiteKey?: string | null }) {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Msg[]>(restore);
   const [input, setInput] = useState("");
@@ -55,7 +56,8 @@ export function Assistant({ url, locale, labels, supportEmail }: { url: string; 
     setInput("");
     setStatus("streaming");
     try {
-      const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ messages: next, locale }) });
+      const token = await turnstileToken(turnstileSiteKey);
+      const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ messages: next, locale, ...(token ? { turnstileToken: token } : {}) }) });
       if (res.status === 503) return setStatus("unavailable");
       if (!res.ok || !res.body) return setStatus("error");
       const reader = res.body.getReader();

@@ -40,7 +40,7 @@ export const home = {
     const phone = catalogue.company.phone;
     const label = "text-xs font-extrabold uppercase tracking-[0.14em] text-brand";
     return (
-      <Shell locale={locale} page="home" storeUrl={catalogue.store.url} legalName={company.legalName} address={company.address} supportEmail={company.supportEmail} assistantEnabled={catalogue.assistant.enabled}>
+      <Shell locale={locale} page="home" storeUrl={catalogue.store.url} legalName={company.legalName} address={company.address} supportEmail={company.supportEmail} assistantEnabled={catalogue.assistant.enabled} turnstileSiteKey={catalogue.assistant.turnstileSiteKey}>
         <section className="glow relative overflow-hidden border-b border-line">
           <Container className="grid items-center gap-12 py-16 lg:grid-cols-2 lg:py-24">
             <div>
@@ -114,7 +114,7 @@ export const home = {
         <Section id="domains">
           <SectionHeader kicker={t.nav.domains} title={t.home.domainsTitle} lede={t.home.domainsLede} right={<ArrowLink href={pathFor("domains", locale)}>{t.home.products.domains.link}</ArrowLink>} />
           <div className="rounded-2xl border border-line bg-panel p-5 sm:p-8">
-            <DomainSearch locale={locale} storeSearchUrl={catalogue.store.domainSearchUrl} apiUrl={api.domainSearch} ideasUrl={api.domainIdeas} contactHref={anchorFor("contact", locale)} labels={domainSearchLabels(t)} ideas={assistantOn(catalogue)} />
+            <DomainSearch locale={locale} storeSearchUrl={catalogue.store.domainSearchUrl} apiUrl={api.domainSearch} ideasUrl={api.domainIdeas} contactHref={anchorFor("contact", locale)} labels={domainSearchLabels(t)} ideas={assistantOn(catalogue)} turnstileSiteKey={catalogue.assistant.turnstileSiteKey} />
           </div>
         </Section>
 

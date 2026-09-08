@@ -16,7 +16,7 @@ export const care = {
     const { t, catalogue, company } = await screenContext(locale);
     const plans = catalogue.products.care;
     return (
-      <Shell locale={locale} page="care" storeUrl={catalogue.store.url} legalName={company.legalName} address={company.address} supportEmail={company.supportEmail} assistantEnabled={catalogue.assistant.enabled}>
+      <Shell locale={locale} page="care" storeUrl={catalogue.store.url} legalName={company.legalName} address={company.address} supportEmail={company.supportEmail} assistantEnabled={catalogue.assistant.enabled} turnstileSiteKey={catalogue.assistant.turnstileSiteKey}>
         <PageIntro kicker={t.care.title} title={t.care.h2} lede={t.care.lede} />
         <Section>
           <div className="mb-8 flex flex-wrap items-center justify-between gap-4">

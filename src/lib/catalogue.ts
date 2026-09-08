@@ -54,7 +54,7 @@ export const catalogueSchema = z.object({
   store: z.object({ url: z.url(), plansUrl: z.url(), domainSearchUrl: z.url(), loginUrl: z.url(), registerUrl: z.url() }),
   domains: z.object({ enabled: z.boolean() }),
   /** Chat and name suggestions are served by the store only once its API key is set; older stores omit the field. */
-  assistant: z.object({ enabled: z.boolean() }).default({ enabled: false }),
+  assistant: z.object({ enabled: z.boolean(), turnstileSiteKey: z.string().nullable().default(null) }).default({ enabled: false, turnstileSiteKey: null }),
   products: z.object({ hosting: z.array(product), build: z.array(product), care: z.array(product) }),
   tlds: z.array(
     z.object({

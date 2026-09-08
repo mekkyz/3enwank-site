@@ -18,10 +18,10 @@ export const domains = {
     const open = catalogue.domains.enabled && catalogue.tlds.length > 0;
     const api = storeApi(catalogue);
     return (
-      <Shell locale={locale} page="domains" storeUrl={catalogue.store.url} legalName={company.legalName} address={company.address} supportEmail={company.supportEmail} assistantEnabled={catalogue.assistant.enabled}>
+      <Shell locale={locale} page="domains" storeUrl={catalogue.store.url} legalName={company.legalName} address={company.address} supportEmail={company.supportEmail} assistantEnabled={catalogue.assistant.enabled} turnstileSiteKey={catalogue.assistant.turnstileSiteKey}>
         <PageIntro kicker={t.domains.title} title={t.domains.h2} lede={t.domains.lede}>
           <div className="mt-8 rounded-2xl border border-line bg-panel p-5 sm:p-8">
-            <DomainSearch locale={locale} storeSearchUrl={catalogue.store.domainSearchUrl} apiUrl={api.domainSearch} ideasUrl={api.domainIdeas} contactHref={anchorFor("contact", locale)} labels={domainSearchLabels(t)} ideas={assistantOn(catalogue)} />
+            <DomainSearch locale={locale} storeSearchUrl={catalogue.store.domainSearchUrl} apiUrl={api.domainSearch} ideasUrl={api.domainIdeas} contactHref={anchorFor("contact", locale)} labels={domainSearchLabels(t)} ideas={assistantOn(catalogue)} turnstileSiteKey={catalogue.assistant.turnstileSiteKey} />
           </div>
         </PageIntro>
         <Section>

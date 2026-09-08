@@ -137,14 +137,14 @@ export function Assistant({ url, locale, labels, supportEmail, turnstileSiteKey 
               {labels.placeholder}
             </label>
             <textarea id="assistant-input" ref={inputRef} rows={1} dir="auto" value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={keys} maxLength={2000} placeholder={labels.placeholder} className="block max-h-32 min-h-11 w-full resize-none rounded-lg border border-line bg-surface px-3 py-2.5 text-sm text-ink placeholder:text-faint focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand-soft" />
-            <button type="submit" disabled={status === "streaming" || !input.trim()} className="btn-gradient inline-flex h-11 shrink-0 items-center justify-center rounded-lg px-4 text-sm font-bold disabled:opacity-60">
+            <button type="submit" disabled={status === "streaming" || !input.trim()} className="btn-primary inline-flex h-11 shrink-0 items-center justify-center rounded-lg px-4 text-sm font-bold disabled:opacity-60">
               {labels.send}
             </button>
           </form>
           <p className="px-4 pb-3 text-[11px] leading-snug text-faint">{labels.note}</p>
         </section>
       ) : null}
-      <button type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open} aria-label={open ? labels.close : labels.open} title={open ? labels.close : labels.open} className="btn-gradient pulse-once flex h-14 w-14 items-center justify-center rounded-full shadow-[0_16px_32px_-12px_rgba(124,95,165,0.9)]">
+      <button type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open} aria-label={open ? labels.close : labels.open} title={open ? labels.close : labels.open} className="btn-primary pulse-once flex h-14 w-14 items-center justify-center rounded-full shadow-[0_16px_32px_-12px_rgba(124,95,165,0.9)]">
         {open ? (
           <svg aria-hidden="true" viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
             <path d="M6 9l6 6 6-6" />

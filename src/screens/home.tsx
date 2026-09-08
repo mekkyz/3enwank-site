@@ -118,8 +118,14 @@ export const home = {
           </div>
         </Section>
 
-        <Container className="pb-4">
-          <div className="band-gradient flex flex-wrap items-center justify-between gap-6 rounded-2xl px-7 py-9 sm:px-10">
+        {/*
+         * The band sits between two sections, so it needs their rhythm below it as well as above.
+         * It had pb-4: sixteen pixels between a full-width block of brand colour and the point where
+         * the page background changes tone, which read as the band having been dropped in and left
+         * there. The section above contributes its own padding, so this matches it.
+         */}
+        <Container className="pb-14 sm:pb-20">
+          <div className="band flex flex-wrap items-center justify-between gap-6 rounded-2xl px-7 py-9 sm:px-10">
             <div>
               <h2 className="text-2xl font-extrabold tracking-tight sm:text-3xl">{t.home.moveTitle}</h2>
               <p className="mt-2 max-w-xl text-white/90">{t.home.moveBody}</p>

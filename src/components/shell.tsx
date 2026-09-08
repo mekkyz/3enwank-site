@@ -68,7 +68,7 @@ export function Shell({ locale, page, storeUrl, legalName, address, supportEmail
             <a href={storeLink(`${store}/login`, locale)} className="hidden min-h-11 items-center px-2 text-sm font-bold text-brand-strong hover:text-brand sm:inline-flex">
               {t.nav.login}
             </a>
-            <a href={pathFor("hosting", locale)} className="btn-gradient inline-flex min-h-11 items-center whitespace-nowrap rounded-lg px-3 text-[13px] font-bold sm:px-4 sm:text-sm">
+            <a href={pathFor("hosting", locale)} className="btn-primary inline-flex min-h-11 items-center whitespace-nowrap rounded-lg px-3 text-[13px] font-bold sm:px-4 sm:text-sm">
               {t.nav.plans}
             </a>
           </div>

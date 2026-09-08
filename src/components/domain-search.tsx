@@ -89,7 +89,7 @@ function Row({ r, primary = false, index = 0, enabled, locale, storeSearchUrl, c
         ) : null}
         {free ? (
           r.sellable && enabled ? (
-            <a href={storeLink(`${storeSearchUrl}?q=${encodeURIComponent(r.name)}`, locale)} className="btn-gradient inline-flex min-h-10 items-center whitespace-nowrap rounded-lg px-4 text-sm font-bold">
+            <a href={storeLink(`${storeSearchUrl}?q=${encodeURIComponent(r.name)}`, locale)} className="btn-primary inline-flex min-h-10 items-center whitespace-nowrap rounded-lg px-4 text-sm font-bold">
               {labels.register}
             </a>
           ) : (
@@ -224,7 +224,7 @@ export function DomainSearch({ locale, storeSearchUrl, apiUrl, ideasUrl, contact
             dir="ltr"
             className="block min-h-12 w-full rounded-lg border border-line bg-surface px-4 text-lg text-ink placeholder:text-faint focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand-soft"
           />
-          <button type="submit" disabled={status === "loading"} className="btn-gradient inline-flex min-h-12 shrink-0 items-center justify-center rounded-lg px-7 text-sm font-bold disabled:opacity-70">
+          <button type="submit" disabled={status === "loading"} className="btn-primary inline-flex min-h-12 shrink-0 items-center justify-center rounded-lg px-7 text-sm font-bold disabled:opacity-70">
             {status === "loading" ? labels.checking : labels.button}
           </button>
         </div>

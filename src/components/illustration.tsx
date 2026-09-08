@@ -28,17 +28,12 @@ export function HeroIllustration({ labels, title }: { labels: [string, string, s
   );
   return (
     <svg viewBox="0 0 600 440" className="h-auto w-full max-w-[560px]" role="img" aria-label={title} direction="ltr">
-      <defs>
-        <linearGradient id="hero-bar" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#7c5fa5" />
-          <stop offset="1" stopColor="#2a95c5" />
-        </linearGradient>
-      </defs>
       <circle cx="300" cy="220" r="200" fill="var(--illus-bg)" />
       <circle className="spin-slow" cx="300" cy="220" r="140" fill="none" stroke="var(--illus-ring)" strokeWidth="1.5" strokeDasharray="6 8" />
       <path d="M300 220L120 110M300 220l180-110M300 220L120 340M300 220l180 120" stroke="var(--illus-link)" strokeWidth="2" />
       <rect x="190" y="150" width="220" height="140" rx="14" fill="var(--illus-node)" stroke="var(--illus-node-line)" strokeWidth="2.5" />
-      <rect x="190" y="150" width="220" height="34" rx="14" fill="url(#hero-bar)" />
+      {/* The window's title bar: flat brand purple, not a purple-to-blue ramp. */}
+      <rect x="190" y="150" width="220" height="34" rx="14" fill="var(--color-brand-ink)" />
       <circle cx="210" cy="167" r="5" fill="#ffffff" />
       <circle cx="228" cy="167" r="5" fill="#ffffff" />
       <circle cx="246" cy="167" r="5" fill="#ffffff" />

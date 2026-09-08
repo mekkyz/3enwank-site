@@ -15,13 +15,13 @@
   --color-muted: #b4b9d0;
   --color-faint: #8b90ab;
   --color-line: #2a2f52;
-  --color-brand: #9b7fc9;
-  --color-brand-strong: #c3addf;
-  --color-brand-soft: #2b2450;
-  --color-brand-ink: #7c5fa5;
-  --color-accent: #5fbde8;
+  --color-brand: #a474e7;
+  --color-brand-strong: #c197f7;
+  --color-brand-soft: #28183f;
+  --color-brand-ink: #7b32e2;
+  --color-accent: #4cbcf0;
   --color-accent-strong: #8fd3f2;
-  --color-accent-soft: #163a52;
+  --color-accent-soft: #153747;
   --color-ok: #6fd3a2;
   --color-ok-soft: #123a2c;
   --color-warn: #f0b35a;
@@ -38,8 +38,8 @@
   --illus-bar: #3a3f6b;
   --illus-bar-2: #2a2f52;
   --illus-label: #d7dbeb;
-  --glow-a: rgba(124, 95, 165, 0.35);
-  --glow-b: rgba(42, 149, 197, 0.28);
+  /* The band and the primary button: one flat brand colour, white text, no gradient. */
+  --color-band: #7b32e2;
 }
 
 [data-theme="light"] {
@@ -52,13 +52,13 @@
   --color-muted: #4b5169;
   --color-faint: #6f7681;
   --color-line: #e8e9ee;
-  --color-brand: #7c5fa5;
-  --color-brand-strong: #5f4685;
-  --color-brand-soft: #f1ecf7;
-  --color-brand-ink: #7c5fa5;
-  --color-accent: #2a95c5;
-  --color-accent-strong: #1f6f92;
-  --color-accent-soft: #e6f3f9;
+  --color-brand: #7024db;
+  --color-brand-strong: #5e1eb8;
+  --color-brand-soft: #f2eafd;
+  --color-brand-ink: #7024db;
+  --color-accent: #0c80b6;
+  --color-accent-strong: #086691;
+  --color-accent-soft: #e3f4fd;
   --color-ok: #067647;
   --color-ok-soft: #e6f4ec;
   --color-warn: #b54708;
@@ -67,6 +67,7 @@
   --color-dark-line: #2c3050;
   --color-dark-muted: #c4c8dc;
   --color-danger: #b42318;
+  --color-band: #7024db;
   --illus-bg: #f3effa;
   --illus-ring: #dcd3ea;
   --illus-link: #cfe7f2;
@@ -75,8 +76,6 @@
   --illus-bar: #dcd3ea;
   --illus-bar-2: #e8e9ee;
   --illus-label: #2a2f45;
-  --glow-a: rgba(124, 95, 165, 0.18);
-  --glow-b: rgba(42, 149, 197, 0.14);
 }
 
 @theme inline {
@@ -153,36 +152,34 @@ li {
   white-space: nowrap;
 }
 
-/* The primary action: the two brand colours, brighter on hover. */
-.btn-gradient {
-  background-image: linear-gradient(105deg, var(--color-brand-ink) 0%, #2a95c5 60%, #7c5fa5 100%);
-  background-size: 200% 100%;
-  background-position: 0% 50%;
+/*
+ * The primary action: one flat brand colour, lifting slightly on hover.
+ *
+ * It was a two-colour gradient that slid on hover. Flat reads as more deliberate, the colour is the
+ * brand's own purple rather than an average of two, and there is nothing for the eye to track while
+ * it is trying to read the label.
+ */
+.btn-primary {
+  background-color: var(--color-brand-ink);
   color: #ffffff;
   transition:
-    background-position 0.55s ease,
+    background-color 0.18s ease,
     transform 0.2s ease,
     box-shadow 0.2s ease;
 }
-.btn-gradient:hover {
-  background-position: 100% 50%;
+.btn-primary:hover {
+  background-color: color-mix(in oklab, var(--color-brand-ink) 86%, #ffffff);
   transform: translateY(-1px);
 }
 
-/* Bands in the two brand hues, the same in both themes, so white text keeps its contrast. */
-.band-gradient {
-  background-image: linear-gradient(100deg, #7c5fa5 0%, #2a95c5 55%, #7c5fa5 100%);
-  background-size: 220% 100%;
+/*
+ * Full-width call-to-action bands: one flat brand colour in both themes, so white text keeps its
+ * contrast without a gradient sliding underneath it. The animated version drifted between purple and
+ * blue on a sixteen-second loop, which moved in the corner of the eye on every page it appeared.
+ */
+.band {
+  background-color: var(--color-band);
   color: #ffffff;
-  animation: band-shift 16s ease-in-out infinite alternate;
-}
-@keyframes band-shift {
-  from {
-    background-position: 0% 50%;
-  }
-  to {
-    background-position: 100% 50%;
-  }
 }
 
 /* Cards rise slightly under the pointer. */
@@ -247,106 +244,21 @@ li {
   transform-origin: 300px 220px;
 }
 
-/* Soft brand glow behind the hero. */
+/*
+ * The hero's texture: a dot grid, and nothing else.
+ *
+ * This used to carry two large radial colour washes and two blurred, slowly drifting blobs on top of
+ * them. Together they were the largest gradient on the site and they made the brand colours read as
+ * a haze rather than as colour. The grid gives the surface something to be without tinting it.
+ */
 .glow {
-  background:
-    radial-gradient(circle, color-mix(in oklab, var(--color-line) 80%, transparent) 1px, transparent 1.5px) 0 0 / 28px 28px,
-    radial-gradient(60% 55% at 78% 30%, var(--glow-a) 0%, transparent 70%),
-    radial-gradient(45% 50% at 12% 70%, var(--glow-b) 0%, transparent 70%);
-}
-.glow::before,
-.glow::after {
-  content: "";
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(70px);
-  opacity: 0.6;
-  pointer-events: none;
-  z-index: 0;
-}
-.glow::before {
-  width: 44rem;
-  height: 44rem;
-  top: -20rem;
-  inset-inline-end: -12rem;
-  background: var(--glow-a);
-  animation: blob-a 24s ease-in-out infinite alternate;
-}
-.glow::after {
-  width: 36rem;
-  height: 36rem;
-  bottom: -20rem;
-  inset-inline-start: -14rem;
-  background: var(--glow-b);
-  animation: blob-b 28s ease-in-out infinite alternate;
+  background: radial-gradient(circle, color-mix(in oklab, var(--color-line) 80%, transparent) 1px, transparent 1.5px) 0 0 / 28px 28px;
 }
 .glow > * {
   position: relative;
   z-index: 1;
 }
-@keyframes blob-a {
-  from {
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-  to {
-    transform: translate3d(-6rem, 5rem, 0) scale(1.15);
-  }
-}
-@keyframes blob-b {
-  from {
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-  to {
-    transform: translate3d(6rem, -4rem, 0) scale(1.1);
-  }
-}
-@media (max-width: 640px) {
-  .glow::after {
-    display: none;
-  }
-}
 
-/* Sections reveal as they scroll into view. Only once the inline script has marked the document
-   (html.js), so a page without JavaScript shows everything at once; and never under reduced motion. */
-@media (prefers-reduced-motion: no-preference) {
-  html.js [data-reveal],
-  html.js [data-reveal-stagger] > * {
-    opacity: 0;
-    transform: translateY(18px);
-    transition:
-      opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
-      transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
-  }
-  html.js [data-reveal].is-in,
-  html.js [data-reveal-stagger].is-in > * {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-/* The bar gains a shadow once the page has scrolled. */
-header[data-bar] {
-  transition: box-shadow 0.3s ease;
-}
-header[data-bar].is-scrolled {
-  box-shadow: 0 10px 30px -18px rgba(0, 0, 0, 0.5);
-}
-
-/* Text links with a chevron: the chevron nudges forward. */
-.arrow-link svg {
-  transition: translate 0.2s ease;
-}
-.arrow-link:hover svg {
-  translate: 3px 0;
-}
-[dir="rtl"] .arrow-link:hover svg {
-  translate: -3px 0;
-}
-
-/* The plan most people pick breathes a little. */
-.pulse-glow {
-  animation: pulse-glow 5s ease-in-out infinite;
-}
 @keyframes pulse-glow {
   0%,
   100% {

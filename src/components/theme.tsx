@@ -1,13 +1,13 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import { THEME_KEY, type Theme } from "@/lib/theme";
 
 /**
  * Dark is the default. The choice is kept in localStorage and applied by the inline script in
  * <head> (see root.tsx) before the first paint, so there is no flash on the next page.
  */
-export const THEME_KEY = "3enwank.theme";
-type Theme = "dark" | "light";
+export { THEME_KEY };
 
 const listeners = new Set<() => void>();
 /** The choice made on this page, so the switch reflects it even when storage is blocked. */

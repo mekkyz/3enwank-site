@@ -170,6 +170,10 @@ export const en: Messages = {
     error: "The assistant did not answer. Try again, or email us.",
     unavailable: "The assistant is not switched on yet. Email us and a person answers.",
     note: "Answers come from an AI assistant and can be wrong. Prices come from our price list.",
+    stop: "Stop",
+    retry: "Try again",
+    clear: "Start over",
+    suggestions: ["What hosting plans do you have?", "Can you move my site from another host?", "Is a domain name still free?"],
   },
   about: {
     title: "About 3enwank",

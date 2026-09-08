@@ -14,7 +14,15 @@
   --color-ink: #f2f3f9;
   --color-muted: #b4b9d0;
   --color-faint: #8b90ab;
-  --color-line: #2a2f52;
+  /*
+   * Two border roles, because they answer to different rules. `line` is decoration — the hairline
+   * around a card, a divider between rows — and wants to be quiet. `line-strong` is the edge of a
+   * control a person is meant to press or type into, which WCAG 1.4.11 asks to reach 3:1 against
+   * what it sits on. They were the same token at 1.46:1, which is why every bordered button read as
+   * disabled.
+   */
+  --color-line: #3a4170;
+  --color-line-strong: #5a63a8;
   --color-brand: #a474e7;
   --color-brand-strong: #c197f7;
   --color-brand-soft: #28183f;
@@ -51,7 +59,8 @@
   --color-ink: #1c1f2e;
   --color-muted: #4b5169;
   --color-faint: #6f7681;
-  --color-line: #e8e9ee;
+  --color-line: #d7d9e3;
+  --color-line-strong: #7a80a0;
   --color-brand: #7024db;
   --color-brand-strong: #5e1eb8;
   --color-brand-soft: #f2eafd;
@@ -87,6 +96,7 @@
   --color-muted: var(--color-muted);
   --color-faint: var(--color-faint);
   --color-line: var(--color-line);
+  --color-line-strong: var(--color-line-strong);
   --color-brand: var(--color-brand);
   --color-brand-strong: var(--color-brand-strong);
   --color-brand-soft: var(--color-brand-soft);
@@ -327,4 +337,53 @@ html.theme-switching *::after {
 /* Anchored sections stop below the sticky header. */
 section[id] {
   scroll-margin-top: 4.5rem;
+}
+
+/* The assistant panel: the dots while it thinks, the caret while an answer streams, and the
+   small rise a new message makes. The reduced-motion block above neutralises all three. */
+@keyframes chat-dot {
+  0%,
+  60%,
+  100% {
+    opacity: 0.25;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes chat-caret {
+  0%,
+  45% {
+    opacity: 1;
+  }
+  55%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes chat-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.chat-dot {
+  animation: chat-dot 1.1s ease-in-out infinite;
+}
+
+.chat-caret {
+  animation: chat-caret 1s step-end infinite;
+}
+
+.chat-in {
+  animation: chat-in 0.18s ease-out both;
 }

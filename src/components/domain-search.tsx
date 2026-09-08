@@ -222,7 +222,7 @@ export function DomainSearch({ locale, storeSearchUrl, apiUrl, ideasUrl, contact
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
             dir="ltr"
-            className="block min-h-12 w-full rounded-lg border border-line bg-surface px-4 text-lg text-ink placeholder:text-faint focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand-soft"
+            className="block min-h-12 w-full rounded-lg border border-line-strong bg-surface px-4 text-lg text-ink placeholder:text-faint focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand-soft"
           />
           <button type="submit" disabled={status === "loading"} className="btn-primary inline-flex min-h-12 shrink-0 items-center justify-center rounded-lg px-7 text-sm font-bold disabled:opacity-70">
             {status === "loading" ? labels.checking : labels.button}
@@ -264,7 +264,7 @@ export function DomainSearch({ locale, storeSearchUrl, apiUrl, ideasUrl, contact
             <label htmlFor={`${id}-desc`} className="sr-only">
               {labels.ideasHint}
             </label>
-            <input id={`${id}-desc`} type="text" maxLength={300} minLength={10} required value={desc} onChange={(e) => setDesc(e.target.value)} placeholder={labels.ideasPlaceholder} className="block min-h-11 w-full rounded-lg border border-line bg-surface px-4 text-base text-ink placeholder:text-faint focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand-soft" />
+            <input id={`${id}-desc`} type="text" maxLength={300} minLength={10} required value={desc} onChange={(e) => setDesc(e.target.value)} placeholder={labels.ideasPlaceholder} className="block min-h-11 w-full rounded-lg border border-line-strong bg-surface px-4 text-base text-ink placeholder:text-faint focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand-soft" />
             <button type="submit" disabled={ideasStatus === "loading"} className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-lg border-[1.5px] border-brand px-5 text-sm font-bold text-brand-strong hover:bg-brand-soft disabled:opacity-70">
               {ideasStatus === "loading" ? labels.ideasWorking : labels.ideasButton}
             </button>

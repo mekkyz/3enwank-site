@@ -148,7 +148,7 @@ export type Messages = {
     ideasUnavailable: string;
   };
   /** The chat widget in the corner of every page. */
-  assistant: { open: string; close: string; title: string; intro: string; placeholder: string; send: string; thinking: string; error: string; unavailable: string; note: string };
+  assistant: { open: string; close: string; title: string; intro: string; placeholder: string; send: string; thinking: string; error: string; unavailable: string; note: string; stop: string; retry: string; clear: string; suggestions: readonly [string, string, string] };
   about: {
     title: string;
     h2: string;

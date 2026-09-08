@@ -66,7 +66,7 @@ export function Fine({ children }: { children: ReactNode }) {
 type ButtonVariant = "primary" | "secondary" | "white" | "outline";
 const VARIANTS: Record<ButtonVariant, string> = {
   primary: "btn-primary shadow-[0_10px_24px_-14px_var(--color-brand-ink)]",
-  secondary: "border-[1.5px] border-line bg-panel text-ink hover:border-brand hover:text-brand-strong",
+  secondary: "border-[1.5px] border-line-strong bg-panel text-ink hover:border-brand hover:text-brand-strong",
   white: "bg-white text-[#5e1eb8] hover:bg-[#f2eafd]",
   outline: "border-[1.5px] border-brand text-brand-strong hover:bg-brand-soft",
 };

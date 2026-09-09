@@ -1,4 +1,4 @@
-import { ButtonLink, Card, Fine, PageIntro, Section } from "@/components/blocks";
+import { ButtonLink, Card, PageIntro, Section } from "@/components/blocks";
 import { CurrencyToggle } from "@/components/currency";
 import { DomainSearch } from "@/components/domain-search";
 import { TldTable } from "@/components/domains";
@@ -42,7 +42,6 @@ export const domains = {
               <ButtonLink href={anchorFor("contact", locale)}>{t.domains.ask}</ButtonLink>
             </Card>
           )}
-          <Fine>{t.domains.fine}</Fine>
         </Section>
       </Shell>
     );

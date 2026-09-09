@@ -126,7 +126,6 @@ export type Messages = {
     notYet: string;
     moreTlds: string;
     ask: string;
-    fine: string;
     /** Inline availability results. */
     available: string;
     taken: string;

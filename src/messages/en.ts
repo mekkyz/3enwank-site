@@ -150,6 +150,7 @@ export const en: Messages = {
     error: "The check did not go through. Try again, or search from the customer area.",
     rateLimited: "Too many searches. Wait a few minutes.",
     otherExtensions: "Other extensions",
+    moreExtensions: "Show more endings",
     ideasTitle: "No name yet?",
     ideasHint: "Describe the business in a few words and we suggest names that are free.",
     ideasPlaceholder: "A bakery in Maadi that delivers",

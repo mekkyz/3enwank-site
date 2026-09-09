@@ -157,6 +157,7 @@ export const arEg: Messages = {
     error: "التأكد ماكملش. جرّب تاني، أو دوّر من حساب العملاء.",
     rateLimited: "بحث كتير. استنى كام دقيقة.",
     otherExtensions: "امتدادات تانية",
+    moreExtensions: "شوف امتدادات تانية",
     ideasTitle: "لسه ماخترتش اسم؟",
     ideasHint: "اوصف شغلك في كام كلمة، و" + NB + "إحنا نقترح عليك أسماء فاضية.",
     ideasPlaceholder: "مخبز في المعادي بيوصّل للبيوت",

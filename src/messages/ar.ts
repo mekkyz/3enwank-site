@@ -150,6 +150,7 @@ export const ar: Messages = {
     error: "لم يكتمل التحقق. حاول مرة أخرى، أو ابحث من حساب العملاء.",
     rateLimited: "عمليات بحث كثيرة. انتظر بضع دقائق.",
     otherExtensions: "امتدادات أخرى",
+    moreExtensions: "عرض امتدادات أخرى",
     ideasTitle: "لم تختر اسمًا بعد؟",
     ideasHint: "صف نشاطك في كلمات قليلة ونقترح عليك أسماء متاحة.",
     ideasPlaceholder: "مخبز في المعادي يوصّل إلى المنازل",

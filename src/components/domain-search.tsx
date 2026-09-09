@@ -24,6 +24,7 @@ export type DomainSearchLabels = {
   error: string;
   rateLimited: string;
   otherExtensions: string;
+  moreExtensions: string;
   perYear: string;
   ideasTitle: string;
   ideasHint: string;
@@ -108,12 +109,32 @@ function Row({ r, primary = false, index = 0, enabled, locale, storeSearchUrl, c
  * store's search page; with it, the store's public API answers in place and "Register" hands the
  * name to the store. Prices follow the visitor's currency choice.
  */
+/** Endings offered beside the name typed, and the longer list behind "show more". */
+const SHORTLIST = 5;
+const MORE = 17;
+
+/** A row that is still being checked. Same height as a real one, so nothing jumps when it lands. */
+function Pending({ name }: { name?: string }) {
+  return (
+    <li className="flex items-center justify-between gap-3 border-b border-line py-3 last:border-0">
+      <div className="min-w-0 flex-1">
+        {name ? <span className="block truncate text-sm font-bold text-muted" dir="ltr">{name}</span> : <span className="shimmer block h-4 w-40 max-w-full rounded" />}
+      </div>
+      <span className="shimmer h-4 w-20 shrink-0 rounded" />
+      <span className="shimmer h-9 w-24 shrink-0 rounded-lg" />
+    </li>
+  );
+}
+
 export function DomainSearch({ locale, storeSearchUrl, apiUrl, ideasUrl, contactHref, labels, ideas, turnstileSiteKey = null }: { locale: Locale; storeSearchUrl: string; apiUrl: string; ideasUrl: string; contactHref: string; labels: DomainSearchLabels; ideas: boolean; turnstileSiteKey?: string | null }) {
   const { currency } = useCurrency();
   const id = useId();
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState<Status>("idle");
   const [data, setData] = useState<SearchResponse | null>(null);
+  /** How many endings are still being checked, so their rows can be drawn before the answers land. */
+  const [awaiting, setAwaiting] = useState(0);
+  const [moreLoaded, setMoreLoaded] = useState(false);
   const abort = useRef<AbortController | null>(null);
   const searched = useRef("");
   const [focused, setFocused] = useState(false);
@@ -139,26 +160,74 @@ export function DomainSearch({ locale, storeSearchUrl, apiUrl, ideasUrl, contact
     return () => window.clearInterval(id);
   }, [query, focused]);
 
+  const ask = useCallback(
+    async (q: string, c: Currency, suggest: number, signal: AbortSignal): Promise<SearchResponse | "limited" | "error"> => {
+      const res = await fetch(`${apiUrl}?q=${encodeURIComponent(q)}&currency=${c}&suggest=${suggest}`, { signal, headers: { Accept: "application/json" } });
+      if (res.status === 429) return "limited";
+      if (!res.ok) return "error";
+      return (await res.json()) as SearchResponse;
+    },
+    [apiUrl],
+  );
+
+  /**
+   * Two requests, not one. The registrar answers about one name a second, so asking for the typed
+   * name on its own puts a real answer on screen in about a second instead of holding everything
+   * back until every other ending has been checked too. The second request re-uses the first
+   * answer from the store's cache, so this costs the registrar nothing extra.
+   */
   const run = useCallback(
     async (q: string, c: Currency) => {
       abort.current?.abort();
       const ctl = new AbortController();
       abort.current = ctl;
       setStatus("loading");
+      setData(null);
+      setMoreLoaded(false);
+      setAwaiting(SHORTLIST);
       try {
-        const res = await fetch(`${apiUrl}?q=${encodeURIComponent(q)}&currency=${c}`, { signal: ctl.signal, headers: { Accept: "application/json" } });
-        if (res.status === 429) return setStatus("limited");
-        if (!res.ok) return setStatus("error");
-        const body = (await res.json()) as SearchResponse;
+        const first = await ask(q, c, 0, ctl.signal);
+        if (first === "limited") return setStatus("limited");
+        if (first === "error") return setStatus("error");
         searched.current = q;
-        setData(body);
-        setStatus(body.invalid ? "invalid" : "done");
+        setData(first);
+        if (first.invalid) {
+          setAwaiting(0);
+          return setStatus("invalid");
+        }
+        setStatus("done");
+
+        const full = await ask(q, c, SHORTLIST, ctl.signal);
+        setAwaiting(0);
+        if (full === "limited" || full === "error") return;
+        setData(full);
       } catch (e) {
         if ((e as Error).name !== "AbortError") setStatus("error");
+        setAwaiting(0);
       }
     },
-    [apiUrl],
+    [ask],
   );
+
+  /** "Show more endings" asks for the long list; the six already answered come from the cache. */
+  const loadMore = useCallback(async () => {
+    const q = searched.current;
+    if (!q || awaiting) return;
+    const ctl = new AbortController();
+    abort.current = ctl;
+    setAwaiting(MORE - SHORTLIST);
+    try {
+      const full = await ask(q, currency, MORE, ctl.signal);
+      if (full !== "limited" && full !== "error") {
+        setData(full);
+        setMoreLoaded(true);
+      }
+    } catch {
+      // Leave the shortlist on screen; the button can be pressed again.
+    } finally {
+      setAwaiting(0);
+    }
+  }, [ask, awaiting, currency]);
 
   // A currency flip re-prices the names already on screen.
   useEffect(() => {
@@ -235,21 +304,42 @@ export function DomainSearch({ locale, storeSearchUrl, apiUrl, ideasUrl, contact
         {status === "error" ? <p className="mt-4 text-sm text-warn">{labels.error}</p> : null}
         {status === "limited" ? <p className="mt-4 text-sm text-warn">{labels.rateLimited}</p> : null}
         {status === "invalid" ? <p className="mt-4 text-sm text-warn">{labels.error}</p> : null}
+        {status === "loading" && !data ? (
+          <div className="mt-6">
+            <ul>
+              <Pending name={query.trim().includes(".") ? query.trim().toLowerCase() : undefined} />
+            </ul>
+            <h3 className="mt-4 text-xs font-extrabold uppercase tracking-[0.14em] text-muted">{labels.otherExtensions}</h3>
+            <ul className="mt-1">
+              {Array.from({ length: SHORTLIST }, (_, i) => (
+                <Pending key={`first-${i}`} />
+              ))}
+            </ul>
+          </div>
+        ) : null}
         {data && (status === "done" || status === "loading") ? (
-          <div className={`mt-6 ${status === "loading" ? "opacity-60" : ""}`}>
+          <div className="mt-6">
             {data.primary ? (
               <ul>
                 <Row r={data.primary} primary {...rowProps} />
               </ul>
             ) : null}
-            {data.suggestions.length ? (
+            {data.suggestions.length || awaiting ? (
               <>
                 <h3 className="mt-4 text-xs font-extrabold uppercase tracking-[0.14em] text-muted">{labels.otherExtensions}</h3>
                 <ul className="mt-1">
                   {data.suggestions.map((r, i) => (
                     <Row key={r.name} r={r} index={i + 1} {...rowProps} />
                   ))}
+                  {Array.from({ length: awaiting }, (_, i) => (
+                    <Pending key={`pending-${i}`} />
+                  ))}
                 </ul>
+                {!moreLoaded && !awaiting && data.suggestions.length >= SHORTLIST ? (
+                  <button type="button" onClick={() => void loadMore()} className="mt-3 inline-flex min-h-11 items-center justify-center rounded-lg border-[1.5px] border-line-strong px-4 text-sm font-bold text-muted hover:border-brand hover:text-ink">
+                    {labels.moreExtensions}
+                  </button>
+                ) : null}
               </>
             ) : null}
           </div>
@@ -266,10 +356,26 @@ export function DomainSearch({ locale, storeSearchUrl, apiUrl, ideasUrl, contact
             </label>
             <input id={`${id}-desc`} type="text" maxLength={300} minLength={10} required value={desc} onChange={(e) => setDesc(e.target.value)} placeholder={labels.ideasPlaceholder} className="block min-h-11 w-full rounded-lg border border-line-strong bg-surface px-4 text-base text-ink placeholder:text-faint focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand-soft" />
             <button type="submit" disabled={ideasStatus === "loading"} className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-lg border-[1.5px] border-brand px-5 text-sm font-bold text-brand-strong hover:bg-brand-soft disabled:opacity-70">
-              {ideasStatus === "loading" ? labels.ideasWorking : labels.ideasButton}
+              {ideasStatus === "loading" ? (
+                <span className="inline-flex items-center gap-2">
+                  <span aria-hidden="true" className="chat-dot inline-block h-1.5 w-1.5 rounded-full bg-current" />
+                  <span aria-hidden="true" className="chat-dot inline-block h-1.5 w-1.5 rounded-full bg-current" style={{ animationDelay: "0.16s" }} />
+                  <span aria-hidden="true" className="chat-dot inline-block h-1.5 w-1.5 rounded-full bg-current" style={{ animationDelay: "0.32s" }} />
+                  <span>{labels.ideasWorking}</span>
+                </span>
+              ) : (
+                labels.ideasButton
+              )}
             </button>
           </form>
           <div aria-live="polite">
+            {ideasStatus === "loading" ? (
+              <ul className="mt-3">
+                {Array.from({ length: 5 }, (_, i) => (
+                  <Pending key={`idea-${i}`} />
+                ))}
+              </ul>
+            ) : null}
             {ideasStatus === "unavailable" ? <p className="mt-3 text-sm text-muted">{labels.ideasUnavailable}</p> : null}
             {ideasStatus === "limited" ? <p className="mt-3 text-sm text-warn">{labels.rateLimited}</p> : null}
             {ideasStatus === "error" ? <p className="mt-3 text-sm text-warn">{labels.error}</p> : null}

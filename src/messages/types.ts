@@ -138,6 +138,7 @@ export type Messages = {
     error: string;
     rateLimited: string;
     otherExtensions: string;
+    moreExtensions: string;
     /** Name suggestions from the assistant. */
     ideasTitle: string;
     ideasHint: string;

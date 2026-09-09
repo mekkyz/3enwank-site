@@ -51,6 +51,7 @@ export function domainSearchLabels(t: Messages): DomainSearchLabels {
     error: d.error,
     rateLimited: d.rateLimited,
     otherExtensions: d.otherExtensions,
+    moreExtensions: d.moreExtensions,
     perYear: t.common.perYear,
     ideasTitle: d.ideasTitle,
     ideasHint: d.ideasHint,

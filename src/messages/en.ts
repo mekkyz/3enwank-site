@@ -124,7 +124,7 @@ export const en: Messages = {
   domains: {
     title: "Domains",
     h2: "Register it, or bring it with you.",
-    lede: "International and local extensions. The DNS is set up so the name works with your hosting from the first day.",
+    lede: "We connect the name to your hosting for you. Nothing to configure, working from the first day.",
     searchLabel: "Find a domain name",
     searchPlaceholder: "example.com",
     searchButton: "Search",
@@ -136,7 +136,6 @@ export const en: Messages = {
     transfer: "Transfer",
     perYear: "Prices per year.",
     privacy: "WHOIS privacy included where the extension allows it.",
-    years: "{min} to {max} years at a time.",
     notYet: "Online domain registration is not open yet. Tell us the name you want and we register it for you, or transfer the one you have.",
     moreTlds: "These are the most popular endings. Hundreds more are available. Search for the one you want above.",
     ask: "Ask about a domain",

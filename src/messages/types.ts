@@ -122,7 +122,6 @@ export type Messages = {
     perYear: string;
     privacy: string;
     /** {min} and {max}. */
-    years: string;
     notYet: string;
     moreTlds: string;
     ask: string;

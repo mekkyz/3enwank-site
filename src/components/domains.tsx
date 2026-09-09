@@ -1,6 +1,6 @@
 import type { Tld } from "@/lib/catalogue";
 import type { Locale } from "@/lib/i18n";
-import { fill, messagesFor } from "@/messages";
+import { messagesFor } from "@/messages";
 import { Ltr } from "./bidi";
 import { Price } from "./currency";
 
@@ -52,7 +52,7 @@ export function TldTable({ tlds, locale }: { tlds: Tld[]; locale: Locale }) {
         </tbody>
       </table>
       <p className="border-t border-line px-4 py-3 text-xs text-muted">
-        {t.domains.perYear} {t.domains.privacy} {tlds.length ? fill(t.domains.years, { min: Math.min(...tlds.map((x) => x.minYears)), max: Math.max(...tlds.map((x) => x.maxYears)) }) : null}
+        {t.domains.perYear} {t.domains.privacy}
       </p>
     </div>
   );

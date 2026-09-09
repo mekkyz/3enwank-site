@@ -1,5 +1,5 @@
 import { ArrowLink, ButtonLink, Card, Container, Facts, Section, SectionHeader } from "@/components/blocks";
-import { CurrencyToggle, Price } from "@/components/currency";
+import { Price } from "@/components/currency";
 import { DomainSearch } from "@/components/domain-search";
 import { HeroIllustration } from "@/components/illustration";
 import { PlanCard } from "@/components/plans";
@@ -87,10 +87,7 @@ export const home = {
         {featured.length ? (
           <Section>
             <SectionHeader kicker={t.nav.hosting} title={t.home.pricingTitle} lede={t.home.pricingLede} right={<ArrowLink href={pathFor("hosting", locale)}>{t.home.compareLink}</ArrowLink>} />
-            <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-              <p className="text-sm text-muted">{vatLine(t, catalogue)}</p>
-              <CurrencyToggle label={t.common.currency} hint={t.common.currencyHint} />
-            </div>
+            <p className="mb-6 text-sm text-muted">{vatLine(t, catalogue)}</p>
             <ul data-reveal-stagger className="grid gap-5 md:grid-cols-3">
               {featured.map((p) => (
                 <li key={p.slug}>

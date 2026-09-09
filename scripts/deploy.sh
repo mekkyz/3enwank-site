@@ -33,7 +33,13 @@ switch_current() {
 wait_healthy() {
   local i
   for i in $(seq 1 30); do
-    if curl -fsS -o /dev/null http://127.0.0.1:3001/api/health/; then return 0; fi
+    # Every locale, not just the health route. The Arabic and Egyptian pages are prerendered params
+    # of a dynamic [locale] route: they can be missing while the English pages and /api/health are
+    # perfectly happy, which is how a release once served 404 for two of the three languages.
+    if curl -fsS -o /dev/null http://127.0.0.1:3001/api/health/ &&
+       curl -fsS -o /dev/null http://127.0.0.1:3001/ &&
+       curl -fsS -o /dev/null http://127.0.0.1:3001/ar/ &&
+       curl -fsS -o /dev/null http://127.0.0.1:3001/ar-eg/; then return 0; fi
     sleep 1
   done
   return 1

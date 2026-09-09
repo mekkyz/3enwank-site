@@ -1,5 +1,5 @@
 import { ButtonLink, Card, Empty, Fine, PageIntro, Section } from "@/components/blocks";
-import { CurrencyToggle, Price } from "@/components/currency";
+import { Price } from "@/components/currency";
 import { FeatureList } from "@/components/plans";
 import { Shell } from "@/components/shell";
 import { deliveryFrom, depositSplit, localizedFeatures, localizedSummary, summaryWithoutDelivery } from "@/lib/format";
@@ -20,10 +20,7 @@ export const websites = {
       <Shell locale={locale} page="websites" storeUrl={catalogue.store.url} legalName={company.legalName} address={company.address} supportEmail={company.supportEmail} assistantEnabled={catalogue.assistant.enabled} turnstileSiteKey={catalogue.assistant.turnstileSiteKey}>
         <PageIntro kicker={t.websites.title} title={t.websites.h2} lede={t.websites.lede} />
         <Section>
-          <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
-            <p className="text-sm text-muted">{vatLine(t, catalogue)}</p>
-            <CurrencyToggle label={t.common.currency} hint={t.common.currencyHint} />
-          </div>
+          <p className="mb-8 text-sm text-muted">{vatLine(t, catalogue)}</p>
           {packages.length ? (
             <ol data-reveal-stagger className="grid gap-5 pt-3 sm:grid-cols-2 lg:grid-cols-3">
               {packages.map((p) => {

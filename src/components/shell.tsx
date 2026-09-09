@@ -3,6 +3,7 @@ import { ASSISTANT_PREVIEW, STORE_URL, currentYear } from "@/lib/site";
 import { anchorFor, languageLinks, pathFor, storeLink, type Locale, type PageKey } from "@/lib/i18n";
 import { messagesFor } from "@/messages";
 import { Assistant } from "./assistant";
+import { CurrencySwitch } from "./currency";
 import { Logo, LogoFull } from "./logo";
 import { ThemeSwitch } from "./theme";
 
@@ -39,21 +40,19 @@ export function Shell({ locale, page, storeUrl, legalName, address, supportEmail
               </a>
             ))}
           </nav>
-          <div className="flex items-center gap-1 sm:gap-3">
+          <div className="flex items-center gap-1 sm:gap-2">
+            <CurrencySwitch label={t.common.currency} />
             <details className="relative">
-              <summary className="flex min-h-11 cursor-pointer list-none items-center gap-1.5 rounded-lg px-2 text-sm font-semibold text-muted hover:text-ink sm:px-2.5 [&::-webkit-details-marker]:hidden" aria-label={t.nav.language} title={t.nav.language}>
+              <summary className="flex min-h-11 cursor-pointer list-none items-center rounded-lg px-2 text-sm font-semibold text-muted hover:text-ink [&::-webkit-details-marker]:hidden" aria-label={`${t.nav.language}: ${current.name}`} title={t.nav.language}>
                 <svg aria-hidden="true" viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="12" cy="12" r="9" />
                   <path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18" />
                 </svg>
-                <span lang={current.lang} className="hidden sm:inline">
-                  {current.name}
-                </span>
               </summary>
-              <ul className="absolute end-0 z-50 mt-1 min-w-40 rounded-lg border border-line bg-panel p-1 text-sm shadow-lg">
+              <ul className="absolute end-0 z-50 mt-1 min-w-28 rounded-lg border border-line bg-panel p-1 text-sm shadow-lg">
                 {languages.map((l) => (
                   <li key={l.code}>
-                    <a href={l.path} hrefLang={l.lang} lang={l.lang} dir={l.dir} aria-current={l.current ? "true" : undefined} className={`flex items-center justify-between gap-3 rounded-md px-3 py-2 font-semibold hover:bg-brand-soft ${l.current ? "bg-brand-soft text-brand-strong" : "text-ink"}`}>
+                    <a href={l.path} hrefLang={l.lang} lang={l.lang} dir={l.dir} aria-current={l.current ? "true" : undefined} className={`flex items-center justify-between gap-2.5 whitespace-nowrap rounded-md px-3 py-2 font-semibold hover:bg-brand-soft ${l.current ? "bg-brand-soft text-brand-strong" : "text-ink"}`}>
                       {l.name}
                       {l.current ? (
                         <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
@@ -68,8 +67,8 @@ export function Shell({ locale, page, storeUrl, legalName, address, supportEmail
             <a href={storeLink(`${store}/login`, locale)} className="hidden min-h-11 items-center px-2 text-sm font-bold text-brand-strong hover:text-brand sm:inline-flex">
               {t.nav.login}
             </a>
-            <a href={pathFor("hosting", locale)} className="btn-primary inline-flex min-h-11 items-center whitespace-nowrap rounded-lg px-3 text-[13px] font-bold sm:px-4 sm:text-sm">
-              {t.nav.plans}
+            <a href={anchorFor("contact", locale)} className="btn-primary inline-flex min-h-11 items-center whitespace-nowrap rounded-lg px-3 text-[13px] font-bold sm:px-4 sm:text-sm">
+              {t.nav.contact}
             </a>
           </div>
         </div>

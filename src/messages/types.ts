@@ -15,7 +15,6 @@ export type Messages = {
     about: string;
     contact: string;
     login: string;
-    plans: string;
     language: string;
     menu: string;
   };
@@ -43,7 +42,6 @@ export type Messages = {
     /** Exactly one {rate}. Shown once near every price list. */
     vatIncluded: string;
     currency: string;
-    currencyHint: string;
     mostChosen: string;
     included: string;
     unlimited: string;

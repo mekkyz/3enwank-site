@@ -118,10 +118,10 @@ function Pending({ name }: { name?: string }) {
   return (
     <li className="flex items-center justify-between gap-3 border-b border-line py-3 last:border-0">
       <div className="min-w-0 flex-1">
-        {name ? <span className="block truncate text-sm font-bold text-muted" dir="ltr">{name}</span> : <span className="shimmer block h-4 w-40 max-w-full rounded" />}
+        {name ? <span className="block truncate text-sm font-bold text-muted" dir="ltr">{name}</span> : <span className="waiting block h-4 w-40 max-w-full rounded" />}
       </div>
-      <span className="shimmer h-4 w-20 shrink-0 rounded" />
-      <span className="shimmer h-9 w-24 shrink-0 rounded-lg" />
+      <span className="waiting h-4 w-20 shrink-0 rounded" />
+      <span className="waiting h-9 w-24 shrink-0 rounded-lg" />
     </li>
   );
 }

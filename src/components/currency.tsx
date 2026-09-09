@@ -89,18 +89,48 @@ export function Price({ prices, locale, className = "", fallback, normal }: { pr
   );
 }
 
-export function CurrencyToggle({ label, hint }: { label: string; hint: string }) {
+/**
+ * The EGP/USD switch, in the bar beside the language menu.
+ *
+ * It used to be a segmented control sitting above each price table, with a line of explanation under
+ * it, repeated on five pages. Currency is a property of the whole visit rather than of one table, so
+ * it belongs where the language menu is; and the explanation it carried ("invoices in either currency
+ * are paid by bank transfer") is on the invoice itself and in the terms, which is where a person
+ * looks for it.
+ *
+ * The three-letter code stays visible at every width: it is the state, and an icon alone would not
+ * say which currency the prices are in.
+ */
+export function CurrencySwitch({ label }: { label: string }) {
   const { currency, setCurrency } = useCurrency();
   return (
-    <div className="flex flex-col items-end gap-1.5">
-      <div role="group" aria-label={label} className="inline-flex rounded-lg border border-line bg-panel p-0.5 text-sm font-bold">
+    <details className="relative">
+      <summary className="flex min-h-11 cursor-pointer list-none items-center gap-1.5 rounded-lg px-2 text-sm font-bold text-muted hover:text-ink [&::-webkit-details-marker]:hidden" aria-label={label} title={label}>
+        <svg aria-hidden="true" viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="2" y="6" width="20" height="12" rx="2.5" />
+          <circle cx="12" cy="12" r="2.75" />
+        </svg>
+        <span className="tabular">{currency}</span>
+      </summary>
+      <ul className="absolute end-0 z-50 mt-1 min-w-28 rounded-lg border border-line bg-panel p-1 text-sm shadow-lg">
         {currencies.map((c) => (
-          <button key={c} type="button" aria-pressed={currency === c} onClick={() => setCurrency(c)} className={`min-h-9 rounded-md px-3.5 transition ${currency === c ? "bg-brand text-white" : "text-muted hover:text-ink"}`}>
-            {c}
-          </button>
+          <li key={c}>
+            <button
+              type="button"
+              onClick={() => setCurrency(c)}
+              aria-pressed={currency === c}
+              className={`flex w-full items-center justify-between gap-3 rounded-md px-3 py-2 font-bold ${currency === c ? "bg-brand-soft text-brand-strong" : "text-ink hover:bg-brand-soft"}`}
+            >
+              <span className="tabular">{c}</span>
+              {currency === c ? (
+                <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20 6L9 17l-5-5" />
+                </svg>
+              ) : null}
+            </button>
+          </li>
         ))}
-      </div>
-      <p className="max-w-xs text-end text-xs text-muted">{hint}</p>
-    </div>
+      </ul>
+    </details>
   );
 }

@@ -1,5 +1,5 @@
 import { Container, Empty, Fine, PageIntro, Section, SectionHeader } from "@/components/blocks";
-import { CurrencyToggle, Price } from "@/components/currency";
+import { Price } from "@/components/currency";
 import { CompareTable, PlanCard } from "@/components/plans";
 import { Shell } from "@/components/shell";
 import { localizedValue } from "@/lib/format";
@@ -27,10 +27,7 @@ export const hosting = {
       <Shell locale={locale} page="hosting" storeUrl={catalogue.store.url} legalName={company.legalName} address={company.address} supportEmail={company.supportEmail} assistantEnabled={catalogue.assistant.enabled} turnstileSiteKey={catalogue.assistant.turnstileSiteKey}>
         <PageIntro kicker={t.hosting.title} title={t.hosting.h2} lede={t.hosting.lede} />
         <Section>
-          <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
-            <p className="text-sm text-muted">{vatLine(t, catalogue)}</p>
-            <CurrencyToggle label={t.common.currency} hint={t.common.currencyHint} />
-          </div>
+          <p className="mb-8 text-sm text-muted">{vatLine(t, catalogue)}</p>
           {plans.length ? (
             <ul data-reveal-stagger className="grid gap-5 pt-3 sm:grid-cols-2 lg:grid-cols-3">
               {plans.map((p) => (

@@ -1,5 +1,4 @@
 import { Empty, Fine, PageIntro, Section, SectionHeader } from "@/components/blocks";
-import { CurrencyToggle } from "@/components/currency";
 import { CompareTable, PlanCard } from "@/components/plans";
 import { Shell } from "@/components/shell";
 import { pageMetadata } from "@/lib/metadata";
@@ -19,10 +18,7 @@ export const care = {
       <Shell locale={locale} page="care" storeUrl={catalogue.store.url} legalName={company.legalName} address={company.address} supportEmail={company.supportEmail} assistantEnabled={catalogue.assistant.enabled} turnstileSiteKey={catalogue.assistant.turnstileSiteKey}>
         <PageIntro kicker={t.care.title} title={t.care.h2} lede={t.care.lede} />
         <Section>
-          <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
-            <p className="text-sm text-muted">{vatLine(t, catalogue)}</p>
-            <CurrencyToggle label={t.common.currency} hint={t.common.currencyHint} />
-          </div>
+          <p className="mb-8 text-sm text-muted">{vatLine(t, catalogue)}</p>
           {plans.length ? (
             <ul data-reveal-stagger className="grid gap-5 pt-3 sm:grid-cols-2 lg:grid-cols-4">
               {plans.map((p) => (

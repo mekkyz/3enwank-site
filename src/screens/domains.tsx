@@ -1,5 +1,4 @@
 import { ButtonLink, Card, PageIntro, Section } from "@/components/blocks";
-import { CurrencyToggle } from "@/components/currency";
 import { DomainSearch } from "@/components/domain-search";
 import { TldTable } from "@/components/domains";
 import { Shell } from "@/components/shell";
@@ -27,10 +26,7 @@ export const domains = {
         <Section>
           {open ? (
             <>
-              <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-                <p className="text-sm text-muted">{vatLine(t, catalogue)}</p>
-                <CurrencyToggle label={t.common.currency} hint={t.common.currencyHint} />
-              </div>
+              <p className="mb-6 text-sm text-muted">{vatLine(t, catalogue)}</p>
               <TldTable tlds={catalogue.tlds} locale={locale} />
               {catalogue.tldCount > catalogue.tlds.length ? (
                 <p className="mt-4 text-sm text-muted">{t.domains.moreTlds.replace("{count}", String(catalogue.tldCount))}</p>

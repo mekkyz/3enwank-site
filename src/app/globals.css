@@ -388,19 +388,25 @@ section[id] {
   animation: chat-in 0.18s ease-out both;
 }
 
-/* Placeholder rows while the registrar is being asked. A sweep rather than a pulse, so a row that
-   is still waiting reads as work in progress and not as an empty result. */
-@keyframes shimmer {
-  from {
-    background-position: 200% 0;
+/*
+ * Placeholder rows while the registrar is being asked.
+ *
+ * This was a purple band swept across the row on a loop — the one kind of gradient that cannot be
+ * argued as texture, since the whole point of it was the colour moving. It is a pulse between two
+ * flat surface colours instead: a row still waiting reads as work in progress rather than as an
+ * empty result, and there is no colour ramp left in the stylesheet.
+ */
+@keyframes waiting {
+  0%,
+  100% {
+    background-color: var(--color-surface-alt);
   }
-  to {
-    background-position: -200% 0;
+  50% {
+    background-color: var(--color-line);
   }
 }
 
-.shimmer {
-  background-image: linear-gradient(90deg, var(--color-surface-alt) 25%, var(--color-line) 50%, var(--color-surface-alt) 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.4s linear infinite;
+.waiting {
+  background-color: var(--color-surface-alt);
+  animation: waiting 1.4s ease-in-out infinite;
 }

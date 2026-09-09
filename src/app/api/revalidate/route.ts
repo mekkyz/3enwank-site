@@ -1,5 +1,5 @@
 import { timingSafeEqual } from "node:crypto";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { CATALOGUE_TAG } from "@/lib/catalogue";
 
 /**
@@ -24,8 +24,15 @@ export async function POST(request: Request): Promise<Response> {
   if (!tokenMatches(url.searchParams.get("token") ?? bearer)) {
     return Response.json({ success: false, error: "forbidden" }, { status: 403, headers: { "Cache-Control": "no-store" } });
   }
+  // The catalogue is the only thing this hook can change, and every page reads it through a fetch
+  // carrying this tag, so invalidating the tag refreshes all of them.
+  //
+  // It used to also call revalidatePath("/", "layout"). That took every localised page off the air:
+  // the Arabic and Egyptian pages are prerendered params of a dynamic [locale] route, and clearing
+  // the layout subtree dropped their prerendered entries, after which Next answered NoFallbackError
+  // and served 404 for /ar and /ar-eg until the service was restarted. Reproduced on the live site
+  // on 2026-09-09; one press of "Publish website" in the admin was enough.
   revalidateTag(CATALOGUE_TAG, "max");
-  revalidatePath("/", "layout");
   const id = new Date().toISOString();
   return Response.json({ success: true, result: { id } }, { headers: { "Cache-Control": "no-store" } });
 }

@@ -3,7 +3,9 @@ import { ASSISTANT_PREVIEW, STORE_URL, currentYear } from "@/lib/site";
 import { anchorFor, languageLinks, pathFor, storeLink, type Locale, type PageKey } from "@/lib/i18n";
 import { messagesFor } from "@/messages";
 import { Assistant } from "./assistant";
+import { CartLink } from "./cart-link";
 import { CurrencySwitch } from "./currency";
+import { LanguageIcon } from "./icons";
 import { Logo, LogoFull } from "./logo";
 import { ThemeSwitch } from "./theme";
 
@@ -42,12 +44,10 @@ export function Shell({ locale, page, storeUrl, legalName, address, supportEmail
           </nav>
           <div className="flex items-center gap-1 sm:gap-2">
             <CurrencySwitch label={t.common.currency} />
+            <CartLink href={storeLink(`${store}/cart`, locale)} label={t.nav.cart} />
             <details className="relative">
               <summary className="flex min-h-11 cursor-pointer list-none items-center rounded-lg px-2 text-sm font-semibold text-muted hover:text-ink [&::-webkit-details-marker]:hidden" aria-label={`${t.nav.language}: ${current.name}`} title={t.nav.language}>
-                <svg aria-hidden="true" viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="9" />
-                  <path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18" />
-                </svg>
+                <LanguageIcon />
               </summary>
               <ul className="absolute end-0 z-50 mt-1 min-w-28 rounded-lg border border-line bg-panel p-1 text-sm shadow-lg">
                 {languages.map((l) => (

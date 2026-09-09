@@ -17,6 +17,7 @@ export const en: Messages = {
     about: "About",
     contact: "Contact",
     login: "Log in",
+    cart: "Cart",
     language: "Language",
     menu: "Menu",
   },
@@ -225,7 +226,7 @@ export const en: Messages = {
     title: "Privacy",
     intro: "How {legalName} (\"3enwank\") handles personal data on this website and in the customer area. Version {version}.",
     sections: [
-      { title: "This website", body: ["These pages run no analytics and load nothing from third parties. The only requests your browser makes are to this site itself. They set no cookies of their own, but the customer area at 3enwank.com/account is part of the same address, so if you are signed in your session cookie and your cart cookie travel with every request here too. They are read only by the customer area."] },
+      { title: "This website", body: ["These pages run no analytics and load nothing from third parties. The only requests your browser makes are to this site itself. They set no cookies of their own, but the customer area at 3enwank.com/account is part of the same address, so if you are signed in your session cookie and your cart cookie travel with every request here too. Your session and the contents of your cart are read only by the customer area. These pages read one thing: how many items are in your cart, which the customer area publishes separately for the basket in the menu bar. Your choice of currency and of light or dark is kept in your browser and is never sent anywhere."] },
       { title: "The customer area", body: ["When you open an account at 3enwank.com/account we store your name, email address, phone or WhatsApp number, address and, for businesses, the company name and tax registration number, because tax invoices require them. The customer area uses one session cookie to keep you signed in and nothing else."] },
       { title: "Invoices and the tax authority", body: ["Invoices are reported to the Egyptian Tax Authority’s e-invoicing system, which receives the invoice details and the receiver’s name, address and tax number or national ID where the law requires it."] },
       { title: "Payments", body: ["Invoices are paid by bank transfer and matched by invoice number, so we hold no card details of any kind. If we add card payment later, it will be handled by a payment provider that receives your card details directly, and this policy will say so before that happens."] },

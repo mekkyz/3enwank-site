@@ -24,6 +24,7 @@ export const arEg: Messages = {
     about: "عننا",
     contact: "كلمنا",
     login: "تسجيل الدخول",
+    cart: "السلة",
     language: "اللغة",
     menu: "القائمة",
   },

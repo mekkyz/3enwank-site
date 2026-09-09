@@ -65,7 +65,12 @@
   --color-brand-strong: #5e1eb8;
   --color-brand-soft: #f2eafd;
   --color-brand-ink: #7024db;
-  --color-accent: #0c80b6;
+  /*
+   * Dark enough to carry text on its own tint: the category labels render accent on accent-soft,
+   * which at the previous #0c80b6 was 3.90:1. Same hue to a tenth of a degree, 4.53:1 there and
+   * 5.11:1 on white.
+   */
+  --color-accent: #0b75a6;
   --color-accent-strong: #086691;
   --color-accent-soft: #e3f4fd;
   --color-ok: #067647;

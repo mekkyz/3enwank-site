@@ -15,6 +15,7 @@ export type Messages = {
     about: string;
     contact: string;
     login: string;
+    cart: string;
     language: string;
     menu: string;
   };

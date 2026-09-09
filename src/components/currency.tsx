@@ -4,6 +4,7 @@ import { createContext, useContext, useState, useSyncExternalStore, type ReactNo
 import { currencies, type Currency, type Money } from "@/lib/catalogue";
 import { formatPrice } from "@/lib/format";
 import type { Locale } from "@/lib/i18n";
+import { CurrencyIcon } from "./icons";
 
 /**
  * The EGP/USD switch. Pages render EGP on the server (what most visitors want and what search
@@ -106,10 +107,7 @@ export function CurrencySwitch({ label }: { label: string }) {
   return (
     <details className="relative">
       <summary className="flex min-h-11 cursor-pointer list-none items-center gap-1.5 rounded-lg px-2 text-sm font-bold text-muted hover:text-ink [&::-webkit-details-marker]:hidden" aria-label={label} title={label}>
-        <svg aria-hidden="true" viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-          <rect x="2" y="6" width="20" height="12" rx="2.5" />
-          <circle cx="12" cy="12" r="2.75" />
-        </svg>
+        <CurrencyIcon />
         <span className="tabular">{currency}</span>
       </summary>
       <ul className="absolute end-0 z-50 mt-1 min-w-28 rounded-lg border border-line bg-panel p-1 text-sm shadow-lg">

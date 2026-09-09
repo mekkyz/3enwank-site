@@ -116,22 +116,23 @@ export const home = {
         </Section>
 
         {/*
-         * The band sits between two sections, so it needs their rhythm below it as well as above.
-         * It had pb-4: sixteen pixels between a full-width block of brand colour and the point where
-         * the page background changes tone, which read as the band having been dropped in and left
-         * there. The section above contributes its own padding, so this matches it.
+         * A page-level invitation, not the tail of the section above it. Sitting in a bare container
+         * on the same background, straight under a headed "Domains" section, it read as a fourth
+         * thing about domains: the rule and the section's own rhythm mark where that section ends.
          */}
-        <Container className="pb-14 sm:pb-20">
-          <div className="band flex flex-wrap items-center justify-between gap-6 rounded-2xl px-7 py-9 sm:px-10">
-            <div>
-              <h2 className="text-2xl font-extrabold tracking-tight sm:text-3xl">{t.home.moveTitle}</h2>
-              <p className="mt-2 max-w-xl text-white/90">{t.home.moveBody}</p>
+        <Section>
+          <div className="border-t border-line pt-14 sm:pt-20">
+            <div className="band flex flex-wrap items-center justify-between gap-6 rounded-2xl px-7 py-9 sm:px-10">
+              <div>
+                <h2 className="text-2xl font-extrabold tracking-tight sm:text-3xl">{t.home.moveTitle}</h2>
+                <p className="mt-2 max-w-xl text-white/90">{t.home.moveBody}</p>
+              </div>
+              <ButtonLink href={pathFor("hosting", locale)} variant="white" size="lg">
+                {t.home.moveCta}
+              </ButtonLink>
             </div>
-            <ButtonLink href={anchorFor("contact", locale)} variant="white" size="lg">
-              {t.home.moveCta}
-            </ButtonLink>
           </div>
-        </Container>
+        </Section>
 
         <Section id="contact" tone="alt">
           <SectionHeader kicker={t.contact.title} title={t.contact.h2} lede={t.contact.lede} />

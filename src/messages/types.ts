@@ -131,6 +131,7 @@ export type Messages = {
     premium: string;
     notOffered: string;
     registerCta: string;
+    addedCta: string;
     askUs: string;
     checking: string;
     error: string;

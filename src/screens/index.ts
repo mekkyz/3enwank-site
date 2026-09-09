@@ -9,6 +9,8 @@ import { hosting } from "./hosting";
 import { privacy, terms } from "./legal";
 import { websites } from "./websites";
 
-export type Screen = { metadata(locale: Locale): Metadata; render(locale: Locale): Promise<ReactNode> };
+/** Query parameters a screen may care about. Only the domain search uses them today. */
+export type ScreenParams = { q?: string; added?: string };
+export type Screen = { metadata(locale: Locale): Metadata; render(locale: Locale, params?: ScreenParams): Promise<ReactNode> };
 
 export const screens: Record<PageKey, Screen> = { home, hosting, websites, care, domains, about, terms, privacy };

@@ -144,6 +144,7 @@ export const en: Messages = {
     premium: "Premium name, not sold online",
     notOffered: "Extension we do not sell",
     registerCta: "Register",
+    addedCta: "In your cart",
     askUs: "Ask us",
     checking: "Checking",
     error: "The check did not go through. Try again, or search from the customer area.",

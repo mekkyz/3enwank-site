@@ -17,12 +17,15 @@ import { CartIcon } from "./icons";
  * is signed and httpOnly, and every price is recomputed there.
  */
 function subscribe(onChange: () => void) {
-  // The customer may add something in a store tab and come back to this one.
+  // The customer may add something in a store tab and come back to this one...
   document.addEventListener("visibilitychange", onChange);
   window.addEventListener("pageshow", onChange);
+  // ...or add a domain from the search on this page, which never navigates.
+  window.addEventListener("enwank:cart", onChange);
   return () => {
     document.removeEventListener("visibilitychange", onChange);
     window.removeEventListener("pageshow", onChange);
+    window.removeEventListener("enwank:cart", onChange);
   };
 }
 

@@ -144,6 +144,7 @@ export const ar: Messages = {
     premium: "اسم مميز، لا يُباع عبر الموقع",
     notOffered: "امتداد لا نبيعه",
     registerCta: "سجّله",
+    addedCta: "في سلتك",
     askUs: "اسألنا",
     checking: "جارٍ التحقق",
     error: "لم يكتمل التحقق. حاول مرة أخرى، أو ابحث من حساب العملاء.",

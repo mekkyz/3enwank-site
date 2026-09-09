@@ -1,3 +1,5 @@
+import { headers } from "next/headers";
+import { CATALOGUE_URL } from "@/lib/site";
 import type { DomainSearchLabels } from "@/components/domain-search";
 import { loadCatalogue, type Catalogue } from "@/lib/catalogue";
 import { ASSISTANT_PREVIEW } from "@/lib/site";
@@ -23,9 +25,29 @@ export function vatLine(t: Messages, catalogue: Catalogue): string {
 }
 
 /** The store's public API, next to its catalogue endpoint. */
-export function storeApi(catalogue: Catalogue): { domainSearch: string; domainIdeas: string; assistant: string } {
+export function storeApi(catalogue: Catalogue): { domainSearch: string; domainIdeas: string; assistant: string; cartDomain: string } {
   const base = `${catalogue.store.url.replace(/\/+$/, "")}/api/public`;
-  return { domainSearch: `${base}/domains/search`, domainIdeas: `${base}/domains/ideas`, assistant: `${base}/assistant` };
+  return { domainSearch: `${base}/domains/search`, domainIdeas: `${base}/domains/ideas`, assistant: `${base}/assistant`, cartDomain: `${base}/cart/domain` };
+}
+
+/**
+ * The availability answer, fetched on the server so a visitor without JavaScript still gets one.
+ *
+ * Called over the loopback address the catalogue already uses, with the visitor's own address
+ * forwarded: without that every server-rendered search on this site would share one rate-limit
+ * bucket. nginx overwrites X-Real-IP on anything arriving from outside, so only this path can set
+ * it.
+ */
+export async function searchDomainsOnServer(query: string, currency: "EGP" | "USD"): Promise<unknown | null> {
+  const url = `${CATALOGUE_URL.replace(/\/api\/public\/catalogue.*$/, "")}/api/public/domains/search?q=${encodeURIComponent(query)}&currency=${currency}`;
+  const ip = (await headers()).get("x-real-ip") ?? (await headers()).get("x-forwarded-for")?.split(",")[0]?.trim() ?? "";
+  try {
+    const res = await fetch(url, { headers: { Accept: "application/json", ...(ip ? { "X-Real-IP": ip } : {}) }, cache: "no-store" });
+    return res.ok ? await res.json() : null;
+  } catch {
+    // The widget re-asks from the browser the moment it hydrates; a failure here is not the end.
+    return null;
+  }
 }
 
 /** Chat and name ideas: on when the store has its key, or forced on for a design review. */
@@ -46,6 +68,7 @@ export function domainSearchLabels(t: Messages): DomainSearchLabels {
     premium: d.premium,
     notOffered: d.notOffered,
     register: d.registerCta,
+    added: d.addedCta,
     askUs: d.askUs,
     checking: d.checking,
     error: d.error,

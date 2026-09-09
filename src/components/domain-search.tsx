@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useId, useRef, useState, type FormEvent } from "react";
 import type { Currency } from "@/lib/catalogue";
 import { formatPrice } from "@/lib/format";
-import { storeLink, type Locale } from "@/lib/i18n";
+import type { Locale } from "@/lib/i18n";
 import { useCurrency } from "./currency";
 import { turnstileToken } from "@/lib/turnstile";
 
@@ -19,6 +19,7 @@ export type DomainSearchLabels = {
   premium: string;
   notOffered: string;
   register: string;
+  added: string;
   askUs: string;
   checking: string;
   error: string;
@@ -67,7 +68,7 @@ function statusOf(r: Result, l: DomainSearchLabels): { text: string; tone: keyof
   return r.available ? { text: l.available, tone: "ok" } : { text: l.taken, tone: "muted" };
 }
 
-function Row({ r, primary = false, index = 0, enabled, locale, storeSearchUrl, contactHref, labels }: { r: Result; primary?: boolean; index?: number; enabled: boolean; locale: Locale; storeSearchUrl: string; contactHref: string; labels: DomainSearchLabels }) {
+function Row({ r, primary = false, index = 0, enabled, locale, cartUrl, searchPath, contactHref, labels, added, onAdd }: { r: Result; primary?: boolean; index?: number; enabled: boolean; locale: Locale; cartUrl: string; searchPath: string; contactHref: string; labels: DomainSearchLabels; added: boolean; onAdd: (name: string) => void }) {
   const s = statusOf(r, labels);
   const price = r.price ? formatPrice({ gross: r.price.gross, formatted: r.price.formatted }, r.price.currency, locale) : null;
   const free = r.available === true && !r.premium;
@@ -90,9 +91,40 @@ function Row({ r, primary = false, index = 0, enabled, locale, storeSearchUrl, c
         ) : null}
         {free ? (
           r.sellable && enabled ? (
-            <a href={storeLink(`${storeSearchUrl}?q=${encodeURIComponent(r.name)}`, locale)} className="btn-primary inline-flex min-h-10 items-center whitespace-nowrap rounded-lg px-4 text-sm font-bold">
-              {labels.register}
-            </a>
+            /*
+             * A real form, so this works before React does and keeps working if it never runs. It
+             * posts to the store on the shared origin, which writes the shared cart cookie and sends
+             * the visitor back to this page. With JavaScript the submit is intercepted and the name
+             * is added without leaving the results at all.
+             */
+            <form
+              action={cartUrl}
+              method="post"
+              onSubmit={(e) => {
+                e.preventDefault();
+                onAdd(r.name);
+              }}
+            >
+              <input type="hidden" name="name" value={r.name} />
+              <input type="hidden" name="years" value="1" />
+              <input type="hidden" name="return" value={`${searchPath}?q=${encodeURIComponent(r.name)}`} />
+              <button
+                type="submit"
+                disabled={added}
+                className={`inline-flex min-h-10 items-center gap-1.5 whitespace-nowrap rounded-lg px-4 text-sm font-bold transition ${added ? "border-[1.5px] border-line-strong bg-panel text-muted" : "btn-primary"}`}
+              >
+                {added ? (
+                  <>
+                    <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20 6L9 17l-5-5" />
+                    </svg>
+                    {labels.added}
+                  </>
+                ) : (
+                  labels.register
+                )}
+              </button>
+            </form>
           ) : (
             <a href={contactHref} className="whitespace-nowrap text-sm font-bold text-brand-strong hover:text-brand">
               {labels.askUs}
@@ -126,12 +158,42 @@ function Pending({ name }: { name?: string }) {
   );
 }
 
-export function DomainSearch({ locale, storeSearchUrl, apiUrl, ideasUrl, contactHref, labels, ideas, turnstileSiteKey = null }: { locale: Locale; storeSearchUrl: string; apiUrl: string; ideasUrl: string; contactHref: string; labels: DomainSearchLabels; ideas: boolean; turnstileSiteKey?: string | null }) {
+export function DomainSearch({
+  locale,
+  searchPath,
+  cartUrl,
+  apiUrl,
+  ideasUrl,
+  contactHref,
+  labels,
+  ideas,
+  turnstileSiteKey = null,
+  initialQuery = "",
+  initialResults = null,
+  initialAdded = [],
+}: {
+  locale: Locale;
+  /** Where the form goes without JavaScript: this same page, which answers server-side. */
+  searchPath: string;
+  /** The store's add-to-cart endpoint on the shared origin. */
+  cartUrl: string;
+  apiUrl: string;
+  ideasUrl: string;
+  contactHref: string;
+  labels: DomainSearchLabels;
+  ideas: boolean;
+  turnstileSiteKey?: string | null;
+  /** Set when the page was asked for with ?q=, so the answer is in the HTML before React runs. */
+  initialQuery?: string;
+  initialResults?: SearchResponse | null;
+  /** Names the server already knows are in the cart, from ?added= after a no-JavaScript post. */
+  initialAdded?: string[];
+}) {
   const { currency } = useCurrency();
   const id = useId();
-  const [query, setQuery] = useState("");
-  const [status, setStatus] = useState<Status>("idle");
-  const [data, setData] = useState<SearchResponse | null>(null);
+  const [query, setQuery] = useState(initialQuery);
+  const [status, setStatus] = useState<Status>(initialResults ? (initialResults.invalid ? "invalid" : "done") : "idle");
+  const [data, setData] = useState<SearchResponse | null>(initialResults);
   /** How many endings are still being checked, so their rows can be drawn before the answers land. */
   const [awaiting, setAwaiting] = useState(0);
   const [moreLoaded, setMoreLoaded] = useState(false);
@@ -266,11 +328,37 @@ export function DomainSearch({ locale, storeSearchUrl, apiUrl, ideasUrl, contact
   }
 
   const enabled = data?.enabled ?? false;
-  const rowProps = { enabled, locale, storeSearchUrl, contactHref, labels };
+  /*
+   * Names already in the cart, so a row that has been added says so instead of offering again.
+   * Seeded from ?added= for the no-JavaScript round trip, which comes back to this page.
+   */
+  const [added, setAdded] = useState<string[]>(initialAdded);
+  const add = useCallback(
+    async (name: string) => {
+      setAdded((prev) => (prev.includes(name) ? prev : [...prev, name]));
+      try {
+        const res = await fetch(cartUrl, {
+          method: "POST",
+          credentials: "same-origin",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify({ name, years: 1 }),
+        });
+        if (!res.ok) throw new Error(String(res.status));
+        // Tell the basket in the bar without waiting for a navigation.
+        window.dispatchEvent(new CustomEvent("enwank:cart"));
+      } catch {
+        // Put the button back rather than claim something is in a cart that it is not.
+        setAdded((prev) => prev.filter((n) => n !== name));
+      }
+    },
+    [cartUrl],
+  );
+
+  const rowProps = { enabled, locale, cartUrl, searchPath, contactHref, labels, onAdd: add };
   const freeIdeas = ideasData?.ideas.filter((r) => r.available !== false) ?? [];
   return (
     <div>
-      <form action={storeLink(storeSearchUrl, locale)} method="get" onSubmit={submit} role="search">
+      <form action={searchPath} method="get" onSubmit={submit} role="search">
         <label htmlFor={`${id}-q`} className="mb-2 block text-sm font-semibold text-ink">
           {labels.label}
         </label>
@@ -321,7 +409,7 @@ export function DomainSearch({ locale, storeSearchUrl, apiUrl, ideasUrl, contact
           <div className="mt-6">
             {data.primary ? (
               <ul>
-                <Row r={data.primary} primary {...rowProps} />
+                <Row r={data.primary} primary {...rowProps} added={added.includes(data.primary.name)} />
               </ul>
             ) : null}
             {data.suggestions.length || awaiting ? (
@@ -329,7 +417,7 @@ export function DomainSearch({ locale, storeSearchUrl, apiUrl, ideasUrl, contact
                 <h3 className="mt-4 text-xs font-extrabold uppercase tracking-[0.14em] text-muted">{labels.otherExtensions}</h3>
                 <ul className="mt-1">
                   {data.suggestions.map((r, i) => (
-                    <Row key={r.name} r={r} index={i + 1} {...rowProps} />
+                    <Row key={r.name} r={r} index={i + 1} {...rowProps} added={added.includes(r.name)} />
                   ))}
                   {Array.from({ length: awaiting }, (_, i) => (
                     <Pending key={`pending-${i}`} />
@@ -383,7 +471,7 @@ export function DomainSearch({ locale, storeSearchUrl, apiUrl, ideasUrl, contact
               freeIdeas.length ? (
                 <ul className="mt-3">
                   {freeIdeas.map((r, i) => (
-                    <Row key={r.name} r={r} index={i} {...rowProps} enabled={enabled || r.sellable} />
+                    <Row key={r.name} r={r} index={i} {...rowProps} enabled={enabled || r.sellable} added={added.includes(r.name)} />
                   ))}
                 </ul>
               ) : (

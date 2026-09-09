@@ -151,6 +151,7 @@ export const arEg: Messages = {
     premium: "اسم مميز، مش بيتباع أونلاين",
     notOffered: "امتداد مابنبيعوش",
     registerCta: "سجّله",
+    addedCta: "في السلة",
     askUs: "اسألنا",
     checking: "بنتأكد",
     error: "التأكد ماكملش. جرّب تاني، أو دوّر من حساب العملاء.",

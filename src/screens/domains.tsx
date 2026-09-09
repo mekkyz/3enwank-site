@@ -32,6 +32,9 @@ export const domains = {
                 <CurrencyToggle label={t.common.currency} hint={t.common.currencyHint} />
               </div>
               <TldTable tlds={catalogue.tlds} locale={locale} />
+              {catalogue.tldCount > catalogue.tlds.length ? (
+                <p className="mt-4 text-sm text-muted">{t.domains.moreTlds.replace("{count}", String(catalogue.tldCount))}</p>
+              ) : null}
             </>
           ) : (
             <Card className="grid gap-6 md:grid-cols-[1fr_auto] md:items-center">

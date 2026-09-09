@@ -124,6 +124,7 @@ export type Messages = {
     /** {min} and {max}. */
     years: string;
     notYet: string;
+    moreTlds: string;
     ask: string;
     fine: string;
     /** Inline availability results. */

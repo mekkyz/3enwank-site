@@ -65,6 +65,8 @@ export const catalogueSchema = z.object({
       prices: z.object({ EGP: tldPrices.optional(), USD: tldPrices.optional() }),
     }),
   ),
+  /** Everything on sale, not only the rows above: the table lists the common ones, the rest are searched for. */
+  tldCount: z.number().int().nonnegative().default(0),
 });
 
 export type Catalogue = z.infer<typeof catalogueSchema>;

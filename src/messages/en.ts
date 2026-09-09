@@ -138,6 +138,7 @@ export const en: Messages = {
     privacy: "WHOIS privacy included where the registry allows it.",
     years: "{min} to {max} years at a time.",
     notYet: "Online domain registration is not open yet. Tell us the name you want and we register it for you, or transfer the one you have.",
+    moreTlds: "We sell {count} extensions in total. Type the name you want above and we check it at the registrar.",
     ask: "Ask about a domain",
     available: "Available",
     taken: "Taken",

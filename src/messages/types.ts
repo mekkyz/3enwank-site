@@ -200,6 +200,7 @@ export type Messages = {
       sentAgain: string;
       failed: string;
       limited: string;
+      blocked: string;
       privacy: string;
     };
   };

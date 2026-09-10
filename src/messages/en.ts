@@ -251,6 +251,7 @@ export const en: Messages = {
       sentAgain: "Send another message",
       failed: "That did not send. Try again, or use WhatsApp.",
       limited: "Too many messages from one connection. Wait a minute, or use WhatsApp.",
+      blocked: "Our spam check could not run in this browser. Reach us on WhatsApp or by email instead.",
       privacy: "Used only to answer you. Not a mailing list, and not passed to anyone else.",
     },
   },

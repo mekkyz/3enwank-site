@@ -93,9 +93,8 @@ export function ContactSection({
              * isolates the run instead and both lines start at the same edge.
              */}
             <div className="mt-6 space-y-1 text-sm text-muted">
-              <p>
-                <bdi dir="ltr">{c.languages.first}</bdi>
-              </p>
+              {/* The page's own language: forcing ltr here put the full stop on the wrong side in Arabic. */}
+              <p>{c.languages.first}</p>
               <p className={locale === "en" ? "font-arabic" : ""}>
                 <bdi dir={locale === "en" ? "rtl" : "ltr"} lang={locale === "en" ? "ar" : "en"}>
                   {c.languages.second}

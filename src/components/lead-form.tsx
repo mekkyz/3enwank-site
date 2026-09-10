@@ -21,6 +21,7 @@ export type LeadFormLabels = {
   sentAgain: string;
   failed: string;
   limited: string;
+  blocked: string;
   privacy: string;
 };
 
@@ -39,7 +40,7 @@ export function reachLooksReal(raw: string): boolean {
   return /^\d{8,15}$/.test(value.replace(/[\s()+-]/g, ""));
 }
 
-type State = "idle" | "sending" | "sent" | "failed" | "limited";
+type State = "idle" | "sending" | "sent" | "failed" | "limited" | "blocked";
 
 export function LeadForm({
   endpoint,
@@ -80,6 +81,9 @@ export function LeadForm({
     }
     setState("sending");
     try {
+      // Null when the challenge is off, blocked, or slow. Omitted rather than sent as null: the
+      // store treats a missing token as a captcha question and can say so, where a null used to be
+      // a schema error and came back as an unexplained failure.
       const token = await turnstileToken(turnstileSiteKey);
       const res = await fetch(endpoint, {
         method: "POST",
@@ -92,10 +96,13 @@ export function LeadForm({
           locale,
           source: "home-contact",
           company: honeypot.current?.value ?? "",
-          turnstileToken: token,
+          ...(token ? { turnstileToken: token } : {}),
         }),
       });
       if (res.status === 429) return setState("limited");
+      // A refused challenge is not a broken form, and telling someone to "try again" when their
+      // browser is blocking the challenge sends them round the same loop for ever.
+      if (res.status === 403) return setState("blocked");
       if (!res.ok) return setState("failed");
       setState("sent");
     } catch {
@@ -257,6 +264,7 @@ export function LeadForm({
 
       {state === "failed" ? <p className="text-sm text-warn">{labels.failed}</p> : null}
       {state === "limited" ? <p className="text-sm text-warn">{labels.limited}</p> : null}
+      {state === "blocked" ? <p className="text-sm text-warn">{labels.blocked}</p> : null}
 
       <div className="flex flex-wrap items-center gap-4">
         <button

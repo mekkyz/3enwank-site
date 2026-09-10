@@ -101,6 +101,7 @@ export function Shell({ locale, page, storeUrl, legalName, address, supportEmail
                 </a>
               </p>
             ) : null}
+            {trust ? <Trust t={t} trust={trust} /> : null}
           </div>
           <FooterColumn title={t.footer.products} links={[["hosting", t.nav.hosting], ["websites", t.nav.websites], ["care", t.nav.care], ["domains", t.nav.domains]].map(([key, label]) => [pathFor(key as PageKey, locale), label as string])} />
           <FooterColumn
@@ -121,7 +122,6 @@ export function Shell({ locale, page, storeUrl, legalName, address, supportEmail
             ]}
           />
         </div>
-        {trust ? <Trust t={t} trust={trust} /> : null}
         <div className="border-t border-line">
           <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5 py-4 text-xs text-faint sm:px-8">
             <p>

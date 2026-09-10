@@ -82,7 +82,7 @@ export function Shell({ locale, page, storeUrl, legalName, address, supportEmail
         {children}
       </main>
       <footer className="mt-16 border-t border-line bg-surface-alt">
-        <div className="mx-auto grid max-w-6xl gap-10 px-5 py-12 sm:px-8 md:grid-cols-[1.6fr_repeat(3,minmax(0,1fr))]">
+        <div className="mx-auto grid max-w-6xl gap-10 px-5 py-12 sm:px-8 sm:grid-cols-2 lg:grid-cols-[1.4fr_repeat(4,minmax(0,1fr))]">
           <div className="text-sm text-muted">
             <LogoFull className="h-20" />
             {legalName ? (
@@ -114,8 +114,15 @@ export function Shell({ locale, page, storeUrl, legalName, address, supportEmail
             links={[
               [pathFor("about", locale), t.nav.about],
               [anchorFor("contact", locale), t.nav.contact],
+            ]}
+          />
+          <FooterColumn
+            title={t.footer.legal}
+            links={[
               [pathFor("terms", locale), t.terms.title],
               [pathFor("privacy", locale), t.privacy.title],
+              [pathFor("delivery", locale), t.delivery.title],
+              [pathFor("refunds", locale), t.refunds.title],
             ]}
           />
         </div>

@@ -207,6 +207,8 @@ export type Messages = {
   /** {legalName} and {version} in intro. */
   terms: { title: string; intro: string; sections: Section[] };
   privacy: { title: string; intro: string; sections: Section[] };
+  delivery: { title: string; intro: string; sections: Section[] };
+  refunds: { title: string; intro: string; sections: Section[] };
   notFound: { title: string; body: string; home: string };
   /**
    * Translations for catalogue feature lines ("Storage: 1 GB NVMe") used while the catalogue's

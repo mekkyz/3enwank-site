@@ -87,7 +87,8 @@ describe("Egyptian Arabic", () => {
     expect(messagesFor("ar-eg").common.unlimited).toBe("مفتوح");
     expect(messagesFor("ar-eg").common.choose).toBe("اطلبها");
     // Formal words the dialect does not use (legal pages are formal by design and excluded).
-    const informal = eg.filter(([k]) => !k.startsWith("terms.") && !k.startsWith("privacy."));
+    const legal = ["terms.", "privacy.", "delivery.", "refunds."];
+    const informal = eg.filter(([k]) => !legal.some((p) => k.startsWith(p)));
     // Whole words only. Arabic has no \b that helps here — \bالتي\b matches inside التيكتات, which
     // is dialect for "the tickets" — so each word is fenced by "no Arabic letter either side".
     const A = "\\u0600-\\u06FF";

@@ -1,14 +1,17 @@
 import { Container, PageIntro } from "@/components/blocks";
 import { Shell } from "@/components/shell";
 import { pageMetadata } from "@/lib/metadata";
-import type { Locale } from "@/lib/i18n";
+import { pathFor, type Locale } from "@/lib/i18n";
 import { fill, messagesFor } from "@/messages";
 import { screenContext } from "./shared";
 
 /** The catalogue does not carry a terms version; this matches settings.legal.termsVersion on the platform. */
-const TERMS_VERSION = "2026-09-06";
+const TERMS_VERSION = "2026-09-10";
 
-function legalScreen(page: "terms" | "privacy") {
+/** The policy pages, which cross-reference each other in prose and link to each other at the foot. */
+const LEGAL_PAGES = ["terms", "privacy", "delivery", "refunds"] as const;
+
+function legalScreen(page: (typeof LEGAL_PAGES)[number]) {
   return {
     metadata(locale: Locale) {
       const t = messagesFor(locale);
@@ -32,6 +35,13 @@ function legalScreen(page: "terms" | "privacy") {
                   ))}
                 </section>
               ))}
+              <nav aria-label={t.footer.legal} className="flex flex-wrap gap-x-5 gap-y-2 border-t border-line pt-6 text-sm">
+                {LEGAL_PAGES.filter((p) => p !== page).map((p) => (
+                  <a key={p} href={pathFor(p, locale)} className="text-brand-strong hover:underline">
+                    {t[p].title}
+                  </a>
+                ))}
+              </nav>
               <p className="text-sm text-muted">
                 <a href={`mailto:${company.supportEmail}`} className="text-brand-strong hover:underline" dir="ltr">
                   {company.supportEmail}
@@ -49,3 +59,5 @@ function legalScreen(page: "terms" | "privacy") {
 
 export const terms = legalScreen("terms");
 export const privacy = legalScreen("privacy");
+export const delivery = legalScreen("delivery");
+export const refunds = legalScreen("refunds");

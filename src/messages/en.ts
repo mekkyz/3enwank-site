@@ -264,7 +264,7 @@ export const en: Messages = {
       { title: "Backups", body: ["Every account is copied off the server nightly and kept for three months. Backups are a safety net, not a substitute for your own copy. Keep one of anything you cannot afford to lose."] },
       { title: "Care plans", body: ["A care plan covers updates, malware scanning, the number of content changes on the plan and a first-response time for requests. A content change is one clear edit that takes half an hour or less with the existing design and content. New pages, new features and design work are quoted separately."] },
       { title: "Domains", body: ["Domain names are registered in your name through our registrar and are subject to the registry’s rules for the extension. A name that is not renewed by its expiry date expires at the registry. Recovering an expired name may be impossible or cost extra. Transfer codes are sent to your account email on request."] },
-      { title: "Cancellation and refunds", body: ["You can cancel any annual service from the customer area. It stays active until the end of the paid period and is not renewed. Paid periods are not refunded, except when we cannot deliver what you bought, in which case you receive a credit note for the unused amount.", "Invoices are tax documents and cannot be altered after issue. Corrections are made with credit notes."] },
+      { title: "Cancellation and refunds", body: ["Write to us to cancel a service. It stays active until the end of the paid period and is not renewed. A period you have already paid for is not refunded, except when we cannot deliver what you bought. The refund and cancellation policy has the detail."] },
       { title: "Liability", body: ["We keep the servers running and patched, but no host can promise zero downtime. Our liability for any failure is limited to the amount you paid for the affected service in the current period. We are not liable for loss of business or data beyond the backups described above."] },
       { title: "Changes", body: ["We may update these terms. The version you accepted is recorded with your order, and the current version is always published here."] },
     ],
@@ -279,6 +279,29 @@ export const en: Messages = {
       { title: "Payments", body: ["Invoices are paid by bank transfer and matched by invoice number, so we hold no card details of any kind. If we add card payment later, it will be handled by a payment provider that receives your card details directly, and this policy will say so before that happens."] },
       { title: "Email", body: ["We send transactional email only: order confirmations, invoices, renewal reminders, service notices and replies to your support requests. Support mail is read by a person."] },
       { title: "Your rights", body: ["You can see and correct your details in the customer area at any time. You can ask us to close your account and delete what the law does not oblige us to keep; invoices are kept for the legal retention period. Write to the support address below."] },
+    ],
+  },
+  delivery: {
+    title: "Delivery and shipping policy",
+    intro: "Everything {legalName} (\"3enwank\") sells is delivered online. Nothing is posted or shipped, and there is no delivery charge. Version {version}.",
+    sections: [
+      { title: "Nothing is shipped", body: ["Hosting plans, website builds, care plans and domain names are digital services. They are delivered to the customer area at 3enwank.com/account and to your email address. There is no physical product, no courier and no shipping cost. The address you give us is the address on your tax invoice, not a delivery address."] },
+      { title: "Hosting and care plans", body: ["A hosting plan is set up as soon as the invoice is paid, and the login details go to your account email. A care plan starts the same day and runs for the year on the invoice.", "An invoice paid by bank transfer is activated as soon as the transfer is confirmed, usually the same business day."] },
+      { title: "Domain names", body: ["A domain is sent to the registrar as soon as the invoice is paid. Most names are live within minutes, and some extensions take longer at the registry. You get an email as soon as the name is live. If the registry refuses the name, that line is refunded in full."] },
+      { title: "Website builds", body: ["Every package states its own delivery time on its page, from a few working days for a landing page to several weeks for a store. The time starts when the deposit is paid and the text and images we asked for are with us.", "A build is delivered on your own hosting or on a plan you buy from us. You see the work and approve it before it goes live."] },
+      { title: "Where we deliver", body: ["We deliver anywhere. The services travel over the internet, so there is no country we cannot reach and no customs or import step in the way."] },
+      { title: "If something is late", body: ["Write to the support address below with your invoice number and we will tell you where the order stands. If we cannot deliver what you bought, the refund and cancellation policy says what happens next."] },
+    ],
+  },
+  refunds: {
+    title: "Refund and cancellation policy",
+    intro: "How to cancel a service bought from {legalName} (\"3enwank\"), and when money is returned. Version {version}.",
+    sections: [
+      { title: "Cancelling", body: ["Write to the support address below, or open a ticket in the customer area, and say which service you want to cancel. It stays active until the end of the period you have paid for and is not renewed after that. Nothing is deleted on the day you cancel."] },
+      { title: "Refunds", body: ["A period you have already paid for is not refunded. If we cannot deliver what you bought, you get the unused amount back, either to the way you paid or as credit on your account, whichever you prefer.", "Invoices are tax documents and cannot be altered after they are issued, so a correction is made with a credit note."] },
+      { title: "Domain names", body: ["A domain is registered in your name at the registry on the day you pay, and the registry does not take it back, so a registered name is not refunded. If the registration fails, that line is refunded in full."] },
+      { title: "Website builds", body: ["The deposit pays for the work that starts when you pay it. If you stop a build after work has started, the deposit stays with us, and anything invoiced but not yet started is refunded."] },
+      { title: "How to ask", body: ["Write to the support address below with the invoice number and what you want refunded. We answer within one working day. Money goes back the way it came, and your bank sets how long it takes to appear."] },
     ],
   },
   notFound: {

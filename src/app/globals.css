@@ -267,21 +267,6 @@ li {
   transform-origin: 300px 220px;
 }
 
-/*
- * The hero's texture: a dot grid, and nothing else.
- *
- * This used to carry two large radial colour washes and two blurred, slowly drifting blobs on top of
- * them. Together they were the largest gradient on the site and they made the brand colours read as
- * a haze rather than as colour. The grid gives the surface something to be without tinting it.
- */
-.glow {
-  background: radial-gradient(circle, color-mix(in oklab, var(--color-line) 80%, transparent) 1px, transparent 1.5px) 0 0 / 28px 28px;
-}
-.glow > * {
-  position: relative;
-  z-index: 1;
-}
-
 @keyframes pulse-glow {
   0%,
   100% {

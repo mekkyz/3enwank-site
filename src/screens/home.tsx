@@ -47,7 +47,7 @@ export const home = {
     const whatsapp = WHATSAPP_NUMBER || (phone ?? "").replace(/[^0-9]/g, "") || null;
     return (
       <Shell locale={locale} page="home" storeUrl={catalogue.store.url} legalName={company.legalName} address={company.address} supportEmail={company.contactEmail} trust={trust} assistantEnabled={catalogue.assistant.enabled} turnstileSiteKey={catalogue.assistant.turnstileSiteKey}>
-        <section className="glow relative overflow-hidden border-b border-line">
+        <section className="relative overflow-hidden border-b border-line">
           <Container className="grid items-center gap-12 py-16 lg:grid-cols-2 lg:py-24">
             <div>
               <h1 className="rise max-w-xl text-4xl font-extrabold leading-[1.08] tracking-tight text-ink sm:text-5xl lg:text-[3.6rem]">{t.home.h1}</h1>
@@ -68,7 +68,7 @@ export const home = {
           </Container>
         </section>
 
-        <Section>
+        <Section tone="alt">
           <SectionHeader title={t.home.productsTitle} />
           <ul data-reveal-stagger className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             <ProductCard kind="hosting" title={t.home.products.hosting.title} body={t.home.products.hosting.body} link={t.home.products.hosting.link} href={pathFor("hosting", locale)} meta={fromPrice("hosting")} />
@@ -83,7 +83,7 @@ export const home = {
          * the page painted in a colour of its own, which made a list of what every account includes
          * read as a separate advertisement rather than as part of the same page.
          */}
-        <Section tone="alt">
+        <Section>
           <SectionHeader title={t.home.whyTitle} />
           <ul data-reveal-stagger className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {t.home.why.map((f) => (
@@ -96,7 +96,7 @@ export const home = {
         </Section>
 
         {featured.length ? (
-          <Section>
+          <Section tone="alt">
             <SectionHeader kicker={t.nav.hosting} title={t.home.pricingTitle} lede={t.home.pricingLede} right={<ArrowLink href={pathFor("hosting", locale)}>{t.home.compareLink}</ArrowLink>} />
             <p className="mb-6 text-sm text-muted">{vatLine(t, catalogue)}</p>
             <ul data-reveal-stagger className="grid gap-5 md:grid-cols-3">
@@ -110,7 +110,7 @@ export const home = {
         ) : null}
 
         {catalogue.products.build.length || catalogue.products.care.length ? (
-          <Section tone="alt">
+          <Section>
             <SectionHeader title={t.home.glanceTitle} lede={t.home.glanceLede} />
             <div data-reveal-stagger className="grid gap-5 md:grid-cols-2">
               {catalogue.products.build.length ? <Glance title={t.home.products.websites.title} items={catalogue.products.build} cycle={t.common.oneTime} link={[pathFor("websites", locale), t.home.products.websites.link]} locale={locale} t={t} /> : null}
@@ -119,7 +119,7 @@ export const home = {
           </Section>
         ) : null}
 
-        <Section id="domains">
+        <Section id="domains" tone="alt">
           <SectionHeader kicker={t.nav.domains} title={t.home.domainsTitle} lede={t.home.domainsLede} right={<ArrowLink href={pathFor("domains", locale)}>{t.home.products.domains.link}</ArrowLink>} />
           <div className="rounded-2xl border border-line bg-panel p-5 sm:p-8">
             <DomainSearch locale={locale} searchPath={pathFor("domains", locale)} cartUrl={api.cartDomain} apiUrl={api.domainSearch} ideasUrl={api.domainIdeas} contactHref={anchorFor("contact", locale)} labels={domainSearchLabels(t)} ideas={assistantOn(catalogue)} turnstileSiteKey={catalogue.assistant.turnstileSiteKey} />
@@ -131,7 +131,7 @@ export const home = {
          * the same background as the headed "Domains" section directly above, it still read as a
          * fourth thing about domains. Its own ground is what separates it.
          */}
-        <Section tone="alt">
+        <Section>
           <div>
             <div className="band flex flex-wrap items-center justify-between gap-6 rounded-2xl px-7 py-9 sm:px-10">
               <div>

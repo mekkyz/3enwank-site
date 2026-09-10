@@ -169,8 +169,7 @@ export type Messages = {
     title: string;
     h2: string;
     wa: { title: string; cta: string; defaultText: string };
-    languages: { first: string; second: string };
-    urgent: { label: string; body: string; wa: string; waText: string; ticket: string; email: string; emailSubject: string };
+    urgent: { label: string; body: string; wa: string; waText: string; ticket: string; emailSubject: string };
     email: string;
     emailBody: string;
     address: string;
@@ -197,7 +196,6 @@ export type Messages = {
       failed: string;
       limited: string;
       blocked: string;
-      privacy: string;
     };
   };
   /** {legalName} and {version} in intro. */

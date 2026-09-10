@@ -18,8 +18,9 @@ function waHref(number: string, text: string): string {
  * panel whose heading names it as the alternative. Size, colour and wording all say the same thing,
  * which is what makes it a choice rather than a menu.
  *
- * Under the WhatsApp side is the one route that must not be buried: a customer whose site is down
- * should not be filling in a sales form and waiting for working hours.
+ * The routes for a customer whose site is down live with "Already a customer?" rather than in a
+ * strip below the section: everyone they are written for is already reading those words, and a
+ * person whose site is down should not be filling in a sales form to reach us.
  *
  * Almost nothing here is a bordered box. Every outline is a line the eye has to resolve before it
  * can read what is inside, and there were six of them on one screen. Ground colour separates the
@@ -83,23 +84,6 @@ export function ContactSection({
                 </div>
               </>
             ) : null}
-
-
-            {/*
-             * Both languages shown: a reader should see their own on the page before deciding which
-             * to write in. `dir` on the paragraph would right-align the Arabic against the far side,
-             * where it reads as a stray caption rather than as the second half of a pair, so <bdi>
-             * isolates the run instead and both lines start at the same edge.
-             */}
-            <div className="mt-4 space-y-1 text-sm text-muted">
-              {/* The page's own language: forcing ltr here put the full stop on the wrong side in Arabic. */}
-              <p>{c.languages.first}</p>
-              <p className={locale === "en" ? "font-arabic" : ""}>
-                <bdi dir={locale === "en" ? "rtl" : "ltr"} lang={locale === "en" ? "ar" : "en"}>
-                  {c.languages.second}
-                </bdi>
-              </p>
-            </div>
           </div>
 
           {/*
@@ -140,6 +124,43 @@ export function ContactSection({
                 >
                   {c.existingCta}
                 </a>
+                {/*
+                 * The broken-site routes belong to this item, not to a strip of their own under the
+                 * section: everyone they are written for is already reading the words "Already a
+                 * customer?". Same three doors, one of them the same WhatsApp number as the panel
+                 * above but carrying the urgent first line.
+                 */}
+                <p className="mt-4 text-sm text-muted">
+                  <span className="font-bold text-ink">{c.urgent.label}</span> {c.urgent.body}
+                </p>
+                <ul className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-sm font-bold">
+                  {whatsapp ? (
+                    <li>
+                      <a
+                        href={waHref(whatsapp, c.urgent.waText)}
+                        rel="noopener"
+                        target="_blank"
+                        className="text-brand-strong hover:text-brand"
+                      >
+                        {c.urgent.wa}
+                      </a>
+                    </li>
+                  ) : null}
+                  <li>
+                    <a href={`${storeUrl}/tickets`} rel="noopener" className="text-brand-strong hover:text-brand">
+                      {c.urgent.ticket}
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href={`mailto:${supportEmail}?subject=${encodeURIComponent(c.urgent.emailSubject)}`}
+                      className="break-all text-brand-strong hover:text-brand"
+                      dir="ltr"
+                    >
+                      {supportEmail}
+                    </a>
+                  </li>
+                </ul>
               </dd>
             </div>
           </dl>
@@ -158,45 +179,6 @@ export function ContactSection({
             />
           </div>
         </div>
-      </div>
-
-      {/*
-       * Full width, under both columns. It is the route for a customer whose site is down, so it is
-       * findable without being the first thing a new visitor reads under the heading.
-       */}
-      <div className="mt-6 rounded-xl bg-surface-alt px-5 py-4">
-        <div className="flex flex-wrap items-baseline gap-x-6 gap-y-1.5">
-          <h3 className="text-sm font-extrabold text-ink">{c.urgent.label}</h3>
-          <p className="text-sm text-muted">{c.urgent.body}</p>
-        </div>
-        <ul className="mt-2.5 flex flex-wrap gap-x-5 gap-y-1.5 text-sm font-bold">
-          {whatsapp ? (
-            <li>
-              <a
-                href={waHref(whatsapp, c.urgent.waText)}
-                rel="noopener"
-                target="_blank"
-                className="text-brand-strong hover:text-brand"
-              >
-                {c.urgent.wa}
-              </a>
-            </li>
-          ) : null}
-          <li>
-            <a href={`${storeUrl}/tickets`} rel="noopener" className="text-brand-strong hover:text-brand">
-              {c.urgent.ticket}
-            </a>
-          </li>
-          <li>
-            <a
-              href={`mailto:${supportEmail}?subject=${encodeURIComponent(c.urgent.emailSubject)}`}
-              className="text-brand-strong hover:text-brand"
-              dir="ltr"
-            >
-              {c.urgent.email.replace("{email}", supportEmail)}
-            </a>
-          </li>
-        </ul>
       </div>
     </Section>
   );

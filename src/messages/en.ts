@@ -203,17 +203,12 @@ export const en: Messages = {
       cta: "Open WhatsApp",
       defaultText: "Hello 3enwank. I came from your website and I have a question.",
     },
-    languages: {
-      first: "We answer in English or Arabic, whichever you write in.",
-      second: "بنرد بالعربي أو بالإنجليزي، زي ما تكتب لنا.",
-    },
     urgent: {
       label: "Site down, or email not arriving?",
-      body: "If you are already a customer, use one of these rather than the form.",
+      body: "These reach us faster than the form.",
       wa: "WhatsApp",
       waText: "URGENT. My site is down. My domain is:",
       ticket: "Open a ticket",
-      email: "Write to {email}",
       emailSubject: "Site down:",
     },
     email: "Email",
@@ -247,7 +242,6 @@ export const en: Messages = {
       failed: "That did not send. Try again, or use WhatsApp.",
       limited: "Too many messages from one connection. Wait a minute, or use WhatsApp.",
       blocked: "Our spam check could not run in this browser. Reach us on WhatsApp or by email instead.",
-      privacy: "Used only to answer you. Not a mailing list, and not passed to anyone else.",
     },
   },
   terms: {

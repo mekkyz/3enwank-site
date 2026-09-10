@@ -22,7 +22,6 @@ export type LeadFormLabels = {
   failed: string;
   limited: string;
   blocked: string;
-  privacy: string;
 };
 
 const NEEDS = ["hosting", "website", "domains", "care", "other"] as const;
@@ -275,7 +274,6 @@ export function LeadForm({
           {state === "sending" ? labels.sending : labels.submit}
         </button>
       </div>
-      <p className="text-xs leading-relaxed text-faint">{labels.privacy}</p>
     </form>
   );
 }

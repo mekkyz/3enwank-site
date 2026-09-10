@@ -40,7 +40,7 @@ export const home = {
     const phone = catalogue.company.phone;
     const label = "text-xs font-extrabold uppercase tracking-[0.14em] text-brand";
     return (
-      <Shell locale={locale} page="home" storeUrl={catalogue.store.url} legalName={company.legalName} address={company.address} supportEmail={company.supportEmail} trust={trust} assistantEnabled={catalogue.assistant.enabled} turnstileSiteKey={catalogue.assistant.turnstileSiteKey}>
+      <Shell locale={locale} page="home" storeUrl={catalogue.store.url} legalName={company.legalName} address={company.address} supportEmail={company.contactEmail} trust={trust} assistantEnabled={catalogue.assistant.enabled} turnstileSiteKey={catalogue.assistant.turnstileSiteKey}>
         <section className="glow relative overflow-hidden border-b border-line">
           <Container className="grid items-center gap-12 py-16 lg:grid-cols-2 lg:py-24">
             <div>
@@ -72,13 +72,18 @@ export const home = {
           </ul>
         </Section>
 
-        <Section tone="dark">
-          <SectionHeader title={t.home.whyTitle} light />
+        {/*
+         * Plain surface-alt, like every other alternating section. It used to be the one block on
+         * the page painted in a colour of its own, which made a list of what every account includes
+         * read as a separate advertisement rather than as part of the same page.
+         */}
+        <Section tone="alt">
+          <SectionHeader title={t.home.whyTitle} />
           <ul data-reveal-stagger className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {t.home.why.map((f) => (
-              <li key={f.title} className="border-t border-dark-line pt-5">
-                <h3 className="text-xl font-extrabold text-white">{f.title}</h3>
-                <p className="mt-2 text-[15px] leading-relaxed text-dark-muted">{f.body}</p>
+              <li key={f.title} className="border-t border-line pt-5">
+                <h3 className="text-xl font-extrabold text-ink">{f.title}</h3>
+                <p className="mt-2 text-[15px] leading-relaxed text-muted">{f.body}</p>
               </li>
             ))}
           </ul>
@@ -116,12 +121,12 @@ export const home = {
         </Section>
 
         {/*
-         * A page-level invitation, not the tail of the section above it. Sitting in a bare container
-         * on the same background, straight under a headed "Domains" section, it read as a fourth
-         * thing about domains: the rule and the section's own rhythm mark where that section ends.
+         * A page-level invitation, not the tail of the section above it. A rule was not enough: on
+         * the same background as the headed "Domains" section directly above, it still read as a
+         * fourth thing about domains. Its own ground is what separates it.
          */}
-        <Section>
-          <div className="border-t border-line pt-14 sm:pt-20">
+        <Section tone="alt">
+          <div>
             <div className="band flex flex-wrap items-center justify-between gap-6 rounded-2xl px-7 py-9 sm:px-10">
               <div>
                 <h2 className="text-2xl font-extrabold tracking-tight sm:text-3xl">{t.home.moveTitle}</h2>
@@ -134,13 +139,15 @@ export const home = {
           </div>
         </Section>
 
-        <Section id="contact" tone="alt">
+        <Section id="contact">
           <SectionHeader kicker={t.contact.title} title={t.contact.h2} lede={t.contact.lede} />
           <ul data-reveal-stagger className="grid gap-5 md:grid-cols-[repeat(auto-fit,minmax(16rem,1fr))]">
             <Card as="li" className="h-full">
               <h3 className={label}>{t.contact.email}</h3>
-              <a href={`mailto:${company.supportEmail}`} className="mt-3 block break-all text-xl font-extrabold text-brand-strong hover:underline" dir="ltr">
-                {company.supportEmail}
+              {/* The general address: a visitor here is not a customer yet, and this is answered in
+                  the sales queue rather than in the one holding a site that is down. */}
+              <a href={`mailto:${company.contactEmail}`} className="mt-3 block break-all text-xl font-extrabold text-brand-strong hover:underline" dir="ltr">
+                {company.contactEmail}
               </a>
               <p className="mt-2 text-sm text-muted">{t.contact.emailBody}</p>
             </Card>

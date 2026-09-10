@@ -46,20 +46,17 @@ export function Shell({ locale, page, storeUrl, legalName, address, supportEmail
           <div className="flex items-center gap-1 sm:gap-2">
             <CurrencySwitch label={t.common.currency} />
             <CartLink href={storeLink(`${store}/cart`, locale)} label={t.nav.cart} />
-            <details className="relative">
+            <details data-menu className="relative">
               <summary className="flex min-h-11 cursor-pointer list-none items-center rounded-lg px-2 text-sm font-semibold text-muted hover:text-ink [&::-webkit-details-marker]:hidden" aria-label={`${t.nav.language}: ${current.name}`} title={t.nav.language}>
                 <LanguageIcon />
               </summary>
-              <ul className="absolute end-0 z-50 mt-1 min-w-28 rounded-lg border border-line bg-panel p-1 text-sm shadow-lg">
+              <ul className="absolute end-0 z-50 mt-1 w-max rounded-lg border border-line bg-panel p-1 text-sm shadow-lg">
                 {languages.map((l) => (
                   <li key={l.code}>
-                    <a href={l.path} hrefLang={l.lang} lang={l.lang} dir={l.dir} aria-current={l.current ? "true" : undefined} className={`flex items-center justify-between gap-2.5 whitespace-nowrap rounded-md px-3 py-2 font-semibold hover:bg-brand-soft ${l.current ? "bg-brand-soft text-brand-strong" : "text-ink"}`}>
+                    {/* The chosen one is the coloured one: a tick as well was a second thing saying
+                        the same thing, and it set the width of the whole menu. */}
+                    <a href={l.path} hrefLang={l.lang} lang={l.lang} dir={l.dir} aria-current={l.current ? "true" : undefined} className={`block whitespace-nowrap rounded-md px-3 py-1.5 font-bold ${l.current ? "bg-brand-soft text-brand-strong" : "text-muted hover:bg-brand-soft hover:text-ink"}`}>
                       {l.name}
-                      {l.current ? (
-                        <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M20 6L9 17l-5-5" />
-                        </svg>
-                      ) : null}
                     </a>
                   </li>
                 ))}

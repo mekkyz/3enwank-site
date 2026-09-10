@@ -10,11 +10,17 @@ import { fill, messagesFor, type Messages } from "@/messages";
 /** Plans the pages single out, by catalogue slug; a slug that is not in the catalogue simply highlights nothing. */
 export const HIGHLIGHT: Record<"hosting" | "build" | "care", string> = { hosting: "hosting-m", build: "business-website", care: "care-standard" };
 
-export async function screenContext(locale: Locale): Promise<{ t: Messages; catalogue: Catalogue; company: { legalName: string; address: string; supportEmail: string }; trust: TrustInfo }> {
+export async function screenContext(locale: Locale): Promise<{ t: Messages; catalogue: Catalogue; company: { legalName: string; address: string; contactEmail: string; supportEmail: string }; trust: TrustInfo }> {
   const { catalogue } = await loadCatalogue();
   const company = {
     legalName: loc(catalogue.company.legalName, locale),
     address: loc(catalogue.company.address, locale),
+    /*
+     * The address a visitor writes to before they are a customer. It is answered in the sales queue,
+     * where support@ is where a customer whose site is down goes. Older stores do not publish it and
+     * fall back to support@, which is what this said everywhere until now.
+     */
+    contactEmail: catalogue.company.contactEmail || catalogue.company.supportEmail,
     supportEmail: catalogue.company.supportEmail,
   };
   const trust: TrustInfo = { taxId: catalogue.company.taxId, commercialRegistry: catalogue.company.commercialRegistry, payments: catalogue.payments };

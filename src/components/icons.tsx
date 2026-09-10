@@ -11,32 +11,35 @@ type IconProps = { className?: string };
 const STROKE = { fill: "none", stroke: "currentColor", strokeWidth: 1.7, strokeLinecap: "round", strokeLinejoin: "round" } as const;
 const GLYPH = { fill: "currentColor", stroke: "none", fontSize: 11, fontWeight: 800 } as const;
 
-/** Two currency marks with a swap between them. */
-export function CurrencyIcon({ className = "h-[18px] w-[18px]" }: IconProps) {
+/**
+ * Exchange: two arrows going opposite ways.
+ *
+ * This was a "$" and a "£" set as SVG text with a swap between them, which at 18px was three things
+ * fighting for the same 18 pixels and legible as none of them. One shape, drawn at full size.
+ */
+export function CurrencyIcon({ className = "h-[19px] w-[19px] shrink-0" }: IconProps) {
   return (
-    <svg aria-hidden="true" viewBox="0 0 24 24" className={className}>
-      <text x="0.5" y="16.5" {...GLYPH}>
-        $
-      </text>
-      <path d="M10 12h5" {...STROKE} />
-      <path d="M13.4 10.3 15.2 12l-1.8 1.7" {...STROKE} />
-      <path d="M11.6 13.7 9.8 12l1.8-1.7" {...STROKE} />
-      <text x="15.8" y="16.5" {...GLYPH}>
-        £
-      </text>
+    <svg aria-hidden="true" viewBox="0 0 24 24" className={className} {...STROKE}>
+      <path d="M3.5 8.5h14" />
+      <path d="M14.5 5.2 17.8 8.5l-3.3 3.3" />
+      <path d="M20.5 15.5h-14" />
+      <path d="M9.5 12.2 6.2 15.5l3.3 3.3" />
     </svg>
   );
 }
 
-/** The two scripts the site is written in, side by side in a frame. */
-export function LanguageIcon({ className = "h-[18px] w-[18px]" }: IconProps) {
+/**
+ * The two scripts we publish in. Larger glyphs and a lighter frame than before: at 18px the box was
+ * taking room the letters needed to be read.
+ */
+export function LanguageIcon({ className = "h-[19px] w-[19px] shrink-0" }: IconProps) {
   return (
     <svg aria-hidden="true" viewBox="0 0 24 24" className={className}>
-      <rect x="2.4" y="4.4" width="19.2" height="15.2" rx="3.4" {...STROKE} />
-      <text x="5" y="16" {...GLYPH} fontSize="10">
+      <rect x="1.8" y="3.6" width="20.4" height="16.8" rx="3.2" {...STROKE} strokeWidth={1.5} />
+      <text x="4.2" y="17" {...GLYPH} fontSize="12.5">
         A
       </text>
-      <text x="12.6" y="16" {...GLYPH} fontSize="10">
+      <text x="13" y="17" {...GLYPH} fontSize="12.5">
         ع
       </text>
     </svg>

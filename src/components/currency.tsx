@@ -105,26 +105,20 @@ export function Price({ prices, locale, className = "", fallback, normal }: { pr
 export function CurrencySwitch({ label }: { label: string }) {
   const { currency, setCurrency } = useCurrency();
   return (
-    <details className="relative">
-      <summary className="flex min-h-11 cursor-pointer list-none items-center gap-1.5 rounded-lg px-2 text-sm font-bold text-muted hover:text-ink [&::-webkit-details-marker]:hidden" aria-label={label} title={label}>
+    <details data-menu className="relative">
+      <summary className="flex min-h-11 cursor-pointer list-none items-center rounded-lg px-2 text-sm font-bold text-muted hover:text-ink [&::-webkit-details-marker]:hidden" aria-label={`${label}: ${currency}`} title={label}>
         <CurrencyIcon />
-        <span className="tabular">{currency}</span>
       </summary>
-      <ul className="absolute end-0 z-50 mt-1 min-w-28 rounded-lg border border-line bg-panel p-1 text-sm shadow-lg">
+      <ul className="absolute end-0 z-50 mt-1 w-max rounded-lg border border-line bg-panel p-1 text-sm shadow-lg">
         {currencies.map((c) => (
           <li key={c}>
             <button
               type="button"
               onClick={() => setCurrency(c)}
               aria-pressed={currency === c}
-              className={`flex w-full items-center justify-between gap-3 rounded-md px-3 py-2 font-bold ${currency === c ? "bg-brand-soft text-brand-strong" : "text-ink hover:bg-brand-soft"}`}
+              className={`tabular block w-full whitespace-nowrap rounded-md px-3 py-1.5 text-start font-bold ${currency === c ? "bg-brand-soft text-brand-strong" : "text-muted hover:bg-brand-soft hover:text-ink"}`}
             >
-              <span className="tabular">{c}</span>
-              {currency === c ? (
-                <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M20 6L9 17l-5-5" />
-                </svg>
-              ) : null}
+              {c}
             </button>
           </li>
         ))}

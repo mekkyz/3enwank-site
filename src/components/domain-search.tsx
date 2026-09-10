@@ -469,7 +469,13 @@ export function DomainSearch({
             {ideasStatus === "error" ? <p className="mt-3 text-sm text-warn">{labels.error}</p> : null}
             {ideasStatus === "done" ? (
               freeIdeas.length ? (
-                <ul className="mt-3">
+                /*
+                 * The model proposes several names and each is checked on every extension we sell,
+                 * so a good answer is thirty or forty rows and pushes the whole page down. Capped at
+                 * roughly seven rows and scrolled, which is enough to show that there is more
+                 * without making the reader scroll the page to get past it.
+                 */
+                <ul className="mt-3 max-h-[24rem] overflow-y-auto overscroll-contain pe-1">
                   {freeIdeas.map((r, i) => (
                     <Row key={r.name} r={r} index={i} {...rowProps} enabled={enabled || r.sellable} added={added.includes(r.name)} />
                   ))}

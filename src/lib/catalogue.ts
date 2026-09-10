@@ -48,6 +48,8 @@ export const catalogueSchema = z.object({
     legalName: localized,
     address: localized,
     supportEmail: z.string(),
+    /** Where a visitor writes before they are a customer. Older stores omit it. */
+    contactEmail: z.string().default(""),
     phone: z.string().nullable(),
     website: z.string(),
     /**

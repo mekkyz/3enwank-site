@@ -145,6 +145,17 @@ function Row({ r, primary = false, index = 0, enabled, locale, cartUrl, searchPa
 const SHORTLIST = 5;
 const MORE = 17;
 
+/*
+ * A long answer scrolls inside itself rather than pushing the page down.
+ *
+ * Both lists here get long for the same reason: "show more" turns five endings into seventeen, and
+ * a name suggestion is checked on every ending we sell, so a good answer is thirty or forty rows.
+ * Either one moved the rest of the page out of sight. About seven rows tall, which shows there is
+ * more without making the reader scroll past it to reach anything else. `overscroll-contain` stops
+ * the page itself scrolling on when the list reaches its end.
+ */
+const SCROLL_LIST = "max-h-[24rem] overflow-y-auto overscroll-contain pe-1";
+
 /** A row that is still being checked. Same height as a real one, so nothing jumps when it lands. */
 function Pending({ name }: { name?: string }) {
   return (
@@ -415,7 +426,7 @@ export function DomainSearch({
             {data.suggestions.length || awaiting ? (
               <>
                 <h3 className="mt-4 text-xs font-extrabold uppercase tracking-[0.14em] text-muted">{labels.otherExtensions}</h3>
-                <ul className="mt-1">
+                <ul className={`mt-1 ${SCROLL_LIST}`}>
                   {data.suggestions.map((r, i) => (
                     <Row key={r.name} r={r} index={i + 1} {...rowProps} added={added.includes(r.name)} />
                   ))}
@@ -469,13 +480,7 @@ export function DomainSearch({
             {ideasStatus === "error" ? <p className="mt-3 text-sm text-warn">{labels.error}</p> : null}
             {ideasStatus === "done" ? (
               freeIdeas.length ? (
-                /*
-                 * The model proposes several names and each is checked on every extension we sell,
-                 * so a good answer is thirty or forty rows and pushes the whole page down. Capped at
-                 * roughly seven rows and scrolled, which is enough to show that there is more
-                 * without making the reader scroll the page to get past it.
-                 */
-                <ul className="mt-3 max-h-[24rem] overflow-y-auto overscroll-contain pe-1">
+                <ul className={`mt-3 ${SCROLL_LIST}`}>
                   {freeIdeas.map((r, i) => (
                     <Row key={r.name} r={r} index={i} {...rowProps} enabled={enabled || r.sellable} added={added.includes(r.name)} />
                   ))}

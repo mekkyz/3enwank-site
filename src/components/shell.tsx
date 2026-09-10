@@ -19,7 +19,6 @@ export function Shell({
   page,
   storeUrl,
   legalName,
-  address,
   supportEmail,
   trust,
   assistantEnabled = false,
@@ -30,7 +29,6 @@ export function Shell({
   page: PageKey;
   storeUrl?: string;
   legalName?: string;
-  address?: string;
   supportEmail?: string;
   trust?: TrustInfo;
   assistantEnabled?: boolean;
@@ -155,14 +153,7 @@ export function Shell({
                   {t.footer.operatedBy} {legalName}
                 </p>
               ) : null}
-              {address ? <p className="mt-1">{address}</p> : null}
-              {supportEmail ? (
-                <p className="mt-1">
-                  <a href={`mailto:${supportEmail}`} className="hover:text-ink" dir="ltr">
-                    {supportEmail}
-                  </a>
-                </p>
-              ) : null}
+              {trust ? <Trust t={t} trust={trust} /> : null}
             </div>
             <FooterColumn
               title={t.footer.products}
@@ -198,11 +189,6 @@ export function Shell({
               ]}
             />
           </div>
-          {trust ? (
-            <div className="mt-10 flex flex-wrap gap-x-6 gap-y-1.5 text-xs text-faint">
-              <Trust t={t} trust={trust} />
-            </div>
-          ) : null}
         </div>
         <div className="border-t border-line">
           <div className="mx-auto max-w-6xl px-5 py-5 text-xs text-faint sm:px-8">

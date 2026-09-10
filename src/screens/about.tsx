@@ -13,7 +13,7 @@ export const about = {
   async render(locale: Locale) {
     const { t, catalogue, company, trust } = await screenContext(locale);
     return (
-      <Shell locale={locale} page="about" storeUrl={catalogue.store.url} legalName={company.legalName} address={company.address} supportEmail={company.contactEmail} trust={trust} assistantEnabled={catalogue.assistant.enabled} turnstileSiteKey={catalogue.assistant.turnstileSiteKey}>
+      <Shell locale={locale} page="about" storeUrl={catalogue.store.url} legalName={company.legalName} supportEmail={company.contactEmail} trust={trust} assistantEnabled={catalogue.assistant.enabled} turnstileSiteKey={catalogue.assistant.turnstileSiteKey}>
         <PageIntro kicker={t.about.title} title={t.about.h2} lede={fill(t.about.lede, { legalName: company.legalName })} />
         <Section>
           <SectionHeader title={t.about.principlesTitle} />

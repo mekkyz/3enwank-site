@@ -46,7 +46,7 @@ export const home = {
     const phone = catalogue.company.phone;
     const whatsapp = WHATSAPP_NUMBER || (phone ?? "").replace(/[^0-9]/g, "") || null;
     return (
-      <Shell locale={locale} page="home" storeUrl={catalogue.store.url} legalName={company.legalName} address={company.address} supportEmail={company.contactEmail} trust={trust} assistantEnabled={catalogue.assistant.enabled} turnstileSiteKey={catalogue.assistant.turnstileSiteKey}>
+      <Shell locale={locale} page="home" storeUrl={catalogue.store.url} legalName={company.legalName} supportEmail={company.contactEmail} trust={trust} assistantEnabled={catalogue.assistant.enabled} turnstileSiteKey={catalogue.assistant.turnstileSiteKey}>
         <section className="relative overflow-hidden border-b border-line">
           <Container className="grid items-center gap-12 py-16 lg:grid-cols-2 lg:py-24">
             <div>

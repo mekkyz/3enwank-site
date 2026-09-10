@@ -81,7 +81,7 @@ export const en: Messages = {
       { title: "A real person answers", body: "Not a ticket robot. We read it, we reply in English or Arabic." },
     ],
     pricingTitle: "Hosting plans",
-    pricingLede: "Six sizes, billed once a year. Where a plan shows a crossed-out number, that is the normal price and the other is what you pay now.",
+    pricingLede: "Six sizes, billed once a year.",
     compareLink: "Compare all six plans",
     glanceTitle: "Websites and care plans",
     glanceLede: "Fixed-price builds and yearly care plans from the team that hosts the site.",

@@ -37,8 +37,14 @@ export const home = {
     // A telephone number is not a WhatsApp number. WHATSAPP_NUMBER is the only thing that puts a
     // "message us on WhatsApp" card on the page; the company's phone number gets a phone card, and
     // both can be shown, because they are two different ways to reach the same people.
-    const whatsapp = WHATSAPP_NUMBER;
+    /*
+     * The WhatsApp number, from the store's own company settings unless this site is told otherwise.
+     * WHATSAPP_NUMBER stays as an override for the day the WhatsApp line is not the phone line, but
+     * it is not required: an empty one used to hide the entire WhatsApp panel silently, which on a
+     * page whose whole point is "WhatsApp first" is the worst way for a setting to be missing.
+     */
     const phone = catalogue.company.phone;
+    const whatsapp = WHATSAPP_NUMBER || (phone ?? "").replace(/[^0-9]/g, "") || null;
     return (
       <Shell locale={locale} page="home" storeUrl={catalogue.store.url} legalName={company.legalName} address={company.address} supportEmail={company.contactEmail} trust={trust} assistantEnabled={catalogue.assistant.enabled} turnstileSiteKey={catalogue.assistant.turnstileSiteKey}>
         <section className="glow relative overflow-hidden border-b border-line">

@@ -57,6 +57,7 @@ export const arEg: Messages = {
     choose: "اطلبها",
     details: "التفاصيل",
     vatIncluded: "كل الأسعار شاملة {rate}٪ ضريبة قيمة مضافة.",
+    renewsAt: "أول سنة. بيتجدد بـ{price} في السنة.",
     currency: "العملة",
     mostChosen: "الأكتر طلبًا",
     included: "متضمن",

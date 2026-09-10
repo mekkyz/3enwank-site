@@ -4,7 +4,7 @@ import { storeLink, type Locale } from "@/lib/i18n";
 import { messagesFor } from "@/messages";
 import { Val } from "./bidi";
 import { ButtonLink, Card, Check } from "./blocks";
-import { Price } from "./currency";
+import { Price, RenewalNote } from "./currency";
 
 /** One plan, from the catalogue. Server component; only the price is client-rendered (currency switch). */
 export function PlanCard({ product, locale, highlight = false, cycleLabel, cta, meta, compact = false }: { product: Product; locale: Locale; highlight?: boolean; cycleLabel: string; cta: string; meta?: string; compact?: boolean }) {
@@ -23,6 +23,12 @@ export function PlanCard({ product, locale, highlight = false, cycleLabel, cta, 
         <Price prices={product.prices} normal={normalPrices(product)} locale={locale} fallback={t.common.notAvailable} className="text-[2rem] font-extrabold leading-none tracking-tight text-ink" />
         <span className="text-sm text-muted">{cycleLabel}</span>
       </p>
+      {/*
+       * The advertised price buys the first year; the struck-out figure beside it is what the plan
+       * costs from the second onwards. Saying so on the card is the only place a customer can read
+       * it before they decide, and it is what the store now actually charges at renewal.
+       */}
+      <RenewalNote prices={normalPrices(product)} locale={locale} label={t.common.renewsAt} className="mt-1.5 text-sm font-semibold text-muted" />
       {meta ? <p className="mt-1.5 text-sm text-muted">{meta}</p> : null}
       {features.length ? (
         <ul className="mt-5 space-y-2.5 border-t border-line pt-5 text-[15px]">

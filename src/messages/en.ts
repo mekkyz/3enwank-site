@@ -50,6 +50,7 @@ export const en: Messages = {
     choose: "Choose",
     details: "Details",
     vatIncluded: "All prices include {rate}% VAT.",
+    renewsAt: "First year. Renews at {price} a year.",
     currency: "Currency",
     mostChosen: "Most chosen",
     included: "Included",
@@ -258,7 +259,7 @@ export const en: Messages = {
     title: "Terms of service",
     intro: "These terms apply to every hosting plan, website build, care plan and domain name bought from {legalName} (\"3enwank\"). Version {version}. By placing an order in the customer area you accept them.",
     sections: [
-      { title: "Prices and billing", body: ["Prices are shown in Egyptian pounds and US dollars with VAT included. Invoices are paid by bank transfer, using the account details printed on the invoice. Hosting, care plans and domains are billed once a year in advance. The renewal invoice is issued before the due date and the price on it is the price in force at that time.", "Website builds are invoiced in two parts: a deposit to start and the rest when you approve the work. Work starts when the deposit is paid."] },
+      { title: "Prices and billing", body: ["Prices are shown in Egyptian pounds and US dollars with VAT included. Invoices are paid by bank transfer, using the account details printed on the invoice. Hosting, care plans and domains are billed once a year in advance. Where a plan advertises a price below its normal price, that lower price buys the first year only and the plan renews at the normal price, which is shown on the plan and on your first invoice. The renewal invoice is issued before the due date.", "Website builds are invoiced in two parts: a deposit to start and the rest when you approve the work. Work starts when the deposit is paid."] },
       { title: "Hosting", body: ["A hosting plan gives you one cPanel account with the storage, bandwidth, email and database limits of the plan. Accounts are for lawful content only. Spam, phishing, malware and anything that harms other customers on the server leads to suspension without refund.", "An unpaid hosting renewal is suspended five days after the due date and can be reactivated by paying the invoice. Care plans and website builds are never suspended for late payment; upkeep stops. We do not delete accounts automatically. A cancelled account is removed after you tell us, or after the cancellation grace period on your invoice."] },
       { title: "Backups", body: ["Every account is copied off the server nightly and kept for three months. Backups are a safety net, not a substitute for your own copy. Keep one of anything you cannot afford to lose."] },
       { title: "Care plans", body: ["A care plan covers updates, malware scanning, the number of content changes on the plan and a first-response time for requests. A content change is one clear edit that takes half an hour or less with the existing design and content. New pages, new features and design work are quoted separately."] },

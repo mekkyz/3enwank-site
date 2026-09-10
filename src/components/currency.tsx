@@ -126,3 +126,18 @@ export function CurrencySwitch({ label }: { label: string }) {
     </details>
   );
 }
+
+/**
+ * "First year. Renews at EGP 2,499 a year." in whichever currency the visitor is looking at.
+ *
+ * A client island for the same reason <Price> is one: the currency lives in the browser, and the
+ * renewal figure has to move with it or the card would quote a year-one price in dollars beside a
+ * renewal in pounds.
+ */
+export function RenewalNote({ prices, locale, label, className = "" }: { prices: Partial<Record<Currency, Money>>; locale: Locale; label: string; className?: string }) {
+  const { currency } = useCurrency();
+  const chosen = prices[currency] ? currency : currencies.find((c) => prices[c]);
+  const money = chosen ? prices[chosen] : undefined;
+  if (!money || !chosen) return null;
+  return <p className={className}>{label.replace("{price}", formatPrice(money, chosen, locale))}</p>;
+}

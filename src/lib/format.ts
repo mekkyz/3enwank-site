@@ -133,8 +133,18 @@ export function summaryWithoutDelivery(summary: string | null | undefined): stri
   return (summary ?? "").replace(DELIVERY_RE, "").trim();
 }
 
-/** The list price a plan advertises in its billing note ("Normal price 2,499 EGP - you pay 1,999 EGP"), per currency, in minor units. */
-export function normalPrices(product: Pick<Product, "features">): Partial<Record<Currency, Money>> {
+/**
+ * What a plan renews at, when the advertised price only covers the first year.
+ *
+ * It comes from the store's own price list. It used to be recovered here with a regular expression
+ * over an English feature line ("Normal price 2,499 EGP - you pay 1,999 EGP"), which was a
+ * reasonable way to draw a number on a page and became unacceptable the moment the same figure
+ * started deciding what a customer is charged a year later. The regex survives only as a fallback
+ * for a store that has not published the field yet.
+ */
+export function normalPrices(product: Pick<Product, "features" | "renewalPrices">): Partial<Record<Currency, Money>> {
+  const published = product.renewalPrices ?? {};
+  if (Object.keys(published).length > 0) return published;
   const out: Partial<Record<Currency, Money>> = {};
   for (const line of product.features.en) {
     for (const m of line.matchAll(/Normal price ([\d,]+(?:\.\d{1,2})?) (EGP|USD)/g)) {

@@ -49,6 +49,7 @@ export type Messages = {
     details: string;
     /** Exactly one {rate}. Shown once near every price list. */
     vatIncluded: string;
+    renewsAt: string;
     currency: string;
     mostChosen: string;
     included: string;

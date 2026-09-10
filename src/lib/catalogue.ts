@@ -26,6 +26,11 @@ const product = z.object({
   /** Builds: share invoiced up front in basis points (5000 = 50%), what checkout charges; null elsewhere. */
   depositBp: z.number().int().min(0).max(10000).nullable().optional(),
   prices,
+  /**
+   * What the plan renews at, when the advertised price only covers the first year. Empty for
+   * anything that renews at the same price, and defaulted so an older store still validates.
+   */
+  renewalPrices: prices.default({}),
   options: z.array(
     z.object({
       key: z.string(),

@@ -51,7 +51,10 @@ function store(c: Currency) {
   for (const l of listeners) l();
 }
 
-const CurrencyContext = createContext<{ currency: Currency; setCurrency: (c: Currency) => void }>({ currency: DEFAULT, setCurrency: () => {} });
+const CurrencyContext = createContext<{ currency: Currency; setCurrency: (c: Currency) => void }>({
+  currency: DEFAULT,
+  setCurrency: () => {},
+});
 
 export function CurrencyProvider({ children }: { children: ReactNode }) {
   const stored = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
@@ -70,7 +73,19 @@ export function useCurrency() {
 }
 
 /** A price in the chosen currency, isolated left-to-right; `normal` shows a crossed-out list price when the chosen currency has one. */
-export function Price({ prices, locale, className = "", fallback, normal }: { prices: Partial<Record<Currency, Money>>; locale: Locale; className?: string; fallback: string; normal?: Partial<Record<Currency, Money>> }) {
+export function Price({
+  prices,
+  locale,
+  className = "",
+  fallback,
+  normal,
+}: {
+  prices: Partial<Record<Currency, Money>>;
+  locale: Locale;
+  className?: string;
+  fallback: string;
+  normal?: Partial<Record<Currency, Money>>;
+}) {
   const { currency } = useCurrency();
   const chosen = prices[currency] ? currency : currencies.find((c) => prices[c]);
   const money = chosen ? prices[chosen] : undefined;
@@ -106,17 +121,21 @@ export function CurrencySwitch({ label }: { label: string }) {
   const { currency, setCurrency } = useCurrency();
   return (
     <details data-menu className="relative">
-      <summary className="flex min-h-11 cursor-pointer list-none items-center rounded-lg px-2 text-sm font-bold text-muted hover:text-ink [&::-webkit-details-marker]:hidden" aria-label={`${label}: ${currency}`} title={label}>
+      <summary
+        className="flex min-h-11 cursor-pointer list-none items-center rounded-full px-2 text-sm font-bold text-muted hover:text-ink [&::-webkit-details-marker]:hidden"
+        aria-label={`${label}: ${currency}`}
+        title={label}
+      >
         <CurrencyIcon />
       </summary>
-      <ul className="absolute end-0 z-50 mt-1 w-max rounded-lg border border-line bg-panel p-1 text-sm shadow-lg">
+      <ul className="absolute end-0 z-50 mt-1 w-max rounded-2xl border border-line bg-panel p-1 text-sm shadow-lg">
         {currencies.map((c) => (
           <li key={c}>
             <button
               type="button"
               onClick={() => setCurrency(c)}
               aria-pressed={currency === c}
-              className={`tabular block w-full whitespace-nowrap rounded-md px-3 py-1.5 text-start font-bold ${currency === c ? "bg-brand-soft text-brand-strong" : "text-muted hover:bg-brand-soft hover:text-ink"}`}
+              className={`tabular block w-full whitespace-nowrap rounded-full px-3 py-1.5 text-start font-bold ${currency === c ? "bg-brand-soft text-brand-strong" : "text-muted hover:bg-brand-soft hover:text-ink"}`}
             >
               {c}
             </button>
@@ -134,7 +153,17 @@ export function CurrencySwitch({ label }: { label: string }) {
  * renewal figure has to move with it or the card would quote a year-one price in dollars beside a
  * renewal in pounds.
  */
-export function RenewalNote({ prices, locale, label, className = "" }: { prices: Partial<Record<Currency, Money>>; locale: Locale; label: string; className?: string }) {
+export function RenewalNote({
+  prices,
+  locale,
+  label,
+  className = "",
+}: {
+  prices: Partial<Record<Currency, Money>>;
+  locale: Locale;
+  label: string;
+  className?: string;
+}) {
   const { currency } = useCurrency();
   const chosen = prices[currency] ? currency : currencies.find((c) => prices[c]);
   const money = chosen ? prices[chosen] : undefined;

@@ -46,7 +46,12 @@ function getServerSnapshot(): number {
 export function CartLink({ href, label }: { href: string; label: string }) {
   const count = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   return (
-    <a href={href} className="relative flex min-h-11 items-center rounded-lg px-2 text-muted hover:text-ink" aria-label={count > 0 ? `${label} (${count})` : label} title={label}>
+    <a
+      href={href}
+      className="relative flex min-h-11 items-center rounded-full px-2 text-muted hover:text-ink"
+      aria-label={count > 0 ? `${label} (${count})` : label}
+      title={label}
+    >
       <CartIcon />
       {count > 0 ? (
         <span className="tabular absolute end-0.5 top-1 inline-flex min-w-[17px] items-center justify-center rounded-full bg-brand-ink px-1 text-[10px] font-extrabold leading-[15px] text-white">

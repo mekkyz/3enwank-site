@@ -46,7 +46,14 @@ type Result = {
   price: { gross: number; formatted: string; currency: Currency } | null;
   reason?: "not_offered" | "unknown";
 };
-type SearchResponse = { query: string; currency: Currency; invalid: boolean; enabled: boolean; primary: Result | null; suggestions: Result[] };
+type SearchResponse = {
+  query: string;
+  currency: Currency;
+  invalid: boolean;
+  enabled: boolean;
+  primary: Result | null;
+  suggestions: Result[];
+};
 type IdeasResponse = { ideas: Result[]; checked: boolean };
 
 type Status = "idle" | "loading" | "done" | "invalid" | "error" | "limited";
@@ -63,22 +70,54 @@ const TONE = {
 } as const;
 
 function statusOf(r: Result, l: DomainSearchLabels): { text: string; tone: keyof typeof TONE } {
-  if (r.available === null) return r.reason === "not_offered" ? { text: l.notOffered, tone: "muted" } : { text: l.unknown, tone: "warn" };
+  if (r.available === null)
+    return r.reason === "not_offered" ? { text: l.notOffered, tone: "muted" } : { text: l.unknown, tone: "warn" };
   if (r.premium) return { text: l.premium, tone: "brand" };
   return r.available ? { text: l.available, tone: "ok" } : { text: l.taken, tone: "muted" };
 }
 
-function Row({ r, primary = false, index = 0, enabled, locale, cartUrl, searchPath, contactHref, labels, added, onAdd }: { r: Result; primary?: boolean; index?: number; enabled: boolean; locale: Locale; cartUrl: string; searchPath: string; contactHref: string; labels: DomainSearchLabels; added: boolean; onAdd: (name: string) => void }) {
+function Row({
+  r,
+  primary = false,
+  index = 0,
+  enabled,
+  locale,
+  cartUrl,
+  searchPath,
+  contactHref,
+  labels,
+  added,
+  onAdd,
+}: {
+  r: Result;
+  primary?: boolean;
+  index?: number;
+  enabled: boolean;
+  locale: Locale;
+  cartUrl: string;
+  searchPath: string;
+  contactHref: string;
+  labels: DomainSearchLabels;
+  added: boolean;
+  onAdd: (name: string) => void;
+}) {
   const s = statusOf(r, labels);
-  const price = r.price ? formatPrice({ gross: r.price.gross, formatted: r.price.formatted }, r.price.currency, locale) : null;
+  const price = r.price
+    ? formatPrice({ gross: r.price.gross, formatted: r.price.formatted }, r.price.currency, locale)
+    : null;
   const free = r.available === true && !r.premium;
   return (
-    <li className="row-in flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-t border-line py-3.5 first:border-t-0" style={{ animationDelay: `${Math.min(index, 8) * 50}ms` }}>
+    <li
+      className="row-in flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-t border-line py-3.5 first:border-t-0"
+      style={{ animationDelay: `${Math.min(index, 8) * 50}ms` }}
+    >
       <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
         <bdi dir="ltr" className={`break-all font-extrabold text-ink ${primary ? "text-xl sm:text-2xl" : "text-base"}`}>
           {r.name}
         </bdi>
-        <span className={`whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-bold ${TONE[s.tone]}`}>{s.text}</span>
+        <span className={`whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-bold ${TONE[s.tone]}`}>
+          {s.text}
+        </span>
       </div>
       <div className="flex items-center gap-4">
         {price ? (
@@ -111,11 +150,20 @@ function Row({ r, primary = false, index = 0, enabled, locale, cartUrl, searchPa
               <button
                 type="submit"
                 disabled={added}
-                className={`inline-flex min-h-10 items-center gap-1.5 whitespace-nowrap rounded-lg px-4 text-sm font-bold transition ${added ? "border-[1.5px] border-line-strong bg-panel text-muted" : "btn-primary"}`}
+                className={`inline-flex min-h-10 items-center gap-1.5 whitespace-nowrap rounded-full px-4 text-sm font-bold transition ${added ? "border-[1.5px] border-line-strong bg-panel text-muted" : "btn-primary"}`}
               >
                 {added ? (
                   <>
-                    <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 24 24"
+                      className="h-4 w-4"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.6"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
                       <path d="M20 6L9 17l-5-5" />
                     </svg>
                     {labels.added}
@@ -161,10 +209,16 @@ function Pending({ name }: { name?: string }) {
   return (
     <li className="flex items-center justify-between gap-3 border-b border-line py-3 last:border-0">
       <div className="min-w-0 flex-1">
-        {name ? <span className="block truncate text-sm font-bold text-muted" dir="ltr">{name}</span> : <span className="waiting block h-4 w-40 max-w-full rounded" />}
+        {name ? (
+          <span className="block truncate text-sm font-bold text-muted" dir="ltr">
+            {name}
+          </span>
+        ) : (
+          <span className="waiting block h-4 w-40 max-w-full rounded" />
+        )}
       </div>
       <span className="waiting h-4 w-20 shrink-0 rounded" />
-      <span className="waiting h-9 w-24 shrink-0 rounded-lg" />
+      <span className="waiting h-9 w-24 shrink-0 rounded-full" />
     </li>
   );
 }
@@ -234,8 +288,16 @@ export function DomainSearch({
   }, [query, focused]);
 
   const ask = useCallback(
-    async (q: string, c: Currency, suggest: number, signal: AbortSignal): Promise<SearchResponse | "limited" | "error"> => {
-      const res = await fetch(`${apiUrl}?q=${encodeURIComponent(q)}&currency=${c}&suggest=${suggest}`, { signal, headers: { Accept: "application/json" } });
+    async (
+      q: string,
+      c: Currency,
+      suggest: number,
+      signal: AbortSignal,
+    ): Promise<SearchResponse | "limited" | "error"> => {
+      const res = await fetch(`${apiUrl}?q=${encodeURIComponent(q)}&currency=${c}&suggest=${suggest}`, {
+        signal,
+        headers: { Accept: "application/json" },
+      });
       if (res.status === 429) return "limited";
       if (!res.ok) return "error";
       return (await res.json()) as SearchResponse;
@@ -327,7 +389,11 @@ export function DomainSearch({
     setIdeasStatus("loading");
     try {
       const token = await turnstileToken(turnstileSiteKey);
-      const res = await fetch(ideasUrl, { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify({ description: d, locale, currency, ...(token ? { turnstileToken: token } : {}) }) });
+      const res = await fetch(ideasUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({ description: d, locale, currency, ...(token ? { turnstileToken: token } : {}) }),
+      });
       if (res.status === 503) return setIdeasStatus("unavailable");
       if (res.status === 429) return setIdeasStatus("limited");
       if (!res.ok) return setIdeasStatus("error");
@@ -390,9 +456,13 @@ export function DomainSearch({
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
             dir="ltr"
-            className="block min-h-12 w-full rounded-lg border border-line-strong bg-surface px-4 text-lg text-ink placeholder:text-faint focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand-soft"
+            className="block min-h-12 w-full rounded-full border border-line-strong bg-surface px-4 text-lg text-ink placeholder:text-faint focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand-soft"
           />
-          <button type="submit" disabled={status === "loading"} className="btn-primary inline-flex min-h-12 shrink-0 items-center justify-center rounded-lg px-7 text-sm font-bold disabled:opacity-70">
+          <button
+            type="submit"
+            disabled={status === "loading"}
+            className="btn-primary inline-flex min-h-12 shrink-0 items-center justify-center rounded-full px-7 text-sm font-bold disabled:opacity-70"
+          >
             {status === "loading" ? labels.checking : labels.button}
           </button>
         </div>
@@ -408,7 +478,9 @@ export function DomainSearch({
             <ul>
               <Pending name={query.trim().includes(".") ? query.trim().toLowerCase() : undefined} />
             </ul>
-            <h3 className="mt-4 text-xs font-extrabold uppercase tracking-[0.14em] text-muted">{labels.otherExtensions}</h3>
+            <h3 className="mt-4 text-xs font-extrabold uppercase tracking-[0.14em] text-muted">
+              {labels.otherExtensions}
+            </h3>
             <ul className="mt-1">
               {Array.from({ length: SHORTLIST }, (_, i) => (
                 <Pending key={`first-${i}`} />
@@ -425,7 +497,9 @@ export function DomainSearch({
             ) : null}
             {data.suggestions.length || awaiting ? (
               <>
-                <h3 className="mt-4 text-xs font-extrabold uppercase tracking-[0.14em] text-muted">{labels.otherExtensions}</h3>
+                <h3 className="mt-4 text-xs font-extrabold uppercase tracking-[0.14em] text-muted">
+                  {labels.otherExtensions}
+                </h3>
                 <ul className={`mt-1 ${SCROLL_LIST}`}>
                   {data.suggestions.map((r, i) => (
                     <Row key={r.name} r={r} index={i + 1} {...rowProps} added={added.includes(r.name)} />
@@ -435,7 +509,11 @@ export function DomainSearch({
                   ))}
                 </ul>
                 {!moreLoaded && !awaiting && data.suggestions.length >= SHORTLIST ? (
-                  <button type="button" onClick={() => void loadMore()} className="mt-3 inline-flex min-h-11 items-center justify-center rounded-lg border-[1.5px] border-line-strong px-4 text-sm font-bold text-muted hover:border-brand hover:text-ink">
+                  <button
+                    type="button"
+                    onClick={() => void loadMore()}
+                    className="mt-3 inline-flex min-h-11 items-center justify-center rounded-full border-[1.5px] border-line-strong px-4 text-sm font-bold text-muted hover:border-brand hover:text-ink"
+                  >
                     {labels.moreExtensions}
                   </button>
                 ) : null}
@@ -453,13 +531,35 @@ export function DomainSearch({
             <label htmlFor={`${id}-desc`} className="sr-only">
               {labels.ideasHint}
             </label>
-            <input id={`${id}-desc`} type="text" maxLength={300} minLength={10} required value={desc} onChange={(e) => setDesc(e.target.value)} placeholder={labels.ideasPlaceholder} className="block min-h-11 w-full rounded-lg border border-line-strong bg-surface px-4 text-base text-ink placeholder:text-faint focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand-soft" />
-            <button type="submit" disabled={ideasStatus === "loading"} className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-lg border-[1.5px] border-brand px-5 text-sm font-bold text-brand-strong hover:bg-brand-soft disabled:opacity-70">
+            <input
+              id={`${id}-desc`}
+              type="text"
+              maxLength={300}
+              minLength={10}
+              required
+              value={desc}
+              onChange={(e) => setDesc(e.target.value)}
+              placeholder={labels.ideasPlaceholder}
+              className="block min-h-11 w-full rounded-full border border-line-strong bg-surface px-4 text-base text-ink placeholder:text-faint focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand-soft"
+            />
+            <button
+              type="submit"
+              disabled={ideasStatus === "loading"}
+              className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-full border-[1.5px] border-brand px-5 text-sm font-bold text-brand-strong hover:bg-brand-soft disabled:opacity-70"
+            >
               {ideasStatus === "loading" ? (
                 <span className="inline-flex items-center gap-2">
                   <span aria-hidden="true" className="chat-dot inline-block h-1.5 w-1.5 rounded-full bg-current" />
-                  <span aria-hidden="true" className="chat-dot inline-block h-1.5 w-1.5 rounded-full bg-current" style={{ animationDelay: "0.16s" }} />
-                  <span aria-hidden="true" className="chat-dot inline-block h-1.5 w-1.5 rounded-full bg-current" style={{ animationDelay: "0.32s" }} />
+                  <span
+                    aria-hidden="true"
+                    className="chat-dot inline-block h-1.5 w-1.5 rounded-full bg-current"
+                    style={{ animationDelay: "0.16s" }}
+                  />
+                  <span
+                    aria-hidden="true"
+                    className="chat-dot inline-block h-1.5 w-1.5 rounded-full bg-current"
+                    style={{ animationDelay: "0.32s" }}
+                  />
                   <span>{labels.ideasWorking}</span>
                 </span>
               ) : (
@@ -475,14 +575,23 @@ export function DomainSearch({
                 ))}
               </ul>
             ) : null}
-            {ideasStatus === "unavailable" ? <p className="mt-3 text-sm text-muted">{labels.ideasUnavailable}</p> : null}
+            {ideasStatus === "unavailable" ? (
+              <p className="mt-3 text-sm text-muted">{labels.ideasUnavailable}</p>
+            ) : null}
             {ideasStatus === "limited" ? <p className="mt-3 text-sm text-warn">{labels.rateLimited}</p> : null}
             {ideasStatus === "error" ? <p className="mt-3 text-sm text-warn">{labels.error}</p> : null}
             {ideasStatus === "done" ? (
               freeIdeas.length ? (
                 <ul className={`mt-3 ${SCROLL_LIST}`}>
                   {freeIdeas.map((r, i) => (
-                    <Row key={r.name} r={r} index={i} {...rowProps} enabled={enabled || r.sellable} added={added.includes(r.name)} />
+                    <Row
+                      key={r.name}
+                      r={r}
+                      index={i}
+                      {...rowProps}
+                      enabled={enabled || r.sellable}
+                      added={added.includes(r.name)}
+                    />
                   ))}
                 </ul>
               ) : (

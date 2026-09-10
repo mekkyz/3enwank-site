@@ -50,7 +50,7 @@ export function Shell({
     <>
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-panel focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:shadow"
+        className="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-panel focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:shadow"
       >
         {t.nav.skip}
       </a>
@@ -79,13 +79,13 @@ export function Shell({
             <CartLink href={storeLink(`${store}/cart`, locale)} label={t.nav.cart} />
             <details data-menu className="relative">
               <summary
-                className="flex min-h-11 cursor-pointer list-none items-center rounded-lg px-2 text-sm font-semibold text-muted hover:text-ink [&::-webkit-details-marker]:hidden"
+                className="flex min-h-11 cursor-pointer list-none items-center rounded-full px-2 text-sm font-semibold text-muted hover:text-ink [&::-webkit-details-marker]:hidden"
                 aria-label={`${t.nav.language}: ${current.name}`}
                 title={t.nav.language}
               >
                 <LanguageIcon />
               </summary>
-              <ul className="absolute end-0 z-50 mt-1 w-max rounded-lg border border-line bg-panel p-1 text-sm shadow-lg">
+              <ul className="absolute end-0 z-50 mt-1 w-max rounded-2xl border border-line bg-panel p-1 text-sm shadow-lg">
                 {languages.map((l) => (
                   <li key={l.code}>
                     {/* The chosen one is the coloured one: a tick as well was a second thing saying
@@ -96,7 +96,7 @@ export function Shell({
                       lang={l.lang}
                       dir={l.dir}
                       aria-current={l.current ? "true" : undefined}
-                      className={`block whitespace-nowrap rounded-md px-3 py-1.5 font-bold ${l.current ? "bg-brand-soft text-brand-strong" : "text-muted hover:bg-brand-soft hover:text-ink"}`}
+                      className={`block whitespace-nowrap rounded-full px-3 py-1.5 font-bold ${l.current ? "bg-brand-soft text-brand-strong" : "text-muted hover:bg-brand-soft hover:text-ink"}`}
                     >
                       {l.name}
                     </a>
@@ -112,7 +112,7 @@ export function Shell({
             </a>
             <a
               href={anchorFor("contact", locale)}
-              className="btn-primary inline-flex min-h-11 items-center whitespace-nowrap rounded-lg px-3 text-[13px] font-bold sm:px-4 sm:text-sm"
+              className="btn-primary inline-flex min-h-11 items-center whitespace-nowrap rounded-full px-3 text-[13px] font-bold sm:px-4 sm:text-sm"
             >
               {t.nav.contact}
             </a>

@@ -61,7 +61,6 @@ export type Messages = {
     ctaBuild: string;
     facts: string[];
     /** What every account runs on; the hosting page prints it as one line. */
-    stack: string[];
     productsTitle: string;
     products: { hosting: ProductTeaser; websites: ProductTeaser; care: ProductTeaser; domains: ProductTeaser };
     whyTitle: string;
@@ -87,10 +86,7 @@ export type Messages = {
     plan: string;
     perYear: string;
     fine: string;
-    addonTitle: string;
     /** Exactly one {price}; the hosting page renders the live price in its place. */
-    addonBody: string;
-    runsOn: string;
     empty: string;
   };
   websites: {
@@ -100,7 +96,6 @@ export type Messages = {
     /** {deposit} and {rest} once each, filled from the catalogue's depositBp. */
     deposit: string;
     delivery: string;
-    fine: string;
     customTitle: string;
     customBody: string;
     customMeta: string;

@@ -1,8 +1,6 @@
-import { Container, Empty, Fine, PageIntro, Section, SectionHeader } from "@/components/blocks";
-import { Price } from "@/components/currency";
+import { Empty, Fine, PageIntro, Section, SectionHeader } from "@/components/blocks";
 import { CompareTable, PlanCard } from "@/components/plans";
 import { Shell } from "@/components/shell";
-import { localizedValue } from "@/lib/format";
 import { pageMetadata } from "@/lib/metadata";
 import type { Locale } from "@/lib/i18n";
 import { messagesFor } from "@/messages";
@@ -16,13 +14,6 @@ export const hosting = {
   async render(locale: Locale) {
     const { t, catalogue, company, trust } = await screenContext(locale);
     const plans = catalogue.products.hosting;
-    const xxl = plans.find((p) => p.options.some((o) => o.key === "max_addon_domains"));
-    const addonOption = xxl?.options.find((o) => o.key === "max_addon_domains");
-    const addon = addonOption?.values.find((v) => !v.isDefault && (v.prices.EGP?.gross ?? 0) > 0);
-    // The same list the home page shows, in the page's language (the catalogue only carries the English sentence).
-    const runsOn = plans.length ? t.home.stack.join(" · ") : null;
-    // The price sits mid-sentence and is a client component (currency toggle), so the copy is split around it.
-    const [addonBefore, addonAfter] = t.hosting.addonBody.split("{price}");
     return (
       <Shell locale={locale} page="hosting" storeUrl={catalogue.store.url} legalName={company.legalName} supportEmail={company.contactEmail} trust={trust} assistantEnabled={catalogue.assistant.enabled} turnstileSiteKey={catalogue.assistant.turnstileSiteKey}>
         <PageIntro kicker={t.hosting.title} title={t.hosting.h2} lede={t.hosting.lede} />
@@ -39,32 +30,12 @@ export const hosting = {
           ) : (
             <Empty>{t.hosting.empty}</Empty>
           )}
-          {runsOn ? (
-            <p className="mt-8 text-sm text-muted">
-              <span className="font-semibold text-ink">{t.hosting.runsOn}:</span> {runsOn}
-            </p>
-          ) : null}
         </Section>
         {plans.length > 1 ? (
           <Section tone="alt">
             <SectionHeader title={t.hosting.compareTitle} />
             <CompareTable products={plans} locale={locale} caption={t.hosting.compareCaption} exclude={["Runs on"]} perYear={t.hosting.perYear} cta={t.common.choose} />
             <Fine>{t.hosting.fine}</Fine>
-          </Section>
-        ) : null}
-        {xxl && addon && addonOption ? (
-          <Section>
-            <Container className="max-w-3xl px-0">
-              <h2 className="text-2xl font-extrabold text-ink">{t.hosting.addonTitle}</h2>
-              <p className="mt-3 text-muted">
-                {addonBefore}
-                <Price prices={addon.prices} locale={locale} fallback={t.common.notAvailable} className="font-bold text-ink" />
-                {addonAfter}
-              </p>
-              <p className="mt-2 text-sm text-muted">
-                {localizedValue(addonOption.name, locale, t)}: {addonOption.values.map((v) => localizedValue(v.label, locale, t)).join(", ")}
-              </p>
-            </Container>
           </Section>
         ) : null}
       </Shell>

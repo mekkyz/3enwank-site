@@ -141,8 +141,9 @@ export function LeadForm({
    * 3:1; on focus the ring changes colour and thickens instead of a border and a ring both being
    * painted, which used to nudge the text by a pixel as you clicked in.
    */
+  // Pill for the two single-line fields; a pill textarea is not a shape, so that one is a card.
   const field =
-    "block w-full rounded-lg bg-surface px-4 py-3 text-sm text-ink ring-1 ring-line-strong transition placeholder:text-faint focus:outline-none focus:ring-2 focus:ring-brand";
+    "block w-full bg-surface px-4 py-3 text-sm text-ink ring-1 ring-line-strong transition placeholder:text-faint focus:outline-none focus:ring-2 focus:ring-brand";
 
   return (
     <form onSubmit={submit} noValidate className="space-y-6">
@@ -151,7 +152,7 @@ export function LeadForm({
           ref={errorBox}
           tabIndex={-1}
           role="alert"
-          className="rounded-lg border border-danger/40 bg-danger/10 p-4 text-sm"
+          className="rounded-2xl border border-danger/40 bg-danger/10 p-4 text-sm"
         >
           <p className="font-bold text-ink">{labels.errorTitle}</p>
           <ul className="mt-2 list-disc space-y-1 ps-5 text-muted">
@@ -189,7 +190,7 @@ export function LeadForm({
                 className="peer sr-only"
               />
               <span
-                className={`flex min-h-12 items-center gap-2.5 rounded-lg px-3.5 text-sm font-bold transition peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-brand ${
+                className={`flex min-h-12 items-center gap-2.5 rounded-full px-3.5 text-sm font-bold transition peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-brand ${
                   need === k
                     ? "bg-brand-soft text-brand-strong ring-2 ring-brand"
                     : "bg-surface text-muted ring-1 ring-line-strong hover:bg-brand-soft/40 hover:text-ink hover:ring-brand"
@@ -220,7 +221,7 @@ export function LeadForm({
             dir="auto"
             autoComplete="name"
             maxLength={80}
-            className={`${field} min-h-12`}
+            className={`${field} min-h-12 rounded-full`}
           />
         </div>
         <div>
@@ -233,7 +234,7 @@ export function LeadForm({
             value={reach}
             onChange={(e) => setReach(e.target.value)}
             dir="ltr"
-            className={`${field} min-h-12 text-start`}
+            className={`${field} min-h-12 rounded-full text-start`}
             autoComplete="off"
             maxLength={120}
           />
@@ -252,7 +253,7 @@ export function LeadForm({
           rows={3}
           maxLength={300}
           placeholder={labels.notePlaceholder}
-          className={field}
+          className={`${field} rounded-2xl`}
         />
       </div>
 
@@ -269,7 +270,7 @@ export function LeadForm({
         <button
           type="submit"
           disabled={state === "sending"}
-          className="btn-primary inline-flex min-h-11 items-center rounded-lg px-6 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-70"
+          className="btn-primary inline-flex min-h-11 items-center rounded-full px-6 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-70"
         >
           {state === "sending" ? labels.sending : labels.submit}
         </button>

@@ -31,14 +31,42 @@ const ICONS: Record<Kind, ReactNode> = {
   ),
 };
 
-const TINT: Record<Kind, string> = { hosting: "bg-brand-soft text-brand", websites: "bg-accent-soft text-accent", care: "bg-brand-soft text-brand", domains: "bg-accent-soft text-accent" };
+const TINT: Record<Kind, string> = {
+  hosting: "bg-brand-soft text-brand",
+  websites: "bg-accent-soft text-accent",
+  care: "bg-brand-soft text-brand",
+  domains: "bg-accent-soft text-accent",
+};
 
 /** One of the four things the company sells, on the home page. */
-export function ProductCard({ kind, title, body, link, href, meta }: { kind: Kind; title: string; body: string; link: string; href: string; meta?: ReactNode }) {
+export function ProductCard({
+  kind,
+  title,
+  body,
+  link,
+  href,
+  meta,
+}: {
+  kind: Kind;
+  title: string;
+  body: string;
+  link: string;
+  href: string;
+  meta?: ReactNode;
+}) {
   return (
     <Card className="flex h-full flex-col" as="li">
-      <div className={`flex h-11 w-11 items-center justify-center rounded-lg ${TINT[kind]}`}>
-        <svg aria-hidden="true" viewBox="0 0 24 24" className="h-[22px] w-[22px]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <div className={`flex h-11 w-11 items-center justify-center rounded-full ${TINT[kind]}`}>
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 24 24"
+          className="h-[22px] w-[22px]"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
           {ICONS[kind]}
         </svg>
       </div>

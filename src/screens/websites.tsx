@@ -1,4 +1,4 @@
-import { ButtonLink, Card, Empty, Fine, PageIntro, Section } from "@/components/blocks";
+import { ButtonLink, Card, Empty, PageIntro, Section } from "@/components/blocks";
 import { Price } from "@/components/currency";
 import { FeatureList } from "@/components/plans";
 import { Shell } from "@/components/shell";
@@ -62,7 +62,6 @@ export const websites = {
           ) : (
             <Empty>{t.websites.empty}</Empty>
           )}
-          <Fine>{t.websites.fine}</Fine>
         </Section>
         <Section tone="alt">
           <Card className="grid gap-6 md:grid-cols-[1fr_auto] md:items-center">

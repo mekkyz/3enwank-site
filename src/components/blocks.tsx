@@ -191,7 +191,7 @@ export function ArrowLink({
 }
 
 export function Empty({ children }: { children: ReactNode }) {
-  return <p className="rounded-lg border border-line bg-panel px-4 py-6 text-center text-sm text-muted">{children}</p>;
+  return <p className="rounded-2xl border border-line bg-panel px-4 py-6 text-center text-sm text-muted">{children}</p>;
 }
 
 export function Check({ className = "text-accent" }: { className?: string }) {

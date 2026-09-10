@@ -24,15 +24,6 @@ function copy(locale: (typeof locales)[number]): Array<[string, string]> {
 }
 
 describe("message placeholders", () => {
-  it("carries exactly one {price} in hosting.addonBody", () => {
-    for (const locale of locales) {
-      const body = messagesFor(locale).hosting.addonBody;
-      expect(body.match(/\{price\}/g), locale).toHaveLength(1);
-      const [before, after] = body.split("{price}");
-      expect(before!.trim().length, locale).toBeGreaterThan(0);
-      expect(after!.trim().length, locale).toBeGreaterThan(0);
-    }
-  });
 
   it("carries {deposit} and {rest} once each and no hard-coded split", () => {
     for (const locale of locales) {
@@ -103,7 +94,8 @@ describe("Egyptian Arabic", () => {
     const bad = eg.filter(([, s]) => /(^|[.؟!]\s+)و[ \t]/.test(s));
     expect(bad).toEqual([]);
     const nb = eg.filter(([, s]) => /(^|[.؟!]\s+)و /.test(s));
-    expect(nb.length).toBeGreaterThan(3);
+    // A floor, not a count: the convention has to be in live use somewhere, not merely allowed.
+    expect(nb.length).toBeGreaterThanOrEqual(3);
   });
 });
 

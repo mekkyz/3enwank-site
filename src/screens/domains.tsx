@@ -33,7 +33,7 @@ export const domains = {
               <p className="mb-6 text-sm text-muted">{vatLine(t, catalogue)}</p>
               <TldTable tlds={catalogue.tlds} locale={locale} />
               {catalogue.tldCount > catalogue.tlds.length ? (
-                <p className="mt-4 text-sm text-muted">{t.domains.moreTlds.replace("{count}", String(catalogue.tldCount))}</p>
+                <p className="mt-4 text-sm text-muted">{t.domains.moreTlds}</p>
               ) : null}
             </>
           ) : (

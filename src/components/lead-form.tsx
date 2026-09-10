@@ -41,7 +41,19 @@ export function reachLooksReal(raw: string): boolean {
 
 type State = "idle" | "sending" | "sent" | "failed" | "limited";
 
-export function LeadForm({ endpoint, labels, locale, turnstileSiteKey, waHref }: { endpoint: string; labels: LeadFormLabels; locale: string; turnstileSiteKey: string | null; waHref: string }) {
+export function LeadForm({
+  endpoint,
+  labels,
+  locale,
+  turnstileSiteKey,
+  waHref,
+}: {
+  endpoint: string;
+  labels: LeadFormLabels;
+  locale: string;
+  turnstileSiteKey: string | null;
+  waHref: string;
+}) {
   const id = useId();
   const [need, setNeed] = useState<Need | "">("");
   const [name, setName] = useState("");
@@ -72,7 +84,16 @@ export function LeadForm({ endpoint, labels, locale, turnstileSiteKey, waHref }:
       const res = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({ need, name: name.trim(), reach: reach.trim(), note: note.trim(), locale, source: "home-contact", company: honeypot.current?.value ?? "", turnstileToken: token }),
+        body: JSON.stringify({
+          need,
+          name: name.trim(),
+          reach: reach.trim(),
+          note: note.trim(),
+          locale,
+          source: "home-contact",
+          company: honeypot.current?.value ?? "",
+          turnstileToken: token,
+        }),
       });
       if (res.status === 429) return setState("limited");
       if (!res.ok) return setState("failed");
@@ -109,12 +130,18 @@ export function LeadForm({ endpoint, labels, locale, turnstileSiteKey, waHref }:
     );
   }
 
-  const field = "block w-full rounded-lg border border-line-strong bg-surface px-3.5 py-2.5 text-sm text-ink placeholder:text-faint focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand";
+  const field =
+    "block w-full rounded-lg border border-line-strong bg-surface px-3.5 py-2.5 text-sm text-ink placeholder:text-faint focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand";
 
   return (
     <form onSubmit={submit} noValidate className="space-y-5">
       {errors.length ? (
-        <div ref={errorBox} tabIndex={-1} role="alert" className="rounded-lg border border-danger/40 bg-danger/10 p-4 text-sm">
+        <div
+          ref={errorBox}
+          tabIndex={-1}
+          role="alert"
+          className="rounded-lg border border-danger/40 bg-danger/10 p-4 text-sm"
+        >
           <p className="font-bold text-ink">{labels.errorTitle}</p>
           <ul className="mt-2 list-disc space-y-1 ps-5 text-muted">
             {errors.map((m) => (
@@ -126,13 +153,26 @@ export function LeadForm({ endpoint, labels, locale, turnstileSiteKey, waHref }:
 
       <fieldset>
         <legend className="mb-2 block text-sm font-bold text-ink">{labels.needLegend}</legend>
-        {/* A grid rather than wrapping: five chips of unequal length left a ragged 2-2-1 block,
-            and Arabic makes each of them longer again. */}
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+        {/*
+         * Two columns at every width. Three columns made each chip too narrow for its own label, so
+         * "A new website" and "Something else" wrapped onto a second line and the row heights went
+         * uneven; Arabic is longer again. Two wide columns fit every label on one line.
+         */}
+        <div className="grid grid-cols-2 gap-2">
           {NEEDS.map((k) => (
             // A real radio, visible: the chosen one is not carried by colour alone.
-            <label key={k} className={`flex min-h-11 cursor-pointer items-center gap-2 rounded-lg border-[1.5px] px-3 text-sm font-bold transition ${need === k ? "border-brand bg-brand-soft text-brand-strong" : "border-line-strong text-muted hover:text-ink"}`}>
-              <input type="radio" name="need" value={k} checked={need === k} onChange={() => setNeed(k)} className="h-3.5 w-3.5 shrink-0 accent-[var(--color-brand-ink)]" />
+            <label
+              key={k}
+              className={`flex min-h-11 cursor-pointer items-center gap-2 rounded-lg border-[1.5px] px-3 text-sm font-bold transition ${need === k ? "border-brand bg-brand-soft text-brand-strong" : "border-line-strong text-muted hover:text-ink"}`}
+            >
+              <input
+                type="radio"
+                name="need"
+                value={k}
+                checked={need === k}
+                onChange={() => setNeed(k)}
+                className="h-3.5 w-3.5 shrink-0 accent-[var(--color-brand)]"
+              />
               {labels.need[k]}
             </label>
           ))}
@@ -144,14 +184,30 @@ export function LeadForm({ endpoint, labels, locale, turnstileSiteKey, waHref }:
           <label htmlFor={`${id}-name`} className="mb-1.5 block text-sm font-bold text-ink">
             {labels.name}
           </label>
-          <input id={`${id}-name`} value={name} onChange={(e) => setName(e.target.value)} dir="auto" autoComplete="name" maxLength={80} className={`${field} min-h-11`} />
+          <input
+            id={`${id}-name`}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            dir="auto"
+            autoComplete="name"
+            maxLength={80}
+            className={`${field} min-h-11`}
+          />
         </div>
         <div>
           <label htmlFor={`${id}-reach`} className="mb-1.5 block text-sm font-bold text-ink">
             {labels.reach}
           </label>
           {/* Left to right whatever the page direction: a phone number and an address both read that way. */}
-          <input id={`${id}-reach`} value={reach} onChange={(e) => setReach(e.target.value)} dir="ltr" className={`${field} min-h-11 text-start`} autoComplete="off" maxLength={120} />
+          <input
+            id={`${id}-reach`}
+            value={reach}
+            onChange={(e) => setReach(e.target.value)}
+            dir="ltr"
+            className={`${field} min-h-11 text-start`}
+            autoComplete="off"
+            maxLength={120}
+          />
         </div>
       </div>
 
@@ -159,7 +215,16 @@ export function LeadForm({ endpoint, labels, locale, turnstileSiteKey, waHref }:
         <label htmlFor={`${id}-note`} className="mb-1.5 block text-sm font-bold text-ink">
           {labels.note}
         </label>
-        <textarea id={`${id}-note`} value={note} onChange={(e) => setNote(e.target.value)} dir="auto" rows={3} maxLength={300} placeholder={labels.notePlaceholder} className={field} />
+        <textarea
+          id={`${id}-note`}
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+          dir="auto"
+          rows={3}
+          maxLength={300}
+          placeholder={labels.notePlaceholder}
+          className={field}
+        />
       </div>
 
       <div aria-hidden="true" className="absolute h-0 w-0 overflow-hidden opacity-0">
@@ -171,7 +236,11 @@ export function LeadForm({ endpoint, labels, locale, turnstileSiteKey, waHref }:
       {state === "limited" ? <p className="text-sm text-warn">{labels.limited}</p> : null}
 
       <div className="flex flex-wrap items-center gap-4">
-        <button type="submit" disabled={state === "sending"} className="btn-primary inline-flex min-h-11 items-center rounded-lg px-6 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-70">
+        <button
+          type="submit"
+          disabled={state === "sending"}
+          className="btn-primary inline-flex min-h-11 items-center rounded-lg px-6 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-70"
+        >
           {state === "sending" ? labels.sending : labels.submit}
         </button>
       </div>

@@ -26,7 +26,7 @@ export function Trust({ t, trust }: { t: Messages; trust: TrustInfo }) {
   ];
   if (pairs.length === 0) return null;
   return (
-    <dl className="mt-5 space-y-3">
+    <dl className="mt-3 space-y-1.5">
       {pairs.map(([label, value]) => (
         <div key={label}>
           <dt>{label}</dt>

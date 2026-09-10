@@ -68,10 +68,18 @@ export function Card({ children, className = "", highlight = false, as: Tag = "d
  * and wrong for anything holding a form: the fields shift under the cursor while you are typing in
  * them. Same skin, no hover.
  */
-export function Panel({ children, className = "", tone = "line", as: Tag = "div" }: { children: ReactNode; className?: string; tone?: "line" | "brand"; as?: "div" | "li" | "section" }) {
+export function Panel({ children, className = "", tone = "line", as: Tag = "div" }: { children: ReactNode; className?: string; tone?: "line" | "brand" | "warn"; as?: "div" | "li" | "section" }) {
   // The border is chosen here, never overridden through className: two utilities setting the same
   // property leave the winner to stylesheet order rather than to whoever wrote the call.
-  const border = tone === "brand" ? "border-2 border-brand" : "border border-line";
+  const border =
+    tone === "brand"
+      ? "border-2 border-brand"
+      : tone === "warn"
+        ? // A bar down the leading edge rather than a filled panel: this marks one route for the few
+          // people who need it, and a block of warning colour behind a paragraph reads as an error
+          // on the page for everybody else.
+          "border border-line border-s-4 border-s-warn"
+        : "border border-line";
   return <Tag className={`relative rounded-xl bg-panel p-6 sm:p-7 ${border} ${className}`}>{children}</Tag>;
 }
 

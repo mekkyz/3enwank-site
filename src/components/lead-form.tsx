@@ -128,11 +128,13 @@ export function LeadForm({ endpoint, labels, locale, turnstileSiteKey, waHref }:
 
       <fieldset>
         <legend className="mb-2 block text-sm font-bold text-ink">{labels.needLegend}</legend>
-        <div className="flex flex-wrap gap-2">
+        {/* A grid rather than wrapping: five chips of unequal length left a ragged 2-2-1 block,
+            and Arabic makes each of them longer again. */}
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
           {NEEDS.map((k) => (
             // A real radio, visible: the chosen one is not carried by colour alone.
-            <label key={k} className={`inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-lg border-[1.5px] px-3.5 text-sm font-bold transition ${need === k ? "border-brand bg-brand-soft text-brand-strong" : "border-line-strong text-muted hover:text-ink"}`}>
-              <input type="radio" name="need" value={k} checked={need === k} onChange={() => setNeed(k)} className="h-4 w-4 accent-[var(--color-brand-ink)]" />
+            <label key={k} className={`flex min-h-11 cursor-pointer items-center gap-2 rounded-lg border-[1.5px] px-3 text-sm font-bold transition ${need === k ? "border-brand bg-brand-soft text-brand-strong" : "border-line-strong text-muted hover:text-ink"}`}>
+              <input type="radio" name="need" value={k} checked={need === k} onChange={() => setNeed(k)} className="h-3.5 w-3.5 shrink-0 accent-[var(--color-brand-ink)]" />
               {labels.need[k]}
             </label>
           ))}

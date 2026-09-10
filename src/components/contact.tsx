@@ -54,9 +54,41 @@ export function ContactSection({
     <Section id="contact">
       <SectionHeader kicker={c.title} title={c.h2} lede={c.lede} />
 
-      <div className="grid gap-6 lg:grid-cols-[1.05fr_1fr] lg:items-start">
+      {/*
+       * Full width and directly under the heading, because the person who needs it is the person
+       * least able to hunt for it. It was in the right-hand column, which put it beside the WhatsApp
+       * panel and left a column of empty space under that panel on a wide screen.
+       */}
+      <Panel tone="warn" className="mb-6">
+        <div className="flex flex-wrap items-baseline gap-x-6 gap-y-2">
+          <h3 className="text-base font-extrabold text-warn">{c.urgent.label}</h3>
+          <ul className="flex flex-wrap gap-x-5 gap-y-1 text-sm font-bold">
+            {whatsapp ? (
+              <li>
+                <a href={waHref(whatsapp, c.urgent.waText)} rel="noopener" target="_blank" className="text-brand-strong hover:text-brand">
+                  {c.urgent.wa}
+                </a>
+              </li>
+            ) : null}
+            <li>
+              <a href={`${storeUrl}/tickets`} rel="noopener" className="text-brand-strong hover:text-brand">
+                {c.urgent.ticket}
+              </a>
+            </li>
+            <li>
+              <a href={`mailto:${supportEmail}?subject=${encodeURIComponent(c.urgent.emailSubject)}`} className="text-brand-strong hover:text-brand" dir="ltr">
+                {c.urgent.email.replace("{email}", supportEmail)}
+              </a>
+            </li>
+          </ul>
+        </div>
+        <p className="mt-2 max-w-4xl text-sm leading-relaxed text-muted">{c.urgent.body}</p>
+        <p className="mt-2 text-xs text-faint">{c.urgent.after}</p>
+      </Panel>
+
+      <div className="grid gap-6 lg:grid-cols-[1.05fr_1fr]">
         {/* The counter: one number, one button, and whether anyone is behind it right now. */}
-        <Panel tone="brand" className="order-1">
+        <Panel tone="brand" className="order-1 h-full">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-brand">{c.wa.kicker}</p>
             <OfficeStatus t={hours} />
@@ -66,8 +98,9 @@ export function ContactSection({
           {whatsapp ? (
             <>
               <p className="mt-4">
+                {/* `phone` is written for people and already carries its plus; `whatsapp` is bare digits. */}
                 <a href={`tel:+${whatsapp}`} className="tabular text-3xl font-extrabold text-ink hover:text-brand-strong sm:text-4xl">
-                  <bdi dir="ltr">+{phone ?? whatsapp}</bdi>
+                  <bdi dir="ltr">{phone?.trim() || `+${whatsapp}`}</bdi>
                 </a>
               </p>
               <div className="mt-5 flex flex-wrap items-center gap-3">
@@ -106,46 +139,26 @@ export function ContactSection({
            * reader sees their own language on the page before deciding whether to write in it, so
            * each sentence is set in its own script and its own direction.
            */}
+          {/*
+           * Both sentences start at the same edge. `dir` on the paragraph would right-align the
+           * Arabic against the far side of the panel, which reads as a stray caption rather than as
+           * the second half of a pair; <bdi> isolates the run so it renders correctly while the
+           * paragraph keeps the page's own alignment.
+           */}
           <div className="mt-5 space-y-1.5 border-t border-line pt-5 text-sm text-muted">
-            <p>{c.languages.first}</p>
-            <p dir={locale === "en" ? "rtl" : "ltr"} lang={locale === "en" ? "ar" : "en"} className={locale === "en" ? "font-arabic" : ""}>
-              {c.languages.second}
+            <p>
+              <bdi dir="ltr">{c.languages.first}</bdi>
+            </p>
+            <p className={locale === "en" ? "font-arabic" : ""}>
+              <bdi dir={locale === "en" ? "rtl" : "ltr"} lang={locale === "en" ? "ar" : "en"}>
+                {c.languages.second}
+              </bdi>
             </p>
           </div>
         </Panel>
 
-        <div className="order-2 space-y-6">
-          {/*
-           * The lane for a customer who is already paying and whose site is down. Marked by the
-           * warning tone rather than by danger red: it is a signpost for the few people who need it,
-           * not an alarm for everyone reading the page.
-           */}
-          <Panel className="border-warn/40 bg-warn-soft">
-            <h3 className="text-base font-extrabold text-ink">{c.urgent.label}</h3>
-            <p className="mt-2 text-sm leading-relaxed text-muted">{c.urgent.body}</p>
-            <ul className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm font-bold">
-              {whatsapp ? (
-                <li>
-                  <a href={waHref(whatsapp, c.urgent.waText)} rel="noopener" target="_blank" className="text-brand-strong hover:text-brand">
-                    {c.urgent.wa}
-                  </a>
-                </li>
-              ) : null}
-              <li>
-                <a href={`${storeUrl}/tickets`} rel="noopener" className="text-brand-strong hover:text-brand">
-                  {c.urgent.ticket}
-                </a>
-              </li>
-              <li>
-                <a href={`mailto:${supportEmail}?subject=${encodeURIComponent(c.urgent.emailSubject)}`} className="text-brand-strong hover:text-brand" dir="ltr">
-                  {c.urgent.email.replace("{email}", supportEmail)}
-                </a>
-              </li>
-            </ul>
-            <p className="mt-3 text-xs text-faint">{c.urgent.after}</p>
-          </Panel>
-
-          <Panel>
+        <div className="order-2">
+          <Panel className="h-full">
             <h3 className="text-xl font-extrabold tracking-tight text-ink">{c.form.title}</h3>
             <p className="mt-2 text-sm leading-relaxed text-muted">{c.form.lede}</p>
             <div className="mt-5">

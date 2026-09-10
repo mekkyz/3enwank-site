@@ -84,7 +84,6 @@ export function ContactSection({
               </>
             ) : null}
 
-            <p className="mt-5 text-sm text-muted">{c.wa.hours}</p>
 
             {/*
              * Both languages shown: a reader should see their own on the page before deciding which

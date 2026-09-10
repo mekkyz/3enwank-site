@@ -201,11 +201,10 @@ export const en: Messages = {
   },
   contact: {
     title: "Contact",
-    h2: "A real person answers, usually within the hour.",
+    h2: "A real person answers, not a call centre.",
     wa: {
       title: "Message us on WhatsApp",
       cta: "Open WhatsApp",
-      hours: "Sunday to Thursday, 9:00 to 18:00, Cairo time.",
       defaultText: "Hello 3enwank. I came from your website and I have a question.",
     },
     languages: {

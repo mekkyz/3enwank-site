@@ -172,7 +172,7 @@ export type Messages = {
   contact: {
     title: string;
     h2: string;
-    wa: { title: string; cta: string; hours: string; defaultText: string };
+    wa: { title: string; cta: string; defaultText: string };
     languages: { first: string; second: string };
     urgent: { label: string; body: string; wa: string; waText: string; ticket: string; email: string; emailSubject: string };
     email: string;

@@ -169,13 +169,12 @@ export type Messages = {
     title: string;
     h2: string;
     wa: { title: string; cta: string; defaultText: string };
-    urgent: { label: string; body: string; wa: string; waText: string; ticket: string; emailSubject: string };
+    urgent: { label: string; wa: string; waText: string; ticket: string; emailSubject: string };
     email: string;
     emailBody: string;
     address: string;
     addressBody: string;
     existing: string;
-    existingBody: string;
     existingCta: string;
     form: {
       title: string;

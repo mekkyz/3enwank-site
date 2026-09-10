@@ -116,11 +116,10 @@ export function ContactSection({
             <div className="py-4 last:pb-0">
               <dt className={eyebrow}>{c.existing}</dt>
               <dd className="mt-1.5">
-                <p className="text-sm text-muted">{c.existingBody}</p>
                 <a
                   href={`${storeUrl}/login`}
                   rel="noopener"
-                  className="mt-1.5 inline-block text-sm font-bold text-brand-strong hover:text-brand"
+                  className="inline-block text-sm font-bold text-brand-strong hover:text-brand"
                 >
                   {c.existingCta}
                 </a>
@@ -130,9 +129,7 @@ export function ContactSection({
                  * customer?". Same three doors, one of them the same WhatsApp number as the panel
                  * above but carrying the urgent first line.
                  */}
-                <p className="mt-4 text-sm text-muted">
-                  <span className="font-bold text-ink">{c.urgent.label}</span> {c.urgent.body}
-                </p>
+                <p className="mt-4 text-sm font-bold text-ink">{c.urgent.label}</p>
                 <ul className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-sm font-bold">
                   {whatsapp ? (
                     <li>

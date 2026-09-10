@@ -205,7 +205,6 @@ export const ar: Messages = {
     },
     urgent: {
       label: "موقعك متوقف، أو البريد لا يصل؟",
-      body: "هذه أسرع من النموذج.",
       wa: "واتساب",
       waText: "عاجل. موقعي متوقف. نطاقي هو:",
       ticket: "افتح تذكرة",
@@ -216,7 +215,6 @@ export const ar: Messages = {
     address: "الزيارة",
     addressBody: "بموعد مسبق.",
     existing: "عميل لدينا بالفعل؟",
-    existingBody: "الفواتير والاستضافة والنطاقات والتذاكر، كلها في حسابك.",
     existingCta: "افتح حسابك",
     form: {
       title: "تفضّل الكتابة؟",

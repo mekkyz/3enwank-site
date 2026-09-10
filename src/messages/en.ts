@@ -205,7 +205,6 @@ export const en: Messages = {
     },
     urgent: {
       label: "Site down, or email not arriving?",
-      body: "These reach us faster than the form.",
       wa: "WhatsApp",
       waText: "URGENT. My site is down. My domain is:",
       ticket: "Open a ticket",
@@ -216,7 +215,6 @@ export const en: Messages = {
     address: "Visit",
     addressBody: "By appointment.",
     existing: "Already a customer?",
-    existingBody: "Invoices, hosting, domains and tickets.",
     existingCta: "Open the customer area",
     form: {
       title: "Prefer to write?",

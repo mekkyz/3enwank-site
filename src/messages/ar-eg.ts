@@ -212,7 +212,6 @@ export const arEg: Messages = {
     },
     urgent: {
       label: "موقعك واقف، أو الإيميل مش بيوصل؟",
-      body: "دي أسرع من الفورم.",
       wa: "كلمنا واتس",
       waText: "مستعجل. موقعي واقف. الدومين بتاعي:",
       ticket: "افتح تيكت",
@@ -223,7 +222,6 @@ export const arEg: Messages = {
     address: "تعالى لنا",
     addressBody: "بميعاد بس.",
     existing: "عميل عندنا؟",
-    existingBody: "هتلاقي الفواتير والاستضافة والدومينات والتيكتات في حسابك.",
     existingCta: "ادخل حسابك",
     form: {
       title: "تحب تكتب؟",

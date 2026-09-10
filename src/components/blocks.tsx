@@ -150,7 +150,7 @@ export function ButtonLink({
   return (
     <a
       href={href}
-      className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-lg font-bold transition ${pad} ${VARIANTS[variant]} ${className}`}
+      className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-full font-bold transition ${pad} ${VARIANTS[variant]} ${className}`}
       {...(external ? { rel: "noopener" } : {})}
     >
       {children}

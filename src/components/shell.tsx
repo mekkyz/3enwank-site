@@ -140,13 +140,14 @@ export function Shell({
       <footer className="mt-16 border-t border-line bg-surface-alt">
         <div className="mx-auto max-w-6xl px-5 py-12 sm:px-8">
           {/*
-           * The brand column has to hold a 255px-wide logo, so it gets a floor rather than a share
-           * of the row: below that the logo shrinks and the whole column looks like a mistake. The
-           * four link columns then split what is left evenly, with a wider gutter between them than
-           * the old grid had — the labels are short and the columns were reading as one block.
+           * Equal columns put the free space in the wrong places: the brand column's logo filled its
+           * track while a link column's "Hosting" filled a third of its own, so the eye saw 64px
+           * between the logo and Products and 140px between Products and Account. Every column is
+           * sized to its own content instead, and the space left over is dealt out evenly between
+           * them, which is the gap a reader is actually looking at.
            */}
-          <div className="grid gap-x-8 gap-y-10 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-[minmax(16rem,1.4fr)_repeat(4,minmax(0,1fr))] lg:gap-x-12">
-            <div className="text-sm text-muted md:col-span-4 lg:col-span-1 lg:pe-4">
+          <div className="grid gap-x-8 gap-y-10 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-[auto_repeat(4,auto)] lg:justify-between">
+            <div className="text-sm text-muted md:col-span-4 lg:col-span-1">
               <LogoFull className="h-20" />
               {legalName ? (
                 <p className="mt-4">

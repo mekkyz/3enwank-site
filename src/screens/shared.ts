@@ -28,8 +28,19 @@ export function vatLine(t: Messages, catalogue: Catalogue): string {
 
 /** The store's public API, next to its catalogue endpoint. */
 export function storeApi(catalogue: Catalogue): { domainSearch: string; domainIdeas: string; assistant: string; cartDomain: string } {
-  const base = `${catalogue.store.url.replace(/\/+$/, "")}/api/public`;
-  return { domainSearch: `${base}/domains/search`, domainIdeas: `${base}/domains/ideas`, assistant: `${base}/assistant`, cartDomain: `${base}/cart/domain` };
+  const store = catalogue.store.url.replace(/\/+$/, "");
+  const base = `${store}/api/public`;
+  return {
+    domainSearch: `${base}/domains/search`,
+    domainIdeas: `${base}/domains/ideas`,
+    assistant: `${base}/assistant`,
+    /*
+     * Not under /api/public/. nginx hides Set-Cookie on that prefix because everything there is a
+     * cacheable read, and this endpoint's whole job is to write the cart cookie. It answered 200
+     * with the cookie stripped for a day, so the button said "In your cart" and the cart was empty.
+     */
+    cartDomain: `${store}/api/cart/domain`,
+  };
 }
 
 /**

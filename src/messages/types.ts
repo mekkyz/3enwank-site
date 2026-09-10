@@ -34,11 +34,6 @@ export type Messages = {
     copyright: string;
     commercialRegistry: string;
     taxId: string;
-    payTitle: string;
-    payInstapay: string;
-    payVodafoneCash: string;
-    payTransfer: string;
-    payCard: string;
   };
   common: {
     perYear: string;

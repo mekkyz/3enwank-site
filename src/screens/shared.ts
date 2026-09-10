@@ -23,7 +23,7 @@ export async function screenContext(locale: Locale): Promise<{ t: Messages; cata
     contactEmail: catalogue.company.contactEmail || catalogue.company.supportEmail,
     supportEmail: catalogue.company.supportEmail,
   };
-  const trust: TrustInfo = { taxId: catalogue.company.taxId, commercialRegistry: catalogue.company.commercialRegistry, payments: catalogue.payments };
+  const trust: TrustInfo = { taxId: catalogue.company.taxId, commercialRegistry: catalogue.company.commercialRegistry };
   return { t: messagesFor(locale), catalogue, company, trust };
 }
 

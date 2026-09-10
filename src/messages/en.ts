@@ -36,11 +36,6 @@ export const en: Messages = {
     copyright: "All rights reserved.",
     commercialRegistry: "Commercial registration",
     taxId: "Tax registration",
-    payTitle: "We accept",
-    payInstapay: "InstaPay",
-    payVodafoneCash: "Vodafone Cash",
-    payTransfer: "Bank transfer",
-    payCard: "Card",
   },
   common: {
     perYear: "per year",
@@ -270,7 +265,7 @@ export const en: Messages = {
     ],
   },
   privacy: {
-    title: "Privacy",
+    title: "Privacy policy",
     intro: "How {legalName} (\"3enwank\") handles personal data on this website and in the customer area. Version {version}.",
     sections: [
       { title: "This website", body: ["These pages run no analytics and load nothing from third parties. The only requests your browser makes are to this site itself. They set no cookies of their own, but the customer area at 3enwank.com/account is part of the same address, so if you are signed in your session cookie and your cart cookie travel with every request here too. Your session and the contents of your cart are read only by the customer area. These pages read one thing: how many items are in your cart, which the customer area publishes separately for the basket in the menu bar. Your choice of currency and of light or dark is kept in your browser and is never sent anywhere."] },
@@ -282,7 +277,7 @@ export const en: Messages = {
     ],
   },
   delivery: {
-    title: "Delivery and shipping policy",
+    title: "Delivery policy",
     intro: "Everything {legalName} (\"3enwank\") sells is delivered online. Nothing is posted or shipped, and there is no delivery charge. Version {version}.",
     sections: [
       { title: "Nothing is shipped", body: ["Hosting plans, website builds, care plans and domain names are digital services. They are delivered to the customer area at 3enwank.com/account and to your email address. There is no physical product, no courier and no shipping cost. The address you give us is the address on your tax invoice, not a delivery address."] },
@@ -294,7 +289,7 @@ export const en: Messages = {
     ],
   },
   refunds: {
-    title: "Refund and cancellation policy",
+    title: "Refund policy",
     intro: "How to cancel a service bought from {legalName} (\"3enwank\"), and when money is returned. Version {version}.",
     sections: [
       { title: "Cancelling", body: ["Write to the support address below, or open a ticket in the customer area, and say which service you want to cancel. It stays active until the end of the period you have paid for and is not renewed after that. Nothing is deleted on the day you cancel."] },

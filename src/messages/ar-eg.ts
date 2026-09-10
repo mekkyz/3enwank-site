@@ -43,11 +43,6 @@ export const arEg: Messages = {
     copyright: "كل الحقوق محفوظة.",
     commercialRegistry: "السجل التجاري",
     taxId: "البطاقة الضريبية",
-    payTitle: "بنقبل",
-    payInstapay: "إنستاباي",
-    payVodafoneCash: "فودافون كاش",
-    payTransfer: "تحويل بنكي",
-    payCard: "بطاقة",
   },
   common: {
     perYear: "في السنة",

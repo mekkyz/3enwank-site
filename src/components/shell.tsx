@@ -140,69 +140,73 @@ export function Shell({
         {children}
       </main>
       <footer className="mt-16 border-t border-line bg-surface-alt">
-        <div className="mx-auto grid max-w-6xl gap-10 px-5 py-12 sm:px-8 sm:grid-cols-2 lg:grid-cols-[1.4fr_repeat(4,minmax(0,1fr))]">
-          <div className="text-sm text-muted">
-            <LogoFull className="h-20" />
-            {legalName ? (
-              <p className="mt-4">
-                {t.footer.operatedBy} {legalName}
-              </p>
-            ) : null}
-            {address ? <p className="mt-1">{address}</p> : null}
-            {supportEmail ? (
-              <p className="mt-1">
-                <a href={`mailto:${supportEmail}`} className="hover:text-ink" dir="ltr">
-                  {supportEmail}
-                </a>
-              </p>
-            ) : null}
+        <div className="mx-auto max-w-6xl px-5 py-12 sm:px-8">
+          {/*
+           * The brand column has to hold a 255px-wide logo, so it gets a floor rather than a share
+           * of the row: below that the logo shrinks and the whole column looks like a mistake. The
+           * four link columns then split what is left evenly, with a wider gutter between them than
+           * the old grid had — the labels are short and the columns were reading as one block.
+           */}
+          <div className="grid gap-x-8 gap-y-10 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-[minmax(16rem,1.4fr)_repeat(4,minmax(0,1fr))] lg:gap-x-12">
+            <div className="text-sm text-muted md:col-span-4 lg:col-span-1 lg:pe-4">
+              <LogoFull className="h-20" />
+              {legalName ? (
+                <p className="mt-4">
+                  {t.footer.operatedBy} {legalName}
+                </p>
+              ) : null}
+              {address ? <p className="mt-1">{address}</p> : null}
+              {supportEmail ? (
+                <p className="mt-1">
+                  <a href={`mailto:${supportEmail}`} className="hover:text-ink" dir="ltr">
+                    {supportEmail}
+                  </a>
+                </p>
+              ) : null}
+            </div>
+            <FooterColumn
+              title={t.footer.products}
+              links={[
+                ["hosting", t.nav.hosting],
+                ["websites", t.nav.websites],
+                ["care", t.nav.care],
+                ["domains", t.nav.domains],
+              ].map(([key, label]) => [pathFor(key as PageKey, locale), label as string])}
+            />
+            <FooterColumn
+              title={t.footer.account}
+              links={[
+                [storeLink(`${store}/login`, locale), t.footer.login],
+                [storeLink(`${store}/invoices`, locale), t.footer.invoices],
+                [storeLink(`${store}/tickets`, locale), t.footer.tickets],
+              ]}
+            />
+            <FooterColumn
+              title={t.footer.company}
+              links={[
+                [pathFor("about", locale), t.nav.about],
+                [anchorFor("contact", locale), t.nav.contact],
+              ]}
+            />
+            <FooterColumn
+              title={t.footer.legal}
+              links={[
+                [pathFor("terms", locale), t.terms.title],
+                [pathFor("privacy", locale), t.privacy.title],
+                [pathFor("delivery", locale), t.delivery.title],
+                [pathFor("refunds", locale), t.refunds.title],
+              ]}
+            />
           </div>
-          <FooterColumn
-            title={t.footer.products}
-            links={[
-              ["hosting", t.nav.hosting],
-              ["websites", t.nav.websites],
-              ["care", t.nav.care],
-              ["domains", t.nav.domains],
-            ].map(([key, label]) => [pathFor(key as PageKey, locale), label as string])}
-          />
-          <FooterColumn
-            title={t.footer.account}
-            links={[
-              [storeLink(`${store}/login`, locale), t.footer.login],
-              [storeLink(`${store}/invoices`, locale), t.footer.invoices],
-              [storeLink(`${store}/tickets`, locale), t.footer.tickets],
-            ]}
-          />
-          <FooterColumn
-            title={t.footer.company}
-            links={[
-              [pathFor("about", locale), t.nav.about],
-              [anchorFor("contact", locale), t.nav.contact],
-            ]}
-          />
-          <FooterColumn
-            title={t.footer.legal}
-            links={[
-              [pathFor("terms", locale), t.terms.title],
-              [pathFor("privacy", locale), t.privacy.title],
-              [pathFor("delivery", locale), t.delivery.title],
-              [pathFor("refunds", locale), t.refunds.title],
-            ]}
-          />
+          {trust ? (
+            <div className="mt-10 flex flex-wrap gap-x-6 gap-y-1.5 text-xs text-faint">
+              <Trust t={t} trust={trust} />
+            </div>
+          ) : null}
         </div>
         <div className="border-t border-line">
-          {/*
-           * Two deliberate rows rather than one that wraps. The registration and the payment methods
-           * are long enough to push the theme switch onto a line of its own, where it landed under
-           * the copyright at the left edge and read as something left behind. So the small print
-           * gets its own line, and the line below it holds the two things that belong at the ends.
-           */}
           <div className="mx-auto max-w-6xl px-5 py-5 text-xs text-faint sm:px-8">
-            {trust ? (
-              <div className="flex flex-wrap items-center gap-x-6 gap-y-1.5">{<Trust t={t} trust={trust} />}</div>
-            ) : null}
-            <div className={`flex flex-wrap items-center justify-between gap-x-6 gap-y-3 ${trust ? "mt-4" : ""}`}>
+            <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
               <p>
                 © <span className="tabular">{currentYear()}</span> {t.meta.siteName}. {t.footer.copyright}
               </p>

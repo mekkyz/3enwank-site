@@ -34,6 +34,13 @@ export const ar: Messages = {
     themeLight: "فاتح",
     operatedBy: "تديرها",
     copyright: "جميع الحقوق محفوظة.",
+    commercialRegistry: "السجل التجاري",
+    taxId: "البطاقة الضريبية",
+    payTitle: "طرق الدفع",
+    payInstapay: "إنستاباي",
+    payVodafoneCash: "فودافون كاش",
+    payTransfer: "تحويل بنكي",
+    payCard: "بطاقة",
   },
   common: {
     perYear: "في السنة",

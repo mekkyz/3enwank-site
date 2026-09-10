@@ -13,7 +13,7 @@ export const domains = {
     return pageMetadata("domains", locale, t.domains.title, `${t.domains.h2} ${t.domains.lede}`);
   },
   async render(locale: Locale, params: { q?: string; added?: string } = {}) {
-    const { t, catalogue, company } = await screenContext(locale);
+    const { t, catalogue, company, trust } = await screenContext(locale);
     // Asked for with ?q=: answer in the HTML, so a visitor without JavaScript gets a result
     // on this page rather than being sent to a second search somewhere else.
     const q = (params.q ?? "").trim().slice(0, 253);
@@ -21,7 +21,7 @@ export const domains = {
     const open = catalogue.domains.enabled && catalogue.tlds.length > 0;
     const api = storeApi(catalogue);
     return (
-      <Shell locale={locale} page="domains" storeUrl={catalogue.store.url} legalName={company.legalName} address={company.address} supportEmail={company.supportEmail} assistantEnabled={catalogue.assistant.enabled} turnstileSiteKey={catalogue.assistant.turnstileSiteKey}>
+      <Shell locale={locale} page="domains" storeUrl={catalogue.store.url} legalName={company.legalName} address={company.address} supportEmail={company.supportEmail} trust={trust} assistantEnabled={catalogue.assistant.enabled} turnstileSiteKey={catalogue.assistant.turnstileSiteKey}>
         <PageIntro kicker={t.domains.title} title={t.domains.h2} lede={t.domains.lede}>
           <div className="mt-8 rounded-2xl border border-line bg-panel p-5 sm:p-8">
             <DomainSearch locale={locale} searchPath={pathFor("domains", locale)} cartUrl={api.cartDomain} apiUrl={api.domainSearch} ideasUrl={api.domainIdeas} contactHref={anchorFor("contact", locale)} labels={domainSearchLabels(t)} ideas={assistantOn(catalogue)} turnstileSiteKey={catalogue.assistant.turnstileSiteKey} initialQuery={q} initialResults={initialResults as never} initialAdded={params.added ? [params.added] : []} />

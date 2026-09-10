@@ -32,6 +32,13 @@ export type Messages = {
     themeLight: string;
     operatedBy: string;
     copyright: string;
+    commercialRegistry: string;
+    taxId: string;
+    payTitle: string;
+    payInstapay: string;
+    payVodafoneCash: string;
+    payTransfer: string;
+    payCard: string;
   };
   common: {
     perYear: string;

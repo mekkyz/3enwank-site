@@ -50,7 +50,17 @@ export const catalogueSchema = z.object({
     supportEmail: z.string(),
     phone: z.string().nullable(),
     website: z.string(),
+    /**
+     * The registration numbers printed on every invoice. Optional and nullable so an older store
+     * still validates; the footer draws nothing when they are absent rather than a placeholder.
+     */
+    taxId: z.string().nullable().default(null),
+    commercialRegistry: z.string().nullable().default(null),
   }),
+  /** What the company can actually take today. An older store omits it and nothing is claimed. */
+  payments: z
+    .object({ bankTransfer: z.boolean(), instapay: z.boolean(), vodafoneCash: z.boolean(), card: z.boolean() })
+    .default({ bankTransfer: true, instapay: false, vodafoneCash: false, card: false }),
   store: z.object({ url: z.url(), plansUrl: z.url(), domainSearchUrl: z.url(), loginUrl: z.url(), registerUrl: z.url() }),
   domains: z.object({ enabled: z.boolean() }),
   /** Chat and name suggestions are served by the store only once its API key is set; older stores omit the field. */

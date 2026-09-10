@@ -24,7 +24,7 @@ export const home = {
     return pageMetadata("home", locale, t.home.h1, t.meta.description);
   },
   async render(locale: Locale) {
-    const { t, catalogue, company } = await screenContext(locale);
+    const { t, catalogue, company, trust } = await screenContext(locale);
     const hosting = catalogue.products.hosting;
     const featured = ["hosting-xs", HIGHLIGHT.hosting, "hosting-xl"].map((slug) => hosting.find((p) => p.slug === slug)).filter((p): p is NonNullable<typeof p> => Boolean(p));
     const fromPrice = (kind: "hosting" | "build" | "care") => {
@@ -40,7 +40,7 @@ export const home = {
     const phone = catalogue.company.phone;
     const label = "text-xs font-extrabold uppercase tracking-[0.14em] text-brand";
     return (
-      <Shell locale={locale} page="home" storeUrl={catalogue.store.url} legalName={company.legalName} address={company.address} supportEmail={company.supportEmail} assistantEnabled={catalogue.assistant.enabled} turnstileSiteKey={catalogue.assistant.turnstileSiteKey}>
+      <Shell locale={locale} page="home" storeUrl={catalogue.store.url} legalName={company.legalName} address={company.address} supportEmail={company.supportEmail} trust={trust} assistantEnabled={catalogue.assistant.enabled} turnstileSiteKey={catalogue.assistant.turnstileSiteKey}>
         <section className="glow relative overflow-hidden border-b border-line">
           <Container className="grid items-center gap-12 py-16 lg:grid-cols-2 lg:py-24">
             <div>

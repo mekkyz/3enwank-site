@@ -134,8 +134,16 @@ html[dir="rtl"] {
 html[dir="rtl"] body {
   line-height: 1.75;
 }
-html[dir="rtl"] .tracking-tight,
-html[dir="rtl"] .tracking-tighter {
+/*
+ * No letter-spacing in Arabic, ever.
+ *
+ * Arabic is a joined script: spacing the letters of a word does not make it airier, it takes the
+ * word apart. This used to name .tracking-tight and .tracking-tighter, which missed every label
+ * written as tracking-[0.14em] — the kickers above section headings, the 404 page, the domain
+ * results — so those pulled apart on all three Arabic pages. Matching the prefix catches whatever
+ * an arbitrary value happens to compile to.
+ */
+html[dir="rtl"] [class*="tracking-"] {
   letter-spacing: 0;
 }
 

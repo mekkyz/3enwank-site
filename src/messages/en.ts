@@ -34,6 +34,13 @@ export const en: Messages = {
     themeLight: "Light",
     operatedBy: "Operated by",
     copyright: "All rights reserved.",
+    commercialRegistry: "Commercial registration",
+    taxId: "Tax registration",
+    payTitle: "We accept",
+    payInstapay: "InstaPay",
+    payVodafoneCash: "Vodafone Cash",
+    payTransfer: "Bank transfer",
+    payCard: "Card",
   },
   common: {
     perYear: "per year",

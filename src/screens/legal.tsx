@@ -15,10 +15,10 @@ function legalScreen(page: "terms" | "privacy") {
       return pageMetadata(page, locale, t[page].title, fill(t[page].intro, { legalName: "3enwank", version: TERMS_VERSION }).slice(0, 160));
     },
     async render(locale: Locale) {
-      const { t, catalogue, company } = await screenContext(locale);
+      const { t, catalogue, company, trust } = await screenContext(locale);
       const copy = t[page];
       return (
-        <Shell locale={locale} page={page} storeUrl={catalogue.store.url} legalName={company.legalName} address={company.address} supportEmail={company.supportEmail} assistantEnabled={catalogue.assistant.enabled} turnstileSiteKey={catalogue.assistant.turnstileSiteKey}>
+        <Shell locale={locale} page={page} storeUrl={catalogue.store.url} legalName={company.legalName} address={company.address} supportEmail={company.supportEmail} trust={trust} assistantEnabled={catalogue.assistant.enabled} turnstileSiteKey={catalogue.assistant.turnstileSiteKey}>
           <PageIntro title={copy.title} lede={fill(copy.intro, { legalName: company.legalName, version: TERMS_VERSION })} />
           <Container className="max-w-3xl py-12">
             <div className="space-y-9">

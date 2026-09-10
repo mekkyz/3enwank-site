@@ -8,12 +8,13 @@ import { CurrencySwitch } from "./currency";
 import { LanguageIcon } from "./icons";
 import { Logo, LogoFull } from "./logo";
 import { ThemeSwitch } from "./theme";
+import { Trust, type TrustInfo } from "./trust";
 
 /**
  * Header, navigation and footer shared by every page. Server-rendered, no JavaScript: the language
  * menu is a <details> element and every store link is a plain anchor.
  */
-export function Shell({ locale, page, storeUrl, legalName, address, supportEmail, assistantEnabled = false, turnstileSiteKey = null, children }: { locale: Locale; page: PageKey; storeUrl?: string; legalName?: string; address?: string; supportEmail?: string; assistantEnabled?: boolean; turnstileSiteKey?: string | null; children: ReactNode }) {
+export function Shell({ locale, page, storeUrl, legalName, address, supportEmail, trust, assistantEnabled = false, turnstileSiteKey = null, children }: { locale: Locale; page: PageKey; storeUrl?: string; legalName?: string; address?: string; supportEmail?: string; trust?: TrustInfo; assistantEnabled?: boolean; turnstileSiteKey?: string | null; children: ReactNode }) {
   const t = messagesFor(locale);
   const languages = languageLinks(page, locale);
   const current = languages.find((l) => l.current)!;
@@ -120,6 +121,7 @@ export function Shell({ locale, page, storeUrl, legalName, address, supportEmail
             ]}
           />
         </div>
+        {trust ? <Trust t={t} trust={trust} /> : null}
         <div className="border-t border-line">
           <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5 py-4 text-xs text-faint sm:px-8">
             <p>

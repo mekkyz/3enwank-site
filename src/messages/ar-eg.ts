@@ -41,6 +41,13 @@ export const arEg: Messages = {
     themeLight: "فاتح",
     operatedBy: "بتشغّلها",
     copyright: "كل الحقوق محفوظة.",
+    commercialRegistry: "السجل التجاري",
+    taxId: "البطاقة الضريبية",
+    payTitle: "بنقبل",
+    payInstapay: "إنستاباي",
+    payVodafoneCash: "فودافون كاش",
+    payTransfer: "تحويل بنكي",
+    payCard: "بطاقة",
   },
   common: {
     perYear: "في السنة",

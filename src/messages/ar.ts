@@ -222,7 +222,7 @@ export const ar: Messages = {
       emailSubject: "موقع متوقف:",
     },
     email: "البريد الإلكتروني",
-    emailBody: "لكل ما ليس عاجلًا.",
+    emailBody: "عروض الأسعار والمشاريع الجديدة.",
     address: "الزيارة",
     addressBody: "بموعد مسبق.",
     existing: "عميل لدينا بالفعل؟",

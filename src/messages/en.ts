@@ -222,7 +222,7 @@ export const en: Messages = {
       emailSubject: "Site down:",
     },
     email: "Email",
-    emailBody: "Anything that is not urgent.",
+    emailBody: "Quotes and new projects.",
     address: "Visit",
     addressBody: "By appointment.",
     existing: "Already a customer?",

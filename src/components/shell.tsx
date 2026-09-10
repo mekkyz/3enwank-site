@@ -192,19 +192,22 @@ export function Shell({
           />
         </div>
         <div className="border-t border-line">
-          <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-6 gap-y-2 px-5 py-4 text-xs text-faint sm:px-8">
-            {/*
-             * The identity and the payment methods sit on the closing line rather than under the
-             * address. In the column they made one side of the footer twice the height of the other
-             * four; here they read as what they are, the small print that closes the page.
-             */}
-            <div className="flex flex-wrap items-center gap-x-5 gap-y-1">
+          {/*
+           * Two deliberate rows rather than one that wraps. The registration and the payment methods
+           * are long enough to push the theme switch onto a line of its own, where it landed under
+           * the copyright at the left edge and read as something left behind. So the small print
+           * gets its own line, and the line below it holds the two things that belong at the ends.
+           */}
+          <div className="mx-auto max-w-6xl px-5 py-5 text-xs text-faint sm:px-8">
+            {trust ? (
+              <div className="flex flex-wrap items-center gap-x-6 gap-y-1.5">{<Trust t={t} trust={trust} />}</div>
+            ) : null}
+            <div className={`flex flex-wrap items-center justify-between gap-x-6 gap-y-3 ${trust ? "mt-4" : ""}`}>
               <p>
                 © <span className="tabular">{currentYear()}</span> {t.meta.siteName}. {t.footer.copyright}
               </p>
-              {trust ? <Trust t={t} trust={trust} /> : null}
+              <ThemeSwitch label={t.footer.theme} dark={t.footer.themeDark} light={t.footer.themeLight} />
             </div>
-            <ThemeSwitch label={t.footer.theme} dark={t.footer.themeDark} light={t.footer.themeLight} />
           </div>
         </div>
       </footer>

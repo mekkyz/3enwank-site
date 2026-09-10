@@ -229,7 +229,7 @@ export const arEg: Messages = {
       emailSubject: "موقع واقف:",
     },
     email: "الإيميل",
-    emailBody: "أي حاجة مش مستعجلة.",
+    emailBody: "الأسعار والمشاريع الجديدة.",
     address: "تعالى لنا",
     addressBody: "بميعاد بس.",
     existing: "عميل عندنا؟",

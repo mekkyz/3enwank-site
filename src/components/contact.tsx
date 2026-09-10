@@ -165,7 +165,7 @@ export function ContactSection({
        * Full width, under both columns. It is the route for a customer whose site is down, so it is
        * findable without being the first thing a new visitor reads under the heading.
        */}
-      <div className="mt-6 rounded-xl border-s-2 border-warn bg-surface-alt px-5 py-4">
+      <div className="mt-6 rounded-xl bg-surface-alt px-5 py-4">
         <div className="flex flex-wrap items-baseline gap-x-6 gap-y-1.5">
           <h3 className="text-sm font-extrabold text-ink">{c.urgent.label}</h3>
           <p className="text-sm text-muted">{c.urgent.body}</p>

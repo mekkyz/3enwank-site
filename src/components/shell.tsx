@@ -14,7 +14,29 @@ import { Trust, type TrustInfo } from "./trust";
  * Header, navigation and footer shared by every page. Server-rendered, no JavaScript: the language
  * menu is a <details> element and every store link is a plain anchor.
  */
-export function Shell({ locale, page, storeUrl, legalName, address, supportEmail, trust, assistantEnabled = false, turnstileSiteKey = null, children }: { locale: Locale; page: PageKey; storeUrl?: string; legalName?: string; address?: string; supportEmail?: string; trust?: TrustInfo; assistantEnabled?: boolean; turnstileSiteKey?: string | null; children: ReactNode }) {
+export function Shell({
+  locale,
+  page,
+  storeUrl,
+  legalName,
+  address,
+  supportEmail,
+  trust,
+  assistantEnabled = false,
+  turnstileSiteKey = null,
+  children,
+}: {
+  locale: Locale;
+  page: PageKey;
+  storeUrl?: string;
+  legalName?: string;
+  address?: string;
+  supportEmail?: string;
+  trust?: TrustInfo;
+  assistantEnabled?: boolean;
+  turnstileSiteKey?: string | null;
+  children: ReactNode;
+}) {
   const t = messagesFor(locale);
   const languages = languageLinks(page, locale);
   const current = languages.find((l) => l.current)!;
@@ -28,7 +50,10 @@ export function Shell({ locale, page, storeUrl, legalName, address, supportEmail
   ];
   return (
     <>
-      <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-panel focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:shadow">
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-panel focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:shadow"
+      >
         {t.nav.skip}
       </a>
       <header data-bar className="sticky top-0 z-40 border-b border-line bg-panel/95 backdrop-blur">
@@ -36,9 +61,17 @@ export function Shell({ locale, page, storeUrl, legalName, address, supportEmail
           <a href={pathFor("home", locale)} className="flex shrink-0 items-center" aria-label={t.meta.siteName}>
             <Logo className="h-7 sm:h-8" />
           </a>
-          <nav aria-label={t.nav.menu} className="hidden items-center gap-6 text-[15px] font-semibold text-muted lg:flex">
+          <nav
+            aria-label={t.nav.menu}
+            className="hidden items-center gap-6 text-[15px] font-semibold text-muted lg:flex"
+          >
             {items.map(([href, label, active]) => (
-              <a key={href} href={href} aria-current={active ? "page" : undefined} className={`hover:text-ink ${active ? "text-ink" : ""}`}>
+              <a
+                key={href}
+                href={href}
+                aria-current={active ? "page" : undefined}
+                className={`hover:text-ink ${active ? "text-ink" : ""}`}
+              >
                 {label}
               </a>
             ))}
@@ -47,7 +80,11 @@ export function Shell({ locale, page, storeUrl, legalName, address, supportEmail
             <CurrencySwitch label={t.common.currency} />
             <CartLink href={storeLink(`${store}/cart`, locale)} label={t.nav.cart} />
             <details data-menu className="relative">
-              <summary className="flex min-h-11 cursor-pointer list-none items-center rounded-lg px-2 text-sm font-semibold text-muted hover:text-ink [&::-webkit-details-marker]:hidden" aria-label={`${t.nav.language}: ${current.name}`} title={t.nav.language}>
+              <summary
+                className="flex min-h-11 cursor-pointer list-none items-center rounded-lg px-2 text-sm font-semibold text-muted hover:text-ink [&::-webkit-details-marker]:hidden"
+                aria-label={`${t.nav.language}: ${current.name}`}
+                title={t.nav.language}
+              >
                 <LanguageIcon />
               </summary>
               <ul className="absolute end-0 z-50 mt-1 w-max rounded-lg border border-line bg-panel p-1 text-sm shadow-lg">
@@ -55,24 +92,45 @@ export function Shell({ locale, page, storeUrl, legalName, address, supportEmail
                   <li key={l.code}>
                     {/* The chosen one is the coloured one: a tick as well was a second thing saying
                         the same thing, and it set the width of the whole menu. */}
-                    <a href={l.path} hrefLang={l.lang} lang={l.lang} dir={l.dir} aria-current={l.current ? "true" : undefined} className={`block whitespace-nowrap rounded-md px-3 py-1.5 font-bold ${l.current ? "bg-brand-soft text-brand-strong" : "text-muted hover:bg-brand-soft hover:text-ink"}`}>
+                    <a
+                      href={l.path}
+                      hrefLang={l.lang}
+                      lang={l.lang}
+                      dir={l.dir}
+                      aria-current={l.current ? "true" : undefined}
+                      className={`block whitespace-nowrap rounded-md px-3 py-1.5 font-bold ${l.current ? "bg-brand-soft text-brand-strong" : "text-muted hover:bg-brand-soft hover:text-ink"}`}
+                    >
                       {l.name}
                     </a>
                   </li>
                 ))}
               </ul>
             </details>
-            <a href={storeLink(`${store}/login`, locale)} className="hidden min-h-11 items-center px-2 text-sm font-bold text-brand-strong hover:text-brand sm:inline-flex">
+            <a
+              href={storeLink(`${store}/login`, locale)}
+              className="hidden min-h-11 items-center px-2 text-sm font-bold text-brand-strong hover:text-brand sm:inline-flex"
+            >
               {t.nav.login}
             </a>
-            <a href={anchorFor("contact", locale)} className="btn-primary inline-flex min-h-11 items-center whitespace-nowrap rounded-lg px-3 text-[13px] font-bold sm:px-4 sm:text-sm">
+            <a
+              href={anchorFor("contact", locale)}
+              className="btn-primary inline-flex min-h-11 items-center whitespace-nowrap rounded-lg px-3 text-[13px] font-bold sm:px-4 sm:text-sm"
+            >
               {t.nav.contact}
             </a>
           </div>
         </div>
-        <nav aria-label={t.nav.menu} className="mx-auto flex max-w-6xl gap-5 overflow-x-auto px-5 pb-2.5 text-sm font-semibold sm:px-8 lg:hidden">
+        <nav
+          aria-label={t.nav.menu}
+          className="mx-auto flex max-w-6xl gap-5 overflow-x-auto px-5 pb-2.5 text-sm font-semibold sm:px-8 lg:hidden"
+        >
           {items.map(([href, label, active]) => (
-            <a key={href} href={href} aria-current={active ? "page" : undefined} className={`whitespace-nowrap ${active ? "text-ink" : "text-muted"}`}>
+            <a
+              key={href}
+              href={href}
+              aria-current={active ? "page" : undefined}
+              className={`whitespace-nowrap ${active ? "text-ink" : "text-muted"}`}
+            >
               {label}
             </a>
           ))}
@@ -98,9 +156,16 @@ export function Shell({ locale, page, storeUrl, legalName, address, supportEmail
                 </a>
               </p>
             ) : null}
-            {trust ? <Trust t={t} trust={trust} /> : null}
           </div>
-          <FooterColumn title={t.footer.products} links={[["hosting", t.nav.hosting], ["websites", t.nav.websites], ["care", t.nav.care], ["domains", t.nav.domains]].map(([key, label]) => [pathFor(key as PageKey, locale), label as string])} />
+          <FooterColumn
+            title={t.footer.products}
+            links={[
+              ["hosting", t.nav.hosting],
+              ["websites", t.nav.websites],
+              ["care", t.nav.care],
+              ["domains", t.nav.domains],
+            ].map(([key, label]) => [pathFor(key as PageKey, locale), label as string])}
+          />
           <FooterColumn
             title={t.footer.account}
             links={[
@@ -127,15 +192,31 @@ export function Shell({ locale, page, storeUrl, legalName, address, supportEmail
           />
         </div>
         <div className="border-t border-line">
-          <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5 py-4 text-xs text-faint sm:px-8">
-            <p>
-              © <span className="tabular">{currentYear()}</span> {t.meta.siteName}. {t.footer.copyright}
-            </p>
+          <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-6 gap-y-2 px-5 py-4 text-xs text-faint sm:px-8">
+            {/*
+             * The identity and the payment methods sit on the closing line rather than under the
+             * address. In the column they made one side of the footer twice the height of the other
+             * four; here they read as what they are, the small print that closes the page.
+             */}
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-1">
+              <p>
+                © <span className="tabular">{currentYear()}</span> {t.meta.siteName}. {t.footer.copyright}
+              </p>
+              {trust ? <Trust t={t} trust={trust} /> : null}
+            </div>
             <ThemeSwitch label={t.footer.theme} dark={t.footer.themeDark} light={t.footer.themeLight} />
           </div>
         </div>
       </footer>
-      {assistantEnabled || ASSISTANT_PREVIEW ? <Assistant url={`${store}/api/public/assistant`} locale={locale} labels={t.assistant} supportEmail={supportEmail} turnstileSiteKey={turnstileSiteKey} /> : null}
+      {assistantEnabled || ASSISTANT_PREVIEW ? (
+        <Assistant
+          url={`${store}/api/public/assistant`}
+          locale={locale}
+          labels={t.assistant}
+          supportEmail={supportEmail}
+          turnstileSiteKey={turnstileSiteKey}
+        />
+      ) : null}
     </>
   );
 }

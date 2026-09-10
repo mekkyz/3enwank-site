@@ -88,7 +88,7 @@ export const en: Messages = {
     domainsTitle: "Find a domain name",
     domainsLede: "Type a name and see whether it is free, with the price per year.",
     moveTitle: "Hosted somewhere else?",
-    moveBody: "We move your website and your email for free. Your site keeps running while we do it.",
+    moveBody: "Free website & email migration. Your site stays online.",
     moveCta: "See plans",
   },
   hosting: {

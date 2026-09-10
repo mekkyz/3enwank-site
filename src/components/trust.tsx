@@ -7,7 +7,7 @@ export type TrustInfo = {
 };
 
 /**
- * Who this company is on paper, and how it can be paid.
+ * Who this company is on paper, and how it can be paid, on the closing line.
  *
  * Both belong in the footer's first column, under the trading name and the address, because that
  * column is already the answer to "who am I buying from" — the registration numbers are the same
@@ -32,27 +32,24 @@ export function Trust({ t, trust }: { t: Messages; trust: TrustInfo }) {
     ...(p.bankTransfer ? [t.footer.payTransfer] : []),
     ...(p.card ? [t.footer.payCard] : []),
   ];
-  const ids: Array<[string, string]> = [
-    ...(commercialRegistry ? ([[t.footer.commercialRegistry, commercialRegistry]] as Array<[string, string]>) : []),
-    ...(taxId ? ([[t.footer.taxId, taxId]] as Array<[string, string]>) : []),
+  const ids: string[] = [
+    ...(commercialRegistry ? [`${t.footer.commercialRegistry} ${commercialRegistry}`] : []),
+    ...(taxId ? [`${t.footer.taxId} ${taxId}`] : []),
   ];
   if (ids.length === 0 && methods.length === 0) return null;
   return (
-    <div className="mt-4 space-y-1 border-t border-line pt-4 text-xs text-faint">
-      {ids.map(([label, value]) => (
-        <p key={label}>
-          {label}{" "}
-          {/* The number reads left to right in Arabic too, and matches the one on the invoice. */}
-          <bdi dir="ltr" className="tabular font-semibold text-muted">
-            {value}
-          </bdi>
-        </p>
+    <>
+      {ids.map((line) => (
+        // The number reads left to right in Arabic too, and matches the one on the invoice.
+        <span key={line} className="tabular">
+          <bdi dir="ltr">{line}</bdi>
+        </span>
       ))}
       {methods.length ? (
-        <p className="pt-1">
-          {t.footer.payTitle} <span className="font-semibold text-muted">{methods.join(" · ")}</span>
-        </p>
+        <span>
+          {t.footer.payTitle} {methods.join(" · ")}
+        </span>
       ) : null}
-    </div>
+    </>
   );
 }

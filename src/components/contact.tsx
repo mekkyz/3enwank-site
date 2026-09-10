@@ -104,42 +104,46 @@ export function ContactSection({
           </div>
 
           {/*
-           * A signpost, and it should look like one that was placed on purpose: its own quiet
-           * ground with a bar down the leading edge, rather than a rule floating in the page. This
-           * is the route for a customer whose site is down, and it earns being a block.
+           * The quieter ways, stacked under the panel rather than in a row of their own below the
+           * section. They are what fills the height the form takes on the other side, and one
+           * hairline between them is enough to separate three short facts.
            */}
-          <div className="rounded-xl border-s-2 border-warn bg-surface-alt px-5 py-4">
-            <h3 className="text-sm font-extrabold text-ink">{c.urgent.label}</h3>
-            <p className="mt-1 text-sm text-muted">{c.urgent.body}</p>
-            <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5 text-sm font-bold">
-              {whatsapp ? (
-                <li>
-                  <a
-                    href={waHref(whatsapp, c.urgent.waText)}
-                    rel="noopener"
-                    target="_blank"
-                    className="text-brand-strong hover:text-brand"
-                  >
-                    {c.urgent.wa}
-                  </a>
-                </li>
-              ) : null}
-              <li>
-                <a href={`${storeUrl}/tickets`} rel="noopener" className="text-brand-strong hover:text-brand">
-                  {c.urgent.ticket}
-                </a>
-              </li>
-              <li>
+          <dl className="divide-y divide-line">
+            <div className="py-4 first:pt-1">
+              <dt className={eyebrow}>{c.email}</dt>
+              <dd className="mt-1.5">
                 <a
-                  href={`mailto:${supportEmail}?subject=${encodeURIComponent(c.urgent.emailSubject)}`}
-                  className="text-brand-strong hover:text-brand"
+                  href={`mailto:${contactEmail}`}
+                  className="block break-all font-bold text-brand-strong hover:underline"
                   dir="ltr"
                 >
-                  {c.urgent.email.replace("{email}", supportEmail)}
+                  {contactEmail}
                 </a>
-              </li>
-            </ul>
-          </div>
+                <p className="mt-1 text-sm text-muted">{c.emailBody}</p>
+              </dd>
+            </div>
+            <div className="py-4">
+              <dt className={eyebrow}>{c.address}</dt>
+              <dd className="mt-1.5">
+                <p className="font-bold text-ink">{legalName}</p>
+                <address className="mt-1 not-italic text-sm text-muted">{address}</address>
+                <p className="mt-1 text-sm text-muted">{c.addressBody}</p>
+              </dd>
+            </div>
+            <div className="py-4 last:pb-0">
+              <dt className={eyebrow}>{c.existing}</dt>
+              <dd className="mt-1.5">
+                <p className="text-sm text-muted">{c.existingBody}</p>
+                <a
+                  href={`${storeUrl}/login`}
+                  rel="noopener"
+                  className="mt-1.5 inline-block text-sm font-bold text-brand-strong hover:text-brand"
+                >
+                  {c.existingCta}
+                </a>
+              </dd>
+            </div>
+          </dl>
         </div>
 
         {/* The alternative: one hairline, so it sits back from the filled panel beside it. */}
@@ -158,38 +162,42 @@ export function ContactSection({
       </div>
 
       {/*
-       * The quieter ways: three columns under one rule rather than three more cards. They were the
-       * same weight as the two things above them, which is not what they are.
+       * Full width, under both columns. It is the route for a customer whose site is down, so it is
+       * findable without being the first thing a new visitor reads under the heading.
        */}
-      <div className="mt-10 grid gap-x-8 gap-y-6 border-t border-line pt-6 sm:grid-cols-3">
-        <div>
-          <h3 className={eyebrow}>{c.email}</h3>
-          <a
-            href={`mailto:${contactEmail}`}
-            className="mt-2 block break-all font-bold text-brand-strong hover:underline"
-            dir="ltr"
-          >
-            {contactEmail}
-          </a>
-          <p className="mt-1 text-sm text-muted">{c.emailBody}</p>
+      <div className="mt-6 rounded-xl border-s-2 border-warn bg-surface-alt px-5 py-4">
+        <div className="flex flex-wrap items-baseline gap-x-6 gap-y-1.5">
+          <h3 className="text-sm font-extrabold text-ink">{c.urgent.label}</h3>
+          <p className="text-sm text-muted">{c.urgent.body}</p>
         </div>
-        <div>
-          <h3 className={eyebrow}>{c.address}</h3>
-          <p className="mt-2 font-bold text-ink">{legalName}</p>
-          <address className="mt-1 not-italic text-sm text-muted">{address}</address>
-          <p className="mt-1 text-sm text-muted">{c.addressBody}</p>
-        </div>
-        <div>
-          <h3 className={eyebrow}>{c.existing}</h3>
-          <p className="mt-2 text-sm text-muted">{c.existingBody}</p>
-          <a
-            href={`${storeUrl}/login`}
-            rel="noopener"
-            className="mt-2 inline-block text-sm font-bold text-brand-strong hover:text-brand"
-          >
-            {c.existingCta}
-          </a>
-        </div>
+        <ul className="mt-2.5 flex flex-wrap gap-x-5 gap-y-1.5 text-sm font-bold">
+          {whatsapp ? (
+            <li>
+              <a
+                href={waHref(whatsapp, c.urgent.waText)}
+                rel="noopener"
+                target="_blank"
+                className="text-brand-strong hover:text-brand"
+              >
+                {c.urgent.wa}
+              </a>
+            </li>
+          ) : null}
+          <li>
+            <a href={`${storeUrl}/tickets`} rel="noopener" className="text-brand-strong hover:text-brand">
+              {c.urgent.ticket}
+            </a>
+          </li>
+          <li>
+            <a
+              href={`mailto:${supportEmail}?subject=${encodeURIComponent(c.urgent.emailSubject)}`}
+              className="text-brand-strong hover:text-brand"
+              dir="ltr"
+            >
+              {c.urgent.email.replace("{email}", supportEmail)}
+            </a>
+          </li>
+        </ul>
       </div>
     </Section>
   );

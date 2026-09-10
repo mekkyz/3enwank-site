@@ -56,7 +56,23 @@ export function PageIntro({ kicker, title, lede, children }: { kicker?: string; 
 }
 
 export function Card({ children, className = "", highlight = false, as: Tag = "div" }: { children: ReactNode; className?: string; highlight?: boolean; as?: "div" | "li" | "article" }) {
-  return <Tag className={`lift relative rounded-xl border bg-panel p-6 sm:p-7 ${highlight ? "pulse-glow border-2 border-brand shadow-[0_24px_50px_-30px_rgba(124,95,165,0.6)]" : "border-line"} ${className}`}>{children}</Tag>;
+  // The halo followed the brand rather than a colour written down here, which had stayed the
+  // retired purple through the vibrancy pass.
+  return <Tag className={`lift relative rounded-xl border bg-panel p-6 sm:p-7 ${highlight ? "pulse-glow border-2 border-brand shadow-[0_24px_50px_-30px_var(--color-brand-ink)]" : "border-line"} ${className}`}>{children}</Tag>;
+}
+
+/**
+ * A card that does not move.
+ *
+ * `Card` lifts three pixels under the pointer, which is right for something you are choosing between
+ * and wrong for anything holding a form: the fields shift under the cursor while you are typing in
+ * them. Same skin, no hover.
+ */
+export function Panel({ children, className = "", tone = "line", as: Tag = "div" }: { children: ReactNode; className?: string; tone?: "line" | "brand"; as?: "div" | "li" | "section" }) {
+  // The border is chosen here, never overridden through className: two utilities setting the same
+  // property leave the winner to stylesheet order rather than to whoever wrote the call.
+  const border = tone === "brand" ? "border-2 border-brand" : "border border-line";
+  return <Tag className={`relative rounded-xl bg-panel p-6 sm:p-7 ${border} ${className}`}>{children}</Tag>;
 }
 
 export function Fine({ children }: { children: ReactNode }) {

@@ -1,6 +1,7 @@
 import { ArrowLink, ButtonLink, Card, Container, Facts, Section, SectionHeader } from "@/components/blocks";
 import { Price } from "@/components/currency";
 import { DomainSearch } from "@/components/domain-search";
+import { ContactSection } from "@/components/contact";
 import { HeroIllustration } from "@/components/illustration";
 import { PlanCard } from "@/components/plans";
 import { ProductCard } from "@/components/products";
@@ -38,7 +39,6 @@ export const home = {
     // both can be shown, because they are two different ways to reach the same people.
     const whatsapp = WHATSAPP_NUMBER;
     const phone = catalogue.company.phone;
-    const label = "text-xs font-extrabold uppercase tracking-[0.14em] text-brand";
     return (
       <Shell locale={locale} page="home" storeUrl={catalogue.store.url} legalName={company.legalName} address={company.address} supportEmail={company.contactEmail} trust={trust} assistantEnabled={catalogue.assistant.enabled} turnstileSiteKey={catalogue.assistant.turnstileSiteKey}>
         <section className="glow relative overflow-hidden border-b border-line">
@@ -139,62 +139,19 @@ export const home = {
           </div>
         </Section>
 
-        <Section id="contact">
-          <SectionHeader kicker={t.contact.title} title={t.contact.h2} lede={t.contact.lede} />
-          <ul data-reveal-stagger className="grid gap-5 md:grid-cols-[repeat(auto-fit,minmax(16rem,1fr))]">
-            <Card as="li" className="h-full">
-              <h3 className={label}>{t.contact.email}</h3>
-              {/* The general address: a visitor here is not a customer yet, and this is answered in
-                  the sales queue rather than in the one holding a site that is down. */}
-              <a href={`mailto:${company.contactEmail}`} className="mt-3 block break-all text-xl font-extrabold text-brand-strong hover:underline" dir="ltr">
-                {company.contactEmail}
-              </a>
-              <p className="mt-2 text-sm text-muted">{t.contact.emailBody}</p>
-            </Card>
-            {whatsapp ? (
-              <Card as="li" className="h-full">
-                <h3 className={label}>{t.contact.whatsapp}</h3>
-                <p className="mt-3 text-xl font-extrabold text-ink">
-                  <bdi dir="ltr" className="tabular">
-                    +{whatsapp}
-                  </bdi>
-                </p>
-                <p className="mt-2 text-sm text-muted">{t.contact.whatsappBody}</p>
-                <div className="mt-4">
-                  <ButtonLink href={`https://wa.me/${whatsapp}`} variant="outline" external>
-                    {t.contact.whatsappCta}
-                  </ButtonLink>
-                </div>
-              </Card>
-            ) : null}
-            {phone ? (
-              <Card as="li" className="h-full">
-                <h3 className={label}>{t.contact.phone}</h3>
-                <a href={`tel:${phone.replace(/[^0-9+]/g, "")}`} className="mt-3 block text-xl font-extrabold text-ink hover:text-brand-strong">
-                  <bdi dir="ltr" className="tabular">
-                    {phone}
-                  </bdi>
-                </a>
-                <p className="mt-2 text-sm text-muted">{t.contact.whatsappBody}</p>
-              </Card>
-            ) : null}
-            <Card as="li" className="h-full">
-              <h3 className={label}>{t.contact.address}</h3>
-              <p className="mt-3 font-semibold text-ink">{company.legalName}</p>
-              <address className="mt-1 not-italic text-ink">{company.address}</address>
-              <p className="mt-2 text-sm text-muted">{t.contact.addressBody}</p>
-            </Card>
-          </ul>
-          <div className="mt-8 flex flex-wrap items-center justify-between gap-x-8 gap-y-3 text-sm text-muted">
-            <p>{t.contact.micro}</p>
-            <p>
-              {t.contact.existing}{" "}
-              <a href={catalogue.store.loginUrl} className="font-bold text-brand-strong hover:text-brand" rel="noopener">
-                {t.contact.existingCta}
-              </a>
-            </p>
-          </div>
-        </Section>
+        <ContactSection
+          locale={locale}
+          t={t}
+          whatsapp={whatsapp}
+          phone={phone}
+          contactEmail={company.contactEmail}
+          supportEmail={company.supportEmail}
+          legalName={company.legalName}
+          address={company.address}
+          storeUrl={catalogue.store.url.replace(/\/+$/, "")}
+          leadUrl={api.lead}
+          turnstileSiteKey={catalogue.assistant.turnstileSiteKey}
+        />
       </Shell>
     );
   },

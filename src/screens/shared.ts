@@ -33,7 +33,7 @@ export function vatLine(t: Messages, catalogue: Catalogue): string {
 }
 
 /** The store's public API, next to its catalogue endpoint. */
-export function storeApi(catalogue: Catalogue): { domainSearch: string; domainIdeas: string; assistant: string; cartDomain: string } {
+export function storeApi(catalogue: Catalogue): { domainSearch: string; domainIdeas: string; assistant: string; cartDomain: string; lead: string } {
   const store = catalogue.store.url.replace(/\/+$/, "");
   const base = `${store}/api/public`;
   return {
@@ -46,6 +46,9 @@ export function storeApi(catalogue: Catalogue): { domainSearch: string; domainId
      * with the cookie stripped for a day, so the button said "In your cart" and the cart was empty.
      */
     cartDomain: `${store}/api/cart/domain`,
+    /* The contact form. It stays under /api/public/ because it sets no cookie: it opens a
+       ticket and answers with a number, which is exactly what that prefix is for. */
+    lead: `${base}/leads`,
   };
 }
 

@@ -33,6 +33,12 @@ export const home = {
       const cheapest = list.reduce<(typeof list)[number] | null>((min, p) => (!min || (p.prices.EGP?.gross ?? Infinity) < (min.prices.EGP?.gross ?? Infinity) ? p : min), null);
       return cheapest?.prices.EGP ? `${t.common.from} ${cheapest.prices.EGP.formatted.replace(/\.00$/, "")}` : undefined;
     };
+    // Domains price from the cheapest ending we sell, so the card carries a number like the other three.
+    const cheapestTld = catalogue.tlds.reduce<(typeof catalogue.tlds)[number] | null>(
+      (min, x) => (x.prices.EGP && (!min || x.prices.EGP.register.gross < min.prices.EGP!.register.gross) ? x : min),
+      null,
+    );
+    const fromDomain = cheapestTld?.prices.EGP ? `${t.common.from} ${cheapestTld.prices.EGP.register.formatted.replace(/\.00$/, "")}` : undefined;
     const api = storeApi(catalogue);
     // A telephone number is not a WhatsApp number. WHATSAPP_NUMBER is the only thing that puts a
     // "message us on WhatsApp" card on the page; the company's phone number gets a phone card, and
@@ -50,7 +56,7 @@ export const home = {
         <section className="relative overflow-hidden border-b border-line">
           <Container className="grid items-center gap-12 py-16 lg:grid-cols-2 lg:py-24">
             <div>
-              <h1 className="rise max-w-xl text-4xl font-extrabold leading-[1.08] tracking-tight text-ink sm:text-5xl lg:text-[3.6rem]">{t.home.h1}</h1>
+              <h1 className="rise max-w-xl text-balance text-4xl font-extrabold leading-[1.08] tracking-tight text-ink sm:text-5xl lg:text-[3.6rem]">{t.home.h1}</h1>
               <p className="rise-2 mt-6 max-w-xl text-lg text-muted sm:text-xl">{t.home.lede}</p>
               <div className="rise-3 mt-8 flex flex-wrap gap-3">
                 <ButtonLink href={pathFor("hosting", locale)} size="lg">
@@ -74,7 +80,7 @@ export const home = {
             <ProductCard kind="hosting" title={t.home.products.hosting.title} body={t.home.products.hosting.body} link={t.home.products.hosting.link} href={pathFor("hosting", locale)} meta={fromPrice("hosting")} />
             <ProductCard kind="websites" title={t.home.products.websites.title} body={t.home.products.websites.body} link={t.home.products.websites.link} href={pathFor("websites", locale)} meta={fromPrice("build")} />
             <ProductCard kind="care" title={t.home.products.care.title} body={t.home.products.care.body} link={t.home.products.care.link} href={pathFor("care", locale)} meta={fromPrice("care")} />
-            <ProductCard kind="domains" title={t.home.products.domains.title} body={t.home.products.domains.body} link={t.home.products.domains.link} href={anchorFor("domains", locale)} />
+            <ProductCard kind="domains" title={t.home.products.domains.title} body={t.home.products.domains.body} link={t.home.products.domains.link} href={anchorFor("domains", locale)} meta={fromDomain} />
           </ul>
         </Section>
 

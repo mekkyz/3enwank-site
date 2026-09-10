@@ -54,7 +54,7 @@ export function SectionHeader({
     <header data-reveal className="mb-8 flex flex-wrap items-end justify-between gap-5 sm:mb-10">
       <div className="max-w-2xl">
         {kicker ? <Kicker tone={light ? "light" : "brand"}>{kicker}</Kicker> : null}
-        <h2 className={`text-3xl font-extrabold tracking-tight sm:text-4xl ${light ? "text-white" : "text-ink"}`}>
+        <h2 className={`text-balance text-3xl font-extrabold tracking-tight sm:text-4xl ${light ? "text-white" : "text-ink"}`}>
           {title}
         </h2>
         {lede ? (
@@ -89,8 +89,13 @@ export function PageIntro({
             <Kicker>{kicker}</Kicker>
           </div>
         ) : null}
-        <h1 className="rise max-w-3xl text-4xl font-extrabold tracking-tight text-ink sm:text-5xl">{title}</h1>
-        {lede ? <p className="rise-2 mt-4 max-w-2xl text-lg text-muted sm:text-xl">{lede}</p> : null}
+        {/*
+         * Balanced, not ragged: a two-line heading breaks into two lines of the same length rather
+         * than a long one and a short one. The copy binds the words inside each sentence with
+         * non-breaking spaces, so the break can only land between sentences.
+         */}
+        <h1 className="rise max-w-4xl text-balance text-4xl font-extrabold tracking-tight text-ink sm:text-5xl">{title}</h1>
+        {lede ? <p className="rise-2 mt-4 max-w-2xl text-pretty text-lg text-muted sm:text-xl">{lede}</p> : null}
         <div className="rise-3">{children}</div>
       </Container>
     </header>
@@ -120,7 +125,8 @@ export function Card({
 }
 
 export function Fine({ children }: { children: ReactNode }) {
-  return <p className="mt-8 max-w-3xl text-sm leading-relaxed text-muted">{children}</p>;
+  // Measured in characters, not pixels: small print at 14px ran to 100 characters a line at max-w-3xl.
+  return <p className="mt-8 max-w-prose text-pretty text-sm leading-relaxed text-muted">{children}</p>;
 }
 
 type ButtonVariant = "primary" | "secondary" | "white" | "outline";

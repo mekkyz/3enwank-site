@@ -63,15 +63,15 @@ export const en: Messages = {
     facts: ["We move your site from your old host, free", "No setup fees, billed once a year", "Prices in EGP and USD, VAT included"],
     productsTitle: "What we do",
     products: {
-      hosting: { title: "Hosting", body: "Six plans from 1 GB to 150 GB, billed once a year. Email, databases and SSL on every one.", link: "Compare plans" },
+      hosting: { title: "Hosting", body: "Six plans from 1–150 GB, billed annually. Email, databases, and SSL included.", link: "Compare plans" },
       websites: { title: "Websites", body: "From a one-page site to an online store. Fixed scope, fixed price, fixed date.", link: "See packages" },
-      care: { title: "Care plans", body: "Updates, malware scans, content changes, and replies in 4 to 72 hours depending on the plan.", link: "Choose a plan" },
-      domains: { title: "Domains", body: "Register or transfer a domain, and manage it in the same account as your hosting.", link: "Domain prices" },
+      care: { title: "Care plans", body: "Updates, malware scans, content changes, and fast replies.", link: "Choose a plan" },
+      domains: { title: "Domains", body: "Register or transfer your domain and manage it alongside your hosting.", link: "Domain prices" },
     },
     whyTitle: "Included on every account",
     why: [
       { title: "Daily backups", body: "A copy of your account every day, kept for three months." },
-      { title: "SSL on every domain", body: "Issued as soon as your domain points at our servers, and renewed automatically before it expires." },
+      { title: "SSL on every domain", body: "Issued when your domain points to us and renewed automatically." },
       { title: "Firewall", body: "Attacks are blocked and malware is caught, from the first day." },
       { title: "A real person answers", body: "Not a ticket robot. We read it, we reply in English or Arabic." },
     ],
@@ -88,7 +88,7 @@ export const en: Messages = {
   },
   hosting: {
     title: "Web hosting",
-    h2: "Six plans. Billed once a year.",
+    h2: "Six plans. Billed once a year.",
     lede: "Every plan runs on the same servers with the same protection. Pick the size now and upgrade later without moving anything.",
     compareTitle: "Compare the plans",
     compareCaption: "Hosting plans compared feature by feature",
@@ -99,7 +99,7 @@ export const en: Messages = {
   },
   websites: {
     title: "Websites",
-    h2: "Fixed scope. Fixed price. Fixed date.",
+    h2: "Fixed scope. Fixed price. Fixed date.",
     lede: "A deposit to start, the rest when you approve the work. Nothing open ended.",
     deposit: "{deposit}% to start, {rest}% on approval",
     delivery: "Delivery",
@@ -111,7 +111,7 @@ export const en: Messages = {
   },
   care: {
     title: "Care plans",
-    h2: "The part most people skip.",
+    h2: "The part most people skip.",
     lede: "A website is not finished the day it launches. Without upkeep it gets hacked, or breaks quietly and nobody notices for months.",
     compareTitle: "Compare the plans",
     compareCaption: "Care plans compared feature by feature",
@@ -120,7 +120,7 @@ export const en: Messages = {
   },
   domains: {
     title: "Domains",
-    h2: "Register it, or bring it with you.",
+    h2: "Register it, or bring it with you.",
     lede: "We connect the name to your hosting for you. Nothing to configure, working from the first day.",
     searchLabel: "Find a domain name",
     searchPlaceholder: "example.com",
@@ -175,7 +175,7 @@ export const en: Messages = {
   },
   about: {
     title: "About 3enwank",
-    h2: "A small hosting company that runs its own servers.",
+    h2: "A small hosting company that runs its own servers.",
     lede: "3enwank is the hosting and web brand of {legalName}, Cairo. We host and build websites for businesses in Egypt and abroad, and we answer our own email.",
     principlesTitle: "How we work",
     principles: [
@@ -192,7 +192,7 @@ export const en: Messages = {
   },
   contact: {
     title: "Contact",
-    h2: "A real person answers, not a call centre.",
+    h2: "A real person answers, not a call centre.",
     wa: {
       title: "Message us on WhatsApp",
       cta: "Open WhatsApp",

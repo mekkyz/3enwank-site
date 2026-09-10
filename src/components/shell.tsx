@@ -55,7 +55,12 @@ export function Shell({
         {t.nav.skip}
       </a>
       <header data-bar className="sticky top-0 z-40 border-b border-line bg-panel/95 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3 sm:px-8">
+        {/*
+         * gap-2 on the narrowest phone: the logo and the row of controls together were four pixels
+         * wider than a 390px screen, which scrolled every English page sideways by those four
+         * pixels. Nothing else in the header changes size.
+         */}
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-5 py-3 sm:gap-4 sm:px-8">
           <a href={pathFor("home", locale)} className="flex shrink-0 items-center" aria-label={t.meta.siteName}>
             <Logo className="h-7 sm:h-8" />
           </a>

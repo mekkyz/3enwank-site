@@ -6,12 +6,10 @@ import { turnstileToken } from "@/lib/turnstile";
 /** Every string the form shows, passed from the server so no dictionary reaches the browser bundle. */
 export type LeadFormLabels = {
   needLegend: string;
-  need: { hosting: string; website: string; move: string; care: string; other: string };
+  need: { hosting: string; website: string; domains: string; care: string; other: string };
   name: string;
   reach: string;
-  reachHint: string;
   note: string;
-  noteHint: string;
   notePlaceholder: string;
   submit: string;
   sending: string;
@@ -26,7 +24,7 @@ export type LeadFormLabels = {
   privacy: string;
 };
 
-const NEEDS = ["hosting", "website", "move", "care", "other"] as const;
+const NEEDS = ["hosting", "website", "domains", "care", "other"] as const;
 type Need = (typeof NEEDS)[number];
 
 /**
@@ -153,10 +151,7 @@ export function LeadForm({ endpoint, labels, locale, turnstileSiteKey, waHref }:
             {labels.reach}
           </label>
           {/* Left to right whatever the page direction: a phone number and an address both read that way. */}
-          <input id={`${id}-reach`} value={reach} onChange={(e) => setReach(e.target.value)} dir="ltr" className={`${field} min-h-11 text-start`} autoComplete="off" maxLength={120} aria-describedby={`${id}-reach-hint`} />
-          <p id={`${id}-reach-hint`} className="mt-1.5 text-xs text-faint">
-            {labels.reachHint}
-          </p>
+          <input id={`${id}-reach`} value={reach} onChange={(e) => setReach(e.target.value)} dir="ltr" className={`${field} min-h-11 text-start`} autoComplete="off" maxLength={120} />
         </div>
       </div>
 
@@ -164,10 +159,7 @@ export function LeadForm({ endpoint, labels, locale, turnstileSiteKey, waHref }:
         <label htmlFor={`${id}-note`} className="mb-1.5 block text-sm font-bold text-ink">
           {labels.note}
         </label>
-        <textarea id={`${id}-note`} value={note} onChange={(e) => setNote(e.target.value)} dir="auto" rows={3} maxLength={300} placeholder={labels.notePlaceholder} className={field} aria-describedby={`${id}-note-hint`} />
-        <p id={`${id}-note-hint`} className="mt-1.5 text-xs text-faint">
-          {labels.noteHint}
-        </p>
+        <textarea id={`${id}-note`} value={note} onChange={(e) => setNote(e.target.value)} dir="auto" rows={3} maxLength={300} placeholder={labels.notePlaceholder} className={field} />
       </div>
 
       <div aria-hidden="true" className="absolute h-0 w-0 overflow-hidden opacity-0">

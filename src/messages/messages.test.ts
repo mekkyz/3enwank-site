@@ -110,7 +110,7 @@ describe("formal Arabic", () => {
       [ar.home.h1, eg.home.h1, en.home.h1],
       [ar.home.lede, eg.home.lede, en.home.lede],
       [ar.hosting.lede, eg.hosting.lede, en.hosting.lede],
-      [ar.contact.lede, eg.contact.lede, en.contact.lede],
+      [ar.contact.h2, eg.contact.h2, en.contact.h2],
     ];
     for (const [a, b, c] of pairs) {
       expect(a).not.toBe(b);

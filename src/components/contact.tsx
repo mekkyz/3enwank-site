@@ -1,6 +1,5 @@
 import { ButtonLink, Panel, Section, SectionHeader } from "./blocks";
 import { LeadForm, type LeadFormLabels } from "./lead-form";
-import { OfficeStatus } from "./office-status";
 import type { Messages } from "@/messages";
 import type { Locale } from "@/lib/i18n";
 
@@ -48,11 +47,10 @@ export function ContactSection({
 }) {
   const c = t.contact;
   const labels: LeadFormLabels = c.form;
-  const hours = { open: c.wa.open, closedToday: c.wa.closedToday, closedTomorrow: c.wa.closedTomorrow, closedWeekend: c.wa.closedWeekend };
 
   return (
     <Section id="contact">
-      <SectionHeader kicker={c.title} title={c.h2} lede={c.lede} />
+      <SectionHeader kicker={c.title} title={c.h2} />
 
       {/*
        * Full width and directly under the heading, because the person who needs it is the person
@@ -82,18 +80,13 @@ export function ContactSection({
             </li>
           </ul>
         </div>
-        <p className="mt-2 max-w-4xl text-sm leading-relaxed text-muted">{c.urgent.body}</p>
-        <p className="mt-2 text-xs text-faint">{c.urgent.after}</p>
+        <p className="mt-2 text-sm text-muted">{c.urgent.body}</p>
       </Panel>
 
       <div className="grid gap-6 lg:grid-cols-[1.05fr_1fr]">
         {/* The counter: one number, one button, and whether anyone is behind it right now. */}
         <Panel tone="brand" className="order-1 h-full">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-brand">{c.wa.kicker}</p>
-            <OfficeStatus t={hours} />
-          </div>
-          <h3 className="mt-3 text-2xl font-extrabold tracking-tight text-ink">{c.wa.title}</h3>
+          <h3 className="text-2xl font-extrabold tracking-tight text-ink">{c.wa.title}</h3>
 
           {whatsapp ? (
             <>
@@ -108,31 +101,10 @@ export function ContactSection({
                   {c.wa.cta}
                 </ButtonLink>
               </div>
-              <p className="mt-3 text-sm text-muted">
-                {c.wa.call} {c.wa.voice}
-              </p>
-
-              <div className="mt-6 border-t border-line pt-5">
-                <p className="text-sm font-bold text-ink">{c.wa.openersTitle}</p>
-                <ul className="mt-3 flex flex-wrap gap-2">
-                  {c.wa.openers.map((o) => (
-                    <li key={o.chip}>
-                      <a
-                        href={waHref(whatsapp, o.text)}
-                        rel="noopener"
-                        target="_blank"
-                        className="inline-flex min-h-11 items-center rounded-lg border-[1.5px] border-line-strong px-3.5 text-sm font-bold text-muted transition hover:border-brand hover:text-brand-strong"
-                      >
-                        {o.chip}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
             </>
           ) : null}
 
-          <p className="mt-6 text-sm leading-relaxed text-muted">{c.wa.hours}</p>
+          <p className="mt-4 text-sm text-muted">{c.wa.hours}</p>
 
           {/*
            * Both languages, both shown. The point of "Arabic visible, not a footnote" is that a
@@ -160,7 +132,6 @@ export function ContactSection({
         <div className="order-2">
           <Panel className="h-full">
             <h3 className="text-xl font-extrabold tracking-tight text-ink">{c.form.title}</h3>
-            <p className="mt-2 text-sm leading-relaxed text-muted">{c.form.lede}</p>
             <div className="mt-5">
               <LeadForm endpoint={leadUrl} labels={labels} locale={locale} turnstileSiteKey={turnstileSiteKey} waHref={whatsapp ? waHref(whatsapp, c.wa.defaultText) : "#"} />
             </div>

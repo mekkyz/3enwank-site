@@ -172,24 +172,9 @@ export type Messages = {
   contact: {
     title: string;
     h2: string;
-    lede: string;
-    wa: {
-      kicker: string;
-      title: string;
-      cta: string;
-      call: string;
-      voice: string;
-      hours: string;
-      defaultText: string;
-      openersTitle: string;
-      openers: Array<{ chip: string; text: string }>;
-      open: string;
-      closedToday: string;
-      closedTomorrow: string;
-      closedWeekend: string;
-    };
+    wa: { title: string; cta: string; hours: string; defaultText: string };
     languages: { first: string; second: string };
-    urgent: { label: string; body: string; wa: string; waText: string; ticket: string; email: string; emailSubject: string; after: string };
+    urgent: { label: string; body: string; wa: string; waText: string; ticket: string; email: string; emailSubject: string };
     email: string;
     emailBody: string;
     address: string;
@@ -199,14 +184,11 @@ export type Messages = {
     existingCta: string;
     form: {
       title: string;
-      lede: string;
       needLegend: string;
-      need: { hosting: string; website: string; move: string; care: string; other: string };
+      need: { hosting: string; website: string; domains: string; care: string; other: string };
       name: string;
       reach: string;
-      reachHint: string;
       note: string;
-      noteHint: string;
       notePlaceholder: string;
       submit: string;
       sending: string;

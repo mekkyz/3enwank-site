@@ -56,3 +56,20 @@ export function CartIcon({ className = "h-[18px] w-[18px]" }: IconProps) {
     </svg>
   );
 }
+
+/**
+ * The WhatsApp mark: a handset inside a speech bubble, with the bubble's tail at the lower left.
+ *
+ * Drawn as a solid glyph in `currentColor` so it sits on the brand button rather than beside it. The
+ * button stays the site's purple: WhatsApp's own green is 1.98:1 under white text, and a green dark
+ * enough to pass AA no longer looks like WhatsApp, so it would lose the recognition it was for. The
+ * mark carries the channel, the colour carries us.
+ */
+export function WhatsAppIcon({ className = "h-[18px] w-[18px] shrink-0" }: IconProps) {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" className={className} fill="currentColor">
+      <path d="M12.04 2.5a9.4 9.4 0 0 0-8.06 14.2L2.5 21.5l4.94-1.42A9.4 9.4 0 1 0 12.04 2.5Zm0 1.72a7.68 7.68 0 1 1-3.9 14.3l-.28-.16-2.92.84.85-2.85-.18-.29a7.68 7.68 0 0 1 6.43-11.84Z" />
+      <path d="M9.3 7.36c-.18-.4-.36-.41-.53-.42h-.45a.87.87 0 0 0-.63.29 2.64 2.64 0 0 0-.82 1.96c0 1.16.84 2.28.96 2.44.12.15 1.63 2.6 4.02 3.54 1.99.78 2.4.63 2.83.59.43-.04 1.39-.57 1.58-1.11.2-.55.2-1.02.14-1.11-.06-.1-.22-.16-.45-.28-.24-.12-1.4-.69-1.61-.77-.22-.08-.38-.12-.54.12-.16.23-.62.77-.76.93-.14.16-.28.18-.51.06a6.44 6.44 0 0 1-1.9-1.17 7.14 7.14 0 0 1-1.31-1.63c-.14-.24-.02-.36.1-.48.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.53-1.29-.73-1.76Z" />
+    </svg>
+  );
+}

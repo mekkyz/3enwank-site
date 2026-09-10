@@ -130,11 +130,16 @@ export function LeadForm({
     );
   }
 
+  /*
+   * One ring, not a border plus a ring. The edge of a control takes the strong token and keeps its
+   * 3:1; on focus the ring changes colour and thickens instead of a border and a ring both being
+   * painted, which used to nudge the text by a pixel as you clicked in.
+   */
   const field =
-    "block w-full rounded-lg border border-line-strong bg-surface px-3.5 py-2.5 text-sm text-ink placeholder:text-faint focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand";
+    "block w-full rounded-lg bg-surface px-4 py-3 text-sm text-ink ring-1 ring-line-strong transition placeholder:text-faint focus:outline-none focus:ring-2 focus:ring-brand";
 
   return (
-    <form onSubmit={submit} noValidate className="space-y-5">
+    <form onSubmit={submit} noValidate className="space-y-6">
       {errors.length ? (
         <div
           ref={errorBox}
@@ -160,20 +165,38 @@ export function LeadForm({
          */}
         <div className="grid grid-cols-2 gap-2">
           {NEEDS.map((k) => (
-            // A real radio, visible: the chosen one is not carried by colour alone.
-            <label
-              key={k}
-              className={`flex min-h-11 cursor-pointer items-center gap-2 rounded-lg border-[1.5px] px-3 text-sm font-bold transition ${need === k ? "border-brand bg-brand-soft text-brand-strong" : "border-line-strong text-muted hover:text-ink"}`}
-            >
+            /*
+             * The input is hidden but real, and it comes first so the visible span can be styled
+             * from its state: `peer-*` only reaches a later sibling, so with the input nested inside
+             * the styled element the focus ring silently never appeared.
+             *
+             * The chosen one differs by shape as well as colour, an empty ring becoming a filled
+             * dot, so the state never rests on hue alone.
+             */
+            <label key={k} className="block cursor-pointer">
               <input
                 type="radio"
                 name="need"
                 value={k}
                 checked={need === k}
                 onChange={() => setNeed(k)}
-                className="h-3.5 w-3.5 shrink-0 accent-[var(--color-brand)]"
+                className="peer sr-only"
               />
-              {labels.need[k]}
+              <span
+                className={`flex min-h-12 items-center gap-2.5 rounded-lg px-3.5 text-sm font-bold transition peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-brand ${
+                  need === k
+                    ? "bg-brand-soft text-brand-strong ring-2 ring-brand"
+                    : "bg-surface text-muted ring-1 ring-line-strong hover:text-ink"
+                }`}
+              >
+                <span
+                  aria-hidden="true"
+                  className={`grid h-4 w-4 shrink-0 place-items-center rounded-full border-2 transition ${need === k ? "border-brand" : "border-line-strong"}`}
+                >
+                  <span className={`h-2 w-2 rounded-full transition ${need === k ? "bg-brand" : "bg-transparent"}`} />
+                </span>
+                {labels.need[k]}
+              </span>
             </label>
           ))}
         </div>
@@ -181,7 +204,7 @@ export function LeadForm({
 
       <div className="grid gap-5 sm:grid-cols-2">
         <div>
-          <label htmlFor={`${id}-name`} className="mb-1.5 block text-sm font-bold text-ink">
+          <label htmlFor={`${id}-name`} className="mb-2 block text-sm font-bold text-ink">
             {labels.name}
           </label>
           <input
@@ -191,11 +214,11 @@ export function LeadForm({
             dir="auto"
             autoComplete="name"
             maxLength={80}
-            className={`${field} min-h-11`}
+            className={`${field} min-h-12`}
           />
         </div>
         <div>
-          <label htmlFor={`${id}-reach`} className="mb-1.5 block text-sm font-bold text-ink">
+          <label htmlFor={`${id}-reach`} className="mb-2 block text-sm font-bold text-ink">
             {labels.reach}
           </label>
           {/* Left to right whatever the page direction: a phone number and an address both read that way. */}
@@ -204,7 +227,7 @@ export function LeadForm({
             value={reach}
             onChange={(e) => setReach(e.target.value)}
             dir="ltr"
-            className={`${field} min-h-11 text-start`}
+            className={`${field} min-h-12 text-start`}
             autoComplete="off"
             maxLength={120}
           />
@@ -212,7 +235,7 @@ export function LeadForm({
       </div>
 
       <div>
-        <label htmlFor={`${id}-note`} className="mb-1.5 block text-sm font-bold text-ink">
+        <label htmlFor={`${id}-note`} className="mb-2 block text-sm font-bold text-ink">
           {labels.note}
         </label>
         <textarea

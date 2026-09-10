@@ -208,7 +208,7 @@ export const arEg: Messages = {
   },
   contact: {
     title: "كلمنا",
-    h2: "حد بيرد عليك، وغالبًا في أقل من ساعة.",
+    h2: "حد حقيقي بيرد عليك، وغالبًا في أقل من ساعة.",
     wa: {
       title: "ابعت لنا على واتساب",
       cta: "افتح الواتس",
@@ -236,14 +236,14 @@ export const arEg: Messages = {
     existingBody: "هتلاقي الفواتير والاستضافة والدومينات والتيكتات في حسابك.",
     existingCta: "ادخل حسابك",
     form: {
-      title: "تحب تكتب رسالتك؟",
+      title: "تحب تكتب؟",
       needLegend: "محتاج إيه؟",
       need: { hosting: "استضافة", website: "موقع من الأول", domains: "دومينات", care: "باقة صيانة", other: "حاجة تانية" },
       name: "اسمك",
       reach: "رقم واتس أو إيميل",
       note: "في حاجة لازم نعرفها؟",
       notePlaceholder: "الدومين بتاعك، أو مين مستضيفك دلوقتي.",
-      submit: "ابعتها",
+      submit: "ابعت الرسالة",
       sending: "بيبعت",
       errorTitle: "لسه مابعتناش حاجة. صلّح دول:",
       errors: {

@@ -61,7 +61,7 @@ export function ContactSection({
       <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
         <div className="space-y-6">
           {/* Filled, not outlined: the tinted ground is what marks this as the first choice. */}
-          <div className="rounded-2xl bg-brand-soft p-7 sm:p-8">
+          <div className="rounded-2xl bg-brand-soft p-6 sm:p-7">
             <h3 className="text-2xl font-extrabold tracking-tight text-ink">{c.wa.title}</h3>
 
             {whatsapp ? (
@@ -84,7 +84,7 @@ export function ContactSection({
               </>
             ) : null}
 
-            <p className="mt-6 text-sm text-muted">{c.wa.hours}</p>
+            <p className="mt-5 text-sm text-muted">{c.wa.hours}</p>
 
             {/*
              * Both languages shown: a reader should see their own on the page before deciding which
@@ -92,7 +92,7 @@ export function ContactSection({
              * where it reads as a stray caption rather than as the second half of a pair, so <bdi>
              * isolates the run instead and both lines start at the same edge.
              */}
-            <div className="mt-6 space-y-1 text-sm text-muted">
+            <div className="mt-4 space-y-1 text-sm text-muted">
               {/* The page's own language: forcing ltr here put the full stop on the wrong side in Arabic. */}
               <p>{c.languages.first}</p>
               <p className={locale === "en" ? "font-arabic" : ""}>
@@ -103,11 +103,15 @@ export function ContactSection({
             </div>
           </div>
 
-          {/* A bar down the leading edge and nothing else: a signpost, not a fourth box. */}
-          <div className="border-s-2 border-warn ps-5">
-            <h3 className="text-sm font-extrabold text-warn">{c.urgent.label}</h3>
-            <p className="mt-1.5 text-sm text-muted">{c.urgent.body}</p>
-            <ul className="mt-2.5 flex flex-wrap gap-x-5 gap-y-1 text-sm font-bold">
+          {/*
+           * A signpost, and it should look like one that was placed on purpose: its own quiet
+           * ground with a bar down the leading edge, rather than a rule floating in the page. This
+           * is the route for a customer whose site is down, and it earns being a block.
+           */}
+          <div className="rounded-xl border-s-2 border-warn bg-surface-alt px-5 py-4">
+            <h3 className="text-sm font-extrabold text-ink">{c.urgent.label}</h3>
+            <p className="mt-1 text-sm text-muted">{c.urgent.body}</p>
+            <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5 text-sm font-bold">
               {whatsapp ? (
                 <li>
                   <a
@@ -139,7 +143,7 @@ export function ContactSection({
         </div>
 
         {/* The alternative: one hairline, so it sits back from the filled panel beside it. */}
-        <div className="rounded-2xl border border-line bg-panel p-7 sm:p-8">
+        <div className="rounded-2xl border border-line bg-panel p-6 sm:p-7">
           <h3 className="text-xl font-extrabold tracking-tight text-ink">{c.form.title}</h3>
           <div className="mt-6">
             <LeadForm
@@ -157,7 +161,7 @@ export function ContactSection({
        * The quieter ways: three columns under one rule rather than three more cards. They were the
        * same weight as the two things above them, which is not what they are.
        */}
-      <div className="mt-12 grid gap-8 border-t border-line pt-8 sm:grid-cols-3">
+      <div className="mt-10 grid gap-x-8 gap-y-6 border-t border-line pt-6 sm:grid-cols-3">
         <div>
           <h3 className={eyebrow}>{c.email}</h3>
           <a

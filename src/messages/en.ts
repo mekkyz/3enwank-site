@@ -201,7 +201,7 @@ export const en: Messages = {
   },
   contact: {
     title: "Contact",
-    h2: "A person answers, usually within the hour.",
+    h2: "A real person answers, usually within the hour.",
     wa: {
       title: "Message us on WhatsApp",
       cta: "Open WhatsApp",
@@ -229,14 +229,14 @@ export const en: Messages = {
     existingBody: "Invoices, hosting, domains and tickets.",
     existingCta: "Open the customer area",
     form: {
-      title: "Rather write it down?",
+      title: "Prefer to write?",
       needLegend: "What do you need?",
       need: { hosting: "Hosting", website: "A new website", domains: "Domains", care: "A care plan", other: "Something else" },
       name: "Your name",
       reach: "WhatsApp number or email",
       note: "Anything we should know?",
       notePlaceholder: "Your domain, or who hosts you now.",
-      submit: "Send it",
+      submit: "Send message",
       sending: "Sending",
       errorTitle: "Nothing was sent yet. Please fix these:",
       errors: {

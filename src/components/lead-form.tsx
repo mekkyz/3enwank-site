@@ -180,7 +180,7 @@ export function LeadForm({
              * The chosen one differs by shape as well as colour, an empty ring becoming a filled
              * dot, so the state never rests on hue alone.
              */
-            <label key={k} className="block cursor-pointer">
+            <label key={k} className="group block cursor-pointer">
               <input
                 type="radio"
                 name="need"
@@ -193,12 +193,12 @@ export function LeadForm({
                 className={`flex min-h-12 items-center gap-2.5 rounded-lg px-3.5 text-sm font-bold transition peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-brand ${
                   need === k
                     ? "bg-brand-soft text-brand-strong ring-2 ring-brand"
-                    : "bg-surface text-muted ring-1 ring-line-strong hover:text-ink"
+                    : "bg-surface text-muted ring-1 ring-line-strong hover:bg-brand-soft/40 hover:text-ink hover:ring-brand"
                 }`}
               >
                 <span
                   aria-hidden="true"
-                  className={`grid h-4 w-4 shrink-0 place-items-center rounded-full border-2 transition ${need === k ? "border-brand" : "border-line-strong"}`}
+                  className={`grid h-4 w-4 shrink-0 place-items-center rounded-full border-2 transition ${need === k ? "border-brand" : "border-line-strong group-hover:border-brand"}`}
                 >
                   <span className={`h-2 w-2 rounded-full transition ${need === k ? "bg-brand" : "bg-transparent"}`} />
                 </span>

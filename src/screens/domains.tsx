@@ -29,7 +29,7 @@ export const domains = {
         <Section>
           <p className="mb-5 text-sm text-muted">{vatLine(t, catalogue)}</p>
           <div className="rounded-2xl border border-line bg-panel p-5 sm:p-8">
-            <DomainSearch locale={locale} searchPath={pathFor("domains", locale)} cartUrl={api.cartDomain} apiUrl={api.domainSearch} ideasUrl={api.domainIdeas} contactHref={anchorFor("contact", locale)} labels={domainSearchLabels(t)} ideas={assistantOn(catalogue)} turnstileSiteKey={catalogue.assistant.turnstileSiteKey} initialQuery={q} initialResults={initialResults as never} initialAdded={params.added ? [params.added] : []} initialError={params.error ?? null} />
+            <DomainSearch locale={locale} searchPath={pathFor("domains", locale)} cartUrl={api.cartDomain} apiUrl={api.domainSearch} ideasUrl={api.domainIdeas} contactHref={anchorFor("contact", locale)} labels={domainSearchLabels(t)} ideas={assistantOn(catalogue)} tlds={catalogue.tlds.map((t) => t.tld)} turnstileSiteKey={catalogue.assistant.turnstileSiteKey} initialQuery={q} initialResults={initialResults as never} initialAdded={params.added ? [params.added] : []} initialError={params.error ?? null} />
           </div>
         </Section>
         {/*

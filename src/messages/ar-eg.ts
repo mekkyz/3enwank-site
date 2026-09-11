@@ -144,6 +144,7 @@ export const arEg: Messages = {
     transferLabel: "دومين إنت مالكه",
     transferPlaceholder: "myshop.com",
     transferButton: "انقله لينا",
+    allExtensions: "كل الامتدادات اللي بنبيعها",
     cartErrors: {
       noAuthCode: "حط رمز التفويض للدومين ده.",
       unavailable: "مالقيناش الدومين ده مسجَّل في أي حتة، يعني مفيش حاجة تتنقل. لو عايز تسجله، دوّر عليه.",

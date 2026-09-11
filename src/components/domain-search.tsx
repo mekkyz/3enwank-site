@@ -41,6 +41,7 @@ export type DomainSearchLabels = {
   authCodeLabel: string;
   authCodePlaceholder: string;
   cartErrors: Record<string, string>;
+  allExtensions: string;
   transferHint: string;
   ideasTitle: string;
   ideasHint: string;
@@ -341,6 +342,7 @@ export function DomainSearch({
   contactHref,
   labels,
   ideas,
+  tlds = [],
   turnstileSiteKey = null,
   initialQuery = "",
   initialResults = null,
@@ -357,6 +359,8 @@ export function DomainSearch({
   contactHref: string;
   labels: DomainSearchLabels;
   ideas: boolean;
+  /** Every extension we sell, for the block under the search. */
+  tlds?: string[];
   turnstileSiteKey?: string | null;
   /** Set when the page was asked for with ?q=, so the answer is in the HTML before React runs. */
   initialQuery?: string;
@@ -482,6 +486,28 @@ export function DomainSearch({
     const t = setTimeout(() => void run(searched.current, currency), 0);
     return () => clearTimeout(t);
   }, [currency, data, run]);
+
+  /**
+   * Pick an ending: it joins whatever name is typed and searches.
+   *
+   * A visitor with "mybakery" in the box and no idea which ending to try is the person this block
+   * is for, so clicking one finishes their sentence rather than starting a new one. With nothing
+   * typed there is nothing to search for, so the box takes focus and waits.
+   */
+  const pick = useCallback(
+    (tld: string) => {
+      const base = query.trim().toLowerCase().replace(/\.$/, "");
+      const label = base.includes(".") ? base.slice(0, base.indexOf(".")) : base;
+      if (!label) {
+        document.getElementById(`${id}-q`)?.focus();
+        return;
+      }
+      const next = `${label}.${tld}`;
+      setQuery(next);
+      void run(next, currency);
+    },
+    [currency, id, query, run],
+  );
 
   function submit(e: FormEvent<HTMLFormElement>) {
     const q = query.trim();
@@ -672,6 +698,33 @@ export function DomainSearch({
 
       {/* Results belong to the tab that asked for them: a name search still showing while the
           "Suggest names" tab is open answers a question nobody on that tab asked. */}
+      {/*
+       * Every ending we sell, under the search and only until there is something better to show.
+       *
+       * The page lost its price table, which nobody read, and gained a search box floating in an
+       * empty screen. These are not a picture of the table: they are the shortest path to a result
+       * for the visitor who has a name but no idea what to put after it, and they disappear the
+       * moment a search answers, because then the answer is the thing worth looking at.
+       */}
+      {tab === "register" && tlds.length && !data && status === "idle" ? (
+        <div className="mt-6 border-t border-line pt-5">
+          <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-faint">{labels.allExtensions}</p>
+          <ul className="mt-3 flex flex-wrap gap-2">
+            {tlds.map((t) => (
+              <li key={t}>
+                <button
+                  type="button"
+                  onClick={() => pick(t)}
+                  className="tabular rounded-full border border-line px-3 py-1.5 text-sm font-bold text-muted transition hover:border-brand hover:bg-brand-soft hover:text-brand-strong"
+                >
+                  <bdi dir="ltr">.{t}</bdi>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+
       <div aria-live="polite" hidden={tab !== "register"}>
         {status === "error" ? <p className="mt-4 text-sm text-warn">{labels.error}</p> : null}
         {status === "limited" ? <p className="mt-4 text-sm text-warn">{labels.rateLimited}</p> : null}

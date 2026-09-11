@@ -116,6 +116,7 @@ export type Messages = {
     transferLabel: string;
     transferPlaceholder: string;
     transferButton: string;
+    allExtensions: string;
     cartErrors: Record<string, string>;
     authCodeLabel: string;
     authCodePlaceholder: string;

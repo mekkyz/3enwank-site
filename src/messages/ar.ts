@@ -137,6 +137,7 @@ export const ar: Messages = {
     transferLabel: "نطاق تملكه بالفعل",
     transferPlaceholder: "myshop.com",
     transferButton: "انقله إلينا",
+    allExtensions: "كل الامتدادات التي نبيعها",
     cartErrors: {
       noAuthCode: "أضف رمز التفويض لهذا النطاق.",
       unavailable: "لم نجد هذا النطاق مسجَّلًا في أي مكان، فليس هناك ما يُنقل. إن أردت تسجيله، ابحث عنه.",

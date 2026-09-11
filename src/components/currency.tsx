@@ -92,9 +92,9 @@ export function Price({
   const was = chosen && normal?.[chosen] && normal[chosen]!.gross > (money?.gross ?? 0) ? normal[chosen] : undefined;
   if (!money || !chosen) return <span className={className}>{fallback}</span>;
   return (
-    <span className={`inline-flex flex-wrap items-baseline gap-x-2 ${className}`}>
+    <span className={`inline-flex flex-wrap items-baseline gap-x-1.5 ${className}`}>
       {was ? (
-        <bdi dir="ltr" className="tabular whitespace-nowrap text-sm font-medium text-faint line-through">
+        <bdi dir="ltr" className="tabular whitespace-nowrap text-xs font-medium text-faint line-through">
           {formatPrice(was, chosen, locale)}
         </bdi>
       ) : null}

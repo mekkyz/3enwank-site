@@ -63,7 +63,7 @@ export const en: Messages = {
     facts: ["We move your site from your old host, free", "No setup fees, billed once a year", "Prices in EGP and USD, VAT included"],
     productsTitle: "What we do",
     products: {
-      hosting: { title: "Hosting", body: "Six plans from 1–150 GB, billed annually. Email, databases, and SSL included.", link: "Compare plans" },
+      hosting: { title: "Hosting", body: "Six plans from 1–⁠150 GB, billed annually. Email, databases, and SSL.", link: "Compare plans" },
       websites: { title: "Websites", body: "From a one-page site to an online store. Fixed scope, fixed price, fixed date.", link: "See packages" },
       care: { title: "Care plans", body: "Updates, malware scans, content changes, and fast replies.", link: "Choose a plan" },
       domains: { title: "Domains", body: "Register or transfer your domain and manage it alongside your hosting.", link: "Domain prices" },
@@ -94,7 +94,6 @@ export const en: Messages = {
     compareCaption: "Hosting plans compared feature by feature",
     plan: "Plan",
     perYear: "Per year",
-    fine: "Every plan includes one website; XXL includes two. The domains row is how many separate sites the plan can carry, each on its own domain name. Building a site is a separate service.",
     empty: "Hosting plans are being updated. Check the customer area or contact us.",
   },
   websites: {

@@ -85,7 +85,6 @@ export type Messages = {
     compareCaption: string;
     plan: string;
     perYear: string;
-    fine: string;
     /** Exactly one {price}; the hosting page renders the live price in its place. */
     empty: string;
   };

@@ -19,8 +19,15 @@ export function PlanCard({ product, locale, highlight = false, cycleLabel, cta, 
         <Val>{name}</Val>
       </h3>
       {summary ? <p className="mt-1 text-sm text-muted">{summary}</p> : null}
-      <p className="mt-5 flex flex-wrap items-baseline gap-x-2">
-        <Price prices={product.prices} normal={normalPrices(product)} locale={locale} fallback={t.common.notAvailable} className="text-[2rem] font-extrabold leading-none tracking-tight text-ink" />
+      {/*
+       * One line, at the longest price this catalogue can produce. EGP 19,999 beside a struck-out
+       * EGP 29,999 and "per year" came to more than the card is wide, so the cycle label wrapped on
+       * XXL alone and that card's price sat a line lower than every other card's. The struck figure
+       * is a step smaller — it is repeated in full on the line below — and the price itself is two
+       * pixels down from 2rem, which is enough for the longest row with room to spare.
+       */}
+      <p className="mt-5 flex flex-wrap items-baseline gap-x-1.5">
+        <Price prices={product.prices} normal={normalPrices(product)} locale={locale} fallback={t.common.notAvailable} className="text-[1.875rem] font-extrabold leading-none tracking-tight text-ink" />
         <span className="text-sm text-muted">{cycleLabel}</span>
       </p>
       {/*

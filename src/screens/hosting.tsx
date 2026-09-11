@@ -1,4 +1,4 @@
-import { Empty, Fine, PageIntro, Section, SectionHeader } from "@/components/blocks";
+import { Empty, PageIntro, Section, SectionHeader } from "@/components/blocks";
 import { CompareTable, PlanCard } from "@/components/plans";
 import { Shell } from "@/components/shell";
 import { pageMetadata } from "@/lib/metadata";
@@ -35,7 +35,6 @@ export const hosting = {
           <Section tone="alt">
             <SectionHeader title={t.hosting.compareTitle} />
             <CompareTable products={plans} locale={locale} caption={t.hosting.compareCaption} exclude={["Runs on"]} perYear={t.hosting.perYear} cta={t.common.choose} />
-            <Fine>{t.hosting.fine}</Fine>
           </Section>
         ) : null}
       </Shell>

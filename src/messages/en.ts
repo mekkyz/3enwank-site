@@ -113,7 +113,7 @@ export const en: Messages = {
     h2: "The part most people skip.",
     lede: "Launch isn’t the finish line. Keep your website secure and running.",
     notes: [
-      { title: "Updates", body: "Core, plugins and theme. Tried on a copy first on Plus and Pro." },
+      { title: "Updates", body: "The software your site runs on, and everything it depends on. Tried on a copy first on Plus and Pro." },
       { title: "Content changes", body: "One edit of half an hour or less. New pages and features are quoted separately." },
       { title: "Reports", body: "What was updated, what the scan found, what changed." },
     ],

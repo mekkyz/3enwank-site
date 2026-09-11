@@ -1,3 +1,4 @@
+import { readFileSync, readdirSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { locales } from "@/lib/i18n";
 import { fill, messagesFor } from "./index";
@@ -51,6 +52,26 @@ describe("writing rules", () => {
       const bad = strings(messagesFor(locale) as unknown as Tree).filter(([, s]) => s.includes("—"));
       expect(bad, locale).toEqual([]);
     }
+  });
+
+  it("has no em dashes in the components either", () => {
+    /*
+     * The rule above only sees strings that live in a message file. A dash typed straight into JSX
+     * is just as visible on the page and was how one got onto the care page, so the components are
+     * read as text here. Comments are exempt: prose about the code is not copy on the page.
+     */
+    const dir = "src";
+    const files = readdirSync(dir, { recursive: true, encoding: "utf8" }).filter((f) => f.endsWith(".tsx"));
+    const bad: string[] = [];
+    for (const file of files) {
+      readFileSync(`${dir}/${file}`, "utf8")
+        .split("\n")
+        .forEach((line, i) => {
+          const code = line.replace(/\/\/.*$/, "").replace(/^\s*\*.*$/, "");
+          if (code.includes("\u2014")) bad.push(`${file}:${i + 1}`);
+        });
+    }
+    expect(bad).toEqual([]);
   });
 
   it("has no exclamation marks and none of the words that read as generated copy", () => {

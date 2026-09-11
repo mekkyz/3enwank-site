@@ -39,7 +39,7 @@ export const care = {
               <li key={n.title} className="flex gap-2">
                 <span aria-hidden="true">*</span>
                 <span>
-                  <span className="font-semibold text-ink">{n.title}</span> — {n.body}
+                  <span className="font-semibold text-ink">{n.title}:</span> {n.body}
                 </span>
               </li>
             ))}

@@ -113,9 +113,9 @@ export const en: Messages = {
     h2: "The part most people skip.",
     lede: "Launch isn’t the finish line. Keep your website secure and running.",
     notes: [
-      { title: "Updates", body: "The software your site runs on, and everything it depends on. Tried on a copy first on Plus and Pro." },
+      { title: "Updates", body: "The software your site runs on and everything it depends on, kept current so known holes are closed." },
       { title: "Content changes", body: "One edit of half an hour or less. New pages and features are quoted separately." },
-      { title: "Reports", body: "What was updated, what the scan found, what changed." },
+      { title: "Reports", body: "A written note of what was updated, what the scan found and what we fixed, so you can see the work." },
     ],
     empty: "Care plans are being updated. Contact us.",
   },

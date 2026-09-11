@@ -15,5 +15,5 @@ export async function generateMetadata({ params }: LocaleParams) {
 export default async function Page({ params, searchParams }: LocaleParams & { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const [locale, sp] = await Promise.all([localeFromParams(params), searchParams]);
   const one = (v: string | string[] | undefined) => (typeof v === "string" ? v : undefined);
-  return screens.domains.render(locale, { q: one(sp.q), added: one(sp.added) });
+  return screens.domains.render(locale, { q: one(sp.q), added: one(sp.added), error: one(sp.error) });
 }

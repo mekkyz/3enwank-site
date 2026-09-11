@@ -88,6 +88,7 @@ export function domainSearchLabels(t: Messages): DomainSearchLabels {
     transferButton: d.transferButton,
     transferHint: d.transferHint,
     transferThis: d.transferThis,
+    cartErrors: d.cartErrors,
     authCodeLabel: d.authCodeLabel,
     authCodePlaceholder: d.authCodePlaceholder,
     renewsAt: d.renewsAt,

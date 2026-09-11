@@ -40,6 +40,7 @@ export type DomainSearchLabels = {
   transferThis: string;
   authCodeLabel: string;
   authCodePlaceholder: string;
+  cartErrors: Record<string, string>;
   transferHint: string;
   ideasTitle: string;
   ideasHint: string;
@@ -344,6 +345,7 @@ export function DomainSearch({
   initialQuery = "",
   initialResults = null,
   initialAdded = [],
+  initialError = null,
 }: {
   locale: Locale;
   /** Where the form goes without JavaScript: this same page, which answers server-side. */
@@ -361,6 +363,8 @@ export function DomainSearch({
   initialResults?: SearchResponse | null;
   /** Names the server already knows are in the cart, from ?added= after a no-JavaScript post. */
   initialAdded?: string[];
+  /** A refusal the store redirected back with, e.g. a transfer with no authorisation code. */
+  initialError?: string | null;
 }) {
   const { currency } = useCurrency();
   const id = useId();
@@ -487,7 +491,7 @@ export function DomainSearch({
   }
 
   const [desc, setDesc] = useState("");
-  const [tab, setTab] = useState<"register" | "transfer" | "ideas">("register");
+  const [tab, setTab] = useState<"register" | "transfer" | "ideas">(initialError ? "transfer" : "register");
   const [transferName, setTransferName] = useState("");
 
   /**
@@ -585,6 +589,14 @@ export function DomainSearch({
          * checkout, never here — it moves the domain, and this page is not where credentials belong.
          */
         <form action={cartUrl} method="post">
+          {/*
+           * The store refuses a transfer by redirecting back here with a code, and without this the
+           * page redrew as if nothing had happened. A form whose failures are invisible is worse
+           * than one that cannot fail.
+           */}
+          {initialError ? (
+            <p className="mb-3 rounded-2xl bg-warn-soft px-4 py-3 text-sm text-warn">{labels.cartErrors[initialError] ?? labels.cartErrors.generic}</p>
+          ) : null}
           <input type="hidden" name="kind" value="transfer" />
           <input type="hidden" name="years" value="1" />
           <input type="hidden" name="return" value={searchPath} />
@@ -606,11 +618,12 @@ export function DomainSearch({
               className={FIELD}
             />
             {/*
-             * The code sits beside the name, where the customer is already looking, rather than
-             * waiting for checkout. It is posted to the store and parked there; what comes back in
-             * the cart is the id of that row, never the code, because the cart is a cookie. Optional
-             * on purpose: somebody who has not fetched it yet can still start the transfer, and
-             * checkout asks then.
+             * The code sits beside the name, where the customer is already looking and already at
+             * their old registrar with it in front of them. It is posted to the store and parked
+             * there; what comes back in the cart is the id of that row, never the code, because the
+             * cart is a cookie. Required, because a transfer without one is a transfer we cannot
+             * submit, and refusing that here costs a sentence while refusing it after payment costs
+             * a refund.
              */}
             <input
               name="authCode"
@@ -618,6 +631,7 @@ export function DomainSearch({
               autoComplete="off"
               spellCheck={false}
               maxLength={128}
+              required
               dir="ltr"
               placeholder={labels.authCodePlaceholder}
               aria-label={labels.authCodeLabel}

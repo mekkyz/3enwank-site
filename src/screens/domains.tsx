@@ -11,7 +11,7 @@ export const domains = {
     const t = messagesFor(locale);
     return pageMetadata("domains", locale, t.domains.title, `${t.domains.h2} ${t.domains.lede}`);
   },
-  async render(locale: Locale, params: { q?: string; added?: string } = {}) {
+  async render(locale: Locale, params: { q?: string; added?: string; error?: string } = {}) {
     const { t, catalogue, company, trust } = await screenContext(locale);
     // Asked for with ?q=: answer in the HTML, so a visitor without JavaScript gets a result
     // on this page rather than being sent to a second search somewhere else.
@@ -29,7 +29,7 @@ export const domains = {
         <Section>
           <p className="mb-5 text-sm text-muted">{vatLine(t, catalogue)}</p>
           <div className="rounded-2xl border border-line bg-panel p-5 sm:p-8">
-            <DomainSearch locale={locale} searchPath={pathFor("domains", locale)} cartUrl={api.cartDomain} apiUrl={api.domainSearch} ideasUrl={api.domainIdeas} contactHref={anchorFor("contact", locale)} labels={domainSearchLabels(t)} ideas={assistantOn(catalogue)} turnstileSiteKey={catalogue.assistant.turnstileSiteKey} initialQuery={q} initialResults={initialResults as never} initialAdded={params.added ? [params.added] : []} />
+            <DomainSearch locale={locale} searchPath={pathFor("domains", locale)} cartUrl={api.cartDomain} apiUrl={api.domainSearch} ideasUrl={api.domainIdeas} contactHref={anchorFor("contact", locale)} labels={domainSearchLabels(t)} ideas={assistantOn(catalogue)} turnstileSiteKey={catalogue.assistant.turnstileSiteKey} initialQuery={q} initialResults={initialResults as never} initialAdded={params.added ? [params.added] : []} initialError={params.error ?? null} />
           </div>
         </Section>
         {/*

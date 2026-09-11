@@ -39,15 +39,13 @@ export const websites = {
                         <Price prices={p.prices} locale={locale} fallback={t.common.notAvailable} className="text-[2rem] font-extrabold leading-none tracking-tight text-ink" />
                         <span className="text-sm text-muted">{t.common.oneTime}</span>
                       </p>
-                      <p className="mt-1.5 text-sm text-muted">
-                        {fill(t.websites.deposit, depositSplit(p))}
-                        {delivery ? (
-                          <>
-                            {" "}
-                            · {t.websites.delivery}: {delivery}
-                          </>
-                        ) : null}
-                      </p>
+                      {/* Two facts, two lines: joined by a middle dot they wrapped into each other. */}
+                      <p className="mt-1.5 text-sm text-muted">{fill(t.websites.deposit, depositSplit(p))}</p>
+                      {delivery ? (
+                        <p className="mt-0.5 text-sm text-muted">
+                          {t.websites.delivery}: {delivery}
+                        </p>
+                      ) : null}
                       {features.length ? <FeatureList items={features} /> : null}
                       <div className="mt-auto pt-6">
                         <ButtonLink href={storeLink(p.storeUrl, locale)} variant={highlight ? "primary" : "outline"} className="w-full" external>

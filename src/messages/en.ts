@@ -89,7 +89,7 @@ export const en: Messages = {
   hosting: {
     title: "Web hosting",
     h2: "Six plans. Billed once a year.",
-    lede: "Every plan runs on the same servers with the same protection. Pick the size now and upgrade later without moving anything.",
+    lede: "Every plan runs on the same servers with the same protection.",
     compareTitle: "Compare the plans",
     compareCaption: "Hosting plans compared feature by feature",
     plan: "Plan",
@@ -99,7 +99,7 @@ export const en: Messages = {
   websites: {
     title: "Websites",
     h2: "Fixed scope. Fixed price. Fixed date.",
-    lede: "A deposit to start, the rest when you approve the work. Nothing open ended.",
+    lede: "A deposit to start, the rest when you approve the work.",
     deposit: "{deposit}% to start, {rest}% on approval",
     delivery: "Delivery",
     customTitle: "Something custom",

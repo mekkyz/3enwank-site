@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-09-11T14:52:59.322Z",
+  "generatedAt": "2026-09-11T18:08:40.598Z",
   "currencies": [
     "EGP",
     "USD"
@@ -640,77 +640,30 @@
     ],
     "build": [
       {
-        "slug": "landing-page-lite",
+        "slug": "business-card",
         "kind": "build",
         "cycle": "one_time",
         "name": {
-          "ar": "Landing Page Lite",
-          "en": "Landing Page Lite"
+          "ar": "Business Card",
+          "en": "Business Card"
         },
         "summary": {
-          "ar": "One page, up to six sections. Delivery: 7 working days.",
-          "en": "One page, up to six sections. Delivery: 7 working days."
+          "ar": "A simple one-page website. Delivery: up to 2 working days.",
+          "en": "A simple one-page website. Delivery: up to 2 working days."
         },
         "features": {
           "ar": [
-            "One page, up to six sections",
-            "Contact form and WhatsApp button",
-            "Analytics and Meta Pixel",
-            "Two rounds of changes",
-            "Price 9,500 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.",
+            "One page",
+            "Contact details",
+            "WhatsApp, call and email",
+            "Map",
             "Hosting and Care plans are separate."
           ],
           "en": [
-            "One page, up to six sections",
-            "Contact form and WhatsApp button",
-            "Analytics and Meta Pixel",
-            "Two rounds of changes",
-            "Price 9,500 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.",
-            "Hosting and Care plans are separate."
-          ]
-        },
-        "description": {
-          "ar": "<p><strong>Landing Page Lite</strong> - One page, up to six sections. Delivery: 7 working days.</p><ul><li>One page, up to six sections</li><li>Contact form and WhatsApp button</li><li>Analytics and Meta Pixel</li><li>Two rounds of changes</li><li>Price 9,500 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.</li><li>Hosting and Care plans are separate.</li></ul>",
-          "en": "<p><strong>Landing Page Lite</strong> - One page, up to six sections. Delivery: 7 working days.</p><ul><li>One page, up to six sections</li><li>Contact form and WhatsApp button</li><li>Analytics and Meta Pixel</li><li>Two rounds of changes</li><li>Price 9,500 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.</li><li>Hosting and Care plans are separate.</li></ul>"
-        },
-        "depositBp": 5000,
-        "prices": {
-          "EGP": {
-            "gross": 949900,
-            "formatted": "EGP 9,499.00"
-          },
-          "USD": {
-            "gross": 18999,
-            "formatted": "USD 189.99"
-          }
-        },
-        "renewalPrices": {},
-        "options": [],
-        "storeUrl": "https://3enwank.com/account/plans/landing-page-lite"
-      },
-      {
-        "slug": "landing-page-pro",
-        "kind": "build",
-        "cycle": "one_time",
-        "name": {
-          "ar": "Landing Page Pro",
-          "en": "Landing Page Pro"
-        },
-        "summary": {
-          "ar": "One or two pages designed from scratch. Delivery: 10 working days.",
-          "en": "One or two pages designed from scratch. Delivery: 10 working days."
-        },
-        "features": {
-          "ar": [
-            "One or two pages designed from scratch",
-            "Leads land in your inbox, a Google Sheet and WhatsApp",
-            "Price 15,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.",
-            "Hosting and Care plans are separate."
-          ],
-          "en": [
-            "One or two pages designed from scratch",
-            "Leads land in your inbox, a Google Sheet and WhatsApp",
-            "Price 15,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.",
+            "One page",
+            "Contact details",
+            "WhatsApp, call and email",
+            "Map",
             "Hosting and Care plans are separate."
           ]
         },
@@ -721,17 +674,66 @@
         "depositBp": 5000,
         "prices": {
           "EGP": {
-            "gross": 1499900,
-            "formatted": "EGP 14,999.00"
+            "gross": 499900,
+            "formatted": "EGP 4,999.00"
           },
           "USD": {
-            "gross": 29999,
-            "formatted": "USD 299.99"
+            "gross": 9999,
+            "formatted": "USD 99.99"
           }
         },
         "renewalPrices": {},
         "options": [],
-        "storeUrl": "https://3enwank.com/account/plans/landing-page-pro"
+        "storeUrl": "https://3enwank.com/account/plans/business-card"
+      },
+      {
+        "slug": "landing-page",
+        "kind": "build",
+        "cycle": "one_time",
+        "name": {
+          "ar": "Landing Page",
+          "en": "Landing Page"
+        },
+        "summary": {
+          "ar": "A page built to get enquiries. Delivery: up to 1 week.",
+          "en": "A page built to get enquiries. Delivery: up to 1 week."
+        },
+        "features": {
+          "ar": [
+            "Everything in Business Card",
+            "Up to 5 sections",
+            "Contact form",
+            "Leads to your inbox and WhatsApp",
+            "Analytics, ready for ads",
+            "Hosting and Care plans are separate."
+          ],
+          "en": [
+            "Everything in Business Card",
+            "Up to 5 sections",
+            "Contact form",
+            "Leads to your inbox and WhatsApp",
+            "Analytics, ready for ads",
+            "Hosting and Care plans are separate."
+          ]
+        },
+        "description": {
+          "ar": "<p><strong>Landing Page Lite</strong> - One page, up to six sections. Delivery: 7 working days.</p><ul><li>One page, up to six sections</li><li>Contact form and WhatsApp button</li><li>Analytics and Meta Pixel</li><li>Two rounds of changes</li><li>Price 9,500 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.</li><li>Hosting and Care plans are separate.</li></ul>",
+          "en": "<p><strong>Landing Page Lite</strong> - One page, up to six sections. Delivery: 7 working days.</p><ul><li>One page, up to six sections</li><li>Contact form and WhatsApp button</li><li>Analytics and Meta Pixel</li><li>Two rounds of changes</li><li>Price 9,500 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.</li><li>Hosting and Care plans are separate.</li></ul>"
+        },
+        "depositBp": 5000,
+        "prices": {
+          "EGP": {
+            "gross": 999900,
+            "formatted": "EGP 9,999.00"
+          },
+          "USD": {
+            "gross": 19999,
+            "formatted": "USD 199.99"
+          }
+        },
+        "renewalPrices": {},
+        "options": [],
+        "storeUrl": "https://3enwank.com/account/plans/landing-page"
       },
       {
         "slug": "business-website",
@@ -742,22 +744,24 @@
           "en": "Business Website"
         },
         "summary": {
-          "ar": "Up to five pages on WordPress. Delivery: 3 weeks.",
-          "en": "Up to five pages on WordPress. Delivery: 3 weeks."
+          "ar": "A complete business website. Delivery: up to 2 weeks.",
+          "en": "A complete business website. Delivery: up to 2 weeks."
         },
         "features": {
           "ar": [
-            "Up to five pages on WordPress, paid theme licence included",
-            "Forms, Google Maps, WhatsApp",
-            "Google Business Profile connected",
-            "Price 22,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.",
+            "Everything in Landing Page",
+            "Up to 8 pages",
+            "Arabic and English",
+            "Services, team and photos",
+            "Google Business Profile",
             "Hosting and Care plans are separate."
           ],
           "en": [
-            "Up to five pages on WordPress, paid theme licence included",
-            "Forms, Google Maps, WhatsApp",
-            "Google Business Profile connected",
-            "Price 22,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.",
+            "Everything in Landing Page",
+            "Up to 8 pages",
+            "Arabic and English",
+            "Services, team and photos",
+            "Google Business Profile",
             "Hosting and Care plans are separate."
           ]
         },
@@ -768,12 +772,12 @@
         "depositBp": 5000,
         "prices": {
           "EGP": {
-            "gross": 2199900,
-            "formatted": "EGP 21,999.00"
+            "gross": 1999900,
+            "formatted": "EGP 19,999.00"
           },
           "USD": {
-            "gross": 43999,
-            "formatted": "USD 439.99"
+            "gross": 39999,
+            "formatted": "USD 399.99"
           }
         },
         "renewalPrices": {},
@@ -789,22 +793,24 @@
           "en": "Business Plus"
         },
         "summary": {
-          "ar": "Up to ten pages and a blog, in two languages. Delivery: 4 to 5 weeks.",
-          "en": "Up to ten pages and a blog, in two languages. Delivery: 4 to 5 weeks."
+          "ar": "A website that does more than describe you. Delivery: up to 3 weeks.",
+          "en": "A website that does more than describe you. Delivery: up to 3 weeks."
         },
         "features": {
           "ar": [
-            "Up to ten pages and a blog, in two languages",
-            "Custom sections, optimised images",
-            "Structured data for search engines, newsletter signup",
-            "Price 38,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.",
+            "Everything in Business Website",
+            "Up to 16 pages",
+            "Booking or enquiry system",
+            "Blog",
+            "Newsletter",
             "Hosting and Care plans are separate."
           ],
           "en": [
-            "Up to ten pages and a blog, in two languages",
-            "Custom sections, optimised images",
-            "Structured data for search engines, newsletter signup",
-            "Price 38,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.",
+            "Everything in Business Website",
+            "Up to 16 pages",
+            "Booking or enquiry system",
+            "Blog",
+            "Newsletter",
             "Hosting and Care plans are separate."
           ]
         },
@@ -815,12 +821,12 @@
         "depositBp": 5000,
         "prices": {
           "EGP": {
-            "gross": 3799900,
-            "formatted": "EGP 37,999.00"
+            "gross": 2999900,
+            "formatted": "EGP 29,999.00"
           },
           "USD": {
-            "gross": 75999,
-            "formatted": "USD 759.99"
+            "gross": 59999,
+            "formatted": "USD 599.99"
           }
         },
         "renewalPrices": {},
@@ -836,22 +842,24 @@
           "en": "Online Store"
         },
         "summary": {
-          "ar": "WooCommerce with up to fifty products. Delivery: 6 weeks.",
-          "en": "WooCommerce with up to fifty products. Delivery: 6 weeks."
+          "ar": "Everything you need to sell online. Delivery: up to 4 weeks.",
+          "en": "Everything you need to sell online. Delivery: up to 4 weeks."
         },
         "features": {
           "ar": [
-            "WooCommerce with up to fifty products",
-            "Local or international payment gateways, cash on delivery",
-            "Shipping zones and order emails",
-            "Price 55,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.",
+            "Everything in Business Website",
+            "Up to 50 products",
+            "Online payment and cash on delivery",
+            "Shipping and orders",
+            "Stock management",
             "Hosting and Care plans are separate."
           ],
           "en": [
-            "WooCommerce with up to fifty products",
-            "Local or international payment gateways, cash on delivery",
-            "Shipping zones and order emails",
-            "Price 55,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.",
+            "Everything in Business Website",
+            "Up to 50 products",
+            "Online payment and cash on delivery",
+            "Shipping and orders",
+            "Stock management",
             "Hosting and Care plans are separate."
           ]
         },
@@ -862,17 +870,66 @@
         "depositBp": 5000,
         "prices": {
           "EGP": {
-            "gross": 5499900,
-            "formatted": "EGP 54,999.00"
+            "gross": 4999900,
+            "formatted": "EGP 49,999.00"
           },
           "USD": {
-            "gross": 109999,
-            "formatted": "USD 1,099.99"
+            "gross": 99999,
+            "formatted": "USD 999.99"
           }
         },
         "renewalPrices": {},
         "options": [],
         "storeUrl": "https://3enwank.com/account/plans/online-store"
+      },
+      {
+        "slug": "store-plus",
+        "kind": "build",
+        "cycle": "one_time",
+        "name": {
+          "ar": "Store Plus",
+          "en": "Store Plus"
+        },
+        "summary": {
+          "ar": "A larger store with more automation. Delivery: up to 6 weeks.",
+          "en": "A larger store with more automation. Delivery: up to 6 weeks."
+        },
+        "features": {
+          "ar": [
+            "Everything in Online Store",
+            "Up to 500 products",
+            "Discounts and abandoned-cart reminders",
+            "Search and filters",
+            "Prices in EGP and USD",
+            "Hosting and Care plans are separate."
+          ],
+          "en": [
+            "Everything in Online Store",
+            "Up to 500 products",
+            "Discounts and abandoned-cart reminders",
+            "Search and filters",
+            "Prices in EGP and USD",
+            "Hosting and Care plans are separate."
+          ]
+        },
+        "description": {
+          "ar": "<p><strong>Online Store</strong> - WooCommerce with up to fifty products. Delivery: 6 weeks.</p><ul><li>WooCommerce with up to fifty products</li><li>Local or international payment gateways, cash on delivery</li><li>Shipping zones and order emails</li><li>Price 55,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.</li><li>Hosting and Care plans are separate.</li></ul>",
+          "en": "<p><strong>Online Store</strong> - WooCommerce with up to fifty products. Delivery: 6 weeks.</p><ul><li>WooCommerce with up to fifty products</li><li>Local or international payment gateways, cash on delivery</li><li>Shipping zones and order emails</li><li>Price 55,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.</li><li>Hosting and Care plans are separate.</li></ul>"
+        },
+        "depositBp": 5000,
+        "prices": {
+          "EGP": {
+            "gross": 7499900,
+            "formatted": "EGP 74,999.00"
+          },
+          "USD": {
+            "gross": 149999,
+            "formatted": "USD 1,499.99"
+          }
+        },
+        "renewalPrices": {},
+        "options": [],
+        "storeUrl": "https://3enwank.com/account/plans/store-plus"
       }
     ],
     "care": [
@@ -885,27 +942,25 @@
           "en": "Care Basic"
         },
         "summary": {
-          "ar": "Replies within 72 hours on Care Requests.",
-          "en": "Replies within 72 hours on Care Requests."
+          "ar": "For a small site that mostly sits still.",
+          "en": "For a small site that mostly sits still."
         },
         "features": {
           "ar": [
             "Updates: Monthly",
+            "Malware: Monthly + cleanup",
             "Content changes: 2 a year (a content change is one clear edit that takes half an hour or less)",
-            "Reply time: 72 hours",
-            "Malware: Monthly scan",
-            "Emergency restores: 1",
-            "Reports: Yearly",
-            "4,200 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online."
+            "Reply time: Within 2 working days",
+            "Emergency restores: 1 a year",
+            "Reports: On request"
           ],
           "en": [
             "Updates: Monthly",
+            "Malware: Monthly + cleanup",
             "Content changes: 2 a year (a content change is one clear edit that takes half an hour or less)",
-            "Reply time: 72 hours",
-            "Malware: Monthly scan",
-            "Emergency restores: 1",
-            "Reports: Yearly",
-            "4,200 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online."
+            "Reply time: Within 2 working days",
+            "Emergency restores: 1 a year",
+            "Reports: On request"
           ]
         },
         "description": {
@@ -915,12 +970,12 @@
         "depositBp": null,
         "prices": {
           "EGP": {
-            "gross": 419900,
-            "formatted": "EGP 4,199.00"
+            "gross": 399900,
+            "formatted": "EGP 3,999.00"
           },
           "USD": {
-            "gross": 8499,
-            "formatted": "USD 84.99"
+            "gross": 7999,
+            "formatted": "USD 79.99"
           }
         },
         "renewalPrices": {},
@@ -928,35 +983,33 @@
         "storeUrl": "https://3enwank.com/account/plans/care-basic"
       },
       {
-        "slug": "care-standard",
+        "slug": "care-plus",
         "kind": "care",
         "cycle": "annual",
         "name": {
-          "ar": "Care Standard",
-          "en": "Care Standard"
+          "ar": "Care Plus",
+          "en": "Care Plus"
         },
         "summary": {
-          "ar": "Replies within 48 hours on Care Requests.",
-          "en": "Replies within 48 hours on Care Requests."
+          "ar": "For a business site that changes.",
+          "en": "For a business site that changes."
         },
         "features": {
           "ar": [
-            "Updates: Every 2 weeks, tested",
-            "Content changes: 12 a year (a content change is one clear edit that takes half an hour or less)",
-            "Reply time: 48 hours",
-            "Malware: Scan and cleanup",
-            "Emergency restores: 3",
-            "Reports: Quarterly",
-            "10,800 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online."
+            "Updates: Every 2 weeks",
+            "Malware: Every 2 weeks + cleanup",
+            "Content changes: 6 a year (a content change is one clear edit that takes half an hour or less)",
+            "Reply time: Next working day",
+            "Emergency restores: 3 a year",
+            "Reports: Twice a year"
           ],
           "en": [
-            "Updates: Every 2 weeks, tested",
-            "Content changes: 12 a year (a content change is one clear edit that takes half an hour or less)",
-            "Reply time: 48 hours",
-            "Malware: Scan and cleanup",
-            "Emergency restores: 3",
-            "Reports: Quarterly",
-            "10,800 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online."
+            "Updates: Every 2 weeks",
+            "Malware: Every 2 weeks + cleanup",
+            "Content changes: 6 a year (a content change is one clear edit that takes half an hour or less)",
+            "Reply time: Next working day",
+            "Emergency restores: 3 a year",
+            "Reports: Twice a year"
           ]
         },
         "description": {
@@ -966,17 +1019,17 @@
         "depositBp": null,
         "prices": {
           "EGP": {
-            "gross": 1079900,
-            "formatted": "EGP 10,799.00"
+            "gross": 999900,
+            "formatted": "EGP 9,999.00"
           },
           "USD": {
-            "gross": 21999,
-            "formatted": "USD 219.99"
+            "gross": 19999,
+            "formatted": "USD 199.99"
           }
         },
         "renewalPrices": {},
         "options": [],
-        "storeUrl": "https://3enwank.com/account/plans/care-standard"
+        "storeUrl": "https://3enwank.com/account/plans/care-plus"
       },
       {
         "slug": "care-pro",
@@ -987,27 +1040,25 @@
           "en": "Care Pro"
         },
         "summary": {
-          "ar": "Replies within 24 hours on Care Requests.",
-          "en": "Replies within 24 hours on Care Requests."
+          "ar": "For a store, or a site that cannot stop.",
+          "en": "For a store, or a site that cannot stop."
         },
         "features": {
           "ar": [
-            "Updates: Weekly, tested",
-            "Content changes: 36 a year (a content change is one clear edit that takes half an hour or less)",
-            "Reply time: 24 hours",
-            "Malware: Scan, cleanup, hardening",
-            "Emergency restores: Unlimited",
-            "Reports: Monthly",
-            "21,600 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online."
+            "Updates: Weekly",
+            "Malware: Weekly + cleanup",
+            "Content changes: 12 a year (a content change is one clear edit that takes half an hour or less)",
+            "Reply time: Same working day",
+            "Emergency restores: As many as needed",
+            "Reports: Quarterly"
           ],
           "en": [
-            "Updates: Weekly, tested",
-            "Content changes: 36 a year (a content change is one clear edit that takes half an hour or less)",
-            "Reply time: 24 hours",
-            "Malware: Scan, cleanup, hardening",
-            "Emergency restores: Unlimited",
-            "Reports: Monthly",
-            "21,600 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online."
+            "Updates: Weekly",
+            "Malware: Weekly + cleanup",
+            "Content changes: 12 a year (a content change is one clear edit that takes half an hour or less)",
+            "Reply time: Same working day",
+            "Emergency restores: As many as needed",
+            "Reports: Quarterly"
           ]
         },
         "description": {
@@ -1017,68 +1068,17 @@
         "depositBp": null,
         "prices": {
           "EGP": {
-            "gross": 2159900,
-            "formatted": "EGP 21,599.00"
+            "gross": 1999900,
+            "formatted": "EGP 19,999.00"
           },
           "USD": {
-            "gross": 43499,
-            "formatted": "USD 434.99"
+            "gross": 39999,
+            "formatted": "USD 399.99"
           }
         },
         "renewalPrices": {},
         "options": [],
         "storeUrl": "https://3enwank.com/account/plans/care-pro"
-      },
-      {
-        "slug": "store-care",
-        "kind": "care",
-        "cycle": "annual",
-        "name": {
-          "ar": "Store Care",
-          "en": "Store Care"
-        },
-        "summary": {
-          "ar": "Replies within 4 hours on Care Requests.",
-          "en": "Replies within 4 hours on Care Requests."
-        },
-        "features": {
-          "ar": [
-            "Updates: Weekly, plus payments",
-            "Content changes: 36 a year (a content change is one clear edit that takes half an hour or less)",
-            "Reply time: 4 hours",
-            "Malware: Weekly scan and cleanup",
-            "Emergency restores: Unlimited",
-            "Reports: Monthly",
-            "32,000 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online."
-          ],
-          "en": [
-            "Updates: Weekly, plus payments",
-            "Content changes: 36 a year (a content change is one clear edit that takes half an hour or less)",
-            "Reply time: 4 hours",
-            "Malware: Weekly scan and cleanup",
-            "Emergency restores: Unlimited",
-            "Reports: Monthly",
-            "32,000 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online."
-          ]
-        },
-        "description": {
-          "ar": "<p><strong>Store Care</strong> - Replies within <strong>4 hours</strong> on Care Requests.</p><ul><li>Updates: Weekly, plus payments</li><li>Content changes: 36 a year (a content change is one clear edit that takes half an hour or less)</li><li>Reply time: 4 hours</li><li>Malware: Weekly scan and cleanup</li><li>Emergency restores: Unlimited</li><li>Reports: Monthly</li><li>32,000 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online.</li></ul>",
-          "en": "<p><strong>Store Care</strong> - Replies within <strong>4 hours</strong> on Care Requests.</p><ul><li>Updates: Weekly, plus payments</li><li>Content changes: 36 a year (a content change is one clear edit that takes half an hour or less)</li><li>Reply time: 4 hours</li><li>Malware: Weekly scan and cleanup</li><li>Emergency restores: Unlimited</li><li>Reports: Monthly</li><li>32,000 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online.</li></ul>"
-        },
-        "depositBp": null,
-        "prices": {
-          "EGP": {
-            "gross": 3199900,
-            "formatted": "EGP 31,999.00"
-          },
-          "USD": {
-            "gross": 63999,
-            "formatted": "USD 639.99"
-          }
-        },
-        "renewalPrices": {},
-        "options": [],
-        "storeUrl": "https://3enwank.com/account/plans/store-care"
       }
     ]
   },

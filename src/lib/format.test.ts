@@ -34,13 +34,15 @@ describe("features", () => {
   it("translates untranslated summaries and free-text lines, and reads Arabic delivery times", () => {
     const ar = messagesFor("ar");
     const build = fallbackCatalogue().products.build.find((p) => p.slug === "business-website")!;
-    expect(localizedSummary(build, "ar", ar)).toBe("حتى خمس صفحات على WordPress. التسليم: 3 أسابيع.");
-    expect(localizedSummary(build, "en", messagesFor("en"))).toBe("Up to five pages on WordPress. Delivery: 3 weeks.");
+    // The dictionary is keyed on the whole summary, delivery sentence and all, which is what
+    // localizedSummary looks up. A key missing that sentence matches nothing and prints English.
+    expect(localizedSummary(build, "ar", ar)).toBe("موقع كامل لنشاطك. التسليم: حتى أسبوعين.");
+    expect(localizedSummary(build, "en", messagesFor("en"))).toBe("A complete business website. Delivery: up to 2 weeks.");
     expect(localizedSummary({ ...build, summary: { en: "X", ar: "س" } }, "ar", ar)).toBe("س");
     expect(localizedSummary({ ...build, summary: { en: "Unknown", ar: "Unknown" } }, "ar", ar)).toBe("Unknown");
-    expect(localizedFeatures(build, "ar", ar)[0]).toEqual({ text: "حتى خمس صفحات على WordPress، مع رخصة قالب مدفوعة" });
-    expect(deliveryFrom("حتى خمس صفحات على WordPress. التسليم: 3 أسابيع.")).toBe("3 أسابيع");
-    expect(summaryWithoutDelivery("حتى خمس صفحات على WordPress. التسليم: 3 أسابيع.")).toBe("حتى خمس صفحات على WordPress.");
+    expect(localizedFeatures(build, "ar", ar)[0]).toEqual({ text: "كل ما في Landing Page" });
+    expect(deliveryFrom("موقع كامل لنشاطك. التسليم: حتى أسبوعين.")).toBe("حتى أسبوعين");
+    expect(summaryWithoutDelivery("موقع كامل لنشاطك. التسليم: حتى أسبوعين.")).toBe("موقع كامل لنشاطك.");
   });
 
   it("picks card lines and notes", () => {
@@ -68,7 +70,9 @@ describe("features", () => {
     expect(rows.map((r) => r.label)).toEqual(["Storage", "Bandwidth", "Email accounts", "Databases", "Domains", "FTP accounts"]);
     expect(rows[0]!.values).toEqual(["1 GB NVMe", "2 GB NVMe", "5 GB NVMe", "10 GB NVMe", "50 GB NVMe", "150 GB NVMe"]);
     const arRows = compareRows(fallbackCatalogue().products.care, "ar", messagesFor("ar"));
-    expect(arRows[0]).toEqual({ label: "التحديثات", values: ["شهريًا", "كل أسبوعين، بعد اختبارها", "أسبوعيًا، بعد اختبارها", "أسبوعيًا، مع إضافات الدفع"] });
+    // Three care plans, and their update rows say how often rather than how it is done: the page
+    // under the cards explains that they are tried on a copy first.
+    expect(arRows[0]).toEqual({ label: "التحديثات", values: ["شهريًا", "كل أسبوعين", "أسبوعيًا"] });
   });
 
   it("extracts the delivery time from a build summary", () => {

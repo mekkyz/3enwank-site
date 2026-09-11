@@ -65,12 +65,12 @@ export type Messages = {
     products: { hosting: ProductTeaser; websites: ProductTeaser; care: ProductTeaser; domains: ProductTeaser };
     whyTitle: string;
     why: Fact[];
-    pricingTitle: string;
-    pricingLede: string;
+    /** The one section that carries every plan we sell, on three tabs. */
+    plansTitle: string;
+    plansLede: string;
+    /** Names the tab strip for a screen reader; not drawn on the page. */
+    plansTabsLabel: string;
     compareLink: string;
-    /** Websites and care plans at a glance, between the hosting plans and the domain search. */
-    glanceTitle: string;
-    glanceLede: string;
     domainsTitle: string;
     domainsLede: string;
     moveTitle: string;

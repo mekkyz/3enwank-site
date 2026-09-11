@@ -62,6 +62,21 @@ export function localizedFeatures(product: Product, locale: Locale, messages: Me
   });
 }
 
+/**
+ * One feature's value, found by the English label the catalogue writes it under ("Storage") and
+ * returned in the page's language. The label is matched against the English lines and the localized
+ * line at the same index is read, so a translated label still finds its row.
+ */
+export function featureValue(product: Product, locale: Locale, messages: Messages, englishLabel: string): string | null {
+  const index = product.features.en.findIndex((line) => {
+    const parsed = parseFeature(line);
+    return "label" in parsed && parsed.label === englishLabel;
+  });
+  if (index < 0) return null;
+  const line = localizedFeatures(product, locale, messages)[index];
+  return line && "label" in line ? line.value : null;
+}
+
 /** One catalogue string (an option name, a value label) for a locale, with the same untranslated-copy fallback. */
 export function localizedValue(value: { en: string; ar: string } | null | undefined, locale: Locale, messages: Messages): string {
   if (!value) return "";

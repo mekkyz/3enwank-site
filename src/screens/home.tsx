@@ -1,12 +1,13 @@
 import { ArrowLink, ButtonLink, Card, Container, Facts, Section, SectionHeader } from "@/components/blocks";
+import { Val } from "@/components/bidi";
 import { Price } from "@/components/currency";
 import { DomainSearch } from "@/components/domain-search";
 import { ContactSection } from "@/components/contact";
 import { HeroIllustration } from "@/components/illustration";
-import { PlanCard } from "@/components/plans";
 import { ProductCard } from "@/components/products";
 import { Shell } from "@/components/shell";
-import { localizedSummary, summaryWithoutDelivery } from "@/lib/format";
+import { Tabs } from "@/components/tabs";
+import { featureValue, localizedSummary, summaryWithoutDelivery } from "@/lib/format";
 import { pageMetadata } from "@/lib/metadata";
 import { anchorFor, pathFor, type Locale } from "@/lib/i18n";
 import { WHATSAPP_NUMBER } from "@/lib/site";
@@ -15,9 +16,9 @@ import type { Catalogue, Product } from "@/lib/catalogue";
 import { HIGHLIGHT, assistantOn, domainSearchLabels, loc, screenContext, storeApi, vatLine } from "./shared";
 
 /**
- * Home: hero, the four products, what every account includes, three hosting plans, websites and
- * care at a glance, the domain search, the migration offer, about and contact. Everything a visitor
- * needs to decide is on this page; the product pages carry the full tables.
+ * Home: hero, the four products, what every account includes, every plan we sell on three tabs,
+ * the domain search, the migration offer, about and contact. Everything a visitor needs to decide
+ * is on this page; the product pages carry the full tables.
  */
 export const home = {
   metadata(locale: Locale) {
@@ -26,8 +27,17 @@ export const home = {
   },
   async render(locale: Locale) {
     const { t, catalogue, company, trust } = await screenContext(locale);
-    const hosting = catalogue.products.hosting;
-    const featured = ["hosting-xs", HIGHLIGHT.hosting, "hosting-xl"].map((slug) => hosting.find((p) => p.slug === slug)).filter((p): p is NonNullable<typeof p> => Boolean(p));
+    /*
+     * The three families, in the order a visitor meets them in the menu. A family the store has
+     * nothing in simply has no tab; with none of them there is no section at all.
+     */
+    const tabs = (
+      [
+        { id: "hosting", label: t.nav.hosting, items: catalogue.products.hosting, cycle: t.common.perYear, detail: "storage" as const, link: [pathFor("hosting", locale), t.home.compareLink] as const, highlight: HIGHLIGHT.hosting },
+        { id: "websites", label: t.nav.websites, items: catalogue.products.build, cycle: t.common.oneTime, detail: "summary" as const, link: [pathFor("websites", locale), t.home.products.websites.link] as const, highlight: undefined },
+        { id: "care", label: t.nav.care, items: catalogue.products.care, cycle: t.common.perYear, detail: "summary" as const, link: [pathFor("care", locale), t.home.products.care.link] as const, highlight: undefined },
+      ] as const
+    ).filter((tab) => tab.items.length > 0);
     const fromPrice = (kind: "hosting" | "build" | "care") => {
       const list = catalogue.products[kind];
       const cheapest = list.reduce<(typeof list)[number] | null>((min, p) => (!min || (p.prices.EGP?.gross ?? Infinity) < (min.prices.EGP?.gross ?? Infinity) ? p : min), null);
@@ -101,31 +111,28 @@ export const home = {
           </ul>
         </Section>
 
-        {featured.length ? (
+        {/*
+         * One section for everything that has a price. Hosting used to stand on its own above a
+         * second section that carried websites and care as two lists, which put the same three
+         * questions — what is it, what does it include, what does it cost — in two different
+         * shapes on one page. Three tabs over one box answer them the same way.
+         */}
+        {tabs.length ? (
           <Section tone="alt">
-            <SectionHeader kicker={t.nav.hosting} title={t.home.pricingTitle} lede={t.home.pricingLede} right={<ArrowLink href={pathFor("hosting", locale)}>{t.home.compareLink}</ArrowLink>} />
-            <p className="mb-6 text-sm text-muted">{vatLine(t, catalogue)}</p>
-            <ul className="grid gap-5 md:grid-cols-3">
-              {featured.map((p) => (
-                <li key={p.slug}>
-                  <PlanCard product={p} locale={locale} highlight={p.slug === HIGHLIGHT.hosting} cycleLabel={t.common.perYear} cta={t.common.order} compact />
-                </li>
-              ))}
-            </ul>
+            <SectionHeader title={t.home.plansTitle} lede={t.home.plansLede} />
+            <Tabs
+              label={t.home.plansTabsLabel}
+              items={tabs.map((tab) => ({
+                id: tab.id,
+                label: tab.label,
+                panel: <PlanList items={tab.items} cycle={tab.cycle} detail={tab.detail} link={tab.link} highlight={tab.highlight} locale={locale} t={t} />,
+              }))}
+            />
+            <p className="mt-4 text-sm text-muted">{vatLine(t, catalogue)}</p>
           </Section>
         ) : null}
 
-        {catalogue.products.build.length || catalogue.products.care.length ? (
-          <Section>
-            <SectionHeader title={t.home.glanceTitle} lede={t.home.glanceLede} />
-            <div className="grid gap-5 md:grid-cols-2">
-              {catalogue.products.build.length ? <Glance title={t.home.products.websites.title} items={catalogue.products.build} cycle={t.common.oneTime} link={[pathFor("websites", locale), t.home.products.websites.link]} locale={locale} t={t} /> : null}
-              {catalogue.products.care.length ? <Glance title={t.home.products.care.title} items={catalogue.products.care} cycle={t.common.perYear} link={[pathFor("care", locale), t.home.products.care.link]} locale={locale} t={t} /> : null}
-            </div>
-          </Section>
-        ) : null}
-
-        <Section id="domains" tone="alt">
+        <Section id="domains" tone="alt" className="border-t border-line">
           <SectionHeader kicker={t.nav.domains} title={t.home.domainsTitle} lede={t.home.domainsLede} right={<ArrowLink href={pathFor("domains", locale)}>{t.home.products.domains.link}</ArrowLink>} />
           <div className="rounded-2xl border border-line bg-panel p-5 sm:p-8">
             <DomainSearch locale={locale} searchPath={pathFor("domains", locale)} cartUrl={api.cartDomain} apiUrl={api.domainSearch} ideasUrl={api.domainIdeas} contactHref={anchorFor("contact", locale)} labels={domainSearchLabels(t)} ideas={assistantOn(catalogue)} turnstileSiteKey={catalogue.assistant.turnstileSiteKey} />
@@ -169,19 +176,48 @@ export const home = {
   },
 };
 
-/** One product family in brief: name, one line and the price, then the link to the full page. */
-function Glance({ title, items, cycle, link, locale, t }: { title: string; items: Product[]; cycle: string; link: [string, string]; locale: Locale; t: Messages }) {
+/**
+ * Every plan of one family, each on a row: the name, one short detail, and the price. Hosting is
+ * compared on how much room it gives, so its detail is the storage; a website package and a care
+ * plan are chosen by what they are for, so theirs is the summary the store writes.
+ */
+function PlanList({
+  items,
+  cycle,
+  detail,
+  link,
+  highlight,
+  locale,
+  t,
+}: {
+  items: readonly Product[];
+  cycle: string;
+  detail: "storage" | "summary";
+  link: readonly [string, string];
+  highlight?: string;
+  locale: Locale;
+  t: Messages;
+}) {
   return (
-    <Card className="flex h-full flex-col">
-      <h3 className="text-xl font-extrabold text-ink">{title}</h3>
-      <ul className="mt-4 flex-1">
+    <Card className="flex flex-col">
+      {/* Two columns once there are more rows than fit comfortably on one; every row keeps its rule, so the columns read as one table. */}
+      <ul className={`grid gap-x-10 border-b border-line ${items.length > 3 ? "sm:grid-cols-2" : ""}`}>
         {items.map((p) => {
-          const summary = summaryWithoutDelivery(localizedSummary(p, locale, t));
+          const text = detail === "storage" ? featureValue(p, locale, t, "Storage") : summaryWithoutDelivery(localizedSummary(p, locale, t));
           return (
-            <li key={p.slug} className="flex items-start justify-between gap-4 border-t border-line py-3 first:border-t-0">
-              <div className="min-w-0">
-                <p className="font-bold text-ink">{loc(p.name, locale)}</p>
-                {summary ? <p className="mt-0.5 text-sm text-muted">{summary}</p> : null}
+            <li key={p.slug} className="flex items-start justify-between gap-4 border-t border-line py-3.5">
+              {/* Name and detail sit on one line where there is room and wrap onto two where there is not. */}
+              <div className="flex min-w-0 flex-wrap items-baseline gap-x-2.5 gap-y-0.5">
+                <p className="font-bold text-ink">
+                  <Val>{loc(p.name, locale)}</Val>
+                </p>
+                {p.slug === highlight ? <span className="rounded-full bg-brand-soft px-2 py-0.5 text-[11px] font-extrabold uppercase tracking-wider text-brand-strong">{t.common.mostChosen}</span> : null}
+                {/* "1 GB NVMe" beside Arabic text reorders into "GB NVMe 1" without isolation; a translated summary is left to the page direction. */}
+                {text ? (
+                  <p className="text-sm text-muted">
+                    <Val>{text}</Val>
+                  </p>
+                ) : null}
               </div>
               <p className="shrink-0 text-end text-sm text-muted">
                 <Price prices={p.prices} locale={locale} fallback={t.common.notAvailable} className="font-extrabold text-ink" />

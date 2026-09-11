@@ -132,7 +132,7 @@ export const home = {
           </Section>
         ) : null}
 
-        <Section id="domains" tone="alt" className="border-t border-line">
+        <Section id="domains">
           <SectionHeader kicker={t.nav.domains} title={t.home.domainsTitle} lede={t.home.domainsLede} right={<ArrowLink href={pathFor("domains", locale)}>{t.home.products.domains.link}</ArrowLink>} />
           <div className="rounded-2xl border border-line bg-panel p-5 sm:p-8">
             <DomainSearch locale={locale} searchPath={pathFor("domains", locale)} cartUrl={api.cartDomain} apiUrl={api.domainSearch} ideasUrl={api.domainIdeas} contactHref={anchorFor("contact", locale)} labels={domainSearchLabels(t)} ideas={assistantOn(catalogue)} turnstileSiteKey={catalogue.assistant.turnstileSiteKey} />
@@ -144,7 +144,7 @@ export const home = {
          * the same background as the headed "Domains" section directly above, it still read as a
          * fourth thing about domains. Its own ground is what separates it.
          */}
-        <Section>
+        <Section tone="alt">
           <div>
             <div className="band flex flex-wrap items-center justify-between gap-6 rounded-2xl px-7 py-9 sm:px-10">
               <div>

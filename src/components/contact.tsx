@@ -56,7 +56,7 @@ export function ContactSection({
   const eyebrow = "text-xs font-extrabold uppercase tracking-[0.14em] text-faint";
 
   return (
-    <Section id="contact" tone="alt">
+    <Section id="contact">
       <SectionHeader kicker={c.title} title={c.h2} />
 
       <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">

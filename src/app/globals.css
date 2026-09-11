@@ -122,6 +122,15 @@
 }
 
 html {
+  /*
+   * Always reserve the scrollbar's width, whether this page needs one or not.
+   *
+   * Without it the viewport is about 15px narrower on a page long enough to scroll than on one that
+   * is not, so every centred container jumps sideways by half of that as you move between them, and
+   * the layout visibly reflows mid-navigation. Reserving the gutter costs the same 15px everywhere
+   * and the page stops moving. Browsers without the property behave as they did before.
+   */
+  scrollbar-gutter: stable;
   font-family: var(--font-sans);
   scroll-behavior: smooth;
   background: var(--color-surface);

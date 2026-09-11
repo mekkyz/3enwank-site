@@ -111,7 +111,7 @@ export const en: Messages = {
   care: {
     title: "Care plans",
     h2: "The part most people skip.",
-    lede: "A website is not finished the day it launches. Without upkeep it gets hacked, or breaks quietly and nobody notices for months.",
+    lede: "Launch isn’t the finish line. Keep your website secure and running.",
     compareTitle: "Compare the plans",
     compareCaption: "Care plans compared feature by feature",
     fine: "A content change is one clear edit that takes half an hour or less with the design and content already there: a price, a photo, a new team member. New pages, new features and design work are quoted separately. If a plan is not renewed, upkeep stops; the website stays online.",

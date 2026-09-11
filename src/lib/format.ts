@@ -96,7 +96,11 @@ const DELIVERY_RE = /\s*(?:Delivery|التسليم):\s*([^.]+)\.?/i;
 
 /** Lines shown on a plan card: the spec-style ones, without the marketing sentences. */
 export function cardFeatures(lines: FeatureLine[], max = 6): FeatureLine[] {
-  return lines.filter((l) => "label" in l && l.value.length <= 40).slice(0, max);
+  // The length cap is here to keep a sentence out of a row meant for a word or two, not to hide a
+  // feature. It was 40, which silently dropped "Weekly, tested on a copy, checkout included" — the
+  // one row that explains why the top care plan costs what it does — off its own card. A value that
+  // runs long now wraps onto a second line, which is the correct thing for a card to do with it.
+  return lines.filter((l) => "label" in l && l.value.length <= 60).slice(0, max);
 }
 
 /** Free-text lines that are not prices or billing notes (those are shown from the catalogue's price fields). */

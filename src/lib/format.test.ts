@@ -54,6 +54,14 @@ describe("features", () => {
     expect(noteFeatures(lines)).toEqual(["Hosting and Care plans are separate."]);
   });
 
+  it("keeps a value long enough to wrap, and drops only one long enough to be a sentence", () => {
+    // Care Pro's updates row is 43 characters and was being dropped off its own card, which is the
+    // row that says why the plan costs what it does. A "Runs on" line really is a sentence.
+    const wraps = { label: "Updates", value: "Weekly, tested on a copy, checkout included" };
+    const sentence = { label: "Runs on", value: "AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify" };
+    expect(cardFeatures([wraps, sentence])).toEqual([wraps]);
+  });
+
   it("builds comparison rows from labels every plan carries", () => {
     const en = messagesFor("en");
     const rows = compareRows(fallbackCatalogue().products.hosting, "en", en, ["Runs on"]);

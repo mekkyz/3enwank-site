@@ -51,7 +51,7 @@ export function SectionHeader({
   light?: boolean;
 }) {
   return (
-    <header data-reveal className="mb-8 flex flex-wrap items-end justify-between gap-5 sm:mb-10">
+    <header className="mb-8 flex flex-wrap items-end justify-between gap-5 sm:mb-10">
       <div className="max-w-2xl">
         {kicker ? <Kicker tone={light ? "light" : "brand"}>{kicker}</Kicker> : null}
         <h2 className={`text-balance text-3xl font-extrabold tracking-tight sm:text-4xl ${light ? "text-white" : "text-ink"}`}>

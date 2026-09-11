@@ -22,7 +22,7 @@ export const websites = {
         <Section>
           <p className="mb-8 text-sm text-muted">{vatLine(t, catalogue)}</p>
           {packages.length ? (
-            <ol data-reveal-stagger className="grid gap-5 pt-3 sm:grid-cols-2 lg:grid-cols-3">
+            <ol className="grid gap-5 pt-3 sm:grid-cols-2 lg:grid-cols-3">
               {packages.map((p) => {
                 const summary = localizedSummary(p, locale, t);
                 const delivery = deliveryFrom(summary) ?? deliveryFrom(p.summary?.en);

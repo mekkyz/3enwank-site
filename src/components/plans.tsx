@@ -65,7 +65,7 @@ export function CompareTable({ products, locale, caption, exclude = [], perYear,
   if (products.length < 2 || rows.length === 0) return null;
   const name = (p: Product) => p.name[locale === "en" ? "en" : "ar"] || p.name.en;
   return (
-    <div data-reveal className="overflow-x-auto rounded-xl border border-line bg-panel">
+    <div className="overflow-x-auto rounded-xl border border-line bg-panel">
       <table className="w-full min-w-[44rem] text-sm">
         <caption className="sr-only">{caption}</caption>
         <thead>

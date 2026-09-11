@@ -17,7 +17,7 @@ export const about = {
         <PageIntro kicker={t.about.title} title={t.about.h2} lede={fill(t.about.lede, { legalName: company.legalName })} />
         <Section>
           <SectionHeader title={t.about.principlesTitle} />
-          <ul data-reveal-stagger className="grid gap-5 sm:grid-cols-2">
+          <ul className="grid gap-5 sm:grid-cols-2">
             {t.about.principles.map((p) => (
               <Card key={p.title} as="li">
                 <h3 className="text-xl font-extrabold text-ink">{p.title}</h3>

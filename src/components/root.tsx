@@ -21,36 +21,21 @@ const MENU_SCRIPT = `(function(){var d=document;function shut(except){d.querySel
 
 const MOTION_SCRIPT = `(function(){var d=document;if(!("IntersectionObserver" in window))return;var io=new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isIntersecting)return;var t=e.target;if(t.hasAttribute("data-reveal-stagger")){var c=t.children;for(var i=0;i<c.length;i++)c[i].style.transitionDelay=Math.min(i,9)*70+"ms"}t.classList.add("is-in");io.unobserve(t)})},{rootMargin:"0px 0px -8% 0px",threshold:0.08});d.querySelectorAll("[data-reveal],[data-reveal-stagger]").forEach(function(el){io.observe(el)});var h=d.querySelector("header[data-bar]");if(h){var s=function(){h.classList.toggle("is-scrolled",window.scrollY>8)};s();addEventListener("scroll",s,{passive:true})}})();`;
 
-
-/**
- * A recorder for the freeze nobody can reproduce on demand.
- *
- * Off unless a visitor turns it on for themselves, so it costs everyone else the bytes of this
- * string and nothing more. What it is really for is telling two very different faults apart, which
- * look identical from the driving seat:
- *
- *   - the tab stopped running   → a "stall" entry, with how many milliseconds went missing
- *   - the navigation never came → a "click" with no "load" after it, and heartbeats continuing
- *
- * The first is our JavaScript. The second is the request. Nothing else about the page can tell you
- * which, because in both cases the screen simply sits there.
- *
- *   localStorage.setItem("enwank:debug", "1")   then reload and reproduce
- *   copy(enwankDebug.dump())                    then paste it back
- *   enwankDebug.off()                           when we are done
- */
-const DEBUG_SCRIPT = `(function(){try{if(localStorage.getItem("enwank:debug")!=="1")return}catch(e){return}var K="enwank:debuglog";function log(k,d){try{var a=JSON.parse(localStorage.getItem(K)||"[]");a.push({t:Date.now(),p:location.pathname,k:k,d:d});if(a.length>500)a=a.slice(-500);localStorage.setItem(K,JSON.stringify(a))}catch(e){}}window.enwankDebug={dump:function(){return localStorage.getItem(K)||"[]"},clear:function(){localStorage.removeItem(K)},off:function(){localStorage.removeItem("enwank:debug");localStorage.removeItem(K)}};var nav=performance.getEntriesByType("navigation")[0]||{};log("load",{type:nav.type});addEventListener("error",function(e){log("error",{m:String(e.message||"").slice(0,120),f:String(e.filename||(e.target&&e.target.src)||"").slice(-70)})},true);addEventListener("unhandledrejection",function(e){log("reject",String(e.reason||"").slice(0,140))});addEventListener("pageshow",function(e){log("pageshow",{bfcache:e.persisted})});addEventListener("pagehide",function(e){log("pagehide",{bfcache:e.persisted})});document.addEventListener("visibilitychange",function(){log("vis",document.visibilityState)});function what(el){if(!el)return"-";var a=el.closest&&el.closest("a,button");return el.tagName.toLowerCase()+(a?">"+(a.getAttribute("href")||a.textContent||"").trim().slice(0,40):"")}addEventListener("pointerdown",function(e){var top=document.elementFromPoint(e.clientX,e.clientY);log("down",{on:what(e.target),top:what(top),same:e.target===top})},true);addEventListener("keydown",function(e){log("key",String(e.key).slice(0,12))},true);try{new PerformanceObserver(function(l){l.getEntries().forEach(function(en){if(en.duration>200)log("longtask",Math.round(en.duration))})}).observe({type:"longtask",buffered:true})}catch(e){}var last=Date.now();setInterval(function(){var n=Date.now(),g=n-last;last=n;if(g>1200)log("stall",g)},250);addEventListener("load",function(){var n=performance.getEntriesByType("navigation")[0]||{};log("loaded",{ttfb:Math.round(n.responseStart||0),dom:Math.round(n.domContentLoadedEventEnd||0),cached:performance.getEntriesByType("resource").filter(function(r){return r.transferSize===0&&r.decodedBodySize>0}).length})});setTimeout(function(){var sc=performance.getEntriesByType("resource").filter(function(r){return r.initiatorType==="script"});log("state",{ready:document.readyState,hydrated:!!document.documentElement.getAttribute("data-hydrated"),scripts:sc.length,tall:Math.round(document.body.getBoundingClientRect().height)})},4000)})();`
-
 /** The <html>/<body> both root layouts render; the locale decides lang, dir and the font stack (globals.css). */
 export function RootHtml({ locale, children }: { locale: Locale; children: ReactNode }) {
   return (
-    <html lang={langTag(locale)} dir={dirFor(locale)} data-theme="dark" className="h-full antialiased" suppressHydrationWarning>
+    <html
+      lang={langTag(locale)}
+      dir={dirFor(locale)}
+      data-theme="dark"
+      className="h-full antialiased"
+      suppressHydrationWarning
+    >
       <body className="flex min-h-full flex-col bg-surface text-ink">
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
         <CurrencyProvider>{children}</CurrencyProvider>
         <script dangerouslySetInnerHTML={{ __html: MOTION_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: MENU_SCRIPT }} />
-        <script dangerouslySetInnerHTML={{ __html: DEBUG_SCRIPT }} />
       </body>
     </html>
   );

@@ -1,4 +1,4 @@
-import { Empty, PageIntro, Section, SectionHeader } from "@/components/blocks";
+import { Empty, PageIntro, Section } from "@/components/blocks";
 import { PlanCard } from "@/components/plans";
 import { Shell } from "@/components/shell";
 import { pageMetadata } from "@/lib/metadata";
@@ -30,19 +30,17 @@ export const care = {
           ) : (
             <Empty>{t.care.empty}</Empty>
           )}
-        </Section>
-        {/*
-         * What the rows mean, rather than the same rows again in a table. The cards say how often;
-         * a customer deciding between them needs to know what an update is, what counts as a
-         * content change, and what happens when something breaks — none of which fits in a cell.
-         */}
-        <Section tone="alt">
-          <SectionHeader title={t.care.explainTitle} />
-          <ul className="grid gap-x-12 gap-y-7 sm:grid-cols-2">
-            {t.care.explain.map((e) => (
-              <li key={e.title} className="border-t border-line pt-4">
-                <h3 className="font-extrabold text-ink">{e.title}</h3>
-                <p className="mt-1.5 text-pretty text-[15px] leading-relaxed text-muted">{e.body}</p>
+          {/*
+           * Three footnotes under the cards, not a section of their own: they qualify the rows
+           * directly above them, and a heading would make them look like a second thing to read.
+           */}
+          <ul className="mt-8 space-y-1.5 text-sm text-muted">
+            {t.care.notes.map((n) => (
+              <li key={n.title} className="flex gap-2">
+                <span aria-hidden="true">*</span>
+                <span>
+                  <span className="font-semibold text-ink">{n.title}</span> — {n.body}
+                </span>
               </li>
             ))}
           </ul>

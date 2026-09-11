@@ -30,6 +30,9 @@ pnpm check                      # build first; starts the server itself and rend
 `pnpm dev` and `pnpm build` both fetch the catalogue. Without network, or to build exactly what is
 checked in, set `CATALOGUE_SOURCE=fallback`.
 
+Development happens on a machine of its own and releases are cut from the billing box's checkout;
+how the two are wired together is `docs/DEVELOPMENT.md` in the `3enwank-platform` repository.
+
 ## Configuration (environment)
 
 On the box the values live in `/etc/enwank-site/env` (`ops/env.example`); they are read when the

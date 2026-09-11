@@ -22,11 +22,16 @@ export const domains = {
     const api = storeApi(catalogue);
     return (
       <Shell locale={locale} page="domains" storeUrl={catalogue.store.url} legalName={company.legalName} supportEmail={company.contactEmail} trust={trust} assistantEnabled={catalogue.assistant.enabled} turnstileSiteKey={catalogue.assistant.turnstileSiteKey}>
-        <PageIntro kicker={t.domains.title} title={t.domains.h2} lede={t.domains.lede}>
-          <div className="mt-8 rounded-2xl border border-line bg-panel p-5 sm:p-8">
+        <PageIntro kicker={t.domains.title} title={t.domains.h2} lede={t.domains.lede} />
+        {/*
+         * The search has a band of its own, like every other page's content. It used to sit inside
+         * the title block, which made this the one page whose heading came with a form attached.
+         */}
+        <Section>
+          <div className="rounded-2xl border border-line bg-panel p-5 sm:p-8">
             <DomainSearch locale={locale} searchPath={pathFor("domains", locale)} cartUrl={api.cartDomain} apiUrl={api.domainSearch} ideasUrl={api.domainIdeas} contactHref={anchorFor("contact", locale)} labels={domainSearchLabels(t)} ideas={assistantOn(catalogue)} turnstileSiteKey={catalogue.assistant.turnstileSiteKey} initialQuery={q} initialResults={initialResults as never} initialAdded={params.added ? [params.added] : []} />
           </div>
-        </PageIntro>
+        </Section>
         <Section>
           {open ? (
             <>

@@ -27,6 +27,13 @@ export type DomainSearchLabels = {
   otherExtensions: string;
   moreExtensions: string;
   perYear: string;
+  tabRegister: string;
+  tabTransfer: string;
+  tabIdeas: string;
+  transferLabel: string;
+  transferPlaceholder: string;
+  transferButton: string;
+  transferHint: string;
   ideasTitle: string;
   ideasHint: string;
   ideasPlaceholder: string;
@@ -379,6 +386,7 @@ export function DomainSearch({
   }
 
   const [desc, setDesc] = useState("");
+  const [tab, setTab] = useState<"register" | "transfer" | "ideas">("register");
   const [ideasStatus, setIdeasStatus] = useState<IdeasStatus>("idle");
   const [ideasData, setIdeasData] = useState<IdeasResponse | null>(null);
 
@@ -433,9 +441,68 @@ export function DomainSearch({
 
   const rowProps = { enabled, locale, cartUrl, searchPath, contactHref, labels, onAdd: add };
   const freeIdeas = ideasData?.ideas.filter((r) => r.available !== false) ?? [];
+  const tabs = ([["register", labels.tabRegister], ["transfer", labels.tabTransfer], ...(ideas ? [["ideas", labels.tabIdeas] as const] : [])] as const).filter(Boolean);
   return (
     <div>
-      <form action={searchPath} method="get" onSubmit={submit} role="search">
+      {/*
+       * Three doors on one box, the way a registrar does it: registering a new name, moving one you
+       * already own, and describing a business you have not named yet. They were stacked before,
+       * which made the third of them a wall of text under a divider that most visitors scrolled
+       * past on their way to the only field they wanted.
+       */}
+      <div role="tablist" aria-label={labels.label} className="mb-5 inline-flex rounded-full border border-line bg-surface-alt p-1 text-sm font-bold">
+        {tabs.map(([key, text]) => (
+          <button
+            key={key}
+            type="button"
+            role="tab"
+            aria-selected={tab === key}
+            onClick={() => setTab(key)}
+            className={`min-h-9 rounded-full px-4 transition ${tab === key ? "bg-panel text-ink shadow-sm" : "text-muted hover:text-ink"}`}
+          >
+            {text}
+          </button>
+        ))}
+      </div>
+
+      {tab === "transfer" ? (
+        /*
+         * A plain post, not intercepted: the store checks that the name really is registered
+         * somewhere else before it goes in the cart, because a name that is free to register is
+         * exactly the one that cannot be transferred. The authorisation code is asked for at
+         * checkout, never here — it moves the domain, and this page is not where credentials belong.
+         */
+        <form action={cartUrl} method="post">
+          <label htmlFor={`${id}-transfer`} className="mb-2 block text-sm font-semibold text-ink">
+            {labels.transferLabel}
+          </label>
+          <input type="hidden" name="kind" value="transfer" />
+          <input type="hidden" name="years" value="1" />
+          <input type="hidden" name="return" value={searchPath} />
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <input
+              id={`${id}-transfer`}
+              name="name"
+              type="text"
+              inputMode="url"
+              autoComplete="off"
+              autoCapitalize="none"
+              spellCheck={false}
+              maxLength={253}
+              required
+              dir="ltr"
+              placeholder={labels.transferPlaceholder}
+              className="block min-h-12 w-full rounded-full border border-line-strong bg-surface px-4 text-lg text-ink placeholder:text-faint focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand-soft"
+            />
+            <button type="submit" className="btn-primary inline-flex min-h-12 shrink-0 items-center justify-center rounded-full px-7 text-sm font-bold">
+              {labels.transferButton}
+            </button>
+          </div>
+          <p className="mt-2 text-sm text-muted">{labels.transferHint}</p>
+        </form>
+      ) : null}
+
+      <form action={searchPath} method="get" onSubmit={submit} role="search" hidden={tab !== "register"}>
         <label htmlFor={`${id}-q`} className="mb-2 block text-sm font-semibold text-ink">
           {labels.label}
         </label>
@@ -523,10 +590,9 @@ export function DomainSearch({
         ) : null}
       </div>
 
-      {ideas ? (
-        <div className="mt-8 border-t border-line pt-6">
-          <h3 className="text-base font-extrabold text-ink">{labels.ideasTitle}</h3>
-          <p className="mt-1 text-sm text-muted">{labels.ideasHint}</p>
+      {ideas && tab === "ideas" ? (
+        <div>
+          <p className="text-sm text-muted">{labels.ideasHint}</p>
           <form onSubmit={suggest} className="mt-3 flex flex-col gap-2 sm:flex-row">
             <label htmlFor={`${id}-desc`} className="sr-only">
               {labels.ideasHint}

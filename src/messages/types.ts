@@ -106,6 +106,13 @@ export type Messages = {
     title: string;
     h2: string;
     lede: string;
+    tabRegister: string;
+    tabTransfer: string;
+    tabIdeas: string;
+    transferLabel: string;
+    transferPlaceholder: string;
+    transferButton: string;
+    transferHint: string;
     searchLabel: string;
     searchPlaceholder: string;
     searchButton: string;

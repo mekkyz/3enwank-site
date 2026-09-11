@@ -80,6 +80,13 @@ export function assistantOn(catalogue: Catalogue): boolean {
 export function domainSearchLabels(t: Messages): DomainSearchLabels {
   const d = t.domains;
   return {
+    tabRegister: d.tabRegister,
+    tabTransfer: d.tabTransfer,
+    tabIdeas: d.tabIdeas,
+    transferLabel: d.transferLabel,
+    transferPlaceholder: d.transferPlaceholder,
+    transferButton: d.transferButton,
+    transferHint: d.transferHint,
     label: d.searchLabel,
     placeholder: d.searchPlaceholder,
     button: d.searchButton,

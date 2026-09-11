@@ -8,7 +8,7 @@ import { catalogueLocale, type Locale } from "@/lib/i18n";
 import { fill, messagesFor, type Messages } from "@/messages";
 
 /** Plans the pages single out, by catalogue slug; a slug that is not in the catalogue simply highlights nothing. */
-export const HIGHLIGHT: Record<"hosting" | "build" | "care", string> = { hosting: "hosting-m", build: "business-website", care: "care-standard" };
+export const HIGHLIGHT: Record<"hosting" | "build" | "care", string> = { hosting: "hosting-m", build: "business-website", care: "care-plus" };
 
 export async function screenContext(locale: Locale): Promise<{ t: Messages; catalogue: Catalogue; company: { legalName: string; address: string; contactEmail: string; supportEmail: string }; trust: TrustInfo }> {
   const { catalogue } = await loadCatalogue();

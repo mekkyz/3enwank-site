@@ -120,7 +120,7 @@ export const en: Messages = {
   domains: {
     title: "Domains",
     h2: "Register it, or bring it with you.",
-    lede: "We connect the name to your hosting for you. Nothing to configure, working from the first day.",
+    lede: "We connect your domain. Ready from day one.",
     searchLabel: "Find a domain name",
     searchPlaceholder: "example.com",
     searchButton: "Search",

@@ -120,7 +120,7 @@ export const ar: Messages = {
   domains: {
     title: "النطاقات",
     h2: "سجّله، أو انقله إلينا.",
-    lede: "نربط الاسم باستضافتك نيابة عنك. لا إعدادات تضبطها، ويعمل من اليوم الأول.",
+    lede: "نربط نطاقك بالاستضافة. جاهز من اليوم الأول.",
     searchLabel: "ابحث عن اسم نطاق",
     searchPlaceholder: "example.com",
     searchButton: "بحث",

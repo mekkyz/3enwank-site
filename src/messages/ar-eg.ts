@@ -127,7 +127,7 @@ export const arEg: Messages = {
   domains: {
     title: "الدومينات",
     h2: "سجّله، أو هاته معاك.",
-    lede: "إحنا بنوصّل الدومين باستضافتك. مفيش حاجة تظبطها، وبيشتغل من أول يوم.",
+    lede: "بنوصّل دومينك بالاستضافة. جاهز من أول يوم.",
     searchLabel: "دوّر على دومين",
     searchPlaceholder: "example.com",
     searchButton: "دوّر",

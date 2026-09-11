@@ -1,1 +1,2499 @@
-{"version":1,"generatedAt":"2026-09-08T11:50:53.804Z","currencies":["EGP","USD"],"vat":{"rateBp":1400,"pricesIncludeVat":true},"company":{"displayName":"3enwank","legalName":{"en":"Appfux for Software","ar":"أبفكس للبرمجيات"},"address":{"en":"3239 Refaat Hassan St., 11571 Mokattam, Cairo, Egypt","ar":"3239 شارع رفعت حسن، 11571 المقطم، القاهرة، مصر"},"supportEmail":"support@3enwank.com","phone":"+20 120 610 2609","website":"https://3enwank.com"},"store":{"url":"https://3enwank.com/account","plansUrl":"https://3enwank.com","domainSearchUrl":"https://3enwank.com/account/domains/search","loginUrl":"https://3enwank.com/account/login","registerUrl":"https://3enwank.com/account/register"},"groups":[{"slug":"hosting","kind":"hosting","name":{"ar":"Web Hosting","en":"Web Hosting"},"headline":{"ar":"cPanel web hosting","en":"cPanel web hosting"},"tagline":{"ar":"ستة أحجام، تُدفع مرة في السنة.","en":"Six sizes, billed once a year."}},{"slug":"web-design","kind":"build","name":{"ar":"Web Design","en":"Web Design"},"headline":{"ar":"Website builds","en":"Website builds"},"tagline":{"ar":"مشاريع تُسلَّم جاهزة للإطلاق، بسعر ثابت.","en":"One-time projects delivered ready to launch."}},{"slug":"care","kind":"care","name":{"ar":"Website Care","en":"Website Care"},"headline":{"ar":"Website Care plans","en":"Website Care plans"},"tagline":{"ar":"صيانة سنوية مع وقت ردّ ملتزم به.","en":"Annual maintenance with a first-response SLA."}}],"products":{"hosting":[{"slug":"hosting-xs","kind":"hosting","cycle":"annual","name":{"ar":"XS","en":"XS"},"summary":{"ar":"One small website.","en":"One small website."},"features":{"ar":["Storage: 1 GB NVMe","Bandwidth: 8 GB / month","Email accounts: 20","Databases: 2","Domains: 1","FTP accounts: 2","Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe","Billed once a year. Normal price 2,499 EGP - you pay 1,999 EGP per year, VAT included"],"en":["Storage: 1 GB NVMe","Bandwidth: 8 GB / month","Email accounts: 20","Databases: 2","Domains: 1","FTP accounts: 2","Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe","Billed once a year. Normal price 2,499 EGP - you pay 1,999 EGP per year, VAT included"]},"description":{"ar":"<p><strong>XS</strong> - One small website.</p><ul><li>Storage: 1 GB NVMe</li><li>Bandwidth: 8 GB / month</li><li>Email accounts: 20</li><li>Databases: 2</li><li>Domains: 1</li><li>FTP accounts: 2</li><li>Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe</li><li>Billed once a year. Normal price <s>2,499 EGP</s> - you pay 1,999 EGP per year, VAT included</li></ul>","en":"<p><strong>XS</strong> - One small website.</p><ul><li>Storage: 1 GB NVMe</li><li>Bandwidth: 8 GB / month</li><li>Email accounts: 20</li><li>Databases: 2</li><li>Domains: 1</li><li>FTP accounts: 2</li><li>Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe</li><li>Billed once a year. Normal price <s>2,499 EGP</s> - you pay 1,999 EGP per year, VAT included</li></ul>"},"depositBp":null,"prices":{"EGP":{"gross":199900,"formatted":"EGP 1,999.00"},"USD":{"gross":4000,"formatted":"USD 40.00"}},"options":[],"storeUrl":"https://3enwank.com/account/plans/hosting-xs"},{"slug":"hosting-s","kind":"hosting","cycle":"annual","name":{"ar":"S","en":"S"},"summary":{"ar":"Small business website.","en":"Small business website."},"features":{"ar":["Storage: 2 GB NVMe","Bandwidth: 15 GB / month","Email accounts: 50","Databases: 5","Domains: 1","FTP accounts: 5","Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe","Billed once a year. Normal price 2,999 EGP - you pay 2,499 EGP per year, VAT included"],"en":["Storage: 2 GB NVMe","Bandwidth: 15 GB / month","Email accounts: 50","Databases: 5","Domains: 1","FTP accounts: 5","Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe","Billed once a year. Normal price 2,999 EGP - you pay 2,499 EGP per year, VAT included"]},"description":{"ar":"<p><strong>S</strong> - Small business website.</p><ul><li>Storage: 2 GB NVMe</li><li>Bandwidth: 15 GB / month</li><li>Email accounts: 50</li><li>Databases: 5</li><li>Domains: 1</li><li>FTP accounts: 5</li><li>Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe</li><li>Billed once a year. Normal price <s>2,999 EGP</s> - you pay 2,499 EGP per year, VAT included</li></ul>","en":"<p><strong>S</strong> - Small business website.</p><ul><li>Storage: 2 GB NVMe</li><li>Bandwidth: 15 GB / month</li><li>Email accounts: 50</li><li>Databases: 5</li><li>Domains: 1</li><li>FTP accounts: 5</li><li>Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe</li><li>Billed once a year. Normal price <s>2,999 EGP</s> - you pay 2,499 EGP per year, VAT included</li></ul>"},"depositBp":null,"prices":{"EGP":{"gross":249900,"formatted":"EGP 2,499.00"},"USD":{"gross":5000,"formatted":"USD 50.00"}},"options":[],"storeUrl":"https://3enwank.com/account/plans/hosting-s"},{"slug":"hosting-m","kind":"hosting","cycle":"annual","name":{"ar":"M","en":"M"},"summary":{"ar":"Growing website, two domains.","en":"Growing website, two domains."},"features":{"ar":["Storage: 5 GB NVMe","Bandwidth: 40 GB / month","Email accounts: 100","Databases: 10","Domains: 2","FTP accounts: 10","Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe","Billed once a year. Normal price 3,999 EGP - you pay 2,999 EGP per year, VAT included"],"en":["Storage: 5 GB NVMe","Bandwidth: 40 GB / month","Email accounts: 100","Databases: 10","Domains: 2","FTP accounts: 10","Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe","Billed once a year. Normal price 3,999 EGP - you pay 2,999 EGP per year, VAT included"]},"description":{"ar":"<p><strong>M</strong> - Growing website, two domains.</p><ul><li>Storage: 5 GB NVMe</li><li>Bandwidth: 40 GB / month</li><li>Email accounts: 100</li><li>Databases: 10</li><li>Domains: 2</li><li>FTP accounts: 10</li><li>Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe</li><li>Billed once a year. Normal price <s>3,999 EGP</s> - you pay 2,999 EGP per year, VAT included</li></ul>","en":"<p><strong>M</strong> - Growing website, two domains.</p><ul><li>Storage: 5 GB NVMe</li><li>Bandwidth: 40 GB / month</li><li>Email accounts: 100</li><li>Databases: 10</li><li>Domains: 2</li><li>FTP accounts: 10</li><li>Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe</li><li>Billed once a year. Normal price <s>3,999 EGP</s> - you pay 2,999 EGP per year, VAT included</li></ul>"},"depositBp":null,"prices":{"EGP":{"gross":299900,"formatted":"EGP 2,999.00"},"USD":{"gross":6000,"formatted":"USD 60.00"}},"options":[],"storeUrl":"https://3enwank.com/account/plans/hosting-m"},{"slug":"hosting-l","kind":"hosting","cycle":"annual","name":{"ar":"L","en":"L"},"summary":{"ar":"Busy website or small store.","en":"Busy website or small store."},"features":{"ar":["Storage: 10 GB NVMe","Bandwidth: 80 GB / month","Email accounts: 200","Databases: 15","Domains: 3","FTP accounts: 20","Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe","Billed once a year. Normal price 4,999 EGP - you pay 3,999 EGP per year, VAT included"],"en":["Storage: 10 GB NVMe","Bandwidth: 80 GB / month","Email accounts: 200","Databases: 15","Domains: 3","FTP accounts: 20","Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe","Billed once a year. Normal price 4,999 EGP - you pay 3,999 EGP per year, VAT included"]},"description":{"ar":"<p><strong>L</strong> - Busy website or small store.</p><ul><li>Storage: 10 GB NVMe</li><li>Bandwidth: 80 GB / month</li><li>Email accounts: 200</li><li>Databases: 15</li><li>Domains: 3</li><li>FTP accounts: 20</li><li>Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe</li><li>Billed once a year. Normal price <s>4,999 EGP</s> - you pay 3,999 EGP per year, VAT included</li></ul>","en":"<p><strong>L</strong> - Busy website or small store.</p><ul><li>Storage: 10 GB NVMe</li><li>Bandwidth: 80 GB / month</li><li>Email accounts: 200</li><li>Databases: 15</li><li>Domains: 3</li><li>FTP accounts: 20</li><li>Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe</li><li>Billed once a year. Normal price <s>4,999 EGP</s> - you pay 3,999 EGP per year, VAT included</li></ul>"},"depositBp":null,"prices":{"EGP":{"gross":399900,"formatted":"EGP 3,999.00"},"USD":{"gross":8000,"formatted":"USD 80.00"}},"options":[],"storeUrl":"https://3enwank.com/account/plans/hosting-l"},{"slug":"hosting-xl","kind":"hosting","cycle":"annual","name":{"ar":"XL","en":"XL"},"summary":{"ar":"High-traffic site or online store.","en":"High-traffic site or online store."},"features":{"ar":["Storage: 50 GB NVMe","Bandwidth: 400 GB / month","Email accounts: Unlimited","Databases: 20","Domains: 6","FTP accounts: 50","Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe","Billed once a year. Normal price 14,999 EGP - you pay 9,999 EGP per year, VAT included"],"en":["Storage: 50 GB NVMe","Bandwidth: 400 GB / month","Email accounts: Unlimited","Databases: 20","Domains: 6","FTP accounts: 50","Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe","Billed once a year. Normal price 14,999 EGP - you pay 9,999 EGP per year, VAT included"]},"description":{"ar":"<p><strong>XL</strong> - High-traffic site or online store.</p><ul><li>Storage: 50 GB NVMe</li><li>Bandwidth: 400 GB / month</li><li>Email accounts: Unlimited</li><li>Databases: 20</li><li>Domains: 6</li><li>FTP accounts: 50</li><li>Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe</li><li>Billed once a year. Normal price <s>14,999 EGP</s> - you pay 9,999 EGP per year, VAT included</li></ul>","en":"<p><strong>XL</strong> - High-traffic site or online store.</p><ul><li>Storage: 50 GB NVMe</li><li>Bandwidth: 400 GB / month</li><li>Email accounts: Unlimited</li><li>Databases: 20</li><li>Domains: 6</li><li>FTP accounts: 50</li><li>Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe</li><li>Billed once a year. Normal price <s>14,999 EGP</s> - you pay 9,999 EGP per year, VAT included</li></ul>"},"depositBp":null,"prices":{"EGP":{"gross":999900,"formatted":"EGP 9,999.00"},"USD":{"gross":20000,"formatted":"USD 200.00"}},"options":[],"storeUrl":"https://3enwank.com/account/plans/hosting-xl"},{"slug":"hosting-xxl","kind":"hosting","cycle":"annual","name":{"ar":"XXL","en":"XXL"},"summary":{"ar":"Multi-site: 2 domains included, up to 10.","en":"Multi-site: 2 domains included, up to 10."},"features":{"ar":["Storage: 150 GB NVMe","Bandwidth: 1.2 TB / month","Email accounts: Unlimited","Databases: Unlimited","Domains: 2 included (up to 10)","FTP accounts: Unlimited","Add up to 8 more domains at 999 EGP per domain per year (choose below)","Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe","Billed once a year. Normal price 29,999 EGP - you pay 19,999 EGP per year, VAT included"],"en":["Storage: 150 GB NVMe","Bandwidth: 1.2 TB / month","Email accounts: Unlimited","Databases: Unlimited","Domains: 2 included (up to 10)","FTP accounts: Unlimited","Add up to 8 more domains at 999 EGP per domain per year (choose below)","Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe","Billed once a year. Normal price 29,999 EGP - you pay 19,999 EGP per year, VAT included"]},"description":{"ar":"<p><strong>XXL</strong> - Multi-site: 2 domains included, up to 10.</p><ul><li>Storage: 150 GB NVMe</li><li>Bandwidth: 1.2 TB / month</li><li>Email accounts: Unlimited</li><li>Databases: Unlimited</li><li>Domains: 2 included (up to 10)</li><li>FTP accounts: Unlimited</li><li>Add up to 8 more domains at 999 EGP per domain per year (choose below)</li><li>Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe</li><li>Billed once a year. Normal price <s>29,999 EGP</s> - you pay 19,999 EGP per year, VAT included</li></ul>","en":"<p><strong>XXL</strong> - Multi-site: 2 domains included, up to 10.</p><ul><li>Storage: 150 GB NVMe</li><li>Bandwidth: 1.2 TB / month</li><li>Email accounts: Unlimited</li><li>Databases: Unlimited</li><li>Domains: 2 included (up to 10)</li><li>FTP accounts: Unlimited</li><li>Add up to 8 more domains at 999 EGP per domain per year (choose below)</li><li>Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe</li><li>Billed once a year. Normal price <s>29,999 EGP</s> - you pay 19,999 EGP per year, VAT included</li></ul>"},"depositBp":null,"prices":{"EGP":{"gross":1999900,"formatted":"EGP 19,999.00"},"USD":{"gross":40000,"formatted":"USD 400.00"}},"options":[{"key":"max_addon_domains","name":{"ar":"Number of websites (domains) on this account","en":"Number of websites (domains) on this account"},"values":[{"value":"1","label":{"ar":"2 domains (included)","en":"2 domains (included)"},"isDefault":true,"prices":{"EGP":{"gross":0,"formatted":"EGP 0.00"},"USD":{"gross":0,"formatted":"USD 0.00"}}},{"value":"2","label":{"ar":"3 domains","en":"3 domains"},"isDefault":false,"prices":{"EGP":{"gross":99900,"formatted":"EGP 999.00"},"USD":{"gross":2000,"formatted":"USD 20.00"}}},{"value":"3","label":{"ar":"4 domains","en":"4 domains"},"isDefault":false,"prices":{"EGP":{"gross":199800,"formatted":"EGP 1,998.00"},"USD":{"gross":4000,"formatted":"USD 40.00"}}},{"value":"4","label":{"ar":"5 domains","en":"5 domains"},"isDefault":false,"prices":{"EGP":{"gross":299700,"formatted":"EGP 2,997.00"},"USD":{"gross":6000,"formatted":"USD 60.00"}}},{"value":"5","label":{"ar":"6 domains","en":"6 domains"},"isDefault":false,"prices":{"EGP":{"gross":399600,"formatted":"EGP 3,996.00"},"USD":{"gross":8000,"formatted":"USD 80.00"}}},{"value":"6","label":{"ar":"7 domains","en":"7 domains"},"isDefault":false,"prices":{"EGP":{"gross":499500,"formatted":"EGP 4,995.00"},"USD":{"gross":10000,"formatted":"USD 100.00"}}},{"value":"7","label":{"ar":"8 domains","en":"8 domains"},"isDefault":false,"prices":{"EGP":{"gross":599400,"formatted":"EGP 5,994.00"},"USD":{"gross":12000,"formatted":"USD 120.00"}}},{"value":"8","label":{"ar":"9 domains","en":"9 domains"},"isDefault":false,"prices":{"EGP":{"gross":699300,"formatted":"EGP 6,993.00"},"USD":{"gross":14000,"formatted":"USD 140.00"}}},{"value":"9","label":{"ar":"10 domains","en":"10 domains"},"isDefault":false,"prices":{"EGP":{"gross":799200,"formatted":"EGP 7,992.00"},"USD":{"gross":16000,"formatted":"USD 160.00"}}}]}],"storeUrl":"https://3enwank.com/account/plans/hosting-xxl"}],"build":[{"slug":"landing-page-lite","kind":"build","cycle":"one_time","name":{"ar":"Landing Page Lite","en":"Landing Page Lite"},"summary":{"ar":"One page, up to six sections. Delivery: 7 working days.","en":"One page, up to six sections. Delivery: 7 working days."},"features":{"ar":["One page, up to six sections","Contact form and WhatsApp button","Analytics and Meta Pixel","Two rounds of changes","Price 9,500 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.","Hosting and Care plans are separate."],"en":["One page, up to six sections","Contact form and WhatsApp button","Analytics and Meta Pixel","Two rounds of changes","Price 9,500 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.","Hosting and Care plans are separate."]},"description":{"ar":"<p><strong>Landing Page Lite</strong> - One page, up to six sections. Delivery: 7 working days.</p><ul><li>One page, up to six sections</li><li>Contact form and WhatsApp button</li><li>Analytics and Meta Pixel</li><li>Two rounds of changes</li><li>Price 9,500 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.</li><li>Hosting and Care plans are separate.</li></ul>","en":"<p><strong>Landing Page Lite</strong> - One page, up to six sections. Delivery: 7 working days.</p><ul><li>One page, up to six sections</li><li>Contact form and WhatsApp button</li><li>Analytics and Meta Pixel</li><li>Two rounds of changes</li><li>Price 9,500 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.</li><li>Hosting and Care plans are separate.</li></ul>"},"depositBp":5000,"prices":{"EGP":{"gross":950000,"formatted":"EGP 9,500.00"},"USD":{"gross":19000,"formatted":"USD 190.00"}},"options":[],"storeUrl":"https://3enwank.com/account/plans/landing-page-lite"},{"slug":"landing-page-pro","kind":"build","cycle":"one_time","name":{"ar":"Landing Page Pro","en":"Landing Page Pro"},"summary":{"ar":"One or two pages designed from scratch. Delivery: 10 working days.","en":"One or two pages designed from scratch. Delivery: 10 working days."},"features":{"ar":["One or two pages designed from scratch","Leads land in your inbox, a Google Sheet and WhatsApp","Price 15,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.","Hosting and Care plans are separate."],"en":["One or two pages designed from scratch","Leads land in your inbox, a Google Sheet and WhatsApp","Price 15,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.","Hosting and Care plans are separate."]},"description":{"ar":"<p><strong>Landing Page Pro</strong> - One or two pages designed from scratch. Delivery: 10 working days.</p><ul><li>One or two pages designed from scratch</li><li>Leads land in your inbox, a Google Sheet and WhatsApp</li><li>Price 15,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.</li><li>Hosting and Care plans are separate.</li></ul>","en":"<p><strong>Landing Page Pro</strong> - One or two pages designed from scratch. Delivery: 10 working days.</p><ul><li>One or two pages designed from scratch</li><li>Leads land in your inbox, a Google Sheet and WhatsApp</li><li>Price 15,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.</li><li>Hosting and Care plans are separate.</li></ul>"},"depositBp":5000,"prices":{"EGP":{"gross":1500000,"formatted":"EGP 15,000.00"},"USD":{"gross":30000,"formatted":"USD 300.00"}},"options":[],"storeUrl":"https://3enwank.com/account/plans/landing-page-pro"},{"slug":"business-website","kind":"build","cycle":"one_time","name":{"ar":"Business Website","en":"Business Website"},"summary":{"ar":"Up to five pages on WordPress. Delivery: 3 weeks.","en":"Up to five pages on WordPress. Delivery: 3 weeks."},"features":{"ar":["Up to five pages on WordPress, paid theme licence included","Forms, Google Maps, WhatsApp","Google Business Profile connected","Price 22,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.","Hosting and Care plans are separate."],"en":["Up to five pages on WordPress, paid theme licence included","Forms, Google Maps, WhatsApp","Google Business Profile connected","Price 22,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.","Hosting and Care plans are separate."]},"description":{"ar":"<p><strong>Business Website</strong> - Up to five pages on WordPress. Delivery: 3 weeks.</p><ul><li>Up to five pages on WordPress, paid theme licence included</li><li>Forms, Google Maps, WhatsApp</li><li>Google Business Profile connected</li><li>Price 22,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.</li><li>Hosting and Care plans are separate.</li></ul>","en":"<p><strong>Business Website</strong> - Up to five pages on WordPress. Delivery: 3 weeks.</p><ul><li>Up to five pages on WordPress, paid theme licence included</li><li>Forms, Google Maps, WhatsApp</li><li>Google Business Profile connected</li><li>Price 22,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.</li><li>Hosting and Care plans are separate.</li></ul>"},"depositBp":5000,"prices":{"EGP":{"gross":2200000,"formatted":"EGP 22,000.00"},"USD":{"gross":44000,"formatted":"USD 440.00"}},"options":[],"storeUrl":"https://3enwank.com/account/plans/business-website"},{"slug":"business-plus","kind":"build","cycle":"one_time","name":{"ar":"Business Plus","en":"Business Plus"},"summary":{"ar":"Up to ten pages and a blog, in two languages. Delivery: 4 to 5 weeks.","en":"Up to ten pages and a blog, in two languages. Delivery: 4 to 5 weeks."},"features":{"ar":["Up to ten pages and a blog, in two languages","Custom sections, optimised images","Structured data for search engines, newsletter signup","Price 38,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.","Hosting and Care plans are separate."],"en":["Up to ten pages and a blog, in two languages","Custom sections, optimised images","Structured data for search engines, newsletter signup","Price 38,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.","Hosting and Care plans are separate."]},"description":{"ar":"<p><strong>Business Plus</strong> - Up to ten pages and a blog, in two languages. Delivery: 4 to 5 weeks.</p><ul><li>Up to ten pages and a blog, in two languages</li><li>Custom sections, optimised images</li><li>Structured data for search engines, newsletter signup</li><li>Price 38,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.</li><li>Hosting and Care plans are separate.</li></ul>","en":"<p><strong>Business Plus</strong> - Up to ten pages and a blog, in two languages. Delivery: 4 to 5 weeks.</p><ul><li>Up to ten pages and a blog, in two languages</li><li>Custom sections, optimised images</li><li>Structured data for search engines, newsletter signup</li><li>Price 38,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.</li><li>Hosting and Care plans are separate.</li></ul>"},"depositBp":5000,"prices":{"EGP":{"gross":3800000,"formatted":"EGP 38,000.00"},"USD":{"gross":76000,"formatted":"USD 760.00"}},"options":[],"storeUrl":"https://3enwank.com/account/plans/business-plus"},{"slug":"online-store","kind":"build","cycle":"one_time","name":{"ar":"Online Store","en":"Online Store"},"summary":{"ar":"WooCommerce with up to fifty products. Delivery: 6 weeks.","en":"WooCommerce with up to fifty products. Delivery: 6 weeks."},"features":{"ar":["WooCommerce with up to fifty products","Local or international payment gateways, cash on delivery","Shipping zones and order emails","Price 55,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.","Hosting and Care plans are separate."],"en":["WooCommerce with up to fifty products","Local or international payment gateways, cash on delivery","Shipping zones and order emails","Price 55,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.","Hosting and Care plans are separate."]},"description":{"ar":"<p><strong>Online Store</strong> - WooCommerce with up to fifty products. Delivery: 6 weeks.</p><ul><li>WooCommerce with up to fifty products</li><li>Local or international payment gateways, cash on delivery</li><li>Shipping zones and order emails</li><li>Price 55,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.</li><li>Hosting and Care plans are separate.</li></ul>","en":"<p><strong>Online Store</strong> - WooCommerce with up to fifty products. Delivery: 6 weeks.</p><ul><li>WooCommerce with up to fifty products</li><li>Local or international payment gateways, cash on delivery</li><li>Shipping zones and order emails</li><li>Price 55,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.</li><li>Hosting and Care plans are separate.</li></ul>"},"depositBp":5000,"prices":{"EGP":{"gross":5500000,"formatted":"EGP 55,000.00"},"USD":{"gross":110000,"formatted":"USD 1,100.00"}},"options":[],"storeUrl":"https://3enwank.com/account/plans/online-store"}],"care":[{"slug":"care-basic","kind":"care","cycle":"annual","name":{"ar":"Care Basic","en":"Care Basic"},"summary":{"ar":"Replies within 72 hours on Care Requests.","en":"Replies within 72 hours on Care Requests."},"features":{"ar":["Updates: Monthly","Content changes: 2 a year (a content change is one clear edit that takes half an hour or less)","Reply time: 72 hours","Malware: Monthly scan","Emergency restores: 1","Reports: Yearly","4,200 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online."],"en":["Updates: Monthly","Content changes: 2 a year (a content change is one clear edit that takes half an hour or less)","Reply time: 72 hours","Malware: Monthly scan","Emergency restores: 1","Reports: Yearly","4,200 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online."]},"description":{"ar":"<p><strong>Care Basic</strong> - Replies within <strong>72 hours</strong> on Care Requests.</p><ul><li>Updates: Monthly</li><li>Content changes: 2 a year (a content change is one clear edit that takes half an hour or less)</li><li>Reply time: 72 hours</li><li>Malware: Monthly scan</li><li>Emergency restores: 1</li><li>Reports: Yearly</li><li>4,200 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online.</li></ul>","en":"<p><strong>Care Basic</strong> - Replies within <strong>72 hours</strong> on Care Requests.</p><ul><li>Updates: Monthly</li><li>Content changes: 2 a year (a content change is one clear edit that takes half an hour or less)</li><li>Reply time: 72 hours</li><li>Malware: Monthly scan</li><li>Emergency restores: 1</li><li>Reports: Yearly</li><li>4,200 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online.</li></ul>"},"depositBp":null,"prices":{"EGP":{"gross":420000,"formatted":"EGP 4,200.00"},"USD":{"gross":8500,"formatted":"USD 85.00"}},"options":[],"storeUrl":"https://3enwank.com/account/plans/care-basic"},{"slug":"care-standard","kind":"care","cycle":"annual","name":{"ar":"Care Standard","en":"Care Standard"},"summary":{"ar":"Replies within 48 hours on Care Requests.","en":"Replies within 48 hours on Care Requests."},"features":{"ar":["Updates: Every 2 weeks, tested","Content changes: 12 a year (a content change is one clear edit that takes half an hour or less)","Reply time: 48 hours","Malware: Scan and cleanup","Emergency restores: 3","Reports: Quarterly","10,800 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online."],"en":["Updates: Every 2 weeks, tested","Content changes: 12 a year (a content change is one clear edit that takes half an hour or less)","Reply time: 48 hours","Malware: Scan and cleanup","Emergency restores: 3","Reports: Quarterly","10,800 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online."]},"description":{"ar":"<p><strong>Care Standard</strong> - Replies within <strong>48 hours</strong> on Care Requests.</p><ul><li>Updates: Every 2 weeks, tested</li><li>Content changes: 12 a year (a content change is one clear edit that takes half an hour or less)</li><li>Reply time: 48 hours</li><li>Malware: Scan and cleanup</li><li>Emergency restores: 3</li><li>Reports: Quarterly</li><li>10,800 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online.</li></ul>","en":"<p><strong>Care Standard</strong> - Replies within <strong>48 hours</strong> on Care Requests.</p><ul><li>Updates: Every 2 weeks, tested</li><li>Content changes: 12 a year (a content change is one clear edit that takes half an hour or less)</li><li>Reply time: 48 hours</li><li>Malware: Scan and cleanup</li><li>Emergency restores: 3</li><li>Reports: Quarterly</li><li>10,800 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online.</li></ul>"},"depositBp":null,"prices":{"EGP":{"gross":1080000,"formatted":"EGP 10,800.00"},"USD":{"gross":22000,"formatted":"USD 220.00"}},"options":[],"storeUrl":"https://3enwank.com/account/plans/care-standard"},{"slug":"care-pro","kind":"care","cycle":"annual","name":{"ar":"Care Pro","en":"Care Pro"},"summary":{"ar":"Replies within 24 hours on Care Requests.","en":"Replies within 24 hours on Care Requests."},"features":{"ar":["Updates: Weekly, tested","Content changes: 36 a year (a content change is one clear edit that takes half an hour or less)","Reply time: 24 hours","Malware: Scan, cleanup, hardening","Emergency restores: Unlimited","Reports: Monthly","21,600 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online."],"en":["Updates: Weekly, tested","Content changes: 36 a year (a content change is one clear edit that takes half an hour or less)","Reply time: 24 hours","Malware: Scan, cleanup, hardening","Emergency restores: Unlimited","Reports: Monthly","21,600 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online."]},"description":{"ar":"<p><strong>Care Pro</strong> - Replies within <strong>24 hours</strong> on Care Requests.</p><ul><li>Updates: Weekly, tested</li><li>Content changes: 36 a year (a content change is one clear edit that takes half an hour or less)</li><li>Reply time: 24 hours</li><li>Malware: Scan, cleanup, hardening</li><li>Emergency restores: Unlimited</li><li>Reports: Monthly</li><li>21,600 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online.</li></ul>","en":"<p><strong>Care Pro</strong> - Replies within <strong>24 hours</strong> on Care Requests.</p><ul><li>Updates: Weekly, tested</li><li>Content changes: 36 a year (a content change is one clear edit that takes half an hour or less)</li><li>Reply time: 24 hours</li><li>Malware: Scan, cleanup, hardening</li><li>Emergency restores: Unlimited</li><li>Reports: Monthly</li><li>21,600 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online.</li></ul>"},"depositBp":null,"prices":{"EGP":{"gross":2160000,"formatted":"EGP 21,600.00"},"USD":{"gross":43500,"formatted":"USD 435.00"}},"options":[],"storeUrl":"https://3enwank.com/account/plans/care-pro"},{"slug":"store-care","kind":"care","cycle":"annual","name":{"ar":"Store Care","en":"Store Care"},"summary":{"ar":"Replies within 4 hours on Care Requests.","en":"Replies within 4 hours on Care Requests."},"features":{"ar":["Updates: Weekly, plus payments","Content changes: 36 a year (a content change is one clear edit that takes half an hour or less)","Reply time: 4 hours","Malware: Weekly scan and cleanup","Emergency restores: Unlimited","Reports: Monthly","32,000 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online."],"en":["Updates: Weekly, plus payments","Content changes: 36 a year (a content change is one clear edit that takes half an hour or less)","Reply time: 4 hours","Malware: Weekly scan and cleanup","Emergency restores: Unlimited","Reports: Monthly","32,000 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online."]},"description":{"ar":"<p><strong>Store Care</strong> - Replies within <strong>4 hours</strong> on Care Requests.</p><ul><li>Updates: Weekly, plus payments</li><li>Content changes: 36 a year (a content change is one clear edit that takes half an hour or less)</li><li>Reply time: 4 hours</li><li>Malware: Weekly scan and cleanup</li><li>Emergency restores: Unlimited</li><li>Reports: Monthly</li><li>32,000 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online.</li></ul>","en":"<p><strong>Store Care</strong> - Replies within <strong>4 hours</strong> on Care Requests.</p><ul><li>Updates: Weekly, plus payments</li><li>Content changes: 36 a year (a content change is one clear edit that takes half an hour or less)</li><li>Reply time: 4 hours</li><li>Malware: Weekly scan and cleanup</li><li>Emergency restores: Unlimited</li><li>Reports: Monthly</li><li>32,000 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online.</li></ul>"},"depositBp":null,"prices":{"EGP":{"gross":3200000,"formatted":"EGP 32,000.00"},"USD":{"gross":64000,"formatted":"USD 640.00"}},"options":[],"storeUrl":"https://3enwank.com/account/plans/store-care"}]},"domains":{"enabled":false},"assistant":{"enabled":false},"tlds":[]}
+{
+  "version": 1,
+  "generatedAt": "2026-09-11T14:52:59.322Z",
+  "currencies": [
+    "EGP",
+    "USD"
+  ],
+  "vat": {
+    "rateBp": 1400,
+    "pricesIncludeVat": true
+  },
+  "company": {
+    "displayName": "3enwank",
+    "legalName": {
+      "en": "Appfux for Software",
+      "ar": "أبفكس للبرمجيات"
+    },
+    "address": {
+      "en": "3239 Refaat Hassan St., 11571 Mokattam, Cairo, Egypt",
+      "ar": "3239 شارع رفعت حسن، 11571 المقطم، القاهرة، مصر"
+    },
+    "supportEmail": "support@3enwank.com",
+    "contactEmail": "info@3enwank.com",
+    "phone": "+20 120 610 2609",
+    "website": "https://3enwank.com",
+    "taxId": "694852716",
+    "commercialRegistry": "10530 00002 01370"
+  },
+  "payments": {
+    "bankTransfer": true,
+    "instapay": true,
+    "vodafoneCash": true,
+    "card": false
+  },
+  "store": {
+    "url": "https://3enwank.com/account",
+    "plansUrl": "https://3enwank.com",
+    "domainSearchUrl": "https://3enwank.com/account/domains/search",
+    "loginUrl": "https://3enwank.com/account/login",
+    "registerUrl": "https://3enwank.com/account/register"
+  },
+  "groups": [
+    {
+      "slug": "hosting",
+      "kind": "hosting",
+      "name": {
+        "ar": "Web Hosting",
+        "en": "Web Hosting"
+      },
+      "headline": {
+        "ar": "cPanel web hosting",
+        "en": "cPanel web hosting"
+      },
+      "tagline": {
+        "ar": "ستة أحجام، تُدفع مرة في السنة.",
+        "en": "Six sizes, billed once a year."
+      }
+    },
+    {
+      "slug": "web-design",
+      "kind": "build",
+      "name": {
+        "ar": "Web Design",
+        "en": "Web Design"
+      },
+      "headline": {
+        "ar": "Website builds",
+        "en": "Website builds"
+      },
+      "tagline": {
+        "ar": "مشاريع تُسلَّم جاهزة للإطلاق، بسعر ثابت.",
+        "en": "One-time projects delivered ready to launch."
+      }
+    },
+    {
+      "slug": "care",
+      "kind": "care",
+      "name": {
+        "ar": "Website Care",
+        "en": "Website Care"
+      },
+      "headline": {
+        "ar": "Website Care plans",
+        "en": "Website Care plans"
+      },
+      "tagline": {
+        "ar": "صيانة سنوية مع وقت ردّ ملتزم به.",
+        "en": "Annual maintenance with a first-response SLA."
+      }
+    }
+  ],
+  "products": {
+    "hosting": [
+      {
+        "slug": "hosting-xs",
+        "kind": "hosting",
+        "cycle": "annual",
+        "name": {
+          "ar": "XS",
+          "en": "XS"
+        },
+        "summary": {
+          "ar": "One small website.",
+          "en": "One small website."
+        },
+        "features": {
+          "ar": [
+            "Storage: 1 GB NVMe",
+            "Bandwidth: 8 GB / month",
+            "Email accounts: 20",
+            "Databases: 2",
+            "Domains: 1",
+            "FTP accounts: 2",
+            "Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe",
+            "Billed once a year. Normal price 2,499 EGP - you pay 1,999 EGP per year, VAT included"
+          ],
+          "en": [
+            "Storage: 1 GB NVMe",
+            "Bandwidth: 8 GB / month",
+            "Email accounts: 20",
+            "Databases: 2",
+            "Domains: 1",
+            "FTP accounts: 2",
+            "Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe",
+            "Billed once a year. Normal price 2,499 EGP - you pay 1,999 EGP per year, VAT included"
+          ]
+        },
+        "description": {
+          "ar": "<p><strong>XS</strong> - One small website.</p><ul><li>Storage: 1 GB NVMe</li><li>Bandwidth: 8 GB / month</li><li>Email accounts: 20</li><li>Databases: 2</li><li>Domains: 1</li><li>FTP accounts: 2</li><li>Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe</li><li>Billed once a year. Normal price <s>2,499 EGP</s> - you pay 1,999 EGP per year, VAT included</li></ul>",
+          "en": "<p><strong>XS</strong> - One small website.</p><ul><li>Storage: 1 GB NVMe</li><li>Bandwidth: 8 GB / month</li><li>Email accounts: 20</li><li>Databases: 2</li><li>Domains: 1</li><li>FTP accounts: 2</li><li>Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe</li><li>Billed once a year. Normal price <s>2,499 EGP</s> - you pay 1,999 EGP per year, VAT included</li></ul>"
+        },
+        "depositBp": null,
+        "prices": {
+          "EGP": {
+            "gross": 199900,
+            "formatted": "EGP 1,999.00"
+          },
+          "USD": {
+            "gross": 3999,
+            "formatted": "USD 39.99"
+          }
+        },
+        "renewalPrices": {
+          "EGP": {
+            "gross": 249900,
+            "formatted": "EGP 2,499.00"
+          },
+          "USD": {
+            "gross": 4999,
+            "formatted": "USD 49.99"
+          }
+        },
+        "options": [],
+        "storeUrl": "https://3enwank.com/account/plans/hosting-xs"
+      },
+      {
+        "slug": "hosting-s",
+        "kind": "hosting",
+        "cycle": "annual",
+        "name": {
+          "ar": "S",
+          "en": "S"
+        },
+        "summary": {
+          "ar": "Small business website.",
+          "en": "Small business website."
+        },
+        "features": {
+          "ar": [
+            "Storage: 2 GB NVMe",
+            "Bandwidth: 15 GB / month",
+            "Email accounts: 50",
+            "Databases: 5",
+            "Domains: 1",
+            "FTP accounts: 5",
+            "Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe",
+            "Billed once a year. Normal price 2,999 EGP - you pay 2,499 EGP per year, VAT included"
+          ],
+          "en": [
+            "Storage: 2 GB NVMe",
+            "Bandwidth: 15 GB / month",
+            "Email accounts: 50",
+            "Databases: 5",
+            "Domains: 1",
+            "FTP accounts: 5",
+            "Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe",
+            "Billed once a year. Normal price 2,999 EGP - you pay 2,499 EGP per year, VAT included"
+          ]
+        },
+        "description": {
+          "ar": "<p><strong>S</strong> - Small business website.</p><ul><li>Storage: 2 GB NVMe</li><li>Bandwidth: 15 GB / month</li><li>Email accounts: 50</li><li>Databases: 5</li><li>Domains: 1</li><li>FTP accounts: 5</li><li>Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe</li><li>Billed once a year. Normal price <s>2,999 EGP</s> - you pay 2,499 EGP per year, VAT included</li></ul>",
+          "en": "<p><strong>S</strong> - Small business website.</p><ul><li>Storage: 2 GB NVMe</li><li>Bandwidth: 15 GB / month</li><li>Email accounts: 50</li><li>Databases: 5</li><li>Domains: 1</li><li>FTP accounts: 5</li><li>Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe</li><li>Billed once a year. Normal price <s>2,999 EGP</s> - you pay 2,499 EGP per year, VAT included</li></ul>"
+        },
+        "depositBp": null,
+        "prices": {
+          "EGP": {
+            "gross": 249900,
+            "formatted": "EGP 2,499.00"
+          },
+          "USD": {
+            "gross": 4999,
+            "formatted": "USD 49.99"
+          }
+        },
+        "renewalPrices": {
+          "EGP": {
+            "gross": 299900,
+            "formatted": "EGP 2,999.00"
+          },
+          "USD": {
+            "gross": 5999,
+            "formatted": "USD 59.99"
+          }
+        },
+        "options": [],
+        "storeUrl": "https://3enwank.com/account/plans/hosting-s"
+      },
+      {
+        "slug": "hosting-m",
+        "kind": "hosting",
+        "cycle": "annual",
+        "name": {
+          "ar": "M",
+          "en": "M"
+        },
+        "summary": {
+          "ar": "Growing website, two domains.",
+          "en": "Growing website, two domains."
+        },
+        "features": {
+          "ar": [
+            "Storage: 5 GB NVMe",
+            "Bandwidth: 40 GB / month",
+            "Email accounts: 100",
+            "Databases: 10",
+            "Domains: 2",
+            "FTP accounts: 10",
+            "Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe",
+            "Billed once a year. Normal price 3,999 EGP - you pay 2,999 EGP per year, VAT included"
+          ],
+          "en": [
+            "Storage: 5 GB NVMe",
+            "Bandwidth: 40 GB / month",
+            "Email accounts: 100",
+            "Databases: 10",
+            "Domains: 2",
+            "FTP accounts: 10",
+            "Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe",
+            "Billed once a year. Normal price 3,999 EGP - you pay 2,999 EGP per year, VAT included"
+          ]
+        },
+        "description": {
+          "ar": "<p><strong>M</strong> - Growing website, two domains.</p><ul><li>Storage: 5 GB NVMe</li><li>Bandwidth: 40 GB / month</li><li>Email accounts: 100</li><li>Databases: 10</li><li>Domains: 2</li><li>FTP accounts: 10</li><li>Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe</li><li>Billed once a year. Normal price <s>3,999 EGP</s> - you pay 2,999 EGP per year, VAT included</li></ul>",
+          "en": "<p><strong>M</strong> - Growing website, two domains.</p><ul><li>Storage: 5 GB NVMe</li><li>Bandwidth: 40 GB / month</li><li>Email accounts: 100</li><li>Databases: 10</li><li>Domains: 2</li><li>FTP accounts: 10</li><li>Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe</li><li>Billed once a year. Normal price <s>3,999 EGP</s> - you pay 2,999 EGP per year, VAT included</li></ul>"
+        },
+        "depositBp": null,
+        "prices": {
+          "EGP": {
+            "gross": 299900,
+            "formatted": "EGP 2,999.00"
+          },
+          "USD": {
+            "gross": 5999,
+            "formatted": "USD 59.99"
+          }
+        },
+        "renewalPrices": {
+          "EGP": {
+            "gross": 399900,
+            "formatted": "EGP 3,999.00"
+          },
+          "USD": {
+            "gross": 7999,
+            "formatted": "USD 79.99"
+          }
+        },
+        "options": [],
+        "storeUrl": "https://3enwank.com/account/plans/hosting-m"
+      },
+      {
+        "slug": "hosting-l",
+        "kind": "hosting",
+        "cycle": "annual",
+        "name": {
+          "ar": "L",
+          "en": "L"
+        },
+        "summary": {
+          "ar": "Busy website or small store.",
+          "en": "Busy website or small store."
+        },
+        "features": {
+          "ar": [
+            "Storage: 10 GB NVMe",
+            "Bandwidth: 80 GB / month",
+            "Email accounts: 200",
+            "Databases: 15",
+            "Domains: 3",
+            "FTP accounts: 20",
+            "Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe",
+            "Billed once a year. Normal price 4,999 EGP - you pay 3,999 EGP per year, VAT included"
+          ],
+          "en": [
+            "Storage: 10 GB NVMe",
+            "Bandwidth: 80 GB / month",
+            "Email accounts: 200",
+            "Databases: 15",
+            "Domains: 3",
+            "FTP accounts: 20",
+            "Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe",
+            "Billed once a year. Normal price 4,999 EGP - you pay 3,999 EGP per year, VAT included"
+          ]
+        },
+        "description": {
+          "ar": "<p><strong>L</strong> - Busy website or small store.</p><ul><li>Storage: 10 GB NVMe</li><li>Bandwidth: 80 GB / month</li><li>Email accounts: 200</li><li>Databases: 15</li><li>Domains: 3</li><li>FTP accounts: 20</li><li>Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe</li><li>Billed once a year. Normal price <s>4,999 EGP</s> - you pay 3,999 EGP per year, VAT included</li></ul>",
+          "en": "<p><strong>L</strong> - Busy website or small store.</p><ul><li>Storage: 10 GB NVMe</li><li>Bandwidth: 80 GB / month</li><li>Email accounts: 200</li><li>Databases: 15</li><li>Domains: 3</li><li>FTP accounts: 20</li><li>Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe</li><li>Billed once a year. Normal price <s>4,999 EGP</s> - you pay 3,999 EGP per year, VAT included</li></ul>"
+        },
+        "depositBp": null,
+        "prices": {
+          "EGP": {
+            "gross": 399900,
+            "formatted": "EGP 3,999.00"
+          },
+          "USD": {
+            "gross": 7999,
+            "formatted": "USD 79.99"
+          }
+        },
+        "renewalPrices": {
+          "EGP": {
+            "gross": 499900,
+            "formatted": "EGP 4,999.00"
+          },
+          "USD": {
+            "gross": 9999,
+            "formatted": "USD 99.99"
+          }
+        },
+        "options": [],
+        "storeUrl": "https://3enwank.com/account/plans/hosting-l"
+      },
+      {
+        "slug": "hosting-xl",
+        "kind": "hosting",
+        "cycle": "annual",
+        "name": {
+          "ar": "XL",
+          "en": "XL"
+        },
+        "summary": {
+          "ar": "High-traffic site or online store.",
+          "en": "High-traffic site or online store."
+        },
+        "features": {
+          "ar": [
+            "Storage: 50 GB NVMe",
+            "Bandwidth: 400 GB / month",
+            "Email accounts: Unlimited",
+            "Databases: 20",
+            "Domains: 6",
+            "FTP accounts: 50",
+            "Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe",
+            "Billed once a year. Normal price 14,999 EGP - you pay 9,999 EGP per year, VAT included"
+          ],
+          "en": [
+            "Storage: 50 GB NVMe",
+            "Bandwidth: 400 GB / month",
+            "Email accounts: Unlimited",
+            "Databases: 20",
+            "Domains: 6",
+            "FTP accounts: 50",
+            "Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe",
+            "Billed once a year. Normal price 14,999 EGP - you pay 9,999 EGP per year, VAT included"
+          ]
+        },
+        "description": {
+          "ar": "<p><strong>XL</strong> - High-traffic site or online store.</p><ul><li>Storage: 50 GB NVMe</li><li>Bandwidth: 400 GB / month</li><li>Email accounts: Unlimited</li><li>Databases: 20</li><li>Domains: 6</li><li>FTP accounts: 50</li><li>Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe</li><li>Billed once a year. Normal price <s>14,999 EGP</s> - you pay 9,999 EGP per year, VAT included</li></ul>",
+          "en": "<p><strong>XL</strong> - High-traffic site or online store.</p><ul><li>Storage: 50 GB NVMe</li><li>Bandwidth: 400 GB / month</li><li>Email accounts: Unlimited</li><li>Databases: 20</li><li>Domains: 6</li><li>FTP accounts: 50</li><li>Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe</li><li>Billed once a year. Normal price <s>14,999 EGP</s> - you pay 9,999 EGP per year, VAT included</li></ul>"
+        },
+        "depositBp": null,
+        "prices": {
+          "EGP": {
+            "gross": 999900,
+            "formatted": "EGP 9,999.00"
+          },
+          "USD": {
+            "gross": 19999,
+            "formatted": "USD 199.99"
+          }
+        },
+        "renewalPrices": {
+          "EGP": {
+            "gross": 1499900,
+            "formatted": "EGP 14,999.00"
+          },
+          "USD": {
+            "gross": 29999,
+            "formatted": "USD 299.99"
+          }
+        },
+        "options": [],
+        "storeUrl": "https://3enwank.com/account/plans/hosting-xl"
+      },
+      {
+        "slug": "hosting-xxl",
+        "kind": "hosting",
+        "cycle": "annual",
+        "name": {
+          "ar": "XXL",
+          "en": "XXL"
+        },
+        "summary": {
+          "ar": "Multi-site: 2 domains included, up to 10.",
+          "en": "Multi-site: 2 domains included, up to 10."
+        },
+        "features": {
+          "ar": [
+            "Storage: 150 GB NVMe",
+            "Bandwidth: 1.2 TB / month",
+            "Email accounts: Unlimited",
+            "Databases: Unlimited",
+            "Domains: 2 included (up to 10)",
+            "FTP accounts: Unlimited",
+            "Add up to 8 more domains at 999 EGP per domain per year (choose below)",
+            "Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe",
+            "Billed once a year. Normal price 29,999 EGP - you pay 19,999 EGP per year, VAT included"
+          ],
+          "en": [
+            "Storage: 150 GB NVMe",
+            "Bandwidth: 1.2 TB / month",
+            "Email accounts: Unlimited",
+            "Databases: Unlimited",
+            "Domains: 2 included (up to 10)",
+            "FTP accounts: Unlimited",
+            "Add up to 8 more domains at 999 EGP per domain per year (choose below)",
+            "Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe",
+            "Billed once a year. Normal price 29,999 EGP - you pay 19,999 EGP per year, VAT included"
+          ]
+        },
+        "description": {
+          "ar": "<p><strong>XXL</strong> - Multi-site: 2 domains included, up to 10.</p><ul><li>Storage: 150 GB NVMe</li><li>Bandwidth: 1.2 TB / month</li><li>Email accounts: Unlimited</li><li>Databases: Unlimited</li><li>Domains: 2 included (up to 10)</li><li>FTP accounts: Unlimited</li><li>Add up to 8 more domains at 999 EGP per domain per year (choose below)</li><li>Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe</li><li>Billed once a year. Normal price <s>29,999 EGP</s> - you pay 19,999 EGP per year, VAT included</li></ul>",
+          "en": "<p><strong>XXL</strong> - Multi-site: 2 domains included, up to 10.</p><ul><li>Storage: 150 GB NVMe</li><li>Bandwidth: 1.2 TB / month</li><li>Email accounts: Unlimited</li><li>Databases: Unlimited</li><li>Domains: 2 included (up to 10)</li><li>FTP accounts: Unlimited</li><li>Add up to 8 more domains at 999 EGP per domain per year (choose below)</li><li>Runs on: AlmaLinux 10 · cPanel & WHM · NVMe SSD · ModSecurity/OWASP firewall · Imunify malware protection · Let's Encrypt certificates · PowerDNS nameservers · daily backups to Europe</li><li>Billed once a year. Normal price <s>29,999 EGP</s> - you pay 19,999 EGP per year, VAT included</li></ul>"
+        },
+        "depositBp": null,
+        "prices": {
+          "EGP": {
+            "gross": 1999900,
+            "formatted": "EGP 19,999.00"
+          },
+          "USD": {
+            "gross": 39999,
+            "formatted": "USD 399.99"
+          }
+        },
+        "renewalPrices": {
+          "EGP": {
+            "gross": 2999900,
+            "formatted": "EGP 29,999.00"
+          },
+          "USD": {
+            "gross": 59999,
+            "formatted": "USD 599.99"
+          }
+        },
+        "options": [
+          {
+            "key": "max_addon_domains",
+            "name": {
+              "ar": "Number of websites (domains) on this account",
+              "en": "Number of websites (domains) on this account"
+            },
+            "values": [
+              {
+                "value": "1",
+                "label": {
+                  "ar": "2 domains (included)",
+                  "en": "2 domains (included)"
+                },
+                "isDefault": true,
+                "prices": {
+                  "EGP": {
+                    "gross": 0,
+                    "formatted": "EGP 0.00"
+                  },
+                  "USD": {
+                    "gross": 0,
+                    "formatted": "USD 0.00"
+                  }
+                }
+              },
+              {
+                "value": "2",
+                "label": {
+                  "ar": "3 domains",
+                  "en": "3 domains"
+                },
+                "isDefault": false,
+                "prices": {
+                  "EGP": {
+                    "gross": 99900,
+                    "formatted": "EGP 999.00"
+                  },
+                  "USD": {
+                    "gross": 2000,
+                    "formatted": "USD 20.00"
+                  }
+                }
+              },
+              {
+                "value": "3",
+                "label": {
+                  "ar": "4 domains",
+                  "en": "4 domains"
+                },
+                "isDefault": false,
+                "prices": {
+                  "EGP": {
+                    "gross": 199800,
+                    "formatted": "EGP 1,998.00"
+                  },
+                  "USD": {
+                    "gross": 4000,
+                    "formatted": "USD 40.00"
+                  }
+                }
+              },
+              {
+                "value": "4",
+                "label": {
+                  "ar": "5 domains",
+                  "en": "5 domains"
+                },
+                "isDefault": false,
+                "prices": {
+                  "EGP": {
+                    "gross": 299700,
+                    "formatted": "EGP 2,997.00"
+                  },
+                  "USD": {
+                    "gross": 6000,
+                    "formatted": "USD 60.00"
+                  }
+                }
+              },
+              {
+                "value": "5",
+                "label": {
+                  "ar": "6 domains",
+                  "en": "6 domains"
+                },
+                "isDefault": false,
+                "prices": {
+                  "EGP": {
+                    "gross": 399600,
+                    "formatted": "EGP 3,996.00"
+                  },
+                  "USD": {
+                    "gross": 8000,
+                    "formatted": "USD 80.00"
+                  }
+                }
+              },
+              {
+                "value": "6",
+                "label": {
+                  "ar": "7 domains",
+                  "en": "7 domains"
+                },
+                "isDefault": false,
+                "prices": {
+                  "EGP": {
+                    "gross": 499500,
+                    "formatted": "EGP 4,995.00"
+                  },
+                  "USD": {
+                    "gross": 10000,
+                    "formatted": "USD 100.00"
+                  }
+                }
+              },
+              {
+                "value": "7",
+                "label": {
+                  "ar": "8 domains",
+                  "en": "8 domains"
+                },
+                "isDefault": false,
+                "prices": {
+                  "EGP": {
+                    "gross": 599400,
+                    "formatted": "EGP 5,994.00"
+                  },
+                  "USD": {
+                    "gross": 12000,
+                    "formatted": "USD 120.00"
+                  }
+                }
+              },
+              {
+                "value": "8",
+                "label": {
+                  "ar": "9 domains",
+                  "en": "9 domains"
+                },
+                "isDefault": false,
+                "prices": {
+                  "EGP": {
+                    "gross": 699300,
+                    "formatted": "EGP 6,993.00"
+                  },
+                  "USD": {
+                    "gross": 14000,
+                    "formatted": "USD 140.00"
+                  }
+                }
+              },
+              {
+                "value": "9",
+                "label": {
+                  "ar": "10 domains",
+                  "en": "10 domains"
+                },
+                "isDefault": false,
+                "prices": {
+                  "EGP": {
+                    "gross": 799200,
+                    "formatted": "EGP 7,992.00"
+                  },
+                  "USD": {
+                    "gross": 16000,
+                    "formatted": "USD 160.00"
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "storeUrl": "https://3enwank.com/account/plans/hosting-xxl"
+      }
+    ],
+    "build": [
+      {
+        "slug": "landing-page-lite",
+        "kind": "build",
+        "cycle": "one_time",
+        "name": {
+          "ar": "Landing Page Lite",
+          "en": "Landing Page Lite"
+        },
+        "summary": {
+          "ar": "One page, up to six sections. Delivery: 7 working days.",
+          "en": "One page, up to six sections. Delivery: 7 working days."
+        },
+        "features": {
+          "ar": [
+            "One page, up to six sections",
+            "Contact form and WhatsApp button",
+            "Analytics and Meta Pixel",
+            "Two rounds of changes",
+            "Price 9,500 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.",
+            "Hosting and Care plans are separate."
+          ],
+          "en": [
+            "One page, up to six sections",
+            "Contact form and WhatsApp button",
+            "Analytics and Meta Pixel",
+            "Two rounds of changes",
+            "Price 9,500 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.",
+            "Hosting and Care plans are separate."
+          ]
+        },
+        "description": {
+          "ar": "<p><strong>Landing Page Lite</strong> - One page, up to six sections. Delivery: 7 working days.</p><ul><li>One page, up to six sections</li><li>Contact form and WhatsApp button</li><li>Analytics and Meta Pixel</li><li>Two rounds of changes</li><li>Price 9,500 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.</li><li>Hosting and Care plans are separate.</li></ul>",
+          "en": "<p><strong>Landing Page Lite</strong> - One page, up to six sections. Delivery: 7 working days.</p><ul><li>One page, up to six sections</li><li>Contact form and WhatsApp button</li><li>Analytics and Meta Pixel</li><li>Two rounds of changes</li><li>Price 9,500 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.</li><li>Hosting and Care plans are separate.</li></ul>"
+        },
+        "depositBp": 5000,
+        "prices": {
+          "EGP": {
+            "gross": 949900,
+            "formatted": "EGP 9,499.00"
+          },
+          "USD": {
+            "gross": 18999,
+            "formatted": "USD 189.99"
+          }
+        },
+        "renewalPrices": {},
+        "options": [],
+        "storeUrl": "https://3enwank.com/account/plans/landing-page-lite"
+      },
+      {
+        "slug": "landing-page-pro",
+        "kind": "build",
+        "cycle": "one_time",
+        "name": {
+          "ar": "Landing Page Pro",
+          "en": "Landing Page Pro"
+        },
+        "summary": {
+          "ar": "One or two pages designed from scratch. Delivery: 10 working days.",
+          "en": "One or two pages designed from scratch. Delivery: 10 working days."
+        },
+        "features": {
+          "ar": [
+            "One or two pages designed from scratch",
+            "Leads land in your inbox, a Google Sheet and WhatsApp",
+            "Price 15,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.",
+            "Hosting and Care plans are separate."
+          ],
+          "en": [
+            "One or two pages designed from scratch",
+            "Leads land in your inbox, a Google Sheet and WhatsApp",
+            "Price 15,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.",
+            "Hosting and Care plans are separate."
+          ]
+        },
+        "description": {
+          "ar": "<p><strong>Landing Page Pro</strong> - One or two pages designed from scratch. Delivery: 10 working days.</p><ul><li>One or two pages designed from scratch</li><li>Leads land in your inbox, a Google Sheet and WhatsApp</li><li>Price 15,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.</li><li>Hosting and Care plans are separate.</li></ul>",
+          "en": "<p><strong>Landing Page Pro</strong> - One or two pages designed from scratch. Delivery: 10 working days.</p><ul><li>One or two pages designed from scratch</li><li>Leads land in your inbox, a Google Sheet and WhatsApp</li><li>Price 15,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.</li><li>Hosting and Care plans are separate.</li></ul>"
+        },
+        "depositBp": 5000,
+        "prices": {
+          "EGP": {
+            "gross": 1499900,
+            "formatted": "EGP 14,999.00"
+          },
+          "USD": {
+            "gross": 29999,
+            "formatted": "USD 299.99"
+          }
+        },
+        "renewalPrices": {},
+        "options": [],
+        "storeUrl": "https://3enwank.com/account/plans/landing-page-pro"
+      },
+      {
+        "slug": "business-website",
+        "kind": "build",
+        "cycle": "one_time",
+        "name": {
+          "ar": "Business Website",
+          "en": "Business Website"
+        },
+        "summary": {
+          "ar": "Up to five pages on WordPress. Delivery: 3 weeks.",
+          "en": "Up to five pages on WordPress. Delivery: 3 weeks."
+        },
+        "features": {
+          "ar": [
+            "Up to five pages on WordPress, paid theme licence included",
+            "Forms, Google Maps, WhatsApp",
+            "Google Business Profile connected",
+            "Price 22,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.",
+            "Hosting and Care plans are separate."
+          ],
+          "en": [
+            "Up to five pages on WordPress, paid theme licence included",
+            "Forms, Google Maps, WhatsApp",
+            "Google Business Profile connected",
+            "Price 22,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.",
+            "Hosting and Care plans are separate."
+          ]
+        },
+        "description": {
+          "ar": "<p><strong>Business Website</strong> - Up to five pages on WordPress. Delivery: 3 weeks.</p><ul><li>Up to five pages on WordPress, paid theme licence included</li><li>Forms, Google Maps, WhatsApp</li><li>Google Business Profile connected</li><li>Price 22,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.</li><li>Hosting and Care plans are separate.</li></ul>",
+          "en": "<p><strong>Business Website</strong> - Up to five pages on WordPress. Delivery: 3 weeks.</p><ul><li>Up to five pages on WordPress, paid theme licence included</li><li>Forms, Google Maps, WhatsApp</li><li>Google Business Profile connected</li><li>Price 22,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.</li><li>Hosting and Care plans are separate.</li></ul>"
+        },
+        "depositBp": 5000,
+        "prices": {
+          "EGP": {
+            "gross": 2199900,
+            "formatted": "EGP 21,999.00"
+          },
+          "USD": {
+            "gross": 43999,
+            "formatted": "USD 439.99"
+          }
+        },
+        "renewalPrices": {},
+        "options": [],
+        "storeUrl": "https://3enwank.com/account/plans/business-website"
+      },
+      {
+        "slug": "business-plus",
+        "kind": "build",
+        "cycle": "one_time",
+        "name": {
+          "ar": "Business Plus",
+          "en": "Business Plus"
+        },
+        "summary": {
+          "ar": "Up to ten pages and a blog, in two languages. Delivery: 4 to 5 weeks.",
+          "en": "Up to ten pages and a blog, in two languages. Delivery: 4 to 5 weeks."
+        },
+        "features": {
+          "ar": [
+            "Up to ten pages and a blog, in two languages",
+            "Custom sections, optimised images",
+            "Structured data for search engines, newsletter signup",
+            "Price 38,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.",
+            "Hosting and Care plans are separate."
+          ],
+          "en": [
+            "Up to ten pages and a blog, in two languages",
+            "Custom sections, optimised images",
+            "Structured data for search engines, newsletter signup",
+            "Price 38,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.",
+            "Hosting and Care plans are separate."
+          ]
+        },
+        "description": {
+          "ar": "<p><strong>Business Plus</strong> - Up to ten pages and a blog, in two languages. Delivery: 4 to 5 weeks.</p><ul><li>Up to ten pages and a blog, in two languages</li><li>Custom sections, optimised images</li><li>Structured data for search engines, newsletter signup</li><li>Price 38,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.</li><li>Hosting and Care plans are separate.</li></ul>",
+          "en": "<p><strong>Business Plus</strong> - Up to ten pages and a blog, in two languages. Delivery: 4 to 5 weeks.</p><ul><li>Up to ten pages and a blog, in two languages</li><li>Custom sections, optimised images</li><li>Structured data for search engines, newsletter signup</li><li>Price 38,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.</li><li>Hosting and Care plans are separate.</li></ul>"
+        },
+        "depositBp": 5000,
+        "prices": {
+          "EGP": {
+            "gross": 3799900,
+            "formatted": "EGP 37,999.00"
+          },
+          "USD": {
+            "gross": 75999,
+            "formatted": "USD 759.99"
+          }
+        },
+        "renewalPrices": {},
+        "options": [],
+        "storeUrl": "https://3enwank.com/account/plans/business-plus"
+      },
+      {
+        "slug": "online-store",
+        "kind": "build",
+        "cycle": "one_time",
+        "name": {
+          "ar": "Online Store",
+          "en": "Online Store"
+        },
+        "summary": {
+          "ar": "WooCommerce with up to fifty products. Delivery: 6 weeks.",
+          "en": "WooCommerce with up to fifty products. Delivery: 6 weeks."
+        },
+        "features": {
+          "ar": [
+            "WooCommerce with up to fifty products",
+            "Local or international payment gateways, cash on delivery",
+            "Shipping zones and order emails",
+            "Price 55,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.",
+            "Hosting and Care plans are separate."
+          ],
+          "en": [
+            "WooCommerce with up to fifty products",
+            "Local or international payment gateways, cash on delivery",
+            "Shipping zones and order emails",
+            "Price 55,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.",
+            "Hosting and Care plans are separate."
+          ]
+        },
+        "description": {
+          "ar": "<p><strong>Online Store</strong> - WooCommerce with up to fifty products. Delivery: 6 weeks.</p><ul><li>WooCommerce with up to fifty products</li><li>Local or international payment gateways, cash on delivery</li><li>Shipping zones and order emails</li><li>Price 55,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.</li><li>Hosting and Care plans are separate.</li></ul>",
+          "en": "<p><strong>Online Store</strong> - WooCommerce with up to fifty products. Delivery: 6 weeks.</p><ul><li>WooCommerce with up to fifty products</li><li>Local or international payment gateways, cash on delivery</li><li>Shipping zones and order emails</li><li>Price 55,000 EGP (VAT included). Fixed scope, fixed price, fixed date. Half to start, half when you approve the work - pay the first half by card, wallet or bank transfer to start; the second half is due on approval.</li><li>Hosting and Care plans are separate.</li></ul>"
+        },
+        "depositBp": 5000,
+        "prices": {
+          "EGP": {
+            "gross": 5499900,
+            "formatted": "EGP 54,999.00"
+          },
+          "USD": {
+            "gross": 109999,
+            "formatted": "USD 1,099.99"
+          }
+        },
+        "renewalPrices": {},
+        "options": [],
+        "storeUrl": "https://3enwank.com/account/plans/online-store"
+      }
+    ],
+    "care": [
+      {
+        "slug": "care-basic",
+        "kind": "care",
+        "cycle": "annual",
+        "name": {
+          "ar": "Care Basic",
+          "en": "Care Basic"
+        },
+        "summary": {
+          "ar": "Replies within 72 hours on Care Requests.",
+          "en": "Replies within 72 hours on Care Requests."
+        },
+        "features": {
+          "ar": [
+            "Updates: Monthly",
+            "Content changes: 2 a year (a content change is one clear edit that takes half an hour or less)",
+            "Reply time: 72 hours",
+            "Malware: Monthly scan",
+            "Emergency restores: 1",
+            "Reports: Yearly",
+            "4,200 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online."
+          ],
+          "en": [
+            "Updates: Monthly",
+            "Content changes: 2 a year (a content change is one clear edit that takes half an hour or less)",
+            "Reply time: 72 hours",
+            "Malware: Monthly scan",
+            "Emergency restores: 1",
+            "Reports: Yearly",
+            "4,200 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online."
+          ]
+        },
+        "description": {
+          "ar": "<p><strong>Care Basic</strong> - Replies within <strong>72 hours</strong> on Care Requests.</p><ul><li>Updates: Monthly</li><li>Content changes: 2 a year (a content change is one clear edit that takes half an hour or less)</li><li>Reply time: 72 hours</li><li>Malware: Monthly scan</li><li>Emergency restores: 1</li><li>Reports: Yearly</li><li>4,200 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online.</li></ul>",
+          "en": "<p><strong>Care Basic</strong> - Replies within <strong>72 hours</strong> on Care Requests.</p><ul><li>Updates: Monthly</li><li>Content changes: 2 a year (a content change is one clear edit that takes half an hour or less)</li><li>Reply time: 72 hours</li><li>Malware: Monthly scan</li><li>Emergency restores: 1</li><li>Reports: Yearly</li><li>4,200 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online.</li></ul>"
+        },
+        "depositBp": null,
+        "prices": {
+          "EGP": {
+            "gross": 419900,
+            "formatted": "EGP 4,199.00"
+          },
+          "USD": {
+            "gross": 8499,
+            "formatted": "USD 84.99"
+          }
+        },
+        "renewalPrices": {},
+        "options": [],
+        "storeUrl": "https://3enwank.com/account/plans/care-basic"
+      },
+      {
+        "slug": "care-standard",
+        "kind": "care",
+        "cycle": "annual",
+        "name": {
+          "ar": "Care Standard",
+          "en": "Care Standard"
+        },
+        "summary": {
+          "ar": "Replies within 48 hours on Care Requests.",
+          "en": "Replies within 48 hours on Care Requests."
+        },
+        "features": {
+          "ar": [
+            "Updates: Every 2 weeks, tested",
+            "Content changes: 12 a year (a content change is one clear edit that takes half an hour or less)",
+            "Reply time: 48 hours",
+            "Malware: Scan and cleanup",
+            "Emergency restores: 3",
+            "Reports: Quarterly",
+            "10,800 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online."
+          ],
+          "en": [
+            "Updates: Every 2 weeks, tested",
+            "Content changes: 12 a year (a content change is one clear edit that takes half an hour or less)",
+            "Reply time: 48 hours",
+            "Malware: Scan and cleanup",
+            "Emergency restores: 3",
+            "Reports: Quarterly",
+            "10,800 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online."
+          ]
+        },
+        "description": {
+          "ar": "<p><strong>Care Standard</strong> - Replies within <strong>48 hours</strong> on Care Requests.</p><ul><li>Updates: Every 2 weeks, tested</li><li>Content changes: 12 a year (a content change is one clear edit that takes half an hour or less)</li><li>Reply time: 48 hours</li><li>Malware: Scan and cleanup</li><li>Emergency restores: 3</li><li>Reports: Quarterly</li><li>10,800 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online.</li></ul>",
+          "en": "<p><strong>Care Standard</strong> - Replies within <strong>48 hours</strong> on Care Requests.</p><ul><li>Updates: Every 2 weeks, tested</li><li>Content changes: 12 a year (a content change is one clear edit that takes half an hour or less)</li><li>Reply time: 48 hours</li><li>Malware: Scan and cleanup</li><li>Emergency restores: 3</li><li>Reports: Quarterly</li><li>10,800 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online.</li></ul>"
+        },
+        "depositBp": null,
+        "prices": {
+          "EGP": {
+            "gross": 1079900,
+            "formatted": "EGP 10,799.00"
+          },
+          "USD": {
+            "gross": 21999,
+            "formatted": "USD 219.99"
+          }
+        },
+        "renewalPrices": {},
+        "options": [],
+        "storeUrl": "https://3enwank.com/account/plans/care-standard"
+      },
+      {
+        "slug": "care-pro",
+        "kind": "care",
+        "cycle": "annual",
+        "name": {
+          "ar": "Care Pro",
+          "en": "Care Pro"
+        },
+        "summary": {
+          "ar": "Replies within 24 hours on Care Requests.",
+          "en": "Replies within 24 hours on Care Requests."
+        },
+        "features": {
+          "ar": [
+            "Updates: Weekly, tested",
+            "Content changes: 36 a year (a content change is one clear edit that takes half an hour or less)",
+            "Reply time: 24 hours",
+            "Malware: Scan, cleanup, hardening",
+            "Emergency restores: Unlimited",
+            "Reports: Monthly",
+            "21,600 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online."
+          ],
+          "en": [
+            "Updates: Weekly, tested",
+            "Content changes: 36 a year (a content change is one clear edit that takes half an hour or less)",
+            "Reply time: 24 hours",
+            "Malware: Scan, cleanup, hardening",
+            "Emergency restores: Unlimited",
+            "Reports: Monthly",
+            "21,600 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online."
+          ]
+        },
+        "description": {
+          "ar": "<p><strong>Care Pro</strong> - Replies within <strong>24 hours</strong> on Care Requests.</p><ul><li>Updates: Weekly, tested</li><li>Content changes: 36 a year (a content change is one clear edit that takes half an hour or less)</li><li>Reply time: 24 hours</li><li>Malware: Scan, cleanup, hardening</li><li>Emergency restores: Unlimited</li><li>Reports: Monthly</li><li>21,600 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online.</li></ul>",
+          "en": "<p><strong>Care Pro</strong> - Replies within <strong>24 hours</strong> on Care Requests.</p><ul><li>Updates: Weekly, tested</li><li>Content changes: 36 a year (a content change is one clear edit that takes half an hour or less)</li><li>Reply time: 24 hours</li><li>Malware: Scan, cleanup, hardening</li><li>Emergency restores: Unlimited</li><li>Reports: Monthly</li><li>21,600 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online.</li></ul>"
+        },
+        "depositBp": null,
+        "prices": {
+          "EGP": {
+            "gross": 2159900,
+            "formatted": "EGP 21,599.00"
+          },
+          "USD": {
+            "gross": 43499,
+            "formatted": "USD 434.99"
+          }
+        },
+        "renewalPrices": {},
+        "options": [],
+        "storeUrl": "https://3enwank.com/account/plans/care-pro"
+      },
+      {
+        "slug": "store-care",
+        "kind": "care",
+        "cycle": "annual",
+        "name": {
+          "ar": "Store Care",
+          "en": "Store Care"
+        },
+        "summary": {
+          "ar": "Replies within 4 hours on Care Requests.",
+          "en": "Replies within 4 hours on Care Requests."
+        },
+        "features": {
+          "ar": [
+            "Updates: Weekly, plus payments",
+            "Content changes: 36 a year (a content change is one clear edit that takes half an hour or less)",
+            "Reply time: 4 hours",
+            "Malware: Weekly scan and cleanup",
+            "Emergency restores: Unlimited",
+            "Reports: Monthly",
+            "32,000 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online."
+          ],
+          "en": [
+            "Updates: Weekly, plus payments",
+            "Content changes: 36 a year (a content change is one clear edit that takes half an hour or less)",
+            "Reply time: 4 hours",
+            "Malware: Weekly scan and cleanup",
+            "Emergency restores: Unlimited",
+            "Reports: Monthly",
+            "32,000 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online."
+          ]
+        },
+        "description": {
+          "ar": "<p><strong>Store Care</strong> - Replies within <strong>4 hours</strong> on Care Requests.</p><ul><li>Updates: Weekly, plus payments</li><li>Content changes: 36 a year (a content change is one clear edit that takes half an hour or less)</li><li>Reply time: 4 hours</li><li>Malware: Weekly scan and cleanup</li><li>Emergency restores: Unlimited</li><li>Reports: Monthly</li><li>32,000 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online.</li></ul>",
+          "en": "<p><strong>Store Care</strong> - Replies within <strong>4 hours</strong> on Care Requests.</p><ul><li>Updates: Weekly, plus payments</li><li>Content changes: 36 a year (a content change is one clear edit that takes half an hour or less)</li><li>Reply time: 4 hours</li><li>Malware: Weekly scan and cleanup</li><li>Emergency restores: Unlimited</li><li>Reports: Monthly</li><li>32,000 EGP per year, VAT included. If the plan is not renewed, upkeep stops; the website stays online.</li></ul>"
+        },
+        "depositBp": null,
+        "prices": {
+          "EGP": {
+            "gross": 3199900,
+            "formatted": "EGP 31,999.00"
+          },
+          "USD": {
+            "gross": 63999,
+            "formatted": "USD 639.99"
+          }
+        },
+        "renewalPrices": {},
+        "options": [],
+        "storeUrl": "https://3enwank.com/account/plans/store-care"
+      }
+    ]
+  },
+  "domains": {
+    "enabled": true
+  },
+  "assistant": {
+    "enabled": true,
+    "turnstileSiteKey": "0x4AAAAAAEs-R_OsunRihzXq"
+  },
+  "tlds": [
+    {
+      "tld": "com",
+      "privacy": true,
+      "minYears": 1,
+      "maxYears": 10,
+      "prices": {
+        "EGP": {
+          "register": {
+            "gross": 89900,
+            "formatted": "EGP 899.00"
+          },
+          "renew": {
+            "gross": 89900,
+            "formatted": "EGP 899.00"
+          },
+          "transfer": {
+            "gross": 89900,
+            "formatted": "EGP 899.00"
+          }
+        },
+        "USD": {
+          "register": {
+            "gross": 1699,
+            "formatted": "USD 16.99"
+          },
+          "renew": {
+            "gross": 1699,
+            "formatted": "USD 16.99"
+          },
+          "transfer": {
+            "gross": 1699,
+            "formatted": "USD 16.99"
+          }
+        }
+      }
+    },
+    {
+      "tld": "net",
+      "privacy": true,
+      "minYears": 1,
+      "maxYears": 10,
+      "prices": {
+        "EGP": {
+          "register": {
+            "gross": 99900,
+            "formatted": "EGP 999.00"
+          },
+          "renew": {
+            "gross": 99900,
+            "formatted": "EGP 999.00"
+          },
+          "transfer": {
+            "gross": 99900,
+            "formatted": "EGP 999.00"
+          }
+        },
+        "USD": {
+          "register": {
+            "gross": 1899,
+            "formatted": "USD 18.99"
+          },
+          "renew": {
+            "gross": 1899,
+            "formatted": "USD 18.99"
+          },
+          "transfer": {
+            "gross": 1899,
+            "formatted": "USD 18.99"
+          }
+        }
+      }
+    },
+    {
+      "tld": "org",
+      "privacy": true,
+      "minYears": 1,
+      "maxYears": 10,
+      "prices": {
+        "EGP": {
+          "register": {
+            "gross": 59900,
+            "formatted": "EGP 599.00"
+          },
+          "renew": {
+            "gross": 89900,
+            "formatted": "EGP 899.00"
+          },
+          "transfer": {
+            "gross": 89900,
+            "formatted": "EGP 899.00"
+          }
+        },
+        "USD": {
+          "register": {
+            "gross": 1199,
+            "formatted": "USD 11.99"
+          },
+          "renew": {
+            "gross": 1799,
+            "formatted": "USD 17.99"
+          },
+          "transfer": {
+            "gross": 1799,
+            "formatted": "USD 17.99"
+          }
+        }
+      }
+    },
+    {
+      "tld": "store",
+      "privacy": true,
+      "minYears": 1,
+      "maxYears": 10,
+      "prices": {
+        "EGP": {
+          "register": {
+            "gross": 19900,
+            "formatted": "EGP 199.00"
+          },
+          "renew": {
+            "gross": 319900,
+            "formatted": "EGP 3,199.00"
+          },
+          "transfer": {
+            "gross": 319900,
+            "formatted": "EGP 3,199.00"
+          }
+        },
+        "USD": {
+          "register": {
+            "gross": 399,
+            "formatted": "USD 3.99"
+          },
+          "renew": {
+            "gross": 6399,
+            "formatted": "USD 63.99"
+          },
+          "transfer": {
+            "gross": 6399,
+            "formatted": "USD 63.99"
+          }
+        }
+      }
+    },
+    {
+      "tld": "online",
+      "privacy": true,
+      "minYears": 1,
+      "maxYears": 10,
+      "prices": {
+        "EGP": {
+          "register": {
+            "gross": 19900,
+            "formatted": "EGP 199.00"
+          },
+          "renew": {
+            "gross": 219900,
+            "formatted": "EGP 2,199.00"
+          },
+          "transfer": {
+            "gross": 199900,
+            "formatted": "EGP 1,999.00"
+          }
+        },
+        "USD": {
+          "register": {
+            "gross": 399,
+            "formatted": "USD 3.99"
+          },
+          "renew": {
+            "gross": 4399,
+            "formatted": "USD 43.99"
+          },
+          "transfer": {
+            "gross": 3999,
+            "formatted": "USD 39.99"
+          }
+        }
+      }
+    },
+    {
+      "tld": "site",
+      "privacy": true,
+      "minYears": 1,
+      "maxYears": 10,
+      "prices": {
+        "EGP": {
+          "register": {
+            "gross": 19900,
+            "formatted": "EGP 199.00"
+          },
+          "renew": {
+            "gross": 199900,
+            "formatted": "EGP 1,999.00"
+          },
+          "transfer": {
+            "gross": 199900,
+            "formatted": "EGP 1,999.00"
+          }
+        },
+        "USD": {
+          "register": {
+            "gross": 399,
+            "formatted": "USD 3.99"
+          },
+          "renew": {
+            "gross": 3999,
+            "formatted": "USD 39.99"
+          },
+          "transfer": {
+            "gross": 3999,
+            "formatted": "USD 39.99"
+          }
+        }
+      }
+    },
+    {
+      "tld": "shop",
+      "privacy": true,
+      "minYears": 1,
+      "maxYears": 10,
+      "prices": {
+        "EGP": {
+          "register": {
+            "gross": 19900,
+            "formatted": "EGP 199.00"
+          },
+          "renew": {
+            "gross": 239900,
+            "formatted": "EGP 2,399.00"
+          },
+          "transfer": {
+            "gross": 239900,
+            "formatted": "EGP 2,399.00"
+          }
+        },
+        "USD": {
+          "register": {
+            "gross": 299,
+            "formatted": "USD 2.99"
+          },
+          "renew": {
+            "gross": 4799,
+            "formatted": "USD 47.99"
+          },
+          "transfer": {
+            "gross": 4799,
+            "formatted": "USD 47.99"
+          }
+        }
+      }
+    },
+    {
+      "tld": "xyz",
+      "privacy": true,
+      "minYears": 1,
+      "maxYears": 10,
+      "prices": {
+        "EGP": {
+          "register": {
+            "gross": 19900,
+            "formatted": "EGP 199.00"
+          },
+          "renew": {
+            "gross": 109900,
+            "formatted": "EGP 1,099.00"
+          },
+          "transfer": {
+            "gross": 109900,
+            "formatted": "EGP 1,099.00"
+          }
+        },
+        "USD": {
+          "register": {
+            "gross": 299,
+            "formatted": "USD 2.99"
+          },
+          "renew": {
+            "gross": 2199,
+            "formatted": "USD 21.99"
+          },
+          "transfer": {
+            "gross": 2199,
+            "formatted": "USD 21.99"
+          }
+        }
+      }
+    },
+    {
+      "tld": "co",
+      "privacy": true,
+      "minYears": 1,
+      "maxYears": 5,
+      "prices": {
+        "EGP": {
+          "register": {
+            "gross": 119900,
+            "formatted": "EGP 1,199.00"
+          },
+          "renew": {
+            "gross": 239900,
+            "formatted": "EGP 2,399.00"
+          },
+          "transfer": {
+            "gross": 239900,
+            "formatted": "EGP 2,399.00"
+          }
+        },
+        "USD": {
+          "register": {
+            "gross": 2299,
+            "formatted": "USD 22.99"
+          },
+          "renew": {
+            "gross": 4699,
+            "formatted": "USD 46.99"
+          },
+          "transfer": {
+            "gross": 4699,
+            "formatted": "USD 46.99"
+          }
+        }
+      }
+    },
+    {
+      "tld": "io",
+      "privacy": true,
+      "minYears": 1,
+      "maxYears": 10,
+      "prices": {
+        "EGP": {
+          "register": {
+            "gross": 219900,
+            "formatted": "EGP 2,199.00"
+          },
+          "renew": {
+            "gross": 399900,
+            "formatted": "EGP 3,999.00"
+          },
+          "transfer": {
+            "gross": 399900,
+            "formatted": "EGP 3,999.00"
+          }
+        },
+        "USD": {
+          "register": {
+            "gross": 4299,
+            "formatted": "USD 42.99"
+          },
+          "renew": {
+            "gross": 7999,
+            "formatted": "USD 79.99"
+          },
+          "transfer": {
+            "gross": 7999,
+            "formatted": "USD 79.99"
+          }
+        }
+      }
+    },
+    {
+      "tld": "me",
+      "privacy": true,
+      "minYears": 1,
+      "maxYears": 10,
+      "prices": {
+        "EGP": {
+          "register": {
+            "gross": 79900,
+            "formatted": "EGP 799.00"
+          },
+          "renew": {
+            "gross": 139900,
+            "formatted": "EGP 1,399.00"
+          },
+          "transfer": {
+            "gross": 139900,
+            "formatted": "EGP 1,399.00"
+          }
+        },
+        "USD": {
+          "register": {
+            "gross": 1499,
+            "formatted": "USD 14.99"
+          },
+          "renew": {
+            "gross": 2699,
+            "formatted": "USD 26.99"
+          },
+          "transfer": {
+            "gross": 2699,
+            "formatted": "USD 26.99"
+          }
+        }
+      }
+    },
+    {
+      "tld": "info",
+      "privacy": true,
+      "minYears": 1,
+      "maxYears": 10,
+      "prices": {
+        "EGP": {
+          "register": {
+            "gross": 29900,
+            "formatted": "EGP 299.00"
+          },
+          "renew": {
+            "gross": 169900,
+            "formatted": "EGP 1,699.00"
+          },
+          "transfer": {
+            "gross": 169900,
+            "formatted": "EGP 1,699.00"
+          }
+        },
+        "USD": {
+          "register": {
+            "gross": 599,
+            "formatted": "USD 5.99"
+          },
+          "renew": {
+            "gross": 3399,
+            "formatted": "USD 33.99"
+          },
+          "transfer": {
+            "gross": 3399,
+            "formatted": "USD 33.99"
+          }
+        }
+      }
+    },
+    {
+      "tld": "biz",
+      "privacy": true,
+      "minYears": 1,
+      "maxYears": 10,
+      "prices": {
+        "EGP": {
+          "register": {
+            "gross": 49900,
+            "formatted": "EGP 499.00"
+          },
+          "renew": {
+            "gross": 149900,
+            "formatted": "EGP 1,499.00"
+          },
+          "transfer": {
+            "gross": 149900,
+            "formatted": "EGP 1,499.00"
+          }
+        },
+        "USD": {
+          "register": {
+            "gross": 999,
+            "formatted": "USD 9.99"
+          },
+          "renew": {
+            "gross": 2899,
+            "formatted": "USD 28.99"
+          },
+          "transfer": {
+            "gross": 2899,
+            "formatted": "USD 28.99"
+          }
+        }
+      }
+    },
+    {
+      "tld": "cloud",
+      "privacy": true,
+      "minYears": 1,
+      "maxYears": 10,
+      "prices": {
+        "EGP": {
+          "register": {
+            "gross": 29900,
+            "formatted": "EGP 299.00"
+          },
+          "renew": {
+            "gross": 169900,
+            "formatted": "EGP 1,699.00"
+          },
+          "transfer": {
+            "gross": 169900,
+            "formatted": "EGP 1,699.00"
+          }
+        },
+        "USD": {
+          "register": {
+            "gross": 599,
+            "formatted": "USD 5.99"
+          },
+          "renew": {
+            "gross": 3299,
+            "formatted": "USD 32.99"
+          },
+          "transfer": {
+            "gross": 3299,
+            "formatted": "USD 32.99"
+          }
+        }
+      }
+    },
+    {
+      "tld": "tech",
+      "privacy": true,
+      "minYears": 1,
+      "maxYears": 10,
+      "prices": {
+        "EGP": {
+          "register": {
+            "gross": 49900,
+            "formatted": "EGP 499.00"
+          },
+          "renew": {
+            "gross": 399900,
+            "formatted": "EGP 3,999.00"
+          },
+          "transfer": {
+            "gross": 399900,
+            "formatted": "EGP 3,999.00"
+          }
+        },
+        "USD": {
+          "register": {
+            "gross": 999,
+            "formatted": "USD 9.99"
+          },
+          "renew": {
+            "gross": 7899,
+            "formatted": "USD 78.99"
+          },
+          "transfer": {
+            "gross": 7899,
+            "formatted": "USD 78.99"
+          }
+        }
+      }
+    },
+    {
+      "tld": "dev",
+      "privacy": true,
+      "minYears": 1,
+      "maxYears": 10,
+      "prices": {
+        "EGP": {
+          "register": {
+            "gross": 99900,
+            "formatted": "EGP 999.00"
+          },
+          "renew": {
+            "gross": 99900,
+            "formatted": "EGP 999.00"
+          },
+          "transfer": {
+            "gross": 89900,
+            "formatted": "EGP 899.00"
+          }
+        },
+        "USD": {
+          "register": {
+            "gross": 1999,
+            "formatted": "USD 19.99"
+          },
+          "renew": {
+            "gross": 1899,
+            "formatted": "USD 18.99"
+          },
+          "transfer": {
+            "gross": 1799,
+            "formatted": "USD 17.99"
+          }
+        }
+      }
+    },
+    {
+      "tld": "blog",
+      "privacy": true,
+      "minYears": 1,
+      "maxYears": 10,
+      "prices": {
+        "EGP": {
+          "register": {
+            "gross": 29900,
+            "formatted": "EGP 299.00"
+          },
+          "renew": {
+            "gross": 169900,
+            "formatted": "EGP 1,699.00"
+          },
+          "transfer": {
+            "gross": 169900,
+            "formatted": "EGP 1,699.00"
+          }
+        },
+        "USD": {
+          "register": {
+            "gross": 599,
+            "formatted": "USD 5.99"
+          },
+          "renew": {
+            "gross": 3299,
+            "formatted": "USD 32.99"
+          },
+          "transfer": {
+            "gross": 3299,
+            "formatted": "USD 32.99"
+          }
+        }
+      }
+    },
+    {
+      "tld": "digital",
+      "privacy": true,
+      "minYears": 1,
+      "maxYears": 10,
+      "prices": {
+        "EGP": {
+          "register": {
+            "gross": 29900,
+            "formatted": "EGP 299.00"
+          },
+          "renew": {
+            "gross": 259900,
+            "formatted": "EGP 2,599.00"
+          },
+          "transfer": {
+            "gross": 259900,
+            "formatted": "EGP 2,599.00"
+          }
+        },
+        "USD": {
+          "register": {
+            "gross": 499,
+            "formatted": "USD 4.99"
+          },
+          "renew": {
+            "gross": 5099,
+            "formatted": "USD 50.99"
+          },
+          "transfer": {
+            "gross": 5099,
+            "formatted": "USD 50.99"
+          }
+        }
+      }
+    },
+    {
+      "tld": "agency",
+      "privacy": true,
+      "minYears": 1,
+      "maxYears": 10,
+      "prices": {
+        "EGP": {
+          "register": {
+            "gross": 29900,
+            "formatted": "EGP 299.00"
+          },
+          "renew": {
+            "gross": 199900,
+            "formatted": "EGP 1,999.00"
+          },
+          "transfer": {
+            "gross": 199900,
+            "formatted": "EGP 1,999.00"
+          }
+        },
+        "USD": {
+          "register": {
+            "gross": 599,
+            "formatted": "USD 5.99"
+          },
+          "renew": {
+            "gross": 3899,
+            "formatted": "USD 38.99"
+          },
+          "transfer": {
+            "gross": 3899,
+            "formatted": "USD 38.99"
+          }
+        }
+      }
+    },
+    {
+      "tld": "company",
+      "privacy": true,
+      "minYears": 1,
+      "maxYears": 10,
+      "prices": {
+        "EGP": {
+          "register": {
+            "gross": 19900,
+            "formatted": "EGP 199.00"
+          },
+          "renew": {
+            "gross": 129900,
+            "formatted": "EGP 1,299.00"
+          },
+          "transfer": {
+            "gross": 129900,
+            "formatted": "EGP 1,299.00"
+          }
+        },
+        "USD": {
+          "register": {
+            "gross": 399,
+            "formatted": "USD 3.99"
+          },
+          "renew": {
+            "gross": 2599,
+            "formatted": "USD 25.99"
+          },
+          "transfer": {
+            "gross": 2599,
+            "formatted": "USD 25.99"
+          }
+        }
+      }
+    },
+    {
+      "tld": "email",
+      "privacy": true,
+      "minYears": 1,
+      "maxYears": 10,
+      "prices": {
+        "EGP": {
+          "register": {
+            "gross": 49900,
+            "formatted": "EGP 499.00"
+          },
+          "renew": {
+            "gross": 199900,
+            "formatted": "EGP 1,999.00"
+          },
+          "transfer": {
+            "gross": 199900,
+            "formatted": "EGP 1,999.00"
+          }
+        },
+        "USD": {
+          "register": {
+            "gross": 899,
+            "formatted": "USD 8.99"
+          },
+          "renew": {
+            "gross": 3899,
+            "formatted": "USD 38.99"
+          },
+          "transfer": {
+            "gross": 3899,
+            "formatted": "USD 38.99"
+          }
+        }
+      }
+    },
+    {
+      "tld": "live",
+      "privacy": true,
+      "minYears": 1,
+      "maxYears": 10,
+      "prices": {
+        "EGP": {
+          "register": {
+            "gross": 19900,
+            "formatted": "EGP 199.00"
+          },
+          "renew": {
+            "gross": 199900,
+            "formatted": "EGP 1,999.00"
+          },
+          "transfer": {
+            "gross": 199900,
+            "formatted": "EGP 1,999.00"
+          }
+        },
+        "USD": {
+          "register": {
+            "gross": 399,
+            "formatted": "USD 3.99"
+          },
+          "renew": {
+            "gross": 3999,
+            "formatted": "USD 39.99"
+          },
+          "transfer": {
+            "gross": 3999,
+            "formatted": "USD 39.99"
+          }
+        }
+      }
+    },
+    {
+      "tld": "life",
+      "privacy": true,
+      "minYears": 1,
+      "maxYears": 10,
+      "prices": {
+        "EGP": {
+          "register": {
+            "gross": 29900,
+            "formatted": "EGP 299.00"
+          },
+          "renew": {
+            "gross": 229900,
+            "formatted": "EGP 2,299.00"
+          },
+          "transfer": {
+            "gross": 229900,
+            "formatted": "EGP 2,299.00"
+          }
+        },
+        "USD": {
+          "register": {
+            "gross": 599,
+            "formatted": "USD 5.99"
+          },
+          "renew": {
+            "gross": 4499,
+            "formatted": "USD 44.99"
+          },
+          "transfer": {
+            "gross": 4499,
+            "formatted": "USD 44.99"
+          }
+        }
+      }
+    },
+    {
+      "tld": "world",
+      "privacy": true,
+      "minYears": 1,
+      "maxYears": 10,
+      "prices": {
+        "EGP": {
+          "register": {
+            "gross": 19900,
+            "formatted": "EGP 199.00"
+          },
+          "renew": {
+            "gross": 259900,
+            "formatted": "EGP 2,599.00"
+          },
+          "transfer": {
+            "gross": 259900,
+            "formatted": "EGP 2,599.00"
+          }
+        },
+        "USD": {
+          "register": {
+            "gross": 399,
+            "formatted": "USD 3.99"
+          },
+          "renew": {
+            "gross": 5099,
+            "formatted": "USD 50.99"
+          },
+          "transfer": {
+            "gross": 5099,
+            "formatted": "USD 50.99"
+          }
+        }
+      }
+    },
+    {
+      "tld": "space",
+      "privacy": true,
+      "minYears": 1,
+      "maxYears": 10,
+      "prices": {
+        "EGP": {
+          "register": {
+            "gross": 19900,
+            "formatted": "EGP 199.00"
+          },
+          "renew": {
+            "gross": 169900,
+            "formatted": "EGP 1,699.00"
+          },
+          "transfer": {
+            "gross": 169900,
+            "formatted": "EGP 1,699.00"
+          }
+        },
+        "USD": {
+          "register": {
+            "gross": 399,
+            "formatted": "USD 3.99"
+          },
+          "renew": {
+            "gross": 3299,
+            "formatted": "USD 32.99"
+          },
+          "transfer": {
+            "gross": 3299,
+            "formatted": "USD 32.99"
+          }
+        }
+      }
+    },
+    {
+      "tld": "website",
+      "privacy": true,
+      "minYears": 1,
+      "maxYears": 10,
+      "prices": {
+        "EGP": {
+          "register": {
+            "gross": 19900,
+            "formatted": "EGP 199.00"
+          },
+          "renew": {
+            "gross": 169900,
+            "formatted": "EGP 1,699.00"
+          },
+          "transfer": {
+            "gross": 169900,
+            "formatted": "EGP 1,699.00"
+          }
+        },
+        "USD": {
+          "register": {
+            "gross": 399,
+            "formatted": "USD 3.99"
+          },
+          "renew": {
+            "gross": 3299,
+            "formatted": "USD 32.99"
+          },
+          "transfer": {
+            "gross": 3299,
+            "formatted": "USD 32.99"
+          }
+        }
+      }
+    },
+    {
+      "tld": "art",
+      "privacy": true,
+      "minYears": 1,
+      "maxYears": 10,
+      "prices": {
+        "EGP": {
+          "register": {
+            "gross": 19900,
+            "formatted": "EGP 199.00"
+          },
+          "renew": {
+            "gross": 169900,
+            "formatted": "EGP 1,699.00"
+          },
+          "transfer": {
+            "gross": 169900,
+            "formatted": "EGP 1,699.00"
+          }
+        },
+        "USD": {
+          "register": {
+            "gross": 299,
+            "formatted": "USD 2.99"
+          },
+          "renew": {
+            "gross": 3299,
+            "formatted": "USD 32.99"
+          },
+          "transfer": {
+            "gross": 3299,
+            "formatted": "USD 32.99"
+          }
+        }
+      }
+    },
+    {
+      "tld": "design",
+      "privacy": true,
+      "minYears": 1,
+      "maxYears": 10,
+      "prices": {
+        "EGP": {
+          "register": {
+            "gross": 29900,
+            "formatted": "EGP 299.00"
+          },
+          "renew": {
+            "gross": 359900,
+            "formatted": "EGP 3,599.00"
+          },
+          "transfer": {
+            "gross": 359900,
+            "formatted": "EGP 3,599.00"
+          }
+        },
+        "USD": {
+          "register": {
+            "gross": 499,
+            "formatted": "USD 4.99"
+          },
+          "renew": {
+            "gross": 7199,
+            "formatted": "USD 71.99"
+          },
+          "transfer": {
+            "gross": 7199,
+            "formatted": "USD 71.99"
+          }
+        }
+      }
+    },
+    {
+      "tld": "studio",
+      "privacy": true,
+      "minYears": 1,
+      "maxYears": 10,
+      "prices": {
+        "EGP": {
+          "register": {
+            "gross": 89900,
+            "formatted": "EGP 899.00"
+          },
+          "renew": {
+            "gross": 249900,
+            "formatted": "EGP 2,499.00"
+          },
+          "transfer": {
+            "gross": 249900,
+            "formatted": "EGP 2,499.00"
+          }
+        },
+        "USD": {
+          "register": {
+            "gross": 1799,
+            "formatted": "USD 17.99"
+          },
+          "renew": {
+            "gross": 4999,
+            "formatted": "USD 49.99"
+          },
+          "transfer": {
+            "gross": 4999,
+            "formatted": "USD 49.99"
+          }
+        }
+      }
+    },
+    {
+      "tld": "group",
+      "privacy": true,
+      "minYears": 1,
+      "maxYears": 10,
+      "prices": {
+        "EGP": {
+          "register": {
+            "gross": 49900,
+            "formatted": "EGP 499.00"
+          },
+          "renew": {
+            "gross": 169900,
+            "formatted": "EGP 1,699.00"
+          },
+          "transfer": {
+            "gross": 169900,
+            "formatted": "EGP 1,699.00"
+          }
+        },
+        "USD": {
+          "register": {
+            "gross": 999,
+            "formatted": "USD 9.99"
+          },
+          "renew": {
+            "gross": 3299,
+            "formatted": "USD 32.99"
+          },
+          "transfer": {
+            "gross": 3299,
+            "formatted": "USD 32.99"
+          }
+        }
+      }
+    },
+    {
+      "tld": "link",
+      "privacy": true,
+      "minYears": 1,
+      "maxYears": 10,
+      "prices": {
+        "EGP": {
+          "register": {
+            "gross": 59900,
+            "formatted": "EGP 599.00"
+          },
+          "renew": {
+            "gross": 59900,
+            "formatted": "EGP 599.00"
+          },
+          "transfer": {
+            "gross": 59900,
+            "formatted": "EGP 599.00"
+          }
+        },
+        "USD": {
+          "register": {
+            "gross": 1199,
+            "formatted": "USD 11.99"
+          },
+          "renew": {
+            "gross": 1199,
+            "formatted": "USD 11.99"
+          },
+          "transfer": {
+            "gross": 1199,
+            "formatted": "USD 11.99"
+          }
+        }
+      }
+    },
+    {
+      "tld": "click",
+      "privacy": true,
+      "minYears": 1,
+      "maxYears": 10,
+      "prices": {
+        "EGP": {
+          "register": {
+            "gross": 19900,
+            "formatted": "EGP 199.00"
+          },
+          "renew": {
+            "gross": 89900,
+            "formatted": "EGP 899.00"
+          },
+          "transfer": {
+            "gross": 89900,
+            "formatted": "EGP 899.00"
+          }
+        },
+        "USD": {
+          "register": {
+            "gross": 299,
+            "formatted": "USD 2.99"
+          },
+          "renew": {
+            "gross": 1699,
+            "formatted": "USD 16.99"
+          },
+          "transfer": {
+            "gross": 1699,
+            "formatted": "USD 16.99"
+          }
+        }
+      }
+    },
+    {
+      "tld": "pro",
+      "privacy": true,
+      "minYears": 1,
+      "maxYears": 10,
+      "prices": {
+        "EGP": {
+          "register": {
+            "gross": 29900,
+            "formatted": "EGP 299.00"
+          },
+          "renew": {
+            "gross": 169900,
+            "formatted": "EGP 1,699.00"
+          },
+          "transfer": {
+            "gross": 169900,
+            "formatted": "EGP 1,699.00"
+          }
+        },
+        "USD": {
+          "register": {
+            "gross": 599,
+            "formatted": "USD 5.99"
+          },
+          "renew": {
+            "gross": 3399,
+            "formatted": "USD 33.99"
+          },
+          "transfer": {
+            "gross": 3399,
+            "formatted": "USD 33.99"
+          }
+        }
+      }
+    },
+    {
+      "tld": "news",
+      "privacy": true,
+      "minYears": 1,
+      "maxYears": 10,
+      "prices": {
+        "EGP": {
+          "register": {
+            "gross": 79900,
+            "formatted": "EGP 799.00"
+          },
+          "renew": {
+            "gross": 199900,
+            "formatted": "EGP 1,999.00"
+          },
+          "transfer": {
+            "gross": 199900,
+            "formatted": "EGP 1,999.00"
+          }
+        },
+        "USD": {
+          "register": {
+            "gross": 1499,
+            "formatted": "USD 14.99"
+          },
+          "renew": {
+            "gross": 3999,
+            "formatted": "USD 39.99"
+          },
+          "transfer": {
+            "gross": 3999,
+            "formatted": "USD 39.99"
+          }
+        }
+      }
+    },
+    {
+      "tld": "today",
+      "privacy": true,
+      "minYears": 1,
+      "maxYears": 10,
+      "prices": {
+        "EGP": {
+          "register": {
+            "gross": 29900,
+            "formatted": "EGP 299.00"
+          },
+          "renew": {
+            "gross": 179900,
+            "formatted": "EGP 1,799.00"
+          },
+          "transfer": {
+            "gross": 179900,
+            "formatted": "EGP 1,799.00"
+          }
+        },
+        "USD": {
+          "register": {
+            "gross": 599,
+            "formatted": "USD 5.99"
+          },
+          "renew": {
+            "gross": 3599,
+            "formatted": "USD 35.99"
+          },
+          "transfer": {
+            "gross": 3599,
+            "formatted": "USD 35.99"
+          }
+        }
+      }
+    },
+    {
+      "tld": "solutions",
+      "privacy": true,
+      "minYears": 1,
+      "maxYears": 10,
+      "prices": {
+        "EGP": {
+          "register": {
+            "gross": 29900,
+            "formatted": "EGP 299.00"
+          },
+          "renew": {
+            "gross": 199900,
+            "formatted": "EGP 1,999.00"
+          },
+          "transfer": {
+            "gross": 199900,
+            "formatted": "EGP 1,999.00"
+          }
+        },
+        "USD": {
+          "register": {
+            "gross": 599,
+            "formatted": "USD 5.99"
+          },
+          "renew": {
+            "gross": 3899,
+            "formatted": "USD 38.99"
+          },
+          "transfer": {
+            "gross": 3899,
+            "formatted": "USD 38.99"
+          }
+        }
+      }
+    },
+    {
+      "tld": "services",
+      "privacy": true,
+      "minYears": 1,
+      "maxYears": 10,
+      "prices": {
+        "EGP": {
+          "register": {
+            "gross": 69900,
+            "formatted": "EGP 699.00"
+          },
+          "renew": {
+            "gross": 239900,
+            "formatted": "EGP 2,399.00"
+          },
+          "transfer": {
+            "gross": 239900,
+            "formatted": "EGP 2,399.00"
+          }
+        },
+        "USD": {
+          "register": {
+            "gross": 1399,
+            "formatted": "USD 13.99"
+          },
+          "renew": {
+            "gross": 4799,
+            "formatted": "USD 47.99"
+          },
+          "transfer": {
+            "gross": 4799,
+            "formatted": "USD 47.99"
+          }
+        }
+      }
+    },
+    {
+      "tld": "systems",
+      "privacy": true,
+      "minYears": 1,
+      "maxYears": 10,
+      "prices": {
+        "EGP": {
+          "register": {
+            "gross": 89900,
+            "formatted": "EGP 899.00"
+          },
+          "renew": {
+            "gross": 219900,
+            "formatted": "EGP 2,199.00"
+          },
+          "transfer": {
+            "gross": 219900,
+            "formatted": "EGP 2,199.00"
+          }
+        },
+        "USD": {
+          "register": {
+            "gross": 1799,
+            "formatted": "USD 17.99"
+          },
+          "renew": {
+            "gross": 4399,
+            "formatted": "USD 43.99"
+          },
+          "transfer": {
+            "gross": 4399,
+            "formatted": "USD 43.99"
+          }
+        }
+      }
+    },
+    {
+      "tld": "network",
+      "privacy": true,
+      "minYears": 1,
+      "maxYears": 10,
+      "prices": {
+        "EGP": {
+          "register": {
+            "gross": 39900,
+            "formatted": "EGP 399.00"
+          },
+          "renew": {
+            "gross": 219900,
+            "formatted": "EGP 2,199.00"
+          },
+          "transfer": {
+            "gross": 219900,
+            "formatted": "EGP 2,199.00"
+          }
+        },
+        "USD": {
+          "register": {
+            "gross": 699,
+            "formatted": "USD 6.99"
+          },
+          "renew": {
+            "gross": 4399,
+            "formatted": "USD 43.99"
+          },
+          "transfer": {
+            "gross": 4399,
+            "formatted": "USD 43.99"
+          }
+        }
+      }
+    }
+  ],
+  "tldCount": 577
+}

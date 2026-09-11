@@ -25,7 +25,14 @@ export function pageMetadata(page: PageKey, locale: Locale, title: string, descr
     },
     twitter: { card: "summary_large_image", title: fullTitle, description },
     robots: { index: true, follow: true },
-    icons: { icon: [{ url: "/favicon-32.png", sizes: "32x32", type: "image/png" }], apple: "/icon-192.png" },
+    icons: {
+      // Two cuts rather than one halved by the browser, and a square tile for iOS, which rounds its own.
+      icon: [
+        { url: "/favicon-16.png", sizes: "16x16", type: "image/png" },
+        { url: "/favicon-32.png", sizes: "32x32", type: "image/png" },
+      ],
+      apple: "/apple-icon-180.png",
+    },
     other: { "content-language": langTag(locale) },
   };
 }

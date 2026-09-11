@@ -106,6 +106,8 @@ export type Messages = {
     title: string;
     h2: string;
     lede: string;
+    renewsAt: string;
+    cartTotal: string;
     tabRegister: string;
     tabTransfer: string;
     tabIdeas: string;
@@ -126,7 +128,6 @@ export type Messages = {
     privacy: string;
     /** {min} and {max}. */
     notYet: string;
-    moreTlds: string;
     ask: string;
     /** Inline availability results. */
     available: string;

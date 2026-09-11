@@ -1,6 +1,5 @@
 import { ButtonLink, Card, PageIntro, Section } from "@/components/blocks";
 import { DomainSearch } from "@/components/domain-search";
-import { TldTable } from "@/components/domains";
 import { Shell } from "@/components/shell";
 import { pageMetadata } from "@/lib/metadata";
 import { anchorFor, pathFor, type Locale } from "@/lib/i18n";
@@ -28,26 +27,26 @@ export const domains = {
          * the title block, which made this the one page whose heading came with a form attached.
          */}
         <Section>
+          <p className="mb-5 text-sm text-muted">{vatLine(t, catalogue)}</p>
           <div className="rounded-2xl border border-line bg-panel p-5 sm:p-8">
             <DomainSearch locale={locale} searchPath={pathFor("domains", locale)} cartUrl={api.cartDomain} apiUrl={api.domainSearch} ideasUrl={api.domainIdeas} contactHref={anchorFor("contact", locale)} labels={domainSearchLabels(t)} ideas={assistantOn(catalogue)} turnstileSiteKey={catalogue.assistant.turnstileSiteKey} initialQuery={q} initialResults={initialResults as never} initialAdded={params.added ? [params.added] : []} />
           </div>
         </Section>
-        <Section>
-          {open ? (
-            <>
-              <p className="mb-6 text-sm text-muted">{vatLine(t, catalogue)}</p>
-              <TldTable tlds={catalogue.tlds} locale={locale} />
-              {catalogue.tldCount > catalogue.tlds.length ? (
-                <p className="mt-4 text-sm text-muted">{t.domains.moreTlds}</p>
-              ) : null}
-            </>
-          ) : (
+        {/*
+         * No price table under the search.
+         *
+         * Thirty-nine rows of four columns is not how anybody picks an extension — they type the
+         * name they want. Every number it held now reaches the reader in the row for the name they
+         * actually asked about, including the renewal, which is the one the table existed for.
+         */}
+        {open ? null : (
+          <Section>
             <Card className="grid gap-6 md:grid-cols-[1fr_auto] md:items-center">
               <p className="text-muted">{t.domains.notYet}</p>
               <ButtonLink href={anchorFor("contact", locale)}>{t.domains.ask}</ButtonLink>
             </Card>
-          )}
-        </Section>
+          </Section>
+        )}
       </Shell>
     );
   },

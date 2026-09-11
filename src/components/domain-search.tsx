@@ -27,6 +27,8 @@ export type DomainSearchLabels = {
   otherExtensions: string;
   moreExtensions: string;
   perYear: string;
+  renewsAt: string;
+  cartTotal: string;
   tabRegister: string;
   tabTransfer: string;
   tabIdeas: string;
@@ -51,6 +53,7 @@ type Result = {
   premium: boolean;
   sellable: boolean;
   price: { gross: number; formatted: string; currency: Currency } | null;
+  renew?: { gross: number; formatted: string; currency: Currency } | null;
   reason?: "not_offered" | "unknown";
 };
 type SearchResponse = {
@@ -112,6 +115,7 @@ function Row({
   const price = r.price
     ? formatPrice({ gross: r.price.gross, formatted: r.price.formatted }, r.price.currency, locale)
     : null;
+  const renew = r.renew ? formatPrice({ gross: r.renew.gross, formatted: r.renew.formatted }, r.renew.currency, locale) : null;
   const free = r.available === true && !r.premium;
   return (
     <li
@@ -129,10 +133,27 @@ function Row({
       <div className="flex items-center gap-4">
         {price ? (
           <span className="whitespace-nowrap text-sm text-muted">
-            <bdi dir="ltr" className="tabular font-bold text-ink">
-              {price}
-            </bdi>{" "}
-            {labels.perYear}
+            <span className="block">
+              <bdi dir="ltr" className="tabular font-bold text-ink">
+                {price}
+              </bdi>{" "}
+              {labels.perYear}
+            </span>
+            {/*
+             * The second year, under the first, and only when they differ.
+             *
+             * A cheap opening year is how this market is sold: .store is 199 to register and 3,199
+             * to renew. That comparison used to live in a table under the search; the table is gone,
+             * so this row is the only place a customer can meet the number before they buy.
+             */}
+            {renew ? (
+              <span className="block text-xs text-faint">
+                {labels.renewsAt}{" "}
+                <bdi dir="ltr" className="tabular">
+                  {renew}
+                </bdi>
+              </span>
+            ) : null}
           </span>
         ) : null}
         {free ? (
@@ -557,6 +578,11 @@ export function DomainSearch({
         ) : null}
         {data && (status === "done" || status === "loading") ? (
           <div className="mt-6">
+            {added.length ? (
+              // What is in the cart, where the adding happens: the badge is up in the navigation bar,
+              // which is off screen by the time a visitor has scrolled through forty endings.
+              <p className="mb-3 text-sm font-bold text-brand-strong">{labels.cartTotal.replace("{count}", String(added.length))}</p>
+            ) : null}
             {data.primary ? (
               <ul>
                 <Row r={data.primary} primary {...rowProps} added={added.includes(data.primary.name)} />
@@ -567,10 +593,20 @@ export function DomainSearch({
                 <h3 className="mt-4 text-xs font-extrabold uppercase tracking-[0.14em] text-muted">
                   {labels.otherExtensions}
                 </h3>
+                {/*
+                 * Cheapest first among the ones that can be bought, and everything unavailable after
+                 * them. The registrar answers in whatever order it likes, which put a 3,999 .io above
+                 * a 199 .shop and a taken name above both.
+                 */}
                 <ul className={`mt-1 ${SCROLL_LIST}`}>
-                  {data.suggestions.map((r, i) => (
-                    <Row key={r.name} r={r} index={i + 1} {...rowProps} added={added.includes(r.name)} />
-                  ))}
+                  {[...data.suggestions]
+                    .sort((a, b) => {
+                      const buyable = (x: typeof a) => (x.available === true && x.sellable && !x.premium ? 0 : 1);
+                      return buyable(a) - buyable(b) || (a.price?.gross ?? Infinity) - (b.price?.gross ?? Infinity);
+                    })
+                    .map((r, i) => (
+                      <Row key={r.name} r={r} index={i + 1} {...rowProps} added={added.includes(r.name)} />
+                    ))}
                   {Array.from({ length: awaiting }, (_, i) => (
                     <Pending key={`pending-${i}`} />
                   ))}

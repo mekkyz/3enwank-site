@@ -87,6 +87,8 @@ export function domainSearchLabels(t: Messages): DomainSearchLabels {
     transferPlaceholder: d.transferPlaceholder,
     transferButton: d.transferButton,
     transferHint: d.transferHint,
+    renewsAt: d.renewsAt,
+    cartTotal: d.cartTotal,
     label: d.searchLabel,
     placeholder: d.searchPlaceholder,
     button: d.searchButton,

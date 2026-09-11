@@ -60,6 +60,22 @@ export const websites = {
           ) : (
             <Empty>{t.websites.empty}</Empty>
           )}
+          {/*
+           * What the packages assume, said once under them rather than on six cards. The page had
+           * no way to say any of it: the note lines carried in the catalogue were filtered out of
+           * the bullets and never rendered anywhere else, so "Hosting and Care plans are separate"
+           * has been invisible since this page was built.
+           */}
+          {packages.length ? (
+            <ul className="mt-8 space-y-1.5 text-sm text-muted">
+              {t.websites.notes.map((n) => (
+                <li key={n} className="flex gap-2">
+                  <span aria-hidden="true">*</span>
+                  <span>{n}</span>
+                </li>
+              ))}
+            </ul>
+          ) : null}
         </Section>
         <Section tone="alt">
           <Card className="grid gap-6 md:grid-cols-[1fr_auto] md:items-center">

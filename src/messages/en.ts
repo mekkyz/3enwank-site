@@ -106,6 +106,11 @@ export const en: Messages = {
     customBody: "A web app, an integration with software you already use, or something we have not built before. Tell us what it has to do; we scope it and quote it before anyone commits.",
     customMeta: "Quoted per project",
     customCta: "Describe your project",
+    notes: [
+      "Delivery time starts when we have your text, images and logo.",
+      "Time spent waiting on a payment provider, a domain transfer or Google is not counted.",
+      "Hosting and Care plans are separate.",
+    ],
     empty: "Website packages are being updated. Contact us for a quote.",
   },
   care: {

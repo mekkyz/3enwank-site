@@ -99,6 +99,7 @@ export type Messages = {
     customBody: string;
     customMeta: string;
     customCta: string;
+    notes: string[];
     empty: string;
   };
   care: { title: string; h2: string; lede: string; notes: Array<{ title: string; body: string }>; empty: string };

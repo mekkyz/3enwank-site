@@ -131,6 +131,7 @@ export const ar: Messages = {
     transferLabel: "نطاق تملكه بالفعل",
     transferPlaceholder: "myshop.com",
     transferButton: "انقله إلينا",
+    transferThis: "هل هو لك؟ انقله إلينا",
     transferHint: "أوقف قفله لدى مُسجِّلك الحالي أولًا. نطلب رمز التفويض عند الدفع.",
     searchLabel: "ابحث عن اسم نطاق",
     searchPlaceholder: "example.com",

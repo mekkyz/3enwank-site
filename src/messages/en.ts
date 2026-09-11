@@ -131,6 +131,7 @@ export const en: Messages = {
     transferLabel: "A domain you already own",
     transferPlaceholder: "myshop.com",
     transferButton: "Transfer to us",
+    transferThis: "Is it yours? Move it here",
     transferHint: "Remove the transfer lock at your current registrar first. We ask for the authorisation code at checkout.",
     searchLabel: "Find a domain name",
     searchPlaceholder: "example.com",

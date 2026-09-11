@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { useCallback, useEffect, useId, useRef, useState, type FormEvent } from "react";
 import type { Currency } from "@/lib/catalogue";
 import { formatPrice } from "@/lib/format";
@@ -35,6 +36,7 @@ export type DomainSearchLabels = {
   transferLabel: string;
   transferPlaceholder: string;
   transferButton: string;
+  transferThis: string;
   transferHint: string;
   ideasTitle: string;
   ideasHint: string;
@@ -79,6 +81,52 @@ const TONE = {
   brand: "bg-brand-soft text-brand-strong",
 } as const;
 
+/**
+ * The bar every tab uses: label above, field and button on one row, hint below.
+ *
+ * Each tab grew its own version — one had a visible label and another a screen-reader one, one hint
+ * sat above the field and another below, the fields were different heights and the buttons were
+ * filled on two tabs and outlined on the third. Switching tabs redrew the box rather than changing
+ * what it asks for, which is the one thing a tab is supposed not to do.
+ */
+function SearchBar({
+  id,
+  label,
+  hint,
+  button,
+  busy = false,
+  children,
+}: {
+  id: string;
+  label: string;
+  hint?: string;
+  button: ReactNode;
+  busy?: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <>
+      <label htmlFor={id} className="mb-2 block text-sm font-semibold text-ink">
+        {label}
+      </label>
+      <div className="flex flex-col gap-2 sm:flex-row">
+        {children}
+        <button
+          type="submit"
+          disabled={busy}
+          className="btn-primary inline-flex min-h-12 shrink-0 items-center justify-center rounded-full px-7 text-sm font-bold disabled:opacity-70"
+        >
+          {button}
+        </button>
+      </div>
+      {hint ? <p className="mt-2 text-xs text-muted">{hint}</p> : null}
+    </>
+  );
+}
+
+const FIELD =
+  "block min-h-12 w-full rounded-full border border-line-strong bg-surface px-4 text-lg text-ink placeholder:text-faint focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand-soft";
+
 function statusOf(r: Result, l: DomainSearchLabels): { text: string; tone: keyof typeof TONE } {
   if (r.available === null)
     return r.reason === "not_offered" ? { text: l.notOffered, tone: "muted" } : { text: l.unknown, tone: "warn" };
@@ -98,6 +146,7 @@ function Row({
   labels,
   added,
   onAdd,
+  onTransfer,
 }: {
   r: Result;
   primary?: boolean;
@@ -110,6 +159,7 @@ function Row({
   labels: DomainSearchLabels;
   added: boolean;
   onAdd: (name: string) => void;
+  onTransfer?: (name: string) => void;
 }) {
   const s = statusOf(r, labels);
   const price = r.price
@@ -131,7 +181,14 @@ function Row({
         </span>
       </div>
       <div className="flex items-center gap-4">
-        {price ? (
+        {/*
+         * Only on a name that can actually be bought.
+         *
+         * "Taken — EGP 899" and "Premium name, not sold online — EGP 199" both quote a price for
+         * something not on sale, and the premium one is not even the right number: a premium name
+         * costs whatever the registry asks, which is why we do not sell it online.
+         */}
+        {price && free && r.sellable ? (
           <span className="whitespace-nowrap text-sm text-muted">
             <span className="block">
               <bdi dir="ltr" className="tabular font-bold text-ink">
@@ -206,6 +263,11 @@ function Row({
               {labels.askUs}
             </a>
           )
+        ) : r.available === false && onTransfer ? (
+          // Taken is only a dead end if it is not yours.
+          <button type="button" onClick={() => onTransfer(r.name)} className="whitespace-nowrap text-sm font-bold text-brand-strong hover:text-brand">
+            {labels.transferThis}
+          </button>
         ) : null}
       </div>
     </li>
@@ -408,6 +470,17 @@ export function DomainSearch({
 
   const [desc, setDesc] = useState("");
   const [tab, setTab] = useState<"register" | "transfer" | "ideas">("register");
+  const [transferName, setTransferName] = useState("");
+
+  /**
+   * A taken name is not a dead end: it belongs to somebody, and that somebody might be the visitor.
+   * Sending them to the transfer tab with the name already in the field turns the most common
+   * disappointment on this page into the other thing we sell.
+   */
+  const transferThis = useCallback((name: string) => {
+    setTransferName(name);
+    setTab("transfer");
+  }, []);
   const [ideasStatus, setIdeasStatus] = useState<IdeasStatus>("idle");
   const [ideasData, setIdeasData] = useState<IdeasResponse | null>(null);
 
@@ -460,7 +533,7 @@ export function DomainSearch({
     [cartUrl],
   );
 
-  const rowProps = { enabled, locale, cartUrl, searchPath, contactHref, labels, onAdd: add };
+  const rowProps = { enabled, locale, cartUrl, searchPath, contactHref, labels, onAdd: add, onTransfer: transferThis };
   const freeIdeas = ideasData?.ideas.filter((r) => r.available !== false) ?? [];
   const tabs = ([["register", labels.tabRegister], ["transfer", labels.tabTransfer], ...(ideas ? [["ideas", labels.tabIdeas] as const] : [])] as const).filter(Boolean);
   return (
@@ -494,13 +567,10 @@ export function DomainSearch({
          * checkout, never here — it moves the domain, and this page is not where credentials belong.
          */
         <form action={cartUrl} method="post">
-          <label htmlFor={`${id}-transfer`} className="mb-2 block text-sm font-semibold text-ink">
-            {labels.transferLabel}
-          </label>
           <input type="hidden" name="kind" value="transfer" />
           <input type="hidden" name="years" value="1" />
           <input type="hidden" name="return" value={searchPath} />
-          <div className="flex flex-col gap-2 sm:flex-row">
+          <SearchBar id={`${id}-transfer`} label={labels.transferLabel} hint={labels.transferHint} button={labels.transferButton}>
             <input
               id={`${id}-transfer`}
               name="name"
@@ -512,22 +582,23 @@ export function DomainSearch({
               maxLength={253}
               required
               dir="ltr"
+              value={transferName}
+              onChange={(e) => setTransferName(e.target.value)}
               placeholder={labels.transferPlaceholder}
-              className="block min-h-12 w-full rounded-full border border-line-strong bg-surface px-4 text-lg text-ink placeholder:text-faint focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand-soft"
+              className={FIELD}
             />
-            <button type="submit" className="btn-primary inline-flex min-h-12 shrink-0 items-center justify-center rounded-full px-7 text-sm font-bold">
-              {labels.transferButton}
-            </button>
-          </div>
-          <p className="mt-2 text-sm text-muted">{labels.transferHint}</p>
+          </SearchBar>
         </form>
       ) : null}
 
       <form action={searchPath} method="get" onSubmit={submit} role="search" hidden={tab !== "register"}>
-        <label htmlFor={`${id}-q`} className="mb-2 block text-sm font-semibold text-ink">
-          {labels.label}
-        </label>
-        <div className="flex flex-col gap-2 sm:flex-row">
+        <SearchBar
+          id={`${id}-q`}
+          label={labels.label}
+          hint={labels.hint}
+          busy={status === "loading"}
+          button={status === "loading" ? labels.checking : labels.button}
+        >
           <input
             id={`${id}-q`}
             name="q"
@@ -544,20 +615,14 @@ export function DomainSearch({
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
             dir="ltr"
-            className="block min-h-12 w-full rounded-full border border-line-strong bg-surface px-4 text-lg text-ink placeholder:text-faint focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand-soft"
+            className={FIELD}
           />
-          <button
-            type="submit"
-            disabled={status === "loading"}
-            className="btn-primary inline-flex min-h-12 shrink-0 items-center justify-center rounded-full px-7 text-sm font-bold disabled:opacity-70"
-          >
-            {status === "loading" ? labels.checking : labels.button}
-          </button>
-        </div>
-        <p className="mt-2 text-xs text-muted">{labels.hint}</p>
+        </SearchBar>
       </form>
 
-      <div aria-live="polite">
+      {/* Results belong to the tab that asked for them: a name search still showing while the
+          "Suggest names" tab is open answers a question nobody on that tab asked. */}
+      <div aria-live="polite" hidden={tab !== "register"}>
         {status === "error" ? <p className="mt-4 text-sm text-warn">{labels.error}</p> : null}
         {status === "limited" ? <p className="mt-4 text-sm text-warn">{labels.rateLimited}</p> : null}
         {status === "invalid" ? <p className="mt-4 text-sm text-warn">{labels.error}</p> : null}
@@ -628,46 +693,26 @@ export function DomainSearch({
 
       {ideas && tab === "ideas" ? (
         <div>
-          <p className="text-sm text-muted">{labels.ideasHint}</p>
-          <form onSubmit={suggest} className="mt-3 flex flex-col gap-2 sm:flex-row">
-            <label htmlFor={`${id}-desc`} className="sr-only">
-              {labels.ideasHint}
-            </label>
-            <input
+          <form onSubmit={suggest}>
+            <SearchBar
               id={`${id}-desc`}
-              type="text"
-              maxLength={300}
-              minLength={10}
-              required
-              value={desc}
-              onChange={(e) => setDesc(e.target.value)}
-              placeholder={labels.ideasPlaceholder}
-              className="block min-h-11 w-full rounded-full border border-line-strong bg-surface px-4 text-base text-ink placeholder:text-faint focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand-soft"
-            />
-            <button
-              type="submit"
-              disabled={ideasStatus === "loading"}
-              className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-full border-[1.5px] border-brand px-5 text-sm font-bold text-brand-strong hover:bg-brand-soft disabled:opacity-70"
+              label={labels.ideasTitle}
+              hint={labels.ideasHint}
+              busy={ideasStatus === "loading"}
+              button={ideasStatus === "loading" ? labels.ideasWorking : labels.ideasButton}
             >
-              {ideasStatus === "loading" ? (
-                <span className="inline-flex items-center gap-2">
-                  <span aria-hidden="true" className="chat-dot inline-block h-1.5 w-1.5 rounded-full bg-current" />
-                  <span
-                    aria-hidden="true"
-                    className="chat-dot inline-block h-1.5 w-1.5 rounded-full bg-current"
-                    style={{ animationDelay: "0.16s" }}
-                  />
-                  <span
-                    aria-hidden="true"
-                    className="chat-dot inline-block h-1.5 w-1.5 rounded-full bg-current"
-                    style={{ animationDelay: "0.32s" }}
-                  />
-                  <span>{labels.ideasWorking}</span>
-                </span>
-              ) : (
-                labels.ideasButton
-              )}
-            </button>
+              <input
+                id={`${id}-desc`}
+                type="text"
+                maxLength={300}
+                minLength={10}
+                required
+                value={desc}
+                onChange={(e) => setDesc(e.target.value)}
+                placeholder={labels.ideasPlaceholder}
+                className={FIELD}
+              />
+            </SearchBar>
           </form>
           <div aria-live="polite">
             {ideasStatus === "loading" ? (

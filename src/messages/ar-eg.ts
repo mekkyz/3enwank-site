@@ -138,6 +138,7 @@ export const arEg: Messages = {
     transferLabel: "دومين إنت مالكه",
     transferPlaceholder: "myshop.com",
     transferButton: "انقله لينا",
+    transferThis: "هو بتاعك؟ انقله لينا",
     transferHint: "شيل القفل من مسجّلك الحالي الأول. بنطلب رمز التفويض وانت بتدفع.",
     searchLabel: "دوّر على دومين",
     searchPlaceholder: "example.com",

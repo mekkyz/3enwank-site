@@ -114,6 +114,7 @@ export type Messages = {
     transferLabel: string;
     transferPlaceholder: string;
     transferButton: string;
+    transferThis: string;
     transferHint: string;
     searchLabel: string;
     searchPlaceholder: string;

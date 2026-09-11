@@ -1,5 +1,5 @@
-import { Empty, Fine, PageIntro, Section, SectionHeader } from "@/components/blocks";
-import { CompareTable, PlanCard } from "@/components/plans";
+import { Empty, PageIntro, Section, SectionHeader } from "@/components/blocks";
+import { PlanCard } from "@/components/plans";
 import { Shell } from "@/components/shell";
 import { pageMetadata } from "@/lib/metadata";
 import type { Locale } from "@/lib/i18n";
@@ -31,13 +31,22 @@ export const care = {
             <Empty>{t.care.empty}</Empty>
           )}
         </Section>
-        {plans.length > 1 ? (
-          <Section tone="alt">
-            <SectionHeader title={t.care.compareTitle} />
-            <CompareTable products={plans} locale={locale} caption={t.care.compareCaption} perYear={t.common.perYear} cta={t.common.choose} />
-            <Fine>{t.care.fine}</Fine>
-          </Section>
-        ) : null}
+        {/*
+         * What the rows mean, rather than the same rows again in a table. The cards say how often;
+         * a customer deciding between them needs to know what an update is, what counts as a
+         * content change, and what happens when something breaks — none of which fits in a cell.
+         */}
+        <Section tone="alt">
+          <SectionHeader title={t.care.explainTitle} />
+          <ul className="grid gap-x-12 gap-y-7 sm:grid-cols-2">
+            {t.care.explain.map((e) => (
+              <li key={e.title} className="border-t border-line pt-4">
+                <h3 className="font-extrabold text-ink">{e.title}</h3>
+                <p className="mt-1.5 text-pretty text-[15px] leading-relaxed text-muted">{e.body}</p>
+              </li>
+            ))}
+          </ul>
+        </Section>
       </Shell>
     );
   },

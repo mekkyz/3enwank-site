@@ -101,7 +101,7 @@ export type Messages = {
     customCta: string;
     empty: string;
   };
-  care: { title: string; h2: string; lede: string; compareTitle: string; compareCaption: string; fine: string; empty: string };
+  care: { title: string; h2: string; lede: string; explainTitle: string; explain: Array<{ title: string; body: string }>; empty: string };
   domains: {
     title: string;
     h2: string;

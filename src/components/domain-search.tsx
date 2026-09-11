@@ -42,6 +42,7 @@ export type DomainSearchLabels = {
   authCodePlaceholder: string;
   cartErrors: Record<string, string>;
   allExtensions: string;
+  nameFirst: string;
   transferHint: string;
   ideasTitle: string;
   ideasHint: string;
@@ -487,21 +488,32 @@ export function DomainSearch({
     return () => clearTimeout(t);
   }, [currency, data, run]);
 
+  /** Set when an ending was pressed with nothing to attach it to. */
+  const [needName, setNeedName] = useState(false);
   /**
    * Pick an ending: it joins whatever name is typed and searches.
    *
    * A visitor with "mybakery" in the box and no idea which ending to try is the person this block
    * is for, so clicking one finishes their sentence rather than starting a new one. With nothing
-   * typed there is nothing to search for, so the box takes focus and waits.
+   * typed there is nothing to search for, and the block says so rather than appearing to ignore the
+   * press.
    */
   const pick = useCallback(
     (tld: string) => {
       const base = query.trim().toLowerCase().replace(/\.$/, "");
       const label = base.includes(".") ? base.slice(0, base.indexOf(".")) : base;
       if (!label) {
+        /*
+         * Say so. This used to focus the field and return, which on a field already in view is
+         * indistinguishable from a broken page: a visitor pressed an ending eight times in four
+         * seconds, nothing moved, and they left. A control that declines to act has to say it
+         * declined.
+         */
+        setNeedName(true);
         document.getElementById(`${id}-q`)?.focus();
         return;
       }
+      setNeedName(false);
       const next = `${label}.${tld}`;
       setQuery(next);
       void run(next, currency);
@@ -686,7 +698,10 @@ export function DomainSearch({
             maxLength={253}
             required
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              if (needName) setNeedName(false);
+            }}
             placeholder={typed ?? labels.placeholder}
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
@@ -709,6 +724,11 @@ export function DomainSearch({
       {tab === "register" && tlds.length && !data && status === "idle" ? (
         <div className="mt-6 border-t border-line pt-5">
           <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-faint">{labels.allExtensions}</p>
+          {needName ? (
+            <p role="status" className="mt-2 text-sm font-bold text-warn">
+              {labels.nameFirst}
+            </p>
+          ) : null}
           <ul className="mt-3 flex flex-wrap gap-2">
             {tlds.map((t) => (
               <li key={t}>

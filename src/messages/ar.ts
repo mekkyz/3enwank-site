@@ -138,6 +138,7 @@ export const ar: Messages = {
     transferPlaceholder: "myshop.com",
     transferButton: "انقله إلينا",
     allExtensions: "كل الامتدادات التي نبيعها",
+    nameFirst: "اكتب الاسم أولًا، ثم اختر الامتداد.",
     cartErrors: {
       noAuthCode: "أضف رمز التفويض لهذا النطاق.",
       unavailable: "لم نجد هذا النطاق مسجَّلًا في أي مكان، فليس هناك ما يُنقل. إن أردت تسجيله، ابحث عنه.",

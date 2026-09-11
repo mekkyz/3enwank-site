@@ -138,6 +138,7 @@ export const en: Messages = {
     transferPlaceholder: "myshop.com",
     transferButton: "Transfer to us",
     allExtensions: "Every ending we sell",
+    nameFirst: "Type a name first, then choose an ending.",
     cartErrors: {
       noAuthCode: "Add the authorisation code for this domain.",
       unavailable: "We could not find that domain registered anywhere, so there is nothing to transfer. To register it instead, search for it.",

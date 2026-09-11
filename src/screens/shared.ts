@@ -89,6 +89,7 @@ export function domainSearchLabels(t: Messages): DomainSearchLabels {
     transferHint: d.transferHint,
     transferThis: d.transferThis,
     allExtensions: d.allExtensions,
+    nameFirst: d.nameFirst,
     cartErrors: d.cartErrors,
     authCodeLabel: d.authCodeLabel,
     authCodePlaceholder: d.authCodePlaceholder,

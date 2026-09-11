@@ -142,7 +142,7 @@ export function Shell({
       <main id="main" className="flex-1">
         {children}
       </main>
-      <footer className="mt-16 border-t border-line bg-surface-alt">
+      <footer className="mt-16 bg-surface-alt">
         <div className="mx-auto max-w-6xl px-5 py-12 sm:px-8">
           {/*
            * Equal columns put the free space in the wrong places: the brand column's logo filled its

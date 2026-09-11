@@ -82,7 +82,7 @@ export function PageIntro({
   children?: ReactNode;
 }) {
   return (
-    <header className="border-b border-line bg-surface-alt pt-14 pb-10 sm:pt-20 sm:pb-14">
+    <header className="bg-surface-alt pt-14 pb-10 sm:pt-20 sm:pb-14">
       <Container>
         {kicker ? (
           <div className="rise">

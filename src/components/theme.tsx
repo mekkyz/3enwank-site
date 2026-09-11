@@ -46,6 +46,9 @@ function apply(theme: Theme) {
 
 export function ThemeSwitch({ label, dark, light }: { label: string; dark: string; light: string }) {
   const theme = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  // Set once this island is running on the client, so the recorder can tell a hydrated page from
+  // one that only looks like it. Nothing else writes this attribute.
+  if (typeof document !== "undefined") document.documentElement.setAttribute("data-hydrated", "1");
   return (
     <div
       role="group"

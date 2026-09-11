@@ -107,6 +107,7 @@ export type Messages = {
     h2: string;
     lede: string;
     renewsAt: string;
+    renewsSame: string;
     cartTotal: string;
     tabRegister: string;
     tabTransfer: string;
@@ -114,6 +115,8 @@ export type Messages = {
     transferLabel: string;
     transferPlaceholder: string;
     transferButton: string;
+    authCodeLabel: string;
+    authCodePlaceholder: string;
     transferThis: string;
     transferHint: string;
     searchLabel: string;

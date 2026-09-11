@@ -29,6 +29,7 @@ export type DomainSearchLabels = {
   moreExtensions: string;
   perYear: string;
   renewsAt: string;
+  renewsSame: string;
   cartTotal: string;
   tabRegister: string;
   tabTransfer: string;
@@ -37,6 +38,8 @@ export type DomainSearchLabels = {
   transferPlaceholder: string;
   transferButton: string;
   transferThis: string;
+  authCodeLabel: string;
+  authCodePlaceholder: string;
   transferHint: string;
   ideasTitle: string;
   ideasHint: string;
@@ -165,6 +168,15 @@ function Row({
   const price = r.price
     ? formatPrice({ gross: r.price.gross, formatted: r.price.formatted }, r.price.currency, locale)
     : null;
+  /*
+   * Every row says what year two costs, including the rows where it costs the same.
+   *
+   * Printing "renews at 899" under "899" was noise, so the line was left off — and a row with
+   * nothing where its neighbours have a second line reads as a gap in the data, not as "the same".
+   * Saying so plainly is also the better news: it is the opposite of a 199 name that renews at
+   * 3,199, and that contrast is the reason this number is on the page at all.
+   */
+  const sameRenewal = r.renew != null && r.price != null && r.renew.gross === r.price.gross;
   const renew = r.renew ? formatPrice({ gross: r.renew.gross, formatted: r.renew.formatted }, r.renew.currency, locale) : null;
   const free = r.available === true && !r.premium;
   return (
@@ -205,10 +217,16 @@ function Row({
              */}
             {renew ? (
               <span className="block text-xs text-faint">
-                {labels.renewsAt}{" "}
-                <bdi dir="ltr" className="tabular">
-                  {renew}
-                </bdi>
+                {sameRenewal ? (
+                  labels.renewsSame
+                ) : (
+                  <>
+                    {labels.renewsAt}{" "}
+                    <bdi dir="ltr" className="tabular">
+                      {renew}
+                    </bdi>
+                  </>
+                )}
               </span>
             ) : null}
           </span>
@@ -586,6 +604,24 @@ export function DomainSearch({
               onChange={(e) => setTransferName(e.target.value)}
               placeholder={labels.transferPlaceholder}
               className={FIELD}
+            />
+            {/*
+             * The code sits beside the name, where the customer is already looking, rather than
+             * waiting for checkout. It is posted to the store and parked there; what comes back in
+             * the cart is the id of that row, never the code, because the cart is a cookie. Optional
+             * on purpose: somebody who has not fetched it yet can still start the transfer, and
+             * checkout asks then.
+             */}
+            <input
+              name="authCode"
+              type="text"
+              autoComplete="off"
+              spellCheck={false}
+              maxLength={128}
+              dir="ltr"
+              placeholder={labels.authCodePlaceholder}
+              aria-label={labels.authCodeLabel}
+              className={`${FIELD} sm:max-w-56`}
             />
           </SearchBar>
         </form>

@@ -291,7 +291,7 @@ export const arEg: Messages = {
       Updates: "التحديثات",
       "Content changes": "تعديلات المحتوى",
       "Reply time": "وقت الرد",
-      Malware: "فحص الفيروسات",
+      "Malware scan": "فحص الفيروسات",
       "Emergency restores": "استرجاع طوارئ",
       Reports: "التقارير",
     },

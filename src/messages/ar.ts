@@ -329,7 +329,7 @@ export const ar: Messages = {
       Updates: "التحديثات",
       "Content changes": "تعديلات المحتوى",
       "Reply time": "وقت الردّ",
-      Malware: "فحص البرمجيات الخبيثة",
+      "Malware scan": "فحص البرمجيات الخبيثة",
       "Emergency restores": "الاسترجاع الطارئ",
       Reports: "التقارير",
     },

@@ -189,7 +189,21 @@ brand hues in gradients.
 ## Render check before a review
 
 `pnpm check` (`scripts/visual-check.mjs`) serves `./out`, opens every page in every language at
-desktop and phone width with the box's Chromium, and fails on horizontal scroll, elements wider
-than the viewport, wrapped table labels, empty sections, or Arabic text inside an LTR isolate.
-Screenshots land in `./shots/`. `THEME=light pnpm check` repeats it for the light theme. Run both
-after every build that goes to a reviewer.
+desktop and phone width, and fails on horizontal scroll, elements wider than the page, a header row
+wider than its own padding, wrapped table labels, empty sections, or Arabic text inside an LTR
+isolate. Screenshots land in `./shots/`. `THEME=light pnpm check` repeats it for the light theme. Run
+both after every build that goes to a reviewer.
+
+Two things about the widths it measures, both learned the hard way on 2026-09-12:
+
+- **The page is narrower than the viewport.** `html` sets `scrollbar-gutter: stable`, so at a 390px
+  phone width `html` and `body` are 375px while `documentElement.clientWidth` still says 390. The
+  check bounds by the narrower of the two. Bounding by the viewport hid a header row that overflowed
+  by 31px in English, which spilled into the reserved gutter, raised no scrollbar, and passed.
+- **Fitting the page is not fitting the layout.** The header row is additionally measured against the
+  bar's own padding box, because a row that has eaten its padding is broken even while it clears the
+  page edge.
+
+It uses the first Chromium it finds in `CHROME_PATH` or the distro locations, and otherwise the one
+Playwright downloaded (`pnpm exec playwright install chromium`), which is what a machine without a
+distro Chromium ends up using.

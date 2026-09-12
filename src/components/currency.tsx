@@ -122,7 +122,7 @@ export function CurrencySwitch({ label }: { label: string }) {
   return (
     <details data-menu className="relative">
       <summary
-        className="flex min-h-11 cursor-pointer list-none items-center rounded-full px-2 text-sm font-bold text-muted hover:text-ink [&::-webkit-details-marker]:hidden"
+        className="flex min-h-11 cursor-pointer list-none items-center rounded-full px-1.5 text-sm font-bold text-muted hover:text-ink sm:px-2 [&::-webkit-details-marker]:hidden"
         aria-label={`${label}: ${currency}`}
         title={label}
       >

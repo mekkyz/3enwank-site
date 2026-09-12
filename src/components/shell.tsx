@@ -56,13 +56,19 @@ export function Shell({
       </a>
       <header data-bar className="sticky top-0 z-40 border-b border-line bg-panel/95 backdrop-blur">
         {/*
-         * gap-2 on the narrowest phone: the logo and the row of controls together were four pixels
-         * wider than a 390px screen, which scrolled every English page sideways by those four
-         * pixels. Nothing else in the header changes size.
+         * The row has to fit a 375px-wide content box, which is what a 390px phone leaves once
+         * `scrollbar-gutter: stable` has taken its 15px. It did not: the wordmark is 166px at h-7
+         * and the controls another 192px, so English overflowed it by 31px and Arabic by 22px.
+         * Arabic was the visible one only because a right-to-left row spills past the start edge into
+         * negative coordinates, while English spilled the other way into the reserved gutter, where it
+         * raised no scrollbar and nothing looked wrong.
+         *
+         * So the phone gets a smaller wordmark (h-6 is 142px) and slightly tighter controls, which
+         * together buy back more than the 31px. Nothing at sm and above changes.
          */}
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-5 py-3 sm:gap-4 sm:px-8">
           <a href={pathFor("home", locale)} className="flex shrink-0 items-center" aria-label={t.meta.siteName}>
-            <Logo className="h-7 sm:h-8" />
+            <Logo className="h-6 sm:h-8" />
           </a>
           <nav
             aria-label={t.nav.menu}
@@ -84,7 +90,7 @@ export function Shell({
             <CartLink href={storeLink(`${store}/cart`, locale)} label={t.nav.cart} />
             <details data-menu className="relative">
               <summary
-                className="flex min-h-11 cursor-pointer list-none items-center rounded-full px-2 text-sm font-semibold text-muted hover:text-ink [&::-webkit-details-marker]:hidden"
+                className="flex min-h-11 cursor-pointer list-none items-center rounded-full px-1.5 text-sm font-semibold text-muted hover:text-ink sm:px-2 [&::-webkit-details-marker]:hidden"
                 aria-label={`${t.nav.language}: ${current.name}`}
                 title={t.nav.language}
               >
@@ -117,7 +123,7 @@ export function Shell({
             </a>
             <a
               href={anchorFor("contact", locale)}
-              className="btn-primary inline-flex min-h-11 items-center whitespace-nowrap rounded-full px-3 text-[13px] font-bold sm:px-4 sm:text-sm"
+              className="btn-primary inline-flex min-h-11 items-center whitespace-nowrap rounded-full px-2.5 text-[13px] font-bold sm:px-4 sm:text-sm"
             >
               {t.nav.contact}
             </a>

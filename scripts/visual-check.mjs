@@ -64,15 +64,38 @@ for (const w of widths) {
         const arabicRe = new RegExp(arabicSource);
         const out = [];
         const doc = document.documentElement;
-        const vw = doc.clientWidth;
+        // Two different widths, and measuring against the wrong one hides real overflow: `html` sets
+        // scrollbar-gutter: stable, so html and body are 375px wide inside a 390px phone while
+        // doc.clientWidth still reports 390. A header bar 31px too wide for the page spilled into
+        // that 15px gutter, cleared 390, raised no scrollbar, and passed this check. Bound by
+        // whichever is narrower.
+        const vw = Math.min(doc.clientWidth, document.body.clientWidth);
         if (doc.scrollWidth > vw + 1) out.push(`page scrolls horizontally: scrollWidth ${doc.scrollWidth} > ${vw}`);
-        // Anything visible that sticks out of the viewport horizontally (tables scroll inside their box, so their content is exempt).
+        // Anything visible that sticks out of the page horizontally (tables scroll inside their box, so their content is exempt).
         for (const el of document.querySelectorAll("body *")) {
           const cs = getComputedStyle(el);
           if (cs.display === "none" || cs.visibility === "hidden" || el.closest("[data-scroll], .overflow-x-auto")) continue;
           const r = el.getBoundingClientRect();
           if (r.width === 0) continue;
           if (r.right > vw + 1 || r.left < -1) out.push(`overflows viewport: <${el.tagName.toLowerCase()} class="${(el.getAttribute("class") || "").slice(0, 60)}"> right=${Math.round(r.right)} left=${Math.round(r.left)} vw=${vw}`);
+        }
+        // The header bar, against its own padding box rather than the page's. This is the row that
+        // keeps overflowing — a fixed-width wordmark beside controls whose width follows the
+        // language — and the page-level bound above is too loose to see it: with the wordmark one
+        // step too tall, English ended 15px into its own 20px of right padding and still cleared the
+        // page edge. "Fits" here means inside the padding, so measure that.
+        const bar = document.querySelector("header > div");
+        if (bar) {
+          const bcs = getComputedStyle(bar);
+          const bb = bar.getBoundingClientRect();
+          const innerStart = bb.left + parseFloat(bcs.paddingLeft);
+          const innerEnd = bb.right - parseFloat(bcs.paddingRight);
+          for (const child of bar.children) {
+            const cr = child.getBoundingClientRect();
+            if (cr.width === 0) continue;
+            if (cr.left < innerStart - 1 || cr.right > innerEnd + 1)
+              out.push(`header bar overflows its padding: <${child.tagName.toLowerCase()}> ${Math.round(cr.left)}..${Math.round(cr.right)} outside ${Math.round(innerStart)}..${Math.round(innerEnd)}`);
+          }
         }
         // Table label cells must not wrap.
         for (const cell of document.querySelectorAll("th.nowrap, td.nowrap")) {

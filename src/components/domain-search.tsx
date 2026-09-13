@@ -1,5 +1,6 @@
 "use client";
 
+import { CheckIcon } from "@phosphor-icons/react/dist/ssr";
 import type { ReactNode } from "react";
 import { useCallback, useEffect, useId, useRef, useState, type FormEvent } from "react";
 import type { Currency } from "@/lib/catalogue";
@@ -260,18 +261,12 @@ function Row({
               >
                 {added ? (
                   <>
-                    <svg
-                      aria-hidden="true"
-                      viewBox="0 0 24 24"
-                      className="h-4 w-4"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.6"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M20 6L9 17l-5-5" />
-                    </svg>
+                    {/*
+                     * 16px, and bold rather than the 2.6 stroke it replaces: once a name is added
+                     * the button drops the filled pill for a muted outline, so this tick is drawn
+                     * in muted grey on a pale panel, where a lighter weight washes out.
+                     */}
+                    <CheckIcon aria-hidden="true" size={16} weight="bold" />
                     {labels.added}
                   </>
                 ) : (

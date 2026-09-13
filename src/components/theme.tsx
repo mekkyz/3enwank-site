@@ -1,6 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import { MoonIcon, SunIcon } from "@phosphor-icons/react/dist/ssr";
 import { THEME_KEY, type Theme } from "@/lib/theme";
 
 /**
@@ -44,6 +45,21 @@ function apply(theme: Theme) {
   for (const l of listeners) l();
 }
 
+/**
+ * Two buttons in a labelled group, each one an icon plus its own text label ("Dark" / "Light"), so
+ * the accessible name comes from that text and `aria-pressed` says which one is on. The sun and moon
+ * are therefore decorative and stay `aria-hidden`: naming them too would make a screen reader read
+ * each button twice.
+ *
+ * They were hand-drawn inline SVG on a 24 grid and are Phosphor now, still 14px rendered (the old
+ * `h-3.5 w-3.5`) so the pill keeps its height. The import is `@phosphor-icons/react/dist/ssr` and
+ * that entry specifically: the package root entry renders through IconBase, which calls `useContext`
+ * without a "use client" of its own and throws in a server component, while /dist/ssr renders
+ * through SSRBase with no hooks and works on both sides. Weight is bold, matching the 2.2 stroke the
+ * rest of the chrome was drawn at — at 14px "regular" disappears next to bold text. Neither takes
+ * `mirrored`. The sun is symmetric anyway; the crescent is not, but it is an object, not a direction,
+ * and it opens the same way in both scripts here as it did when it was hand-drawn.
+ */
 export function ThemeSwitch({ label, dark, light }: { label: string; dark: string; light: string }) {
   const theme = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   return (
@@ -61,32 +77,9 @@ export function ThemeSwitch({ label, dark, light }: { label: string; dark: strin
           className={`inline-flex min-h-8 items-center gap-1.5 rounded-full px-3 transition ${theme === t ? "bg-brand-soft text-brand-strong" : "text-muted hover:text-ink"}`}
         >
           {t === "dark" ? (
-            <svg
-              aria-hidden="true"
-              viewBox="0 0 24 24"
-              className="h-3.5 w-3.5"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
-            </svg>
+            <MoonIcon aria-hidden="true" size={14} weight="bold" className="shrink-0" />
           ) : (
-            <svg
-              aria-hidden="true"
-              viewBox="0 0 24 24"
-              className="h-3.5 w-3.5"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="12" cy="12" r="4" />
-              <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
-            </svg>
+            <SunIcon aria-hidden="true" size={14} weight="bold" className="shrink-0" />
           )}
           {t === "dark" ? dark : light}
         </button>

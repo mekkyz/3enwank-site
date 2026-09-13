@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
+import { CaretDownIcon, ChatCircleDotsIcon, XIcon } from "@phosphor-icons/react/dist/ssr";
 import type { Locale } from "@/lib/i18n";
 import { turnstileToken } from "@/lib/turnstile";
 import { parseRichText, type Inline } from "@/lib/rich-text";
@@ -112,6 +113,23 @@ function Rich({ text }: { text: string }) {
  * The chat bubble in the corner. Talks to the store's public assistant endpoint, which streams
  * plain text; the conversation lives in this tab only. The panel is closed on the server render,
  * so restoring the conversation on the client changes no markup.
+ *
+ * The three marks used to be hand-drawn inline SVG on a 24 grid; they are Phosphor now, at the same
+ * rendered pixel sizes (20 in the panel header, 24 on the launcher) so nothing reflows. The import
+ * is `@phosphor-icons/react/dist/ssr` and that entry specifically: the package root entry renders
+ * through IconBase, which calls `useContext` with no "use client" of its own, while /dist/ssr
+ * renders through SSRBase with no hooks at all. This file is a client component so either would run
+ * here, but the whole repo imports the one entry that also works in a server component, and the ssr
+ * entry ships no client JS.
+ *
+ * The weight is bold. Measured against the outgoing set at 19px: "regular" is as light as the
+ * 1.7-stroke version the owner already rejected and "fill" is too heavy, while "bold" lands on the
+ * 2.2 stroke these were drawn at — the same weight the bar's icons use.
+ *
+ * None of the three takes Phosphor's `mirrored` prop. The close mark is symmetric, the launcher's
+ * open-state caret points down so there is nothing to flip, and the speech bubble is a decorative
+ * object rather than a direction: mirroring only its tail would be a cosmetic change to a mark the
+ * hand-drawn version already drew tail-down-left on Arabic pages.
  */
 export function Assistant({
   url,
@@ -271,17 +289,8 @@ export function Assistant({
                 aria-label={labels.close}
                 className="flex h-9 w-9 items-center justify-center rounded-full text-muted hover:bg-surface-alt hover:text-ink"
               >
-                <svg
-                  aria-hidden="true"
-                  viewBox="0 0 24 24"
-                  className="h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.2"
-                  strokeLinecap="round"
-                >
-                  <path d="M6 6l12 12M18 6L6 18" />
-                </svg>
+                {/* Decorative: the button already says "close" to a screen reader, so the mark stays hidden. */}
+                <XIcon aria-hidden="true" size={20} weight="bold" className="shrink-0" />
               </button>
             </div>
           </header>
@@ -402,6 +411,10 @@ export function Assistant({
           <p className="px-4 pb-3 text-[11px] leading-snug text-faint">{labels.note}</p>
         </section>
       ) : null}
+      {/*
+        "pulse-once" rings twice a few seconds in (globals.css). The animation is on this button's
+        ::after, not on the mark inside it, so swapping the mark leaves it alone.
+      */}
       <button
         ref={bubbleRef}
         type="button"
@@ -412,31 +425,9 @@ export function Assistant({
         className="btn-primary pulse-once flex h-14 w-14 items-center justify-center rounded-full shadow-[0_16px_32px_-12px_rgba(124,95,165,0.9)]"
       >
         {open ? (
-          <svg
-            aria-hidden="true"
-            viewBox="0 0 24 24"
-            className="h-6 w-6"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.2"
-            strokeLinecap="round"
-          >
-            <path d="M6 9l6 6 6-6" />
-          </svg>
+          <CaretDownIcon aria-hidden="true" size={24} weight="bold" className="shrink-0" />
         ) : (
-          <svg
-            aria-hidden="true"
-            viewBox="0 0 24 24"
-            className="h-6 w-6"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1.1-4.3A8 8 0 1 1 21 12z" />
-            <path d="M8.5 12h.01M12 12h.01M15.5 12h.01" strokeWidth="2.6" />
-          </svg>
+          <ChatCircleDotsIcon aria-hidden="true" size={24} weight="bold" className="shrink-0" />
         )}
       </button>
     </div>

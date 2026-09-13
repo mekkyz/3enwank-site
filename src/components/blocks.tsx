@@ -1,3 +1,4 @@
+import { CaretRightIcon, CheckIcon } from "@phosphor-icons/react/dist/ssr";
 import type { ReactNode } from "react";
 
 /** Layout primitives shared by the screens. Server components; RTL-safe through logical properties. */
@@ -180,18 +181,14 @@ export function ArrowLink({
       className={`arrow-link inline-flex items-center gap-1.5 text-sm font-bold text-brand-strong hover:text-brand ${className}`}
     >
       {children}
-      <svg
-        aria-hidden="true"
-        viewBox="0 0 24 24"
-        className="h-4 w-4 rtl:-scale-x-100"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M9 6l6 6-6 6" />
-      </svg>
+      {/*
+       * The chevron points the way the text runs, so it has to turn round on the Arabic pages, and
+       * the mirror stays in CSS rather than moving to Phosphor's `mirrored` prop. `mirrored` writes
+       * transform="scale(-1, 1)" unconditionally (dist/lib/SSRBase.es.js), and this is a server
+       * component that never sees the locale, so it would point the wrong way in English instead.
+       * `rtl:` keys off the dir on <html> (root.tsx) and needs to know nothing.
+       */}
+      <CaretRightIcon aria-hidden="true" size={16} weight="bold" className="rtl:-scale-x-100" />
     </a>
   );
 }
@@ -201,32 +198,10 @@ export function Empty({ children }: { children: ReactNode }) {
 }
 
 export function Check({ className = "text-accent" }: { className?: string }) {
-  return (
-    <svg
-      aria-hidden="true"
-      viewBox="0 0 24 24"
-      className={`mt-0.5 h-[18px] w-[18px] shrink-0 ${className}`}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M20 6L9 17l-5-5" />
-    </svg>
-  );
-}
-
-/** Short facts with a check mark, under a hero or a price list. */
-export function Facts({ items, className = "" }: { items: string[]; className?: string }) {
-  return (
-    <ul className={`flex flex-wrap gap-x-6 gap-y-2 text-sm font-semibold text-muted ${className}`}>
-      {items.map((f) => (
-        <li key={f} className="flex items-center gap-2">
-          <Check />
-          <span>{f}</span>
-        </li>
-      ))}
-    </ul>
-  );
+  // Still 18px, and still bold: this mark sits beside the 14px text of the plan feature lists (it
+  // served a facts line too, until the hero inlined its own), so its stroke is what has to match,
+  // not its width. Phosphor's bold check draws a 24/256 stroke, which lands at 1.7px here — the
+  // same ink the hand-drawn 2.2/24 stroke put down.
+  // The nudge down a half step keeps it on the first line's baseline rather than its box.
+  return <CheckIcon aria-hidden="true" size={18} weight="bold" className={`mt-0.5 shrink-0 ${className}`} />;
 }

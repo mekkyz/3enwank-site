@@ -1,75 +1,89 @@
 /**
- * The bar's icons. Drawn here rather than pulled from a set, so they carry the same stroke weight
- * as each other and inherit `currentColor` in both themes.
+ * The bar's icons, as a thin wrapper over Phosphor.
  *
- * Each says what it switches rather than what it is: the currency mark shows two currencies being
- * swapped, and the language mark shows the two scripts this site is written in, which is more use
- * to a reader than a globe — a globe means "somewhere", not "another language".
+ * They used to be hand-drawn inline SVG on a 24 grid so they would share a stroke weight. Phosphor
+ * is one family already, drawn on a 256 viewBox with `fill=currentColor`, so the family argument is
+ * settled by the set rather than by us keeping four paths in step by eye.
+ *
+ * The import is `@phosphor-icons/react/dist/ssr`, and that entry specifically. The package ROOT
+ * entry renders through IconBase, which calls `useContext` without a "use client" directive, so it
+ * throws the moment it is rendered in a server component. The /dist/ssr entry renders through
+ * SSRBase, which has no hooks at all: it works in server and client components alike and ships no
+ * client JS. Both matter here, because these four straddle that line — the language switch is in a
+ * server shell and the WhatsApp button is in a server section, while the currency switch and the
+ * cart link are client components.
+ *
+ * The weight is bold. Measured against the outgoing hand-drawn set at 19px: "regular" is as light
+ * as the 1.7-stroke version the owner already rejected, "fill" is too heavy for a bar, and "bold"
+ * lands on the 2.2 stroke these were drawn at. The WhatsApp mark is the one exception and says why
+ * at its own definition: it is a logo, not one of the bar's three objects.
+ *
+ * The wrapper is deliberate. It is the one place the house size and weight are set, it keeps the
+ * call sites in this repo unchanged, and it keeps this file in step with the platform repo's copy
+ * of it.
+ *
+ * None of the four takes Phosphor's `mirrored` prop, because none of them is directional. The three
+ * objects are symmetric about the vertical axis, and the WhatsApp mark is a logo: flipping its tail
+ * on Arabic pages would make it a different mark, not a mirrored one.
  */
+import { MoneyIcon, ShoppingBagIcon, GlobeIcon, WhatsappLogoIcon } from "@phosphor-icons/react/dist/ssr";
+
 type IconProps = { className?: string };
 
-const STROKE = { fill: "none", stroke: "currentColor", strokeWidth: 1.7, strokeLinecap: "round", strokeLinejoin: "round" } as const;
-const GLYPH = { fill: "currentColor", stroke: "none", fontSize: 11, fontWeight: 800 } as const;
+/**
+ * Bold everywhere. See the note above: this is the weight that matches what the bar used to draw,
+ * so changing it here changes every icon in the bar at once, which is the point of the wrapper.
+ */
+const WEIGHT = "bold" as const;
 
 /**
- * Exchange: two arrows going opposite ways.
+ * A banknote.
  *
- * This was a "$" and a "£" set as SVG text with a swap between them, which at 18px was three things
- * fighting for the same 18 pixels and legible as none of them. One shape, drawn at full size.
+ * Not "Coins", which collapses into a blob at 19px, and none of the Currency* variants, every one
+ * of which is a dollar sign — legible and wrong for a company whose prices are in pounds first. An
+ * EGP mark is not a shape anyone recognises at this size either, so the icon names money and leaves
+ * the code itself to the menu that opens underneath.
  */
-export function CurrencyIcon({ className = "h-[19px] w-[19px] shrink-0" }: IconProps) {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 24 24" className={className} {...STROKE}>
-      <path d="M3.5 8.5h14" />
-      <path d="M14.5 5.2 17.8 8.5l-3.3 3.3" />
-      <path d="M20.5 15.5h-14" />
-      <path d="M9.5 12.2 6.2 15.5l3.3 3.3" />
-    </svg>
-  );
+export function CurrencyIcon({ className = "shrink-0" }: IconProps) {
+  return <MoneyIcon size={19} weight={WEIGHT} aria-hidden="true" className={className} />;
 }
 
 /**
- * The two scripts we publish in. Larger glyphs and a lighter frame than before: at 18px the box was
- * taking room the letters needed to be read.
- */
-export function LanguageIcon({ className = "h-[19px] w-[19px] shrink-0" }: IconProps) {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 24 24" className={className}>
-      <rect x="1.8" y="3.6" width="20.4" height="16.8" rx="3.2" {...STROKE} strokeWidth={1.5} />
-      <text x="4.2" y="17" {...GLYPH} fontSize="12.5">
-        A
-      </text>
-      <text x="13" y="17" {...GLYPH} fontSize="12.5">
-        ع
-      </text>
-    </svg>
-  );
-}
-
-/** A basket, for the cart the store keeps. */
-export function CartIcon({ className = "h-[18px] w-[18px]" }: IconProps) {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 24 24" className={className} {...STROKE}>
-      <path d="M2.5 3.5h2.2l2.3 11.2a1.6 1.6 0 0 0 1.6 1.3h8.5a1.6 1.6 0 0 0 1.6-1.25l1.6-7.25H6" />
-      <circle cx="9.5" cy="20" r="1.4" />
-      <circle cx="17.5" cy="20" r="1.4" />
-    </svg>
-  );
-}
-
-/**
- * The WhatsApp mark: a handset inside a speech bubble, with the bubble's tail at the lower left.
+ * A globe.
  *
- * Drawn as a solid glyph in `currentColor` so it sits on the brand button rather than beside it. The
- * button stays the site's purple: WhatsApp's own green is 1.98:1 under white text, and a green dark
- * enough to pass AA no longer looks like WhatsApp, so it would lose the recognition it was for. The
- * mark carries the channel, the colour carries us.
+ * Worth remembering why it is a drawing and not lettering: this icon was once an "A" and a "ع"
+ * set as two SVG <text> glyphs, and text inside an SVG takes the page's font and the page's
+ * direction. On Arabic pages the two were laid out right to left and the "A" was pushed clean out
+ * of the viewBox, so the icon rendered as a box containing only "ع". Nothing in this file may
+ * depend on text rendering or direction again; paths cannot be reordered by direction, so the
+ * Arabic and English bars get identical pixels.
  */
-export function WhatsAppIcon({ className = "h-[18px] w-[18px] shrink-0" }: IconProps) {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 24 24" className={className} fill="currentColor">
-      <path d="M12.04 2.5a9.4 9.4 0 0 0-8.06 14.2L2.5 21.5l4.94-1.42A9.4 9.4 0 1 0 12.04 2.5Zm0 1.72a7.68 7.68 0 1 1-3.9 14.3l-.28-.16-2.92.84.85-2.85-.18-.29a7.68 7.68 0 0 1 6.43-11.84Z" />
-      <path d="M9.3 7.36c-.18-.4-.36-.41-.53-.42h-.45a.87.87 0 0 0-.63.29 2.64 2.64 0 0 0-.82 1.96c0 1.16.84 2.28.96 2.44.12.15 1.63 2.6 4.02 3.54 1.99.78 2.4.63 2.83.59.43-.04 1.39-.57 1.58-1.11.2-.55.2-1.02.14-1.11-.06-.1-.22-.16-.45-.28-.24-.12-1.4-.69-1.61-.77-.22-.08-.38-.12-.54.12-.16.23-.62.77-.76.93-.14.16-.28.18-.51.06a6.44 6.44 0 0 1-1.9-1.17 7.14 7.14 0 0 1-1.31-1.63c-.14-.24-.02-.36.1-.48.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.53-1.29-.73-1.76Z" />
-    </svg>
-  );
+export function LanguageIcon({ className = "shrink-0" }: IconProps) {
+  return <GlobeIcon size={19} weight={WEIGHT} aria-hidden="true" className={className} />;
+}
+
+/**
+ * A shopping bag, at 18px rather than 19 — the size the hand-drawn one carried, kept because the
+ * header has only about 9px of slack at 390px and this sits under the count badge.
+ */
+export function CartIcon({ className = "shrink-0" }: IconProps) {
+  return <ShoppingBagIcon size={18} weight={WEIGHT} aria-hidden="true" className={className} />;
+}
+
+/**
+ * The WhatsApp mark.
+ *
+ * Hand-drawn until Phosphor turned out to have it; the rule is that we only draw what the set does
+ * not carry. What survives the swap is the colour decision, which was never about the drawing: the
+ * mark renders in `currentColor` and sits on the site's purple button rather than on WhatsApp
+ * green, because WhatsApp's own green is 1.98:1 under white text, and a green dark enough to pass
+ * AA no longer looks like WhatsApp, so it would lose the recognition it was for. The mark carries
+ * the channel, the colour carries us.
+ */
+export function WhatsAppIcon({ className = "shrink-0" }: IconProps) {
+  // The one icon that is not WEIGHT. A brand mark is recognised by its silhouette, and the one this
+  // replaced was a solid glyph; at bold it becomes an outline and reads lighter than the button it
+  // sits on. "fill" is too heavy for the bar's three marks and right for this one, which is a logo
+  // rather than a member of that family.
+  return <WhatsappLogoIcon size={18} weight="fill" aria-hidden="true" className={className} />;
 }

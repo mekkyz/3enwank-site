@@ -1,34 +1,25 @@
+import { BrowserIcon, GlobeIcon, HardDrivesIcon, ShieldCheckIcon } from "@phosphor-icons/react/dist/ssr";
 import type { ReactNode } from "react";
 import { ArrowLink, Card } from "./blocks";
 
 type Kind = "hosting" | "websites" | "care" | "domains";
 
-const ICONS: Record<Kind, ReactNode> = {
-  hosting: (
-    <>
-      <rect x="3" y="4" width="18" height="6" rx="2" />
-      <rect x="3" y="14" width="18" height="6" rx="2" />
-      <path d="M7 7h.01M7 17h.01" />
-    </>
-  ),
-  websites: (
-    <>
-      <rect x="3" y="4" width="18" height="14" rx="2" />
-      <path d="M3 9h18M8 21h8" />
-    </>
-  ),
-  care: (
-    <>
-      <path d="M12 3l8 4v5c0 5-3.5 8.5-8 9-4.5-.5-8-4-8-9V7z" />
-      <path d="M9 12l2 2 4-4" />
-    </>
-  ),
-  domains: (
-    <>
-      <circle cx="12" cy="12" r="9" />
-      <path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18" />
-    </>
-  ),
+/*
+ * One mark per thing the company sells, each the nearest stand-in for the drawing it replaces:
+ * stacked drives with a status light for hosting, a shield with a tick for care, a meridian globe for
+ * domains. Websites is the one that had to give something up — the old drawing was a screen with both
+ * a browser bar across the top and a monitor stand under it, and Phosphor splits those: Monitor keeps
+ * the stand and loses the bar, Browser keeps the bar. The bar is the half that said "a website"
+ * rather than "a computer", so Browser it is.
+ *
+ * Typed off one of the components: the /dist/ssr entry exports every icon but not the Icon type, and
+ * reaching into the package root for it would pull the one entry that breaks in a server component.
+ */
+const ICONS: Record<Kind, typeof GlobeIcon> = {
+  hosting: HardDrivesIcon,
+  websites: BrowserIcon,
+  care: ShieldCheckIcon,
+  domains: GlobeIcon,
 };
 
 const TINT: Record<Kind, string> = {
@@ -54,21 +45,12 @@ export function ProductCard({
   href: string;
   meta?: ReactNode;
 }) {
+  const Glyph = ICONS[kind];
   return (
     <Card className="flex h-full flex-col" as="li">
       <div className={`flex h-11 w-11 items-center justify-center rounded-full ${TINT[kind]}`}>
-        <svg
-          aria-hidden="true"
-          viewBox="0 0 24 24"
-          className="h-[22px] w-[22px]"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          {ICONS[kind]}
-        </svg>
+        {/* Still 22px inside the 44px disc, and the tint on the disc is what colours it: currentColor. */}
+        <Glyph aria-hidden="true" size={22} weight="bold" />
       </div>
       <h3 className="mt-4 text-xl font-extrabold text-ink">{title}</h3>
       <p className="mt-2 text-[15px] text-muted">{body}</p>

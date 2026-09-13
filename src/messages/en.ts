@@ -5,7 +5,14 @@ export const en: Messages = {
   meta: {
     siteName: "3enwank",
     titleSuffix: "3enwank",
-    description: "Web hosting, websites, care plans and domains. Servers we own and run ourselves, nightly backups kept in Europe, SSL and a firewall on every account. Prices in EGP and USD.",
+    /*
+     * The home page's description, and only the home page's: every other screen builds its own from
+     * that page's heading and lede. It no longer names Germany. home.metaTitle carries that claim, and
+     * a search result that says "servers we own and run in Germany" in the title and again in the
+     * description spends its two lines on one sentence; "run in Germany, backups kept in Europe" also
+     * reads as two places when Germany is one of them.
+     */
+    description: "Web hosting, websites, care plans and domains. Daily backups, SSL and a firewall on every account. Free migration, no setup fees, prices in EGP and USD.",
   },
   nav: {
     skip: "Skip to content",
@@ -56,17 +63,39 @@ export const en: Messages = {
     learnMore: "Details",
   },
   home: {
-    h1: "Your site stays\u00a0up. Your email keeps\u00a0working.",
-    lede: "Hosting, websites and care plans on servers we own and run ourselves. Daily backups, SSL and a firewall on every plan, and a real person when you write.",
-    ctaPlans: "See plans and prices",
+    h1: "Hosting, websites and domains, on servers we own and run in\u00a0Germany.",
+    /*
+     * "One place", not "one invoice": a website build is invoiced in two parts (see terms) and the
+     * websites page says so, so one invoice for all four was a promise the billing contradicts. The
+     * line also no longer repeats the h1's "we own and run the servers" back at the reader.
+     */
+    lede: "One place for the hosting, the website build, the care plan and the domain. Support in English or Arabic.",
+    /*
+     * The home <title>, which is not the h1. pageMetadata prefixes "3enwank: ", and Google stops
+     * drawing a title around sixty characters, so the h1 at 68 was cut mid-clause ("on servers we own
+     * and..."), losing the country it exists to say. This says the country inside the budget; the page
+     * still greets the reader with the longer h1.
+     */
+    metaTitle: "Hosting, websites and domains, servers in Germany",
+    ctaPlans: "See hosting plans",
     ctaBuild: "Build me a website",
-    facts: ["We move your site from your old host, free", "No setup fees, billed once a year", "Prices in EGP and USD, VAT included"],
+    facts: ["Free migration", "No setup fees", "VAT included"],
     productsTitle: "What we do",
     products: {
-      hosting: { title: "Hosting", body: "Six plans from 1–⁠150 GB, billed annually. Email, databases, and SSL.", link: "Compare plans" },
+      /*
+       * No tier count and no disk range: the catalogue owns both, the store edits it, and the page
+       * shows three of the plans now. "A plan for each size" stays true whatever the store carries,
+       * and the sizes themselves are on the cards and in the comparison table.
+       */
+      hosting: { title: "Hosting", body: "A plan for each size of site, billed once a year. Email, databases, and SSL.", link: "Compare plans" },
       websites: { title: "Websites", body: "From a one-page site to an online store. Fixed scope, fixed price, fixed date.", link: "See packages" },
       care: { title: "Care plans", body: "Updates, malware scans, content changes, and fast replies.", link: "Choose a plan" },
-      domains: { title: "Domains", body: "Register or transfer your domain and manage it alongside your hosting.", link: "Domain prices" },
+      /*
+       * "Search a name", not "Domain prices": /domains/ dropped its price table on purpose, so a label
+       * promising prices sent the reader to a page that has none. The card still carries a number, the
+       * cheapest ending's "From ...", which is where a price belongs.
+       */
+      domains: { title: "Domains", body: "Register or transfer your domain and manage it alongside your hosting.", link: "Search a name" },
     },
     whyTitle: "Included on every account",
     why: [
@@ -78,16 +107,28 @@ export const en: Messages = {
     plansTitle: "Plans and prices",
     plansLede: "Hosting by size, website packages by scope, and yearly care plans.",
     plansTabsLabel: "What we sell",
-    compareLink: "Compare all six plans",
-    domainsTitle: "Find a domain name",
-    domainsLede: "Type a name and see whether it is free, with the price per year.",
+    /*
+     * The fourth entry is the domain search section's link, in the same shape as the three families: it
+     * says what /domains/ has that the section does not, which is every ending we sell. Without it the
+     * section borrowed the product card's label and the same words appeared twice on one page.
+     */
+    allPlans: { hosting: "All hosting plans", websites: "All website packages", care: "All care plans", domains: "All domain endings" },
+    /*
+     * Two lines of chrome over the search instead of three. The kicker already says "Domains" and the
+     * widget labels its own field, so a heading reading "A domain name for your site" over a lede
+     * reading "Type a name" was one sentence said three times. The heading asks the reader's own
+     * question; the lede carries the two things the widget does not say, transfers and the renewal.
+     */
+    domainsTitle: "Is the name you want free?",
+    domainsLede: "Register a new name, or move the one you own. Every result shows the price for the year and what it renews at.",
     moveTitle: "Hosted somewhere else?",
     moveBody: "Free website & email migration. Your site stays online.",
     moveCta: "See plans",
   },
   hosting: {
     title: "Web hosting",
-    h2: "Six plans. Billed once a year.",
+    /* No tier count: the catalogue owns it, and this page prints whatever the store carries. */
+    h2: "Pick a size. Billed once a year.",
     lede: "Every plan runs on the same servers with the same protection.",
     compareTitle: "Compare the plans",
     compareCaption: "Hosting plans compared feature by feature",
@@ -202,11 +243,25 @@ export const en: Messages = {
   },
   about: {
     title: "About 3enwank",
-    h2: "A small hosting company that runs its own servers.",
-    lede: "3enwank is the hosting and web brand of {legalName}, Cairo. We host and build websites for businesses in Egypt and abroad, and we answer our own email.",
+    /*
+     * The heading claims the servers and says where they are, because the home page now names the
+     * country out loud and a bare "runs its own servers" reads thinner beside it.
+     */
+    h2: "A small hosting company with its own servers in Germany.",
+    /*
+     * Two places, said as two sentences. "{legalName}, Cairo" next to a home page about servers in
+     * Germany invited the reader to put the servers in Cairo. An Egyptian company whose machines stand
+     * in a German data centre is the truth, and it reads as a decision when each gets a clause of its own.
+     */
+    lede: "3enwank is the hosting and web brand of {legalName}, a company registered in Cairo. The servers are ours, and they are in Germany. We host and build websites for businesses in Egypt and abroad, and we answer our own email.",
     principlesTitle: "How we work",
     principles: [
-      { title: "We manage the servers ourselves", body: "No reselling. The machines your account runs on are patched by us and backed up by us every day to a data centre in Europe." },
+      /*
+       * The machines are placed, not just owned: "a data centre in Europe" was the only location on this
+       * page and it named the backup's home rather than the servers', which left the reader guessing
+       * where their site actually runs now that the home page names a country.
+       */
+      { title: "We manage the servers ourselves", body: "No reselling. The machines your account runs on are ours, in a data centre in Germany. We patch them, and every account is copied off the server nightly." },
       { title: "Prices are the whole price", body: "Every price is quoted with VAT included and billed once a year. No setup fees. Renewals are at the price on the invoice." },
       { title: "Moving in is free", body: "We move your site and your email, and check that everything works before your domain is switched over." },
       { title: "Straight answers", body: "You write in English or Arabic and get a reply from a real person who can fix the problem." },
@@ -284,6 +339,12 @@ export const en: Messages = {
     sections: [
       { title: "This website", body: ["These pages run no analytics and load nothing from third parties. The only requests your browser makes are to this site itself. They set no cookies of their own, but the customer area at 3enwank.com/account is part of the same address, so if you are signed in your session cookie and your cart cookie travel with every request here too. Your session and the contents of your cart are read only by the customer area. These pages read one thing: how many items are in your cart, which the customer area publishes separately for the basket in the menu bar. Your choice of currency and of light or dark is kept in your browser and is never sent anywhere."] },
       { title: "The customer area", body: ["When you open an account at 3enwank.com/account we store your name, email address, phone or WhatsApp number, address and, for businesses, the company name and tax registration number, because tax invoices require them. The customer area uses one session cookie to keep you signed in and nothing else."] },
+      /*
+       * Where the data lives, which this policy never said. It is worth a section of its own now that
+       * the site names a country in public: the servers and the backups on one side, and Egypt on the
+       * other, because the people who administer both work from Cairo and the tax authority is Egyptian.
+       */
+      { title: "Where your data is held", body: ["Customer websites, their databases and their email run on servers we own in a data centre in Germany. The nightly copy of each account is kept off those servers and inside Europe. The company itself is registered in Cairo, and the people who administer the servers and answer support requests work from Egypt, so your data is read from there as well. Invoice data also reaches the Egyptian Tax Authority, as described below."] },
       { title: "Invoices and the tax authority", body: ["Invoices are reported to the Egyptian Tax Authority’s e-invoicing system, which receives the invoice details and the receiver’s name, address and tax number or national ID where the law requires it."] },
       { title: "Payments", body: ["Invoices are paid by bank transfer and matched by invoice number, so we hold no card details of any kind. If we add card payment later, it will be handled by a payment provider that receives your card details directly, and this policy will say so before that happens."] },
       { title: "Email", body: ["We send transactional email only: order confirmations, invoices, renewal reminders, service notices and replies to your support requests. Support mail is read by a real person."] },

@@ -1,9 +1,14 @@
 /**
  * Locales and URL trees. English owns the root (/hosting/); every other locale lives under its
- * prefix (/ar/hosting/, /ar-eg/hosting/). Adding a locale means one entry in LOCALES and one
- * messages file; the [locale] route tree builds it through generateStaticParams.
+ * prefix (/ar/hosting/). Adding a locale means one entry in LOCALES and one messages file; the
+ * [locale] route tree builds it through generateStaticParams.
+ *
+ * There were three: /ar/ was formal Arabic and /ar-eg/ was Egyptian. The Egyptian copy won, so /ar/
+ * now carries it and the third locale is gone, with no redirect for its old URLs. Anything that
+ * lists the locales has to be taken off ar-eg with it, including the health check in
+ * scripts/deploy.sh, which fails a release over a 404.
  */
-export type Locale = "en" | "ar" | "ar-eg";
+export type Locale = "en" | "ar";
 
 export type LocaleInfo = {
   code: Locale;
@@ -21,7 +26,6 @@ export type LocaleInfo = {
 export const LOCALES: readonly LocaleInfo[] = [
   { code: "en", lang: "en", dir: "ltr", name: "English", og: "en_US", catalogue: "en" },
   { code: "ar", lang: "ar", dir: "rtl", name: "العربية", og: "ar_AR", catalogue: "ar" },
-  { code: "ar-eg", lang: "ar-EG", dir: "rtl", name: "مصري", og: "ar_EG", catalogue: "ar" },
 ];
 
 export const locales: readonly Locale[] = LOCALES.map((l) => l.code);
@@ -109,8 +113,8 @@ export function alternatesFor(page: PageKey, siteUrl: string): Record<string, st
  * the path (/ar/hosting/), the customer area keeps it in a cookie. Without this, an Arabic visitor
  * who pressed Order landed in an English store, which is the moment the shop stopped feeling like
  * the same company. `lang` is read by the customer area's proxy, which sets its cookie from it, so
- * the whole journey stays in one language. ar-eg reads the same catalogue copy as ar, and the
- * customer area has no Egyptian variant, so both send "ar".
+ * the whole journey stays in one language. The customer area has one Arabic, so the Arabic pages
+ * send "ar".
  */
 export function storeLink(url: string, locale: Locale): string {
   const lang = localeInfo(locale).catalogue;

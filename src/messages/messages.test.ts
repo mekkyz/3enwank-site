@@ -89,15 +89,18 @@ describe("writing rules", () => {
 });
 
 describe("Egyptian Arabic", () => {
-  const eg = copy("ar-eg");
+  // The site has one Arabic now, and it is the Egyptian copy: the formal /ar-eg/ split is gone, so
+  // these rules bind "ar". The legal pages are the exception and stay formal, as below.
+  const eg = copy("ar");
   const egText = eg.map(([, s]) => s).join("\n");
 
   it("uses Egyptian vocabulary, not formal Arabic with a few words swapped", () => {
     expect(egText).toContain("إيميل");
     expect(egText).toContain("دومين");
     expect(egText).toContain("باقة");
-    expect(messagesFor("ar-eg").common.unlimited).toBe("مفتوح");
-    expect(messagesFor("ar-eg").common.choose).toBe("اطلبها");
+    expect(messagesFor("ar").common.unlimited).toBe("مفتوح");
+    // اطلبها is the order button. common.choose is a different label ("Choose") and says so.
+    expect(messagesFor("ar").common.order).toBe("اطلبها");
     // Formal words the dialect does not use (legal pages are formal by design and excluded).
     const legal = ["terms.", "privacy.", "delivery.", "refunds."];
     const informal = eg.filter(([k]) => !legal.some((p) => k.startsWith(p)));
@@ -110,30 +113,20 @@ describe("Egyptian Arabic", () => {
     expect(formal).toEqual([]);
   });
 
-  it("follows a sentence-initial waw with a non-breaking space", () => {
-    // "و" starting a sentence: at the beginning of a string or after ., ؟, ! and a space.
-    const bad = eg.filter(([, s]) => /(^|[.؟!]\s+)و[ \t]/.test(s));
+  it("attaches a sentence-initial waw to its word", () => {
+    // و is a prefix, not a word: neither a space nor a non-breaking space may follow it. The file
+    // used to require a NBSP there, which rendered as a visible gap ("و الدعم" for "والدعم").
+    const bad = eg.filter(([, s]) => /(^|[.؟!،]\s*)و[ \t\u00a0]/.test(s));
     expect(bad).toEqual([]);
-    const nb = eg.filter(([, s]) => /(^|[.؟!]\s+)و /.test(s));
-    // A floor, not a count: the convention has to be in live use somewhere, not merely allowed.
-    expect(nb.length).toBeGreaterThanOrEqual(3);
   });
-});
 
-describe("formal Arabic", () => {
-  it("is its own text, not the Egyptian one and not the English one", () => {
-    const ar = messagesFor("ar");
-    const eg = messagesFor("ar-eg");
+  it("is its own text, not the English one", () => {
+    // What is left of the old "formal Arabic" check. It used to prove /ar/ was neither the Egyptian
+    // copy nor the English one; the first half died with the Egyptian locale, the second still holds.
+    const t = messagesFor("ar");
     const en = messagesFor("en");
-    const pairs: Array<[string, string, string]> = [
-      [ar.home.h1, eg.home.h1, en.home.h1],
-      [ar.home.lede, eg.home.lede, en.home.lede],
-      [ar.hosting.lede, eg.hosting.lede, en.hosting.lede],
-      [ar.contact.h2, eg.contact.h2, en.contact.h2],
-    ];
-    for (const [a, b, c] of pairs) {
+    for (const [a, b] of [[t.home.h1, en.home.h1], [t.home.lede, en.home.lede], [t.hosting.lede, en.hosting.lede], [t.contact.h2, en.contact.h2]]) {
       expect(a).not.toBe(b);
-      expect(a).not.toBe(c);
       expect(a).toMatch(/[؀-ۿ]/);
     }
   });

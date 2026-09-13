@@ -1,7 +1,7 @@
 # 3enwank.com
 
 The marketing site for 3enwank: hosting plans, website packages, care plans, domain prices, contact
-and legal pages, in English (`/`), formal Arabic (`/ar/`) and Egyptian Arabic (`/ar-eg/`). A Next.js 16
+and legal pages, in English (`/`) and Egyptian Arabic (`/ar/`). A Next.js 16
 app that runs as its own service on the platform box (`enwank-site.service`, port 3001, behind nginx),
 next to the store but in a separate process and user, with no database (platform repo: `docs/DECISIONS.md`,
 "The public website runs on the box"; design: `docs/design/website.md`).
@@ -20,7 +20,7 @@ Requirements: Node 22 and pnpm 12 (`corepack enable` picks the version from `pac
 ```bash
 pnpm install
 cp .env.example .env            # optional; the defaults point at production
-pnpm dev                        # http://localhost:3000, Arabic at /ar/, Egyptian at /ar-eg/
+pnpm dev                        # http://localhost:3000, Arabic at /ar/
 pnpm test                       # vitest: catalogue loading, formatting, paths
 pnpm lint && pnpm typecheck
 pnpm build && pnpm start        # production server on http://127.0.0.1:3001
@@ -82,7 +82,7 @@ The EGP/USD switch is client-side only: the HTML carries EGP, the visitor's choi
 ```
 src/app/(en)/…            English routes at the root, one thin page.tsx per screen
 src/app/[locale]/…        prefixed locales (generateStaticParams → ar), same screens
-src/app/global-not-found  the 404 page, three languages
+src/app/global-not-found  the 404 page, every language
 src/app/sitemap.ts        sitemap.xml with hreflang alternates; robots.ts
 src/screens/*             one module per page: metadata(locale) + render(locale)
 src/components/*          shell (header, nav, footer), plan cards, tables, currency switch
@@ -168,12 +168,16 @@ refund and privacy policies) and should be reviewed before go-live; the version 
 
 ## Languages and copy
 
-Each language is its own dictionary in `src/messages/` with the same shape (`types.ts`): `en.ts`,
-`ar.ts` (formal Arabic, written as its own text) and `ar-eg.ts` (Egyptian Arabic throughout: إيميل,
-دومين, باقة, مفتوح, اطلبها). Adding a language is one entry in `LOCALES` (`src/lib/i18n.ts`) plus a
-dictionary. `messages.test.ts` enforces the writing rules: no em dashes, no exclamation marks, none
-of the words that read as generated copy, a non-breaking space after a sentence-initial و in the
-Egyptian text, and formal Arabic that is not a copy of the Egyptian or the English.
+Each language is its own dictionary in `src/messages/` with the same shape (`types.ts`): `en.ts` and
+`ar.ts` (Egyptian Arabic throughout: إيميل, دومين, باقة, مفتوح, اطلبها; the legal pages are
+formal, because they are legal text). Adding a language is one entry in `LOCALES` (`src/lib/i18n.ts`)
+plus a dictionary. `messages.test.ts` enforces the writing rules: no em dashes, no exclamation marks,
+none of the words that read as generated copy, a non-breaking space after a sentence-initial و, and
+Arabic that is not a copy of the English.
+
+There was a third locale, `/ar-eg/`, which carried the Egyptian copy while `/ar/` was formal. The
+Egyptian copy reads better to everyone who was being served, so it moved to `/ar/` and the Egyptian
+locale was removed. The old `/ar-eg/` URLs answer 404 on purpose; nothing redirects them.
 
 `dir` and `lang` on `<html>` switch with the language. Latin-only values ("1 GB", prices, ".com")
 are isolated left-to-right with `<bdi dir="ltr">` (`src/components/bidi.tsx`); text that contains

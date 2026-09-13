@@ -24,7 +24,7 @@ if (!base) {
 }
 const origin = base || `http://127.0.0.1:${port}`;
 
-const locales = ["", "ar", "ar-eg"];
+const locales = ["", "ar"];
 const pages = ["", "hosting", "websites", "care", "domains", "about", "terms", "privacy", "delivery", "refunds"];
 const widths = [{ name: "desktop", width: 1440, height: 900 }, { name: "phone", width: 390, height: 844 }];
 const arabic = /[؀-ۿݐ-ݿࢠ-ࣿﭐ-﷿ﹰ-﻿]/;

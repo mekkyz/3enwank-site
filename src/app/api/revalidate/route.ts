@@ -28,10 +28,11 @@ export async function POST(request: Request): Promise<Response> {
   // carrying this tag, so invalidating the tag refreshes all of them.
   //
   // It used to also call revalidatePath("/", "layout"). That took every localised page off the air:
-  // the Arabic and Egyptian pages are prerendered params of a dynamic [locale] route, and clearing
-  // the layout subtree dropped their prerendered entries, after which Next answered NoFallbackError
-  // and served 404 for /ar and /ar-eg until the service was restarted. Reproduced on the live site
-  // on 2026-09-09; one press of "Publish website" in the admin was enough.
+  // the Arabic pages are prerendered params of a dynamic [locale] route, and clearing the layout
+  // subtree dropped their prerendered entries, after which Next answered NoFallbackError and served
+  // 404 for every prefixed locale until the service was restarted (there were two Arabic ones at the
+  // time, /ar and /ar-eg). Reproduced on the live site on 2026-09-09; one press of "Publish website"
+  // in the admin was enough.
   revalidateTag(CATALOGUE_TAG, "max");
   const id = new Date().toISOString();
   return Response.json({ success: true, result: { id } }, { headers: { "Cache-Control": "no-store" } });

@@ -1,12 +1,11 @@
 import type { Locale } from "@/lib/i18n";
 import { ar } from "./ar";
-import { arEg } from "./ar-eg";
 import { en } from "./en";
 import type { Messages } from "./types";
 
 export type { Messages };
 
-const dictionaries: Record<Locale, Messages> = { en, ar, "ar-eg": arEg };
+const dictionaries: Record<Locale, Messages> = { en, ar };
 
 export function messagesFor(locale: Locale): Messages {
   return dictionaries[locale];

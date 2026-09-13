@@ -36,13 +36,13 @@ describe("features", () => {
     const build = fallbackCatalogue().products.build.find((p) => p.slug === "business-website")!;
     // The dictionary is keyed on the whole summary, delivery sentence and all, which is what
     // localizedSummary looks up. A key missing that sentence matches nothing and prints English.
-    expect(localizedSummary(build, "ar", ar)).toBe("موقع كامل لنشاطك. التسليم: حتى أسبوعين.");
+    expect(localizedSummary(build, "ar", ar)).toBe("موقع كامل لشغلك. التسليم: لحد أسبوعين.");
     expect(localizedSummary(build, "en", messagesFor("en"))).toBe("A complete business website. Delivery: up to 2 weeks.");
     expect(localizedSummary({ ...build, summary: { en: "X", ar: "س" } }, "ar", ar)).toBe("س");
     expect(localizedSummary({ ...build, summary: { en: "Unknown", ar: "Unknown" } }, "ar", ar)).toBe("Unknown");
-    expect(localizedFeatures(build, "ar", ar)[0]).toEqual({ text: "كل ما في Landing Page" });
-    expect(deliveryFrom("موقع كامل لنشاطك. التسليم: حتى أسبوعين.")).toBe("حتى أسبوعين");
-    expect(summaryWithoutDelivery("موقع كامل لنشاطك. التسليم: حتى أسبوعين.")).toBe("موقع كامل لنشاطك.");
+    expect(localizedFeatures(build, "ar", ar)[0]).toEqual({ text: "كل اللي في Landing Page" });
+    expect(deliveryFrom("موقع كامل لشغلك. التسليم: لحد أسبوعين.")).toBe("لحد أسبوعين");
+    expect(summaryWithoutDelivery("موقع كامل لشغلك. التسليم: لحد أسبوعين.")).toBe("موقع كامل لشغلك.");
   });
 
   it("picks card lines and notes", () => {
@@ -72,7 +72,7 @@ describe("features", () => {
     const arRows = compareRows(fallbackCatalogue().products.care, "ar", messagesFor("ar"));
     // Three care plans, and their update rows say how often rather than how it is done: the page
     // under the cards explains that they are tried on a copy first.
-    expect(arRows[0]).toEqual({ label: "التحديثات", values: ["شهريًا", "كل أسبوعين", "أسبوعيًا"] });
+    expect(arRows[0]).toEqual({ label: "التحديثات", values: ["كل شهر", "كل أسبوعين", "كل أسبوع"] });
   });
 
   it("extracts the delivery time from a build summary", () => {
@@ -88,14 +88,14 @@ describe("catalogue option strings", () => {
     const ar = messagesFor("ar");
     const xxl = fallbackCatalogue().products.hosting.find((p) => p.slug === "hosting-xxl")!;
     const option = xxl.options.find((o) => o.key === "max_addon_domains")!;
-    expect(localizedValue(option.name, "ar", ar)).toBe("عدد المواقع (النطاقات) على هذا الحساب");
+    expect(localizedValue(option.name, "ar", ar)).toBe("عدد المواقع (الدومينات) على الحساب");
     for (const v of option.values) {
       const label = localizedValue(v.label, "ar", ar);
       expect(label, v.label.en).not.toBe(v.label.en);
-      expect(label, v.label.en).toMatch(/نطاق/);
+      expect(label, v.label.en).toMatch(/دومين/);
     }
-    expect(localizedValue(option.values[0]!.label, "ar", ar)).toBe("نطاقان (مشمولان)");
-    expect(localizedValue(option.values[1]!.label, "ar", ar)).toBe("3 نطاقات");
+    expect(localizedValue(option.values[0]!.label, "ar", ar)).toBe("2 دومين (متضمنين)");
+    expect(localizedValue(option.values[1]!.label, "ar", ar)).toBe("3 دومينات");
   });
 
   it("keeps English as it is and prefers a real Arabic translation over the map", () => {
@@ -132,8 +132,7 @@ describe("value normalisation", () => {
 
   it("drops '/ month' from Arabic bandwidth values, whose label already says monthly", () => {
     const product = { ...fallbackCatalogue().products.hosting[0]!, features: { en: ["Bandwidth: 8 GB / month", "Storage: 1 GB NVMe"], ar: ["Bandwidth: 8 GB / month", "Storage: 1 GB NVMe"] } };
-    expect(localizedFeatures(product, "ar", messagesFor("ar"))[0]).toEqual({ label: "نقل البيانات شهريًا", value: "8 GB" });
-    expect(localizedFeatures(product, "ar-eg", messagesFor("ar-eg"))[0]).toEqual({ label: "الترافيك في الشهر", value: "8 GB" });
+    expect(localizedFeatures(product, "ar", messagesFor("ar"))[0]).toEqual({ label: "الترافيك في الشهر", value: "8 GB" });
     expect(localizedFeatures(product, "en", messagesFor("en"))[0]).toEqual({ label: "Bandwidth", value: "8 GB / month" });
   });
 });

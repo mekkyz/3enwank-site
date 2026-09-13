@@ -4,7 +4,12 @@ type ProductTeaser = { title: string; body: string; link: string };
 type Fact = { title: string; body: string };
 
 export type Messages = {
-  meta: { siteName: string; titleSuffix: string; description: string };
+  meta: {
+    siteName: string;
+    titleSuffix: string;
+    /** The home page's <meta description>, and only that page's; every other screen builds one from its own heading and lede. */
+    description: string;
+  };
   nav: {
     skip: string;
     home: string;
@@ -57,8 +62,15 @@ export type Messages = {
   home: {
     h1: string;
     lede: string;
+    /**
+     * The home page's <title>, which the h1 used to supply. A title is prefixed with "3enwank: " and
+     * cut by a search engine around sixty characters, and the h1 is a hero line written for a reader
+     * who can see all of it, so the two are separate strings with separate budgets.
+     */
+    metaTitle: string;
     ctaPlans: string;
     ctaBuild: string;
+    /** The proof line under the hero buttons. Three short facts, joined by middots; it has to stay one line on a laptop. */
     facts: string[];
     /** What every account runs on; the hosting page prints it as one line. */
     productsTitle: string;
@@ -70,7 +82,16 @@ export type Messages = {
     plansLede: string;
     /** Names the tab strip for a screen reader; not drawn on the page. */
     plansTabsLabel: string;
-    compareLink: string;
+    /**
+     * Under each family's three cards: the way to the page that still lists every tier. `domains` is
+     * the same promise for the search section below them, whose page carries every ending we sell.
+     */
+    allPlans: { hosting: string; websites: string; care: string; domains: string };
+    /**
+     * The domain search's own section, under the plans. Two lines only: the widget names its own field
+     * and the section header already carries a kicker, so anything here that says "type a name" is the
+     * third copy of one sentence.
+     */
     domainsTitle: string;
     domainsLede: string;
     moveTitle: string;

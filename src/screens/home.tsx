@@ -1,24 +1,23 @@
-import { ArrowLink, ButtonLink, Card, Container, Facts, Section, SectionHeader } from "@/components/blocks";
+import { ArrowLink, ButtonLink, Card, Container, Section, SectionHeader } from "@/components/blocks";
 import { Val } from "@/components/bidi";
 import { Price } from "@/components/currency";
 import { DomainSearch } from "@/components/domain-search";
 import { ContactSection } from "@/components/contact";
-import { HeroIllustration } from "@/components/illustration";
 import { ProductCard } from "@/components/products";
 import { Shell } from "@/components/shell";
 import { Tabs } from "@/components/tabs";
-import { featureValue, localizedSummary, summaryWithoutDelivery } from "@/lib/format";
+import { localizedFeatures, localizedSummary, parseFeature, summaryWithoutDelivery } from "@/lib/format";
 import { pageMetadata } from "@/lib/metadata";
-import { anchorFor, pathFor, type Locale } from "@/lib/i18n";
+import { anchorFor, pathFor, storeLink, type Locale } from "@/lib/i18n";
 import { WHATSAPP_NUMBER } from "@/lib/site";
 import { messagesFor, type Messages } from "@/messages";
 import type { Catalogue, Product } from "@/lib/catalogue";
 import { HIGHLIGHT, assistantOn, domainSearchLabels, loc, screenContext, storeApi, vatLine } from "./shared";
 
 /**
- * Home: hero, the four products, what every account includes, every plan we sell on three tabs,
- * the domain search, the migration offer, about and contact. Everything a visitor needs to decide
- * is on this page; the product pages carry the full tables.
+ * Home: hero, the four products, what every account includes, three plans of each family on three
+ * tabs, the domain search, the migration offer and contact. Everything a visitor needs to decide is
+ * on this page; the product pages carry every tier and the full tables.
  */
 export const home = {
   metadata(locale: Locale) {
@@ -28,16 +27,59 @@ export const home = {
   async render(locale: Locale) {
     const { t, catalogue, company, trust } = await screenContext(locale);
     /*
-     * The three families, in the order a visitor meets them in the menu. A family the store has
-     * nothing in simply has no tab; with none of them there is no section at all.
+     * The three families, in the order a visitor meets them in the menu, three plans each and three
+     * specs on each plan. Every tier used to be listed here, which put six hosting plans on the page
+     * separated by one disk size: nobody decides between 1 GB and 2 GB for 500 EGP more. Three tiers
+     * far enough apart to be three different answers, and a link to the page that still has them all.
+     *
+     * A family the store has nothing in simply has no tab; with none of them there is no section.
      */
-    const tabs = (
-      [
-        { id: "hosting", label: t.nav.hosting, items: catalogue.products.hosting, cycle: t.common.perYear, detail: "storage" as const, link: [pathFor("hosting", locale), t.home.compareLink] as const, highlight: HIGHLIGHT.hosting },
-        { id: "websites", label: t.nav.websites, items: catalogue.products.build, cycle: t.common.oneTime, detail: "summary" as const, link: [pathFor("websites", locale), t.home.products.websites.link] as const, highlight: undefined },
-        { id: "care", label: t.nav.care, items: catalogue.products.care, cycle: t.common.perYear, detail: "summary" as const, link: [pathFor("care", locale), t.home.products.care.link] as const, highlight: undefined },
-      ] as const
-    ).filter((tab) => tab.items.length > 0);
+    const families = [
+      {
+        id: "hosting",
+        label: t.nav.hosting,
+        items: threeOf(catalogue.products.hosting, ["hosting-xs", "hosting-m", "hosting-xl"]),
+        cycle: t.common.perYear,
+        /*
+         * How many sites, how much mail, how much room: the three a plan is actually outgrown on.
+         * The catalogue files the site count under "Domains". Bandwidth, databases and FTP accounts
+         * are real differences too, and they are on the hosting page, where a table can hold them.
+         */
+        specs: (p: Product) => labelledSpecs(p, locale, t, ["Domains", "Email accounts", "Storage"]),
+        link: [pathFor("hosting", locale), t.home.allPlans.hosting] as const,
+        highlight: HIGHLIGHT.hosting,
+      },
+      {
+        id: "websites",
+        label: t.nav.websites,
+        items: threeOf(catalogue.products.build, ["business-card", "business-website", "online-store"]),
+        cycle: t.common.oneTime,
+        /*
+         * A build has no gigabytes to compare. Its catalogue features are plain lines, and the first
+         * three of a package's own lines are exactly what separates it from the one below: how big
+         * the site is, what a visitor can do on it, and what it is wired up to. The inherited
+         * "Everything in <the package below>" line and the note that hosting is billed separately
+         * are dropped, because neither tells you which package to buy.
+         */
+        specs: (p: Product) => scopeSpecs(p, locale, t),
+        link: [pathFor("websites", locale), t.home.allPlans.websites] as const,
+        highlight: HIGHLIGHT.build,
+      },
+      {
+        id: "care",
+        label: t.nav.care,
+        items: threeOf(catalogue.products.care, ["care-basic", "care-plus", "care-pro"]),
+        cycle: t.common.perYear,
+        /*
+         * A care plan is bought for how often someone looks at the site, how many changes it buys
+         * and how fast the answer comes, so those are the three. The malware scan follows the
+         * update cadence exactly, and restores and reports are the fine print of the care page.
+         */
+        specs: (p: Product) => labelledSpecs(p, locale, t, ["Updates", "Content changes", "Reply time"]),
+        link: [pathFor("care", locale), t.home.allPlans.care] as const,
+        highlight: HIGHLIGHT.care,
+      },
+    ].filter((family) => family.items.length > 0);
     const fromPrice = (kind: "hosting" | "build" | "care") => {
       const list = catalogue.products[kind];
       const cheapest = list.reduce<(typeof list)[number] | null>((min, p) => (!min || (p.prices.EGP?.gross ?? Infinity) < (min.prices.EGP?.gross ?? Infinity) ? p : min), null);
@@ -63,12 +105,38 @@ export const home = {
     const whatsapp = WHATSAPP_NUMBER || (phone ?? "").replace(/[^0-9]/g, "") || null;
     return (
       <Shell locale={locale} page="home" storeUrl={catalogue.store.url} legalName={company.legalName} supportEmail={company.contactEmail} trust={trust} assistantEnabled={catalogue.assistant.enabled} turnstileSiteKey={catalogue.assistant.turnstileSiteKey}>
-        <section className="relative overflow-hidden">
-          <Container className="grid items-center gap-12 py-16 lg:grid-cols-2 lg:py-24">
-            <div>
-              <h1 className="rise max-w-xl text-balance text-4xl font-extrabold leading-[1.08] tracking-tight text-ink sm:text-5xl lg:text-[3.6rem]">{t.home.h1}</h1>
-              <p className="rise-2 mt-6 max-w-xl text-lg text-muted sm:text-xl">{t.home.lede}</p>
-              <div className="rise-3 mt-8 flex flex-wrap gap-3">
+        {/*
+         * The hero: one statement, the line under it, the two ways in, and the small print under
+         * those. One column, half the height it was.
+         *
+         * Three earlier tries are in this file's history: a 50/50 grid with a drawing on the right, a
+         * statement across the full width whose lede started at the middle of the page, and a
+         * seven-column measure beside a four-column rail. The last one also held the domain search,
+         * which took more of the eye than either button and framed the company as a registrar; the
+         * search is its own section under the plans now. The rail went with it, and the three facts
+         * it carried are one quiet line here, which is all the weight small print should have.
+         *
+         * No tracking-* utility in this block. globals.css zeroes letter-spacing under dir="rtl", so
+         * a heading tuned with negative tracking is a different heading in Arabic; this one is tuned
+         * with size and leading, which both locales get.
+         */}
+        <section>
+          <Container className="pb-9 pt-8 sm:pb-11 sm:pt-10 lg:pb-12 lg:pt-11">
+            {/* One measure for all four lines: statement, lede, buttons and facts share the left edge. */}
+            <div className="max-w-3xl">
+              <h1 className="rise text-balance text-[1.7rem] font-extrabold leading-[1.16] text-ink sm:text-[2.1rem] sm:leading-[1.12] lg:text-[2.4rem]">{t.home.h1}</h1>
+              <p className="rise-2 mt-3 max-w-2xl text-pretty text-base leading-relaxed text-muted sm:mt-4 sm:text-[1.0625rem]">{t.home.lede}</p>
+              {/*
+               * The two ways in, as buttons. They were a pair of arrow links in the rail, which put
+               * the only two commercial paths on the page in the margin, in the weight this site
+               * uses for "read more", while the one filled button in the hero belonged to a domain
+               * search that is no use to a visitor who already has a domain or does not want one.
+               *
+               * Both buttons, one filled: a visitor who knows what they want clicks the plan, a
+               * visitor who wants it built clicks the other, and the search further down still
+               * catches the one who came for a name.
+               */}
+              <div className="rise-3 mt-5 flex flex-wrap gap-3 sm:mt-6">
                 <ButtonLink href={pathFor("hosting", locale)} size="lg">
                   {t.home.ctaPlans}
                 </ButtonLink>
@@ -76,10 +144,29 @@ export const home = {
                   {t.home.ctaBuild}
                 </ButtonLink>
               </div>
-              <Facts items={t.home.facts} className="rise-4 mt-8" />
-            </div>
-            <div className="rise-2 hidden justify-center lg:flex">
-              <HeroIllustration labels={[t.nav.websites, t.home.why[2]!.title, t.contact.email, t.home.why[0]!.title]} title={t.home.h1} />
+              {/*
+               * The three things a visitor can check against the invoice afterwards, on one line.
+               * They were three check-marked rows in the rail, which is a list where a caption will
+               * do. It wraps onto a second line on a phone instead of running off the edge.
+               *
+               * The middot trails the fact it follows, inside the same <li>, and is hidden from a
+               * screen reader, so the list is read as three facts and not as punctuation. It used to
+               * lead the next fact instead, which put a separator at the head of the second line
+               * every time the line wrapped: at 360 in English and at 360, 375 and 390 in Arabic.
+               * A separator can end a line like a hyphen, it cannot open one.
+               */}
+              <ul className="rise-4 mt-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm font-semibold text-muted sm:mt-6">
+                {t.home.facts.map((f, i) => (
+                  <li key={f}>
+                    {f}
+                    {i < t.home.facts.length - 1 ? (
+                      <span aria-hidden="true" className="ps-2">
+                        ·
+                      </span>
+                    ) : null}
+                  </li>
+                ))}
+              </ul>
             </div>
           </Container>
         </section>
@@ -90,7 +177,7 @@ export const home = {
             <ProductCard kind="hosting" title={t.home.products.hosting.title} body={t.home.products.hosting.body} link={t.home.products.hosting.link} href={pathFor("hosting", locale)} meta={fromPrice("hosting")} />
             <ProductCard kind="websites" title={t.home.products.websites.title} body={t.home.products.websites.body} link={t.home.products.websites.link} href={pathFor("websites", locale)} meta={fromPrice("build")} />
             <ProductCard kind="care" title={t.home.products.care.title} body={t.home.products.care.body} link={t.home.products.care.link} href={pathFor("care", locale)} meta={fromPrice("care")} />
-            <ProductCard kind="domains" title={t.home.products.domains.title} body={t.home.products.domains.body} link={t.home.products.domains.link} href={anchorFor("domains", locale)} meta={fromDomain} />
+            <ProductCard kind="domains" title={t.home.products.domains.title} body={t.home.products.domains.body} link={t.home.products.domains.link} href={pathFor("domains", locale)} meta={fromDomain} />
           </ul>
         </Section>
 
@@ -114,37 +201,66 @@ export const home = {
         {/*
          * One section for everything that has a price. Hosting used to stand on its own above a
          * second section that carried websites and care as two lists, which put the same three
-         * questions — what is it, what does it include, what does it cost — in two different
-         * shapes on one page. Three tabs over one box answer them the same way.
+         * questions, what is it, what does it include and what does it cost, in two different shapes
+         * on one page. Three tabs answer them the same way, and each tab answers with three cards
+         * rather than with every tier the family has.
          */}
-        {tabs.length ? (
+        {families.length ? (
           <Section tone="alt">
             <SectionHeader title={t.home.plansTitle} lede={t.home.plansLede} />
+            {/* The three tabs stay: one box, one shape, and the family a visitor came for is one press away rather than two screens down. */}
             <Tabs
               label={t.home.plansTabsLabel}
-              items={tabs.map((tab) => ({
-                id: tab.id,
-                label: tab.label,
-                panel: <PlanList items={tab.items} cycle={tab.cycle} detail={tab.detail} link={tab.link} highlight={tab.highlight} locale={locale} t={t} />,
+              items={families.map((family) => ({
+                id: family.id,
+                label: family.label,
+                panel: <PlanCards items={family.items} cycle={family.cycle} specs={family.specs} link={family.link} highlight={family.highlight} locale={locale} t={t} />,
               }))}
             />
             <p className="mt-4 text-sm text-muted">{vatLine(t, catalogue)}</p>
           </Section>
         ) : null}
 
-        <Section id="domains">
+        {/*
+         * The domain search, under the plans and above the invitation to move. It was the largest
+         * thing in the hero until now, which made the first offer on the page a name rather than
+         * hosting; here it meets a visitor who has just read what a plan costs and needs the one
+         * thing the plan does not come with.
+         *
+         * id="domains" is kept for old inbound links only. Nothing in the app links to it any more:
+         * the one caller, the Domains product card above, now goes to pathFor("domains", locale),
+         * which is the right destination, since that page carries this same search plus every ending
+         * we sell and what each costs. A link from the home page down to a cut-down copy of that on
+         * the home page would be the worse of the two. The offset the anchor lands with is
+         * scroll-margin-top on section[id] in globals.css, which follows the header's two heights. The
+         * scroll-mt-24 that used to be on this line was inert, and one fixed utility value could not
+         * have cleared both bars anyway.
+         *
+         * A hairline above it, and tinted like the plans section: two tinted bands in a row read as
+         * one page, and the rule is what says they are two sections. The band below is plain, so the
+         * alternation carries on from here.
+         */}
+        <Section id="domains" tone="alt" className="border-t border-line">
           <SectionHeader kicker={t.nav.domains} title={t.home.domainsTitle} lede={t.home.domainsLede} right={<ArrowLink href={pathFor("domains", locale)}>{t.home.products.domains.link}</ArrowLink>} />
-          <div className="rounded-2xl border border-line bg-panel p-5 sm:p-8">
+          {/*
+           * A panel from sm up, and on a phone no panel at all: a card inside a 350px screen costs
+           * 34px of it, which is what pushed the widget's own three tabs wider than the screen. On a
+           * phone the search is a heading and a field, like the rest of the page.
+           *
+           * No `tlds`: the widget draws every ending we sell as a row of pills when it is given them,
+           * which is the right thing on the domains page and forty pills here.
+           */}
+          <div className="sm:rounded-2xl sm:border sm:border-line sm:bg-panel sm:p-8">
             <DomainSearch locale={locale} searchPath={pathFor("domains", locale)} cartUrl={api.cartDomain} apiUrl={api.domainSearch} ideasUrl={api.domainIdeas} contactHref={anchorFor("contact", locale)} labels={domainSearchLabels(t)} ideas={assistantOn(catalogue)} turnstileSiteKey={catalogue.assistant.turnstileSiteKey} />
           </div>
         </Section>
 
         {/*
-         * A page-level invitation, not the tail of the section above it. A rule was not enough: on
-         * the same background as the headed "Domains" section directly above, it still read as a
-         * fourth thing about domains. Its own ground is what separates it.
+         * A page-level invitation, not the tail of the section above it. Plain ground is what
+         * separates it from the tinted domain section, as it did from the tinted plans section
+         * before the search moved down here.
          */}
-        <Section tone="alt">
+        <Section>
           <div>
             <div className="band flex flex-wrap items-center justify-between gap-6 rounded-2xl px-7 py-9 sm:px-10">
               <div>
@@ -176,15 +292,84 @@ export const home = {
   },
 };
 
+/** One row on a plan card. A free-text feature has no label and takes the whole row. */
+type Spec = { label?: string; value: string };
+
+/** Three cards, three specs on each: the owner's count, and what fits one row of a laptop screen. */
+const PER_FAMILY = 3;
+const SPECS_PER_CARD = 3;
+
 /**
- * Every plan of one family, each on a row: the name, one short detail, and the price. Hosting is
- * compared on how much room it gives, so its detail is the storage; a website package and a care
- * plan are chosen by what they are for, so theirs is the summary the store writes.
+ * Three plans of a family: the ones asked for by slug, and, when the store no longer has those
+ * slugs, the cheapest, the middle and the dearest in catalogue order, so the three on the page are
+ * still three different sizes rather than nothing. A family of three or fewer is shown whole.
  */
-function PlanList({
+function threeOf(items: readonly Product[], slugs: readonly string[]): Product[] {
+  if (items.length <= PER_FAMILY) return [...items];
+  const named = slugs.flatMap((slug) => {
+    const found = items.find((p) => p.slug === slug);
+    return found ? [found] : [];
+  });
+  if (named.length === PER_FAMILY) return named;
+  return [items[0]!, items[Math.floor((items.length - 1) / 2)]!, items[items.length - 1]!];
+}
+
+/**
+ * The catalogue's feature lines paired with the English label each is filed under, so a row can be
+ * asked for by label and still be read in the page's language: the Arabic copy is translated line
+ * by line at the same index (see localizedFeatures), and the label itself is translated with it.
+ */
+function specLines(product: Product, locale: Locale, t: Messages): Array<{ line: string; label: string; spec: Spec }> {
+  const localized = localizedFeatures(product, locale, t);
+  return product.features.en.flatMap((line, i) => {
+    const row = localized[i];
+    if (!row) return [];
+    const english = parseFeature(line);
+    const label = "label" in english ? english.label : "";
+    if ("label" in row) return row.value ? [{ line, label, spec: { label: row.label, value: row.value } }] : [];
+    return row.text ? [{ line, label, spec: { value: row.text } }] : [];
+  });
+}
+
+/**
+ * The rows a card shows, asked for by the English labels the store files them under and given back
+ * in the order they were asked for. A product missing one of them loses that row and keeps the
+ * others: the catalogue is edited in the customer area, and a renamed feature must cost a line, not
+ * the page.
+ */
+function labelledSpecs(product: Product, locale: Locale, t: Messages, labels: readonly string[]): Spec[] {
+  const lines = specLines(product, locale, t);
+  return labels.flatMap((wanted) => {
+    const found = lines.find((l) => l.label === wanted);
+    return found ? [found.spec] : [];
+  });
+}
+
+/** Lines that say what a package inherits or how it is billed, rather than what it is. */
+const INHERITED = /^Everything in\b/i;
+const BILLING = /\bseparate\b|\b(EGP|USD|VAT)\b/i;
+
+/** The first three of a package's own feature lines: what it is, in the words the store wrote. */
+function scopeSpecs(product: Product, locale: Locale, t: Messages): Spec[] {
+  return specLines(product, locale, t)
+    .filter((l) => !INHERITED.test(l.line) && !BILLING.test(l.line))
+    .slice(0, SPECS_PER_CARD)
+    .map((l) => l.spec);
+}
+
+/**
+ * Three plans of one family as three cards: the name, the store's own one-line summary, the price,
+ * three specs and the way to order. Every one of them comes from the catalogue, including the
+ * formatted price, so nothing here can drift from what the store charges.
+ *
+ * It was one box listing every tier of the family on its own row. Six rows a disk size apart is a
+ * table pretending to be a choice; three cards force the tiers far enough apart to be compared at a
+ * glance, and the link under them is where the rest still live.
+ */
+function PlanCards({
   items,
   cycle,
-  detail,
+  specs,
   link,
   highlight,
   locale,
@@ -192,45 +377,66 @@ function PlanList({
 }: {
   items: readonly Product[];
   cycle: string;
-  detail: "storage" | "summary";
+  specs: (product: Product) => Spec[];
   link: readonly [string, string];
   highlight?: string;
   locale: Locale;
   t: Messages;
 }) {
   return (
-    <Card className="flex flex-col">
-      {/* Two columns once there are more rows than fit comfortably on one; every row keeps its rule, so the columns read as one table. */}
-      <ul className={`grid gap-x-10 border-b border-line ${items.length > 3 ? "sm:grid-cols-2" : ""}`}>
-        {items.map((p) => {
-          const text = detail === "storage" ? featureValue(p, locale, t, "Storage") : summaryWithoutDelivery(localizedSummary(p, locale, t));
+    <div>
+      {/*
+       * Three-up from lg, one column under it. It was md, 768px, where the three cards are 216px
+       * each: every price broke over two lines, and on the care tab seven of the nine spec rows
+       * wrapped. The cards are clean from around 900px on the hosting and care tabs, but the
+       * websites tab has the longest cycle label of the three ("One-time payment"), and its price
+       * only fits beside it on one line from 992px up, so lg is the first standard step where all
+       * three tabs hold together. Measured at 768, 834, 864 and 1024 in both locales.
+       */}
+      <ul className="grid gap-5 lg:grid-cols-3">
+        {items.map((product) => {
+          const chosen = product.slug === highlight;
+          const summary = summaryWithoutDelivery(localizedSummary(product, locale, t));
+          const rows = specs(product);
           return (
-            <li key={p.slug} className="flex items-start justify-between gap-4 border-t border-line py-3.5">
-              {/* Name and detail sit on one line where there is room and wrap onto two where there is not. */}
-              <div className="flex min-w-0 flex-wrap items-baseline gap-x-2.5 gap-y-0.5">
-                <p className="font-bold text-ink">
-                  <Val>{loc(p.name, locale)}</Val>
-                </p>
-                {p.slug === highlight ? <span className="rounded-full bg-brand-soft px-2 py-0.5 text-[11px] font-extrabold uppercase tracking-wider text-brand-strong">{t.common.mostChosen}</span> : null}
-                {/* "1 GB NVMe" beside Arabic text reorders into "GB NVMe 1" without isolation; a translated summary is left to the page direction. */}
-                {text ? (
-                  <p className="text-sm text-muted">
-                    <Val>{text}</Val>
-                  </p>
-                ) : null}
+            <Card key={product.slug} as="li" highlight={chosen} className="flex h-full flex-col">
+              <div className="flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
+                <h3 className="text-xl font-extrabold text-ink">
+                  <Val>{loc(product.name, locale)}</Val>
+                </h3>
+                {/* No tracking on the pill: it carries Arabic copy too, and globals.css zeroes letter-spacing under dir="rtl" anyway. */}
+                {chosen ? <span className="rounded-full bg-brand-soft px-2 py-0.5 text-[11px] font-extrabold uppercase text-brand-strong">{t.common.mostChosen}</span> : null}
               </div>
-              <p className="shrink-0 text-end text-sm text-muted">
-                <Price prices={p.prices} locale={locale} fallback={t.common.notAvailable} className="font-extrabold text-ink" />
-                <span className="block text-xs">{cycle}</span>
+              {summary ? <p className="mt-1.5 text-sm text-muted">{summary}</p> : null}
+              <p className="mt-4 flex flex-wrap items-baseline gap-x-1.5">
+                <Price prices={product.prices} locale={locale} fallback={t.common.notAvailable} className="text-2xl font-extrabold leading-none text-ink" />
+                <span className="text-sm text-muted">{cycle}</span>
               </p>
-            </li>
+              {rows.length ? (
+                <ul className="mt-5 space-y-2.5 border-t border-line pt-5 text-sm">
+                  {rows.map((row, i) => (
+                    <li key={row.label ?? `${i}`} className="flex items-baseline justify-between gap-3">
+                      {row.label ? <span className="text-muted">{row.label}</span> : null}
+                      {/* "1 GB NVMe" beside Arabic text reorders into "GB NVMe 1" without isolation. */}
+                      <Val className={`font-semibold text-ink ${row.label ? "text-end" : ""}`}>{row.value}</Val>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+              <div className="mt-auto pt-6">
+                <ButtonLink href={storeLink(product.storeUrl, locale)} variant={chosen ? "primary" : "outline"} className="w-full" external>
+                  {t.common.order}
+                </ButtonLink>
+              </div>
+            </Card>
           );
         })}
       </ul>
-      <div className="mt-5">
+      {/* The page shows three of the family now, so the way to the rest is part of the panel, not an afterthought on the section header. */}
+      <div className="mt-6">
         <ArrowLink href={link[0]}>{link[1]}</ArrowLink>
       </div>
-    </Card>
+    </div>
   );
 }
 

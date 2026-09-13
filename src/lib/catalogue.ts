@@ -180,6 +180,17 @@ export async function loadCatalogue(): Promise<LoadedCatalogue> {
     return loaded;
   }
   if (lastGood) return { catalogue: lastGood, source: "remote", reason: null };
+  /*
+   * An explicit CATALOGUE_SOURCE=fallback is a configuration, not a failure. The throw below exists
+   * so that a store which has gone away cannot quietly start serving a snapshot of last week's
+   * prices; an operator who asked for the snapshot by name has already made that decision.
+   *
+   * Telling the two apart matters because the throw does not cost every page equally. A static page
+   * has one Next already rendered, so the error makes Next keep it and nothing is visible. A dynamic
+   * route has nothing to keep: /domains/ is rendered per request, so it answered 500 while every
+   * other page served the snapshot happily.
+   */
+  if (CATALOGUE_SOURCE === "fallback") return loaded;
   if (!building()) throw new Error(`[catalogue] ${loaded.reason}`);
   console.warn(`[catalogue] using catalogue.fallback.json: ${loaded.reason}`);
   return loaded;

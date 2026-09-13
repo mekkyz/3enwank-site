@@ -341,9 +341,68 @@ html.theme-switching *::after {
   }
 }
 
-/* Anchored sections stop below the sticky header. */
-section[id] {
-  scroll-margin-top: 4.5rem;
+/*
+ * The sticky bar, the same class the platform toggles. While the page is at the top the bar is not
+ * there to look at: no panel, no hairline, so the hero starts at the first pixel of the page. Both
+ * come back once the page has moved, and the blur comes and goes with them, because a blur over a bar
+ * with nothing behind it smears the hero heading through what is meant to read as empty space.
+ *
+ * Written as a subtraction, not an addition: the panel and the hairline are the header's own classes
+ * in shell.tsx, and this takes them away at the top. So a reader without JavaScript, who never gets
+ * the class, keeps the solid bar rather than a transparent one with the page sliding under it.
+ *
+ * Nothing here changes the header's size. The hairline is always drawn and only loses its colour,
+ * because a border switching between present and absent moves every pixel below it by 1px at the
+ * threshold and takes the anchor offset with it. The blur goes to zero radius rather than to `none`
+ * so it fades with the panel instead of snapping over a bar that is still half transparent.
+ *
+ * `is-scrolled` sits on <html>, set by BAR_SCRIPT in src/components/root.tsx before the header is
+ * parsed. The reduced-motion block above already flattens the transition.
+ */
+header[data-bar] {
+  backdrop-filter: blur(8px);
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    backdrop-filter 0.3s ease;
+}
+html.js:not(.is-scrolled) header[data-bar] {
+  background-color: transparent;
+  border-color: transparent;
+  backdrop-filter: blur(0px);
+}
+
+/*
+ * Anchored sections stop clear of the sticky header, hairline and all.
+ *
+ * The bar is two rows until lg, the logo row with the nav row under it, and one row from lg up:
+ * measured on the real page it is 99px and 69px, in both locales. It was a flat 4.5rem here, 72px,
+ * which is 27px short of the two-row bar, so at every phone and tablet width an anchored section's
+ * top edge and its border-t hairline landed behind the bar instead of under it.
+ *
+ * In @layer base rather than unlayered. `@import "tailwindcss"` puts scroll-mt-* in @layer
+ * utilities, and an unlayered normal declaration beats a layered one whatever the specificity, so
+ * the unlayered rule made scroll-mt-* on a section silently inert wherever a section wanted its own
+ * offset. Layered, this is a default a utility can still override.
+ *
+ * --header-h is the bar's own height, named once so the extra breathing room under it is written
+ * once too. It has to move with the padding on <header data-bar> in shell.tsx; 64rem is Tailwind's
+ * own lg, so the switch happens on the same pixel as the header's.
+ */
+@layer base {
+  :root {
+    --header-h: 99px;
+  }
+
+  @media (min-width: 64rem) {
+    :root {
+      --header-h: 69px;
+    }
+  }
+
+  section[id] {
+    scroll-margin-top: calc(var(--header-h) + 0.75rem);
+  }
 }
 
 /* The assistant panel: the dots while it thinks, the caret while an answer streams, and the

@@ -54,21 +54,44 @@ export function Shell({
       >
         {t.nav.skip}
       </a>
-      <header data-bar className="sticky top-0 z-40 border-b border-line bg-panel/95 backdrop-blur">
+      {/*
+       * The panel and the hairline are here, and globals.css takes them away while the page is at the
+       * top: the wordmark, the links and the mobile row then sit straight on the page, which is what
+       * the hero was drawn to hold. Written that way round so a reader without JavaScript keeps the
+       * solid bar. The blur lives in globals.css with them, so it cannot be left on over a bar with
+       * nothing behind it. `data-bar` is what that rule selects; the class BAR_SCRIPT (root.tsx)
+       * toggles sits on <html>.
+       */}
+      <header data-bar className="sticky top-0 z-40 border-b border-line bg-panel/95">
         {/*
-         * The row has to fit a 375px-wide content box, which is what a 390px phone leaves once
-         * `scrollbar-gutter: stable` has taken its 15px. It did not: the wordmark is 166px at h-7
-         * and the controls another 192px, so English overflowed it by 31px and Arabic by 22px.
-         * Arabic was the visible one only because a right-to-left row spills past the start edge into
-         * negative coordinates, while English spilled the other way into the reserved gutter, where it
-         * raised no scrollbar and nothing looked wrong.
+         * The row was a fixed-width wordmark beside controls whose width follows the language, and
+         * every attempt to fit it by picking a smaller fixed wordmark failed on some phone nobody
+         * had measured. h-7 (166px) overflowed a 390px phone by 31px; h-6 (142px) cleared 390 with
+         * 8.8px to spare and still broke its own padding box by 6.2px at 375 and 21.2px at 360, which
+         * are an iPhone SE and the commonest Android.
          *
-         * So the phone gets a smaller wordmark (h-6 is 142px) and slightly tighter controls, which
-         * together buy back more than the 31px. Nothing at sm and above changes.
+         * The arithmetic says no fixed height can work. At 360 the page is 345px wide once
+         * `scrollbar-gutter: stable` has taken its 15px, so the padding box is 305px; the English
+         * controls are 176px (currency, cart, language, Contact) and the gap 8px, which leaves 121px
+         * for a wordmark that wants 142px. The image is 640x108, so height is the expensive
+         * dimension — every pixel of it costs about six of width — and h-5 would fit 360 by 2.5px and
+         * still fail on a 320px screen.
+         *
+         * So the wordmark stops being fixed and becomes the part that gives. It is the flex row's
+         * only shrinkable item below sm (`min-w-0` so it may shrink past its own width, `max-w-full`
+         * and `h-auto` so it loses height with width rather than squashing), capped at the h-6 it
+         * already had. The controls are what they are, the row is what the screen is, and the
+         * wordmark takes the difference: 142px at 390 and up, 136px at 375, 121px at 360, and no
+         * width left to break on. Nothing at sm and above changes: `sm:shrink-0` stops the shrinking
+         * and `sm:max-h-8` is the h-8 that was there, to the pixel.
          */}
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-5 py-3 sm:gap-4 sm:px-8">
-          <a href={pathFor("home", locale)} className="flex shrink-0 items-center" aria-label={t.meta.siteName}>
-            <Logo className="h-6 sm:h-8" />
+          <a
+            href={pathFor("home", locale)}
+            className="flex min-w-0 items-center sm:shrink-0"
+            aria-label={t.meta.siteName}
+          >
+            <Logo className="h-auto max-h-6 max-w-full sm:max-h-8" />
           </a>
           <nav
             aria-label={t.nav.menu}

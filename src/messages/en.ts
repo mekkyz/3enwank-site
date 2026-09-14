@@ -63,13 +63,15 @@ export const en: Messages = {
     learnMore: "Details",
   },
   home: {
-    h1: "Hosting, websites and domains, on servers we own and run in\u00a0Germany.",
     /*
-     * "One place", not "one invoice": a website build is invoiced in two parts (see terms) and the
-     * websites page says so, so one invoice for all four was a promise the billing contradicts. The
-     * line also no longer repeats the h1's "we own and run the servers" back at the reader.
+     * No country in the h1 (owner, 2026-09-14): "servers we own and run in Germany" made the first
+     * line a statement about where the machines are, when the reader wants to know what they get.
+     * Germany is a reason to trust, and it has its own card under "Why 3enwank"; the <title> still
+     * carries it for search. "One place" is the promise the four cards below then itemise; "one
+     * invoice" it is not, because a website build is invoiced in two parts (see terms).
      */
-    lede: "One place for the hosting, the website build, the care plan and the domain. Support in English or Arabic.",
+    h1: "Everything your website needs, in one\u00a0place.",
+    lede: "Hosting, a site built for you, the domain and the care that keeps it running. We look after all of it, and support is in English or Arabic.",
     /*
      * The home <title>, which is not the h1. pageMetadata prefixes "3enwank: ", and Google stops
      * drawing a title around sixty characters, so the h1 at 68 was cut mid-clause ("on servers we own
@@ -88,6 +90,7 @@ export const en: Messages = {
     ],
     /* Card is named at the owner's request (2026-09-14); the store offers it once Paymob is live. */
     paymentsLine: "Pay by bank transfer, InstaPay, Vodafone Cash or card.",
+    tiles: { hosting: "Billed once a year", websites: "Fixed scope, fixed price", domains: "Register or transfer", care: "Updates, fixes, replies" },
     productsTitle: "What we do",
     products: {
       /*

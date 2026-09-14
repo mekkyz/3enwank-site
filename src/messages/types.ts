@@ -80,6 +80,12 @@ export type Messages = {
     reasonsTitle: string;
     reasons: Fact[];
     paymentsLine: string;
+    /**
+     * The four tiles that fill the right half of the hero on a laptop: one caption each under the
+     * product name (home.products.*.title). Decoration for the eye, not navigation; the cards under
+     * the hero are the links, so the tiles are aria-hidden and carry nothing that is not also there.
+     */
+    tiles: { hosting: string; websites: string; domains: string; care: string };
     /** What every account runs on; the hosting page prints it as one line. */
     productsTitle: string;
     products: { hosting: ProductTeaser; websites: ProductTeaser; care: ProductTeaser; domains: ProductTeaser };

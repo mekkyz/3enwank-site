@@ -17,7 +17,7 @@ import type { Catalogue, Product } from "@/lib/catalogue";
 import type { Currency, Money } from "@/lib/money";
 import { HIGHLIGHT, assistantOn, domainSearchLabels, loc, screenContext, storeApi } from "./shared";
 import { vatLine } from "@/lib/vat";
-import { MapPinIcon, HeadsetIcon, WalletIcon, ArrowsLeftRightIcon, CloudArrowUpIcon, LockKeyIcon, WallIcon, UserSoundIcon, CaretDownIcon } from "@phosphor-icons/react/dist/ssr";
+import { MapPinIcon, HeadsetIcon, WalletIcon, ArrowsLeftRightIcon, CloudArrowUpIcon, LockKeyIcon, WallIcon, UserSoundIcon, CaretDownIcon, HardDrivesIcon, BrowserIcon, GlobeIcon, ShieldCheckIcon } from "@phosphor-icons/react/dist/ssr";
 
 /**
  * Home: hero, the four products, what every account includes, three plans of each family on three
@@ -175,27 +175,55 @@ export const home = {
             <div className="hero-grid" />
           </div>
           <Container className="relative pb-14 pt-12 sm:pb-16 sm:pt-16 lg:pb-20 lg:pt-20">
-            {/* One measure for all three: statement, lede and buttons share the left edge. */}
-            <div className="max-w-3xl">
-              <h1 className="rise text-balance text-[2rem] font-extrabold leading-[1.14] text-ink sm:text-[2.5rem] sm:leading-[1.1] lg:text-[3rem]">{t.home.h1}</h1>
-              <p className="rise-2 mt-4 max-w-2xl text-pretty text-base leading-relaxed text-muted sm:mt-5 sm:text-lg">{t.home.lede}</p>
+            {/*
+             * Two columns from lg: the words, and on the end side the four things the company sells
+             * as tiles over the glow (owner, 2026-09-14: the hero "feels half empty", a subtle
+             * visual of the four things on the right). Below lg there is no empty half to fill and
+             * the four cards are one scroll away, so the tiles are not drawn at all.
+             */}
+            <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-14">
+              {/* One measure for all three: statement, lede and buttons share the left edge. */}
+              <div className="max-w-3xl">
+                <h1 className="rise text-balance text-[2rem] font-extrabold leading-[1.14] text-ink sm:text-[2.5rem] sm:leading-[1.1] lg:text-[3rem]">{t.home.h1}</h1>
+                <p className="rise-2 mt-4 max-w-2xl text-pretty text-base leading-relaxed text-muted sm:mt-5 sm:text-lg">{t.home.lede}</p>
+                {/*
+                 * The two ways in, as buttons. They were a pair of arrow links in the rail, which put
+                 * the only two commercial paths on the page in the margin, in the weight this site
+                 * uses for "read more", while the one filled button in the hero belonged to a domain
+                 * search that is no use to a visitor who already has a domain or does not want one.
+                 *
+                 * Both buttons, one filled: a visitor who knows what they want clicks the plan, a
+                 * visitor who wants it built clicks the other, and the search further down still
+                 * catches the one who came for a name.
+                 */}
+                <div className="rise-3 mt-6 flex flex-wrap gap-3 sm:mt-7">
+                  <ButtonLink href={pathFor("hosting", locale)} size="lg">
+                    {t.home.ctaPlans}
+                  </ButtonLink>
+                  <ButtonLink href={pathFor("websites", locale)} variant="secondary" size="lg">
+                    {t.home.ctaBuild}
+                  </ButtonLink>
+                </div>
+              </div>
               {/*
-               * The two ways in, as buttons. They were a pair of arrow links in the rail, which put
-               * the only two commercial paths on the page in the margin, in the weight this site
-               * uses for "read more", while the one filled button in the hero belonged to a domain
-               * search that is no use to a visitor who already has a domain or does not want one.
-               *
-               * Both buttons, one filled: a visitor who knows what they want clicks the plan, a
-               * visitor who wants it built clicks the other, and the search further down still
-               * catches the one who came for a name.
+               * Four tiles, two by two, the second column a step lower so they read as a loose
+               * arrangement rather than a table; each drifts a few pixels on its own slow loop
+               * (globals.css .drift), which the reduced-motion block stops. The same four icons and
+               * tints as the product cards under the hero, so the tiles and the cards are one set.
+               * aria-hidden: every word here is on those cards, which are the links.
                */}
-              <div className="rise-3 mt-6 flex flex-wrap gap-3 sm:mt-7">
-                <ButtonLink href={pathFor("hosting", locale)} size="lg">
-                  {t.home.ctaPlans}
-                </ButtonLink>
-                <ButtonLink href={pathFor("websites", locale)} variant="secondary" size="lg">
-                  {t.home.ctaBuild}
-                </ButtonLink>
+              <div aria-hidden="true" className="hidden lg:grid lg:grid-cols-2 lg:gap-4">
+                {HERO_TILES.map(([kind, Glyph, tint], i) => (
+                  <div key={kind} className={`rise-${(i % 4) + 1} ${i % 2 ? "lg:translate-y-8" : ""}`}>
+                    <div className={`hero-tile ${i % 2 ? "drift-2" : "drift"} rounded-2xl border border-line bg-panel/75 p-5 shadow-[0_24px_48px_-32px_rgba(0,0,0,0.6)] backdrop-blur-sm`}>
+                      <div className={`flex h-11 w-11 items-center justify-center rounded-full ${tint}`}>
+                        <Glyph size={22} weight="bold" />
+                      </div>
+                      <p className="mt-4 text-base font-extrabold text-ink">{t.home.products[kind].title}</p>
+                      <p className="mt-1 text-sm text-muted">{t.home.tiles[kind]}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </Container>
@@ -378,6 +406,17 @@ export const home = {
  * the components, as products.tsx does, because /dist/ssr exports no Icon type.
  */
 const REASON_ICONS: ReadonlyArray<typeof MapPinIcon> = [MapPinIcon, HeadsetIcon, WalletIcon, ArrowsLeftRightIcon];
+
+/**
+ * The hero's four tiles: the product kinds in the order the cards under it use, with the glyph and
+ * tint those cards carry (components/products.tsx), so the two are visibly one set.
+ */
+const HERO_TILES: ReadonlyArray<readonly ["hosting" | "websites" | "domains" | "care", typeof MapPinIcon, string]> = [
+  ["hosting", HardDrivesIcon, "bg-brand-soft text-brand"],
+  ["websites", BrowserIcon, "bg-accent-soft text-accent"],
+  ["domains", GlobeIcon, "bg-accent-soft text-accent"],
+  ["care", ShieldCheckIcon, "bg-brand-soft text-brand"],
+];
 const WHY_ICONS: ReadonlyArray<typeof MapPinIcon> = [CloudArrowUpIcon, LockKeyIcon, WallIcon, UserSoundIcon];
 
 /** One row on a plan card. A free-text feature has no label and takes the whole row. */

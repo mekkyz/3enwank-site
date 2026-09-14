@@ -624,8 +624,8 @@ html.js:not(.is-scrolled) header[data-bar] {
 .hero-glow {
   position: absolute;
   inset-block: -30% -10%;
-  inset-inline-end: -12%;
-  width: 62%;
+  inset-inline-end: -8%;
+  width: 58%;
   background:
     radial-gradient(closest-side at 62% 38%, color-mix(in srgb, var(--color-brand-ink) 42%, transparent), transparent 72%),
     radial-gradient(closest-side at 28% 74%, color-mix(in srgb, var(--color-accent) 26%, transparent), transparent 72%);

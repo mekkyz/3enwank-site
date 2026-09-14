@@ -46,6 +46,21 @@ describe("message placeholders", () => {
     }
   });
 
+  it("sets a Latin value in an Arabic sentence as its own left-to-right run, percent sign included", () => {
+    /*
+     * "2026-09-10" after an Arabic letter was laid out as "10-09-2026", and the percent sign in
+     * "{deposit}٪ … و{rest}٪" landed on a different side of each number. The isolates are U+2066
+     * and U+2069; English sentences and metadata text (isolate: false) carry none.
+     */
+    const ar = messagesFor("ar");
+    const en = messagesFor("en");
+    expect(fill(ar.terms.intro, { legalName: "X", version: "2026-09-10" })).toContain("\u20662026-09-10\u2069");
+    expect(fill(ar.websites.deposit, { deposit: 50, rest: 50 })).toBe("\u206650٪\u2069 في الأول، و\u206650٪\u2069 عند الموافقة");
+    expect(fill(ar.common.vatIncluded, { rate: 14 })).toContain("\u206614٪\u2069");
+    expect(fill(ar.terms.intro, { legalName: "X", version: "2026-09-10" }, { isolate: false })).not.toMatch(/[\u2066\u2069]/);
+    expect(fill(en.websites.deposit, { deposit: 50, rest: 50 })).toBe("50% to start, 50% on approval");
+  });
+
   it("states VAT once near prices with the catalogue's rate, and not at all while the business is not registered", () => {
     /*
      * This used to only check that vatIncluded carries {rate}. The business is below Egypt's VAT

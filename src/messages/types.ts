@@ -117,6 +117,8 @@ export type Messages = {
     /** Row labels for the compare table once a plan carries a renewal price. */
     firstYear: string;
     renewsAt: string;
+    /** Over the compare table on a phone, where it scrolls sideways inside its box. */
+    scrollHint: string;
     /** Exactly one {price}; the hosting page renders the live price in its place. */
     empty: string;
   };

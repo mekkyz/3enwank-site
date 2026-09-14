@@ -13,3 +13,18 @@ export function hasArabic(text: string): boolean {
 export function isolateDir(text: string): "ltr" | undefined {
   return hasArabic(text) ? undefined : "ltr";
 }
+
+/**
+ * A value set as its own left-to-right run inside an Arabic sentence, with the Unicode isolates
+ * (U+2066 LRI … U+2069 PDI) rather than a <bdi>, so it works where the text is a plain string: a
+ * dictionary sentence filled in by fill(), a client island's label. Without it a version like
+ * "2026-09-10" after an Arabic letter lays out as "10-09-2026", and "50٪" puts its sign on
+ * whichever side the previous character decides. Arabic text is left alone, as isolateDir does,
+ * but the test is for an Arabic letter, not for ARABIC: the percent sign "٪" is Script=Arabic and
+ * is exactly the character a run like "50٪" is isolated for.
+ */
+const ARABIC_LETTER = /(?=\p{L})\p{Script=Arabic}/u;
+
+export function ltrRun(text: string): string {
+  return ARABIC_LETTER.test(text) ? text : `\u2066${text}\u2069`;
+}

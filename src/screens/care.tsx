@@ -25,7 +25,7 @@ export const care = {
             <ul className="grid gap-5 pt-3 sm:grid-cols-2 lg:grid-cols-3">
               {plans.map((p) => (
                 <li key={p.slug}>
-                  <PlanCard product={p} locale={locale} highlight={p.slug === HIGHLIGHT.care} cycleLabel={t.common.perYear} cta={t.common.choose} />
+                  <PlanCard product={p} locale={locale} highlight={p.slug === HIGHLIGHT.care} cycleLabel={t.common.perYear} cta={t.common.choose} heading="h2" />
                 </li>
               ))}
             </ul>

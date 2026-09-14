@@ -1,17 +1,18 @@
 import { ArrowLink, ButtonLink, Card, Container, Section, SectionHeader } from "@/components/blocks";
 import { Val } from "@/components/bidi";
-import { Price } from "@/components/currency";
+import { Price, RenewalNote } from "@/components/currency";
 import { DomainSearch } from "@/components/domain-search";
 import { ContactSection } from "@/components/contact";
 import { ProductCard } from "@/components/products";
 import { Shell } from "@/components/shell";
 import { Tabs } from "@/components/tabs";
-import { localizedFeatures, localizedSummary, parseFeature, summaryWithoutDelivery } from "@/lib/format";
+import { localizedFeatures, localizedSummary, normalPrices, parseFeature, summaryWithoutDelivery } from "@/lib/format";
 import { pageMetadata } from "@/lib/metadata";
 import { anchorFor, pathFor, storeLink, type Locale } from "@/lib/i18n";
 import { WHATSAPP_NUMBER } from "@/lib/site";
 import { messagesFor, type Messages } from "@/messages";
 import type { Catalogue, Product } from "@/lib/catalogue";
+import type { Currency, Money } from "@/lib/money";
 import { HIGHLIGHT, assistantOn, domainSearchLabels, loc, screenContext, storeApi } from "./shared";
 import { heroFacts, vatLine } from "@/lib/vat";
 
@@ -83,17 +84,38 @@ export const home = {
         highlight: HIGHLIGHT.care,
       },
     ].filter((family) => family.items.length > 0);
+    /*
+     * "From EGP 1,999" on the four product cards, through the same <Price> island the plan cards
+     * use, so it follows the currency switch. It used to be a string built on the server from the
+     * EGP price alone, which left a visitor who chose USD reading dollars on the plan cards and
+     * pounds on the cards above them. The cheapest product is picked by its EGP price and both of
+     * its prices go to the island; the store prices every product in both currencies, so the
+     * cheapest in pounds is the cheapest in dollars too.
+     */
+    const from = (prices: Partial<Record<Currency, Money>> | undefined) =>
+      prices && Object.keys(prices).length ? (
+        <>
+          {t.common.from} <Price prices={prices} locale={locale} fallback={t.common.notAvailable} />
+        </>
+      ) : undefined;
     const fromPrice = (kind: "hosting" | "build" | "care") => {
       const list = catalogue.products[kind];
       const cheapest = list.reduce<(typeof list)[number] | null>((min, p) => (!min || (p.prices.EGP?.gross ?? Infinity) < (min.prices.EGP?.gross ?? Infinity) ? p : min), null);
-      return cheapest?.prices.EGP ? `${t.common.from} ${cheapest.prices.EGP.formatted.replace(/\.00$/, "")}` : undefined;
+      return from(cheapest?.prices);
     };
     // Domains price from the cheapest ending we sell, so the card carries a number like the other three.
     const cheapestTld = catalogue.tlds.reduce<(typeof catalogue.tlds)[number] | null>(
       (min, x) => (x.prices.EGP && (!min || x.prices.EGP.register.gross < min.prices.EGP!.register.gross) ? x : min),
       null,
     );
-    const fromDomain = cheapestTld?.prices.EGP ? `${t.common.from} ${cheapestTld.prices.EGP.register.formatted.replace(/\.00$/, "")}` : undefined;
+    const fromDomain = from(
+      cheapestTld
+        ? {
+            ...(cheapestTld.prices.EGP ? { EGP: cheapestTld.prices.EGP.register } : {}),
+            ...(cheapestTld.prices.USD ? { USD: cheapestTld.prices.USD.register } : {}),
+          }
+        : undefined,
+    );
     const api = storeApi(catalogue);
     // A telephone number is not a WhatsApp number. WHATSAPP_NUMBER is the only thing that puts a
     // "message us on WhatsApp" card on the page; the company's phone number gets a phone card, and
@@ -416,9 +438,17 @@ function PlanCards({
               </div>
               {summary ? <p className="mt-1.5 text-sm text-muted">{summary}</p> : null}
               <p className="mt-4 flex flex-wrap items-baseline gap-x-1.5">
-                <Price prices={product.prices} locale={locale} fallback={t.common.notAvailable} className="text-2xl font-extrabold leading-none text-ink" />
+                <Price prices={product.prices} normal={normalPrices(product)} locale={locale} fallback={t.common.notAvailable} className="text-2xl font-extrabold leading-none text-ink" />
                 <span className="text-sm text-muted">{cycle}</span>
               </p>
+              {/*
+               * The renewal price, as the hosting page's cards state it (plans.tsx). Without it the
+               * "per year" label beside an introductory price read as the price every year, on the
+               * first cards a visitor compares; the plan renews at 20 to 50 percent more. Renders
+               * nothing for a product the catalogue gives no renewal price, so the websites tab,
+               * whose packages are one payment, stays as it is.
+               */}
+              <RenewalNote prices={normalPrices(product)} locale={locale} label={t.common.renewsAt} className="mt-1.5 text-sm font-semibold text-muted" />
               {rows.length ? (
                 <ul className="mt-5 space-y-2.5 border-t border-line pt-5 text-sm">
                   {rows.map((row, i) => (

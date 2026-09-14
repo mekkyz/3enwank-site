@@ -26,7 +26,7 @@
  * objects are symmetric about the vertical axis, and the WhatsApp mark is a logo: flipping its tail
  * on Arabic pages would make it a different mark, not a mirrored one.
  */
-import { MoneyIcon, ShoppingBagIcon, GlobeIcon, WhatsappLogoIcon } from "@phosphor-icons/react/dist/ssr";
+import { MoneyIcon, ShoppingBagIcon, GlobeIcon, UserCircleIcon, WhatsappLogoIcon } from "@phosphor-icons/react/dist/ssr";
 
 type IconProps = { className?: string };
 
@@ -68,6 +68,18 @@ export function LanguageIcon({ className = "shrink-0" }: IconProps) {
  */
 export function CartIcon({ className = "shrink-0" }: IconProps) {
   return <ShoppingBagIcon size={18} weight={WEIGHT} aria-hidden="true" className={className} />;
+}
+
+/**
+ * A person in a circle: the customer area, on phones only.
+ *
+ * The bar's "Log in" is a word from 640px up and had no room to be one below it, so a returning
+ * customer on a phone had to find the footer. The circled person is the shape every app puts on
+ * its account entry, which is what the link is; a door-and-arrow "sign in" reads as "leave" at
+ * this size. Symmetric, so no `mirrored`, like the three above.
+ */
+export function AccountIcon({ className = "shrink-0" }: IconProps) {
+  return <UserCircleIcon size={19} weight={WEIGHT} aria-hidden="true" className={className} />;
 }
 
 /**

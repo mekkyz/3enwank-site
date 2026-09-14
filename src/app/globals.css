@@ -332,11 +332,19 @@ html.theme-switching *::after {
   html {
     scroll-behavior: auto;
   }
+  /*
+   * Delays go too. With the duration alone at zero, .rise-2 to .rise-4 still waited out their
+   * 120 to 360ms before the zero-length run, and `both` holds the start frame meanwhile: the hero
+   * lede, the buttons and the facts line stayed invisible for a third of a second for exactly the
+   * reader who asked for nothing to move.
+   */
   *,
   *::before,
   *::after {
     transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
     animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
     animation-iteration-count: 1 !important;
   }
 }

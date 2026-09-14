@@ -4,6 +4,7 @@ import { createContext, useContext, useRef, useState, useSyncExternalStore, type
 // From money.ts, not catalogue.ts: this is a client island, and the catalogue module carries zod.
 import { currencies, type Currency, type Money } from "@/lib/money";
 import { formatPrice } from "@/lib/format";
+import { ltrRun } from "@/lib/bidi";
 import type { Locale } from "@/lib/i18n";
 import { CurrencyIcon } from "./icons";
 
@@ -137,7 +138,7 @@ export function CurrencySwitch({ label }: { label: string }) {
     <details data-menu ref={menu} className="relative">
       <summary
         ref={summary}
-        className="flex min-h-11 cursor-pointer list-none items-center rounded-full px-1.5 text-sm font-bold text-muted hover:text-ink sm:px-2 [&::-webkit-details-marker]:hidden"
+        className="flex min-h-11 cursor-pointer list-none items-center rounded-full px-1 text-sm font-bold text-muted hover:text-ink sm:px-2 [&::-webkit-details-marker]:hidden"
         aria-label={`${label}: ${currency}`}
         title={label}
       >
@@ -183,5 +184,6 @@ export function RenewalNote({
   const chosen = prices[currency] ? currency : currencies.find((c) => prices[c]);
   const money = chosen ? prices[chosen] : undefined;
   if (!money || !chosen) return null;
-  return <p className={className}>{label.replace("{price}", formatPrice(money, chosen, locale))}</p>;
+  // Its own left-to-right run, as fill() does for the dictionary: "2,499 EGP" after "بـ" came out as "EGP 2,499".
+  return <p className={className}>{label.replace("{price}", ltrRun(formatPrice(money, chosen, locale)))}</p>;
 }

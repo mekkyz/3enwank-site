@@ -3,8 +3,8 @@ import { dirFor, langTag, type Locale } from "@/lib/i18n";
 import { CurrencyProvider } from "./currency";
 import { THEME_KEY } from "@/lib/theme";
 
-/** Applied before paint: the stored theme, dark by default. */
-const THEME_SCRIPT = `document.documentElement.classList.add("js");try{document.documentElement.dataset.theme=localStorage.getItem(${JSON.stringify(THEME_KEY)})==="light"?"light":"dark"}catch(e){document.documentElement.dataset.theme="dark"}`;
+/** Applied before paint: the stored theme, dark by default. Exported for the 404 page, which has an <html> of its own. */
+export const THEME_SCRIPT = `document.documentElement.classList.add("js");try{document.documentElement.dataset.theme=localStorage.getItem(${JSON.stringify(THEME_KEY)})==="light"?"light":"dark"}catch(e){document.documentElement.dataset.theme="dark"}`;
 
 /**
  * The header drops its background and its border while the page is at the top, and this class is what

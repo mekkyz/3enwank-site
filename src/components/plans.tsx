@@ -6,8 +6,14 @@ import { Val } from "./bidi";
 import { ButtonLink, Card, Check } from "./blocks";
 import { Price, RenewalNote } from "./currency";
 
-/** One plan, from the catalogue. Server component; only the price is client-rendered (currency switch). */
-export function PlanCard({ product, locale, highlight = false, cycleLabel, cta, meta, compact = false }: { product: Product; locale: Locale; highlight?: boolean; cycleLabel: string; cta: string; meta?: string; compact?: boolean }) {
+/**
+ * One plan, from the catalogue. Server component; only the price is client-rendered (currency switch).
+ *
+ * `heading` is the level the card's name takes. On the hosting and care pages the cards come
+ * straight after the page's h1, so they are h2; anywhere they sit under a section heading they
+ * are h3. The level was fixed at h3, which skipped h2 on both pages for a screen reader's outline.
+ */
+export function PlanCard({ product, locale, highlight = false, cycleLabel, cta, meta, compact = false, heading: Heading = "h3" }: { product: Product; locale: Locale; highlight?: boolean; cycleLabel: string; cta: string; meta?: string; compact?: boolean; heading?: "h2" | "h3" }) {
   const t = messagesFor(locale);
   const features = cardFeatures(localizedFeatures(product, locale, t), compact ? 4 : 6);
   const summary = localizedSummary(product, locale, t);
@@ -16,9 +22,9 @@ export function PlanCard({ product, locale, highlight = false, cycleLabel, cta, 
     <Card highlight={highlight} className="flex h-full flex-col" as="article">
       {/* Brand-strong on brand-soft, as the home page's pill: white on the dark theme's brand purple was 3.37:1 at 11px. */}
       {highlight ? <p className="absolute -top-3.5 start-6 rounded-full bg-brand-soft px-2.5 py-1 text-[11px] font-extrabold uppercase tracking-wider text-brand-strong">{t.common.mostChosen}</p> : null}
-      <h3 className="text-2xl font-extrabold text-ink">
+      <Heading className="text-2xl font-extrabold text-ink">
         <Val>{name}</Val>
-      </h3>
+      </Heading>
       {summary ? <p className="mt-1 text-sm text-muted">{summary}</p> : null}
       {/*
        * One line, at the longest price this catalogue can produce. EGP 19,999 beside a struck-out
@@ -67,7 +73,17 @@ export function CompareTable({ products, locale, caption, exclude = [], perYear,
   const name = (p: Product) => p.name[locale === "en" ? "en" : "ar"] || p.name.en;
   const anyRenewal = products.some((p) => Object.keys(normalPrices(p)).length > 0);
   return (
-    <div className="overflow-x-auto rounded-xl border border-line bg-panel">
+    <div>
+      {/*
+       * The table is 44rem wide and scrolls inside its box on anything narrower, which on a phone
+       * cut it mid-column with nothing to say the rest was there: a second plan half visible reads
+       * as a layout fault, not as a table to swipe. One line above it says so, and only where it
+       * applies: the box holds the whole table from 784px, which is the 44rem (704px) plus the
+       * container's 64px of padding and the 15px a classic scrollbar keeps (scrollbar-gutter:
+       * stable on <html>), so the line is gone at the first width where there is nothing to swipe.
+       */}
+      <p className="mb-2 text-xs text-muted min-[784px]:hidden">{t.hosting.scrollHint}</p>
+      <div className="overflow-x-auto rounded-xl border border-line bg-panel">
       <table className="w-full min-w-[44rem] text-sm">
         <caption className="sr-only">{caption}</caption>
         <thead>
@@ -136,6 +152,7 @@ export function CompareTable({ products, locale, caption, exclude = [], perYear,
           </tr>
         </tbody>
       </table>
+      </div>
     </div>
   );
 }

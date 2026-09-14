@@ -138,6 +138,7 @@ export const en: Messages = {
     perYear: "Per year",
     firstYear: "First year",
     renewsAt: "Renews at",
+    scrollHint: "Swipe the table sideways to see every plan.",
     empty: "Hosting plans are being updated. Check the customer area or contact us.",
   },
   websites: {
@@ -265,7 +266,7 @@ export const en: Messages = {
        * page and it named the backup's home rather than the servers', which left the reader guessing
        * where their site actually runs now that the home page names a country.
        */
-      { title: "We manage the servers ourselves", body: "No reselling. The machines your account runs on are ours, in a data centre in Germany. We patch them, and every account is copied off the server nightly." },
+      { title: "We manage the servers ourselves", body: "No reselling. The machines your account runs on are ours, in a data centre in Germany. We patch them, and every account is copied off the server daily." },
       /* "The whole amount you pay", not "with VAT included": true whether or not the business is VAT-registered, which the catalogue decides, not this file. */
       { title: "Prices are the whole price", body: "Every price is the whole amount you pay, billed once a year. No setup fees. Renewals are at the price on the invoice." },
       { title: "Moving in is free", body: "We move your site and your email, and check that everything works before your domain is switched over." },
@@ -335,7 +336,7 @@ export const en: Messages = {
        */
       { title: "Prices and billing", body: ["Prices are shown in Egyptian pounds and US dollars and are the full amount payable. Where value added tax applies, it is included in the price shown and stated on the invoice. Invoices are paid by bank transfer, using the account details printed on the invoice. Hosting, care plans and domains are billed once a year in advance. Where a plan advertises a price below its normal price, that lower price buys the first year only and the plan renews at the normal price, which is shown on the plan and on your first invoice. The renewal invoice is issued before the due date.", "Website builds are invoiced in two parts: a deposit to start and the rest when you approve the work. Work starts when the deposit is paid."] },
       { title: "Hosting", body: ["A hosting plan gives you one cPanel account with the storage, bandwidth, email and database limits of the plan. Accounts are for lawful content only. Spam, phishing, malware and anything that harms other customers on the server leads to suspension without refund.", "An unpaid hosting renewal is suspended five days after the due date and can be reactivated by paying the invoice. Care plans and website builds are never suspended for late payment; upkeep stops. We do not delete accounts automatically. A cancelled account is removed after you tell us, or after the cancellation grace period on your invoice."] },
-      { title: "Backups", body: ["Every account is copied off the server nightly and kept for three months. Backups are a safety net, not a substitute for your own copy. Keep one of anything you cannot afford to lose."] },
+      { title: "Backups", body: ["Every account is copied off the server daily and kept for three months. Backups are a safety net, not a substitute for your own copy. Keep one of anything you cannot afford to lose."] },
       { title: "Care plans", body: ["A care plan covers updates, malware scanning, the number of content changes on the plan and a first-response time for requests. A content change is one clear edit that takes half an hour or less with the existing design and content. New pages, new features and design work are quoted separately."] },
       { title: "Domains", body: ["Domain names are registered in your name through our registrar and are subject to the registry’s rules for the extension. A name that is not renewed by its expiry date expires at the registry. Recovering an expired name may be impossible or cost extra. Transfer codes are sent to your account email on request."] },
       { title: "Cancellation and refunds", body: ["Write to us to cancel a service. It stays active until the end of the paid period and is not renewed. A period you have already paid for is not refunded, except when we cannot deliver what you bought. The refund and cancellation policy has the detail."] },
@@ -354,7 +355,7 @@ export const en: Messages = {
        * the site names a country in public: the servers and the backups on one side, and Egypt on the
        * other, because the people who administer both work from Cairo and the tax authority is Egyptian.
        */
-      { title: "Where your data is held", body: ["Customer websites, their databases and their email run on servers we own in a data centre in Germany. The nightly copy of each account is kept off those servers and inside Europe. The company itself is registered in Cairo, and the people who administer the servers and answer support requests work from Egypt, so your data is read from there as well. Invoice data also reaches the Egyptian Tax Authority, as described below."] },
+      { title: "Where your data is held", body: ["Customer websites, their databases and their email run on servers we own in a data centre in Germany. The daily copy of each account is kept off those servers and inside Europe. The company itself is registered in Cairo, and the people who administer the servers and answer support requests work from Egypt, so your data is read from there as well. Invoice data also reaches the Egyptian Tax Authority, as described below."] },
       { title: "Invoices and the tax authority", body: ["Invoices are reported to the Egyptian Tax Authority’s e-invoicing system, which receives the invoice details and the receiver’s name, address and tax number or national ID where the law requires it."] },
       { title: "Payments", body: ["Invoices are paid by bank transfer and matched by invoice number, so we hold no card details of any kind. If we add card payment later, it will be handled by a payment provider that receives your card details directly, and this policy will say so before that happens."] },
       { title: "Email", body: ["We send transactional email only: order confirmations, invoices, renewal reminders, service notices and replies to your support requests. Support mail is read by a real person."] },

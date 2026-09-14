@@ -2,7 +2,7 @@ import { ButtonLink, Section, SectionHeader } from "./blocks";
 import { LeadForm, type LeadFormLabels } from "./lead-form";
 import { WhatsAppIcon } from "./icons";
 import type { Messages } from "@/messages";
-import { storeLink, type Locale } from "@/lib/i18n";
+import { dirFor, storeLink, type Locale } from "@/lib/i18n";
 
 /** wa.me takes a bare international number and a pre-written first message. */
 function waHref(number: string, text: string): string {
@@ -176,6 +176,7 @@ export function ContactSection({
               endpoint={leadUrl}
               labels={labels}
               locale={locale}
+              dir={dirFor(locale)}
               turnstileSiteKey={turnstileSiteKey}
               waHref={whatsapp ? waHref(whatsapp, c.wa.defaultText) : "#"}
             />

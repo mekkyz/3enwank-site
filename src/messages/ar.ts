@@ -59,7 +59,8 @@ export const ar: Messages = {
     order: "اطلبها",
     choose: "اختار الباقة",
     details: "التفاصيل",
-    vatIncluded: "كل الأسعار شاملة {rate}٪ ضريبة قيمة مضافة.",
+    // Same words as the store one click away (platform messages/ar.json): the tax is named in full and the rate comes last.
+    vatIncluded: "كل الأسعار شاملة ضريبة القيمة المضافة {rate}٪.",
     renewsAt: "أول سنة. بيتجدد بـ{price} في السنة.",
     currency: "العملة",
     mostChosen: "الأكتر طلبًا",
@@ -140,6 +141,7 @@ export const ar: Messages = {
     perYear: "في السنة",
     firstYear: "أول سنة",
     renewsAt: "سعر التجديد",
+    scrollHint: "اسحب الجدول يمين وشمال عشان تشوف كل الباقات.",
     empty: "باقات الاستضافة بنحدّثها دلوقتي. شوف حساب العملاء أو كلمنا.",
   },
   websites: {
@@ -402,6 +404,8 @@ export const ar: Messages = {
       "Content changes": "تعديلات المحتوى",
       "Reply time": "وقت الرد",
       "Malware scan": "فحص الفيروسات",
+      // The care cards' row is filed under the short label; without it the one English word sat in an Arabic table.
+      Malware: "فحص الفيروسات",
       "Emergency restores": "استرجاع طوارئ",
       Reports: "التقارير",
     },
@@ -484,7 +488,8 @@ export const ar: Messages = {
       "Everything in Business Website": "كل اللي في Business Website",
       "Up to 16 pages": "لحد 16 صفحة",
       "Blog": "مدونة",
-      "Newsletter": "نشرة بريدية",
+      // إيميل مش بريد، زي باقي الموقع: "نشرة بريدية" كانت الاستثناء الوحيد.
+      "Newsletter": "نشرة بالإيميل",
       "Up to 50 products": "لحد 50 منتج",
       "Everything in Online Store": "كل اللي في Online Store",
       "Up to 500 products": "لحد 500 منتج",

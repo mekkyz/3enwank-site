@@ -15,7 +15,7 @@ function legalScreen(page: (typeof LEGAL_PAGES)[number]) {
   return {
     metadata(locale: Locale) {
       const t = messagesFor(locale);
-      return pageMetadata(page, locale, t[page].title, fill(t[page].intro, { legalName: "3enwank", version: TERMS_VERSION }).slice(0, 160));
+      return pageMetadata(page, locale, t[page].title, fill(t[page].intro, { legalName: "3enwank", version: TERMS_VERSION }, { isolate: false }).slice(0, 160));
     },
     async render(locale: Locale) {
       const { t, catalogue, company, trust } = await screenContext(locale);

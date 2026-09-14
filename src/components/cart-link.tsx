@@ -48,7 +48,7 @@ export function CartLink({ href, label }: { href: string; label: string }) {
   return (
     <a
       href={href}
-      className="relative flex min-h-11 items-center rounded-full px-1.5 text-muted hover:text-ink sm:px-2"
+      className="relative flex min-h-11 items-center rounded-full px-1 text-muted hover:text-ink sm:px-2"
       aria-label={count > 0 ? `${label} (${count})` : label}
       title={label}
     >

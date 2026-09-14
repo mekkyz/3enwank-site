@@ -5,7 +5,7 @@ import { messagesFor } from "@/messages";
 import { Assistant } from "./assistant";
 import { CartLink } from "./cart-link";
 import { CurrencySwitch } from "./currency";
-import { LanguageIcon } from "./icons";
+import { AccountIcon, LanguageIcon } from "./icons";
 import { Logo, LogoFull } from "./logo";
 import { ThemeSwitch } from "./theme";
 import { Trust, type TrustInfo } from "./trust";
@@ -84,6 +84,16 @@ export function Shell({
          * wordmark takes the difference: 142px at 390 and up, 136px at 375, 121px at 360, and no
          * width left to break on. Nothing at sm and above changes: `sm:shrink-0` stops the shrinking
          * and `sm:max-h-8` is the h-8 that was there, to the pixel.
+         *
+         * The Log in control below sm is what the tighter gaps pay for. It is an icon there (27px
+         * at px-1), and it would have cost the wordmark 35px at every phone width had the row
+         * stayed as it was, since that was 9px over the slack at 390. So below sm the controls sit
+         * 2px apart rather than 4, the icon controls carry px-1 rather than px-1.5, and the Contact
+         * pill px-2 rather than px-2.5: 20px back, and the wordmark is 139px at 390 (was 142),
+         * 124 at 375 (was 136) and 109 at 360 (was 121). Measured with the site's own fonts in
+         * headless Chromium, English: currency 27, cart 26, language 27, account 27, Contact 73,
+         * four gaps of 2, row gap 8. Arabic is narrower (كلمنا is 32px to Contact's 57) and keeps
+         * the full 142 at every width from 360 up.
          */}
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-5 py-3 sm:gap-4 sm:px-8">
           <a
@@ -108,12 +118,12 @@ export function Shell({
               </a>
             ))}
           </nav>
-          <div className="flex items-center gap-1 sm:gap-2">
+          <div className="flex items-center gap-0.5 sm:gap-2">
             <CurrencySwitch label={t.common.currency} />
             <CartLink href={storeLink(`${store}/cart`, locale)} label={t.nav.cart} />
             <details data-menu className="relative">
               <summary
-                className="flex min-h-11 cursor-pointer list-none items-center rounded-full px-1.5 text-sm font-semibold text-muted hover:text-ink sm:px-2 [&::-webkit-details-marker]:hidden"
+                className="flex min-h-11 cursor-pointer list-none items-center rounded-full px-1 text-sm font-semibold text-muted hover:text-ink sm:px-2 [&::-webkit-details-marker]:hidden"
                 aria-label={`${t.nav.language}: ${current.name}`}
                 title={t.nav.language}
               >
@@ -138,15 +148,19 @@ export function Shell({
                 ))}
               </ul>
             </details>
+            {/* One link, two faces: the account icon below sm, the words from sm up; the name is the same either way. */}
             <a
               href={storeLink(`${store}/login`, locale)}
-              className="hidden min-h-11 items-center px-2 text-sm font-bold text-brand-strong hover:text-brand sm:inline-flex"
+              className="inline-flex min-h-11 items-center rounded-full px-1 text-sm font-bold text-brand-strong hover:text-brand sm:px-2"
+              aria-label={t.nav.login}
+              title={t.nav.login}
             >
-              {t.nav.login}
+              <AccountIcon className="shrink-0 sm:hidden" />
+              <span className="hidden sm:inline">{t.nav.login}</span>
             </a>
             <a
               href={anchorFor("contact", locale)}
-              className="btn-primary inline-flex min-h-11 items-center whitespace-nowrap rounded-full px-2.5 text-[13px] font-bold sm:px-4 sm:text-sm"
+              className="btn-primary inline-flex min-h-11 items-center whitespace-nowrap rounded-full px-2 text-[13px] font-bold sm:px-4 sm:text-sm"
             >
               {t.nav.contact}
             </a>

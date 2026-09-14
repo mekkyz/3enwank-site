@@ -5,7 +5,6 @@ import { pageMetadata } from "@/lib/metadata";
 import { anchorFor, pathFor, type Locale } from "@/lib/i18n";
 import { messagesFor } from "@/messages";
 import { assistantOn, domainSearchLabels, screenContext, searchDomainsOnServer, storeApi } from "./shared";
-import { vatLine } from "@/lib/vat";
 
 export const domains = {
   metadata(locale: Locale) {
@@ -14,7 +13,6 @@ export const domains = {
   },
   async render(locale: Locale, params: { q?: string; added?: string; error?: string } = {}) {
     const { t, catalogue, company, trust } = await screenContext(locale);
-    const vat = vatLine(t, catalogue);
     // Asked for with ?q=: answer in the HTML, so a visitor without JavaScript gets a result
     // on this page rather than being sent to a second search somewhere else.
     const q = (params.q ?? "").trim().slice(0, 253);
@@ -28,10 +26,15 @@ export const domains = {
          * The search has a band of its own, like every other page's content. It used to sit inside
          * the title block, which made this the one page whose heading came with a form attached.
          */}
+        {/*
+         * No VAT line either. Every other price page prints one above its price list, and this
+         * page has no list since the table went: "All prices include 14% VAT" stood over a search
+         * box with no price in sight. The prices a search answers with come from the store already
+         * VAT-inclusive, like every other figure on the site.
+         */}
         <Section>
-          {vat ? <p className="mb-5 text-sm text-muted">{vat}</p> : null}
           <div className="rounded-2xl border border-line bg-panel p-5 sm:p-8">
-            <DomainSearch locale={locale} searchPath={pathFor("domains", locale)} cartUrl={api.cartDomain} apiUrl={api.domainSearch} ideasUrl={api.domainIdeas} contactHref={anchorFor("contact", locale)} labels={domainSearchLabels(t)} ideas={assistantOn(catalogue)} tlds={catalogue.tlds.map((t) => t.tld)} turnstileSiteKey={catalogue.assistant.turnstileSiteKey} initialQuery={q} initialResults={initialResults as never} initialAdded={params.added ? [params.added] : []} initialError={params.error ?? null} />
+            <DomainSearch locale={locale} searchPath={pathFor("domains", locale)} cartUrl={api.cartDomain} apiUrl={api.domainSearch} ideasUrl={api.domainIdeas} contactHref={anchorFor("contact", locale)} labels={domainSearchLabels(t)} ideas={assistantOn(catalogue)} tlds={catalogue.tlds.map((t) => t.tld)} turnstileSiteKey={catalogue.assistant.turnstileSiteKey} initialQuery={q} initialResults={initialResults as never} initialAdded={params.added ? [params.added] : []} initialError={params.error ?? null} resultHeading="h2" />
           </div>
         </Section>
         {/*

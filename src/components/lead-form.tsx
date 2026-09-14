@@ -48,12 +48,19 @@ export function LeadForm({
   endpoint,
   labels,
   locale,
+  dir,
   turnstileSiteKey,
   waHref,
 }: {
   endpoint: string;
   labels: LeadFormLabels;
   locale: string;
+  /**
+   * The page's direction, for the free-text fields. They were dir="auto", which Chromium resolves
+   * from the value alone, so on the Arabic page both sat left-aligned with the placeholder against
+   * the left edge until the first Arabic letter was typed. A field on an Arabic page starts Arabic.
+   */
+  dir: "ltr" | "rtl";
   turnstileSiteKey: string | null;
   waHref: string;
 }) {
@@ -237,7 +244,7 @@ export function LeadForm({
             id={`${id}-name`}
             value={name}
             onChange={(e) => setName(e.target.value)}
-            dir="auto"
+            dir={dir}
             autoComplete="name"
             maxLength={80}
             aria-invalid={faulty("name") || undefined}
@@ -272,7 +279,7 @@ export function LeadForm({
           id={`${id}-note`}
           value={note}
           onChange={(e) => setNote(e.target.value)}
-          dir="auto"
+          dir={dir}
           rows={3}
           maxLength={300}
           placeholder={labels.notePlaceholder}

@@ -345,6 +345,7 @@ export function DomainSearch({
   initialResults = null,
   initialAdded = [],
   initialError = null,
+  resultHeading: ResultHeading = "h3",
 }: {
   locale: Locale;
   /** Where the form goes without JavaScript: this same page, which answers server-side. */
@@ -366,6 +367,12 @@ export function DomainSearch({
   initialAdded?: string[];
   /** A refusal the store redirected back with, e.g. a transfer with no authorisation code. */
   initialError?: string | null;
+  /**
+   * The level of the "Other extensions" heading over the results. h3 under the home page's
+   * section heading; h2 on the domains page, where the search follows the h1 directly and an h3
+   * skipped a level in the outline the moment results appeared.
+   */
+  resultHeading?: "h2" | "h3";
 }) {
   const { currency } = useCurrency();
   const id = useId();
@@ -773,9 +780,9 @@ export function DomainSearch({
             <ul>
               <Pending name={query.trim().includes(".") ? query.trim().toLowerCase() : undefined} />
             </ul>
-            <h3 className="mt-4 text-xs font-extrabold uppercase tracking-[0.14em] text-muted">
+            <ResultHeading className="mt-4 text-xs font-extrabold uppercase tracking-[0.14em] text-muted">
               {labels.otherExtensions}
-            </h3>
+            </ResultHeading>
             <ul className="mt-1">
               {Array.from({ length: SHORTLIST }, (_, i) => (
                 <Pending key={`first-${i}`} />
@@ -798,9 +805,9 @@ export function DomainSearch({
             ) : null}
             {data.suggestions.length || awaiting ? (
               <>
-                <h3 className="mt-4 text-xs font-extrabold uppercase tracking-[0.14em] text-muted">
+                <ResultHeading className="mt-4 text-xs font-extrabold uppercase tracking-[0.14em] text-muted">
                   {labels.otherExtensions}
-                </h3>
+                </ResultHeading>
                 {/*
                  * Cheapest first among the ones that can be bought, and everything unavailable after
                  * them. The registrar answers in whatever order it likes, which put a 3,999 .io above

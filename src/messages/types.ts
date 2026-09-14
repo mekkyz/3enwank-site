@@ -71,15 +71,15 @@ export type Messages = {
     ctaPlans: string;
     ctaBuild: string;
     /**
-     * The proof line under the hero buttons: three short facts joined by middots; it has to stay one
-     * line on a laptop. `facts` carries the two that hold whatever the catalogue says; the third is
-     * factVat while the catalogue's vat.rateBp is above zero and factNoVat otherwise, because the
-     * business is only VAT-registered once the owner flips it on, and "VAT included" before that
-     * would be a claim the invoice contradicts. Both are short, so the line keeps its shape.
+     * "Why 3enwank": the four things that sell the company, each a card with an icon, right under
+     * the hero. They were a 12px facts line under the buttons, the smallest text on the page for the
+     * claims a visitor decides on (owner, 2026-09-14). Four entries, in the order the icons in
+     * screens/home.tsx expect: servers in Germany, support in both languages, prices in pounds, free
+     * migration. `paymentsLine` names the ways to pay under the four cards.
      */
-    facts: string[];
-    factVat: string;
-    factNoVat: string;
+    reasonsTitle: string;
+    reasons: Fact[];
+    paymentsLine: string;
     /** What every account runs on; the hosting page prints it as one line. */
     productsTitle: string;
     products: { hosting: ProductTeaser; websites: ProductTeaser; care: ProductTeaser; domains: ProductTeaser };
@@ -105,6 +105,9 @@ export type Messages = {
     moveTitle: string;
     moveBody: string;
     moveCta: string;
+    /** Six questions and their answers, as a details/summary list near the foot of the page; also published as FAQPage JSON-LD. */
+    faqTitle: string;
+    faq: Array<{ q: string; a: string }>;
   };
   hosting: {
     title: string;

@@ -2,7 +2,7 @@ import { readFileSync, readdirSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { fallbackCatalogue } from "@/lib/catalogue";
 import { locales } from "@/lib/i18n";
-import { heroFacts, vatLine } from "@/lib/vat";
+import { vatLine } from "@/lib/vat";
 import { fill, messagesFor } from "./index";
 
 type Tree = { [k: string]: unknown };
@@ -77,9 +77,6 @@ describe("message placeholders", () => {
       expect(t.common.vatIncluded, locale).not.toMatch(/\d/);
       expect(vatLine(t, registered), locale).toContain("14");
       expect(vatLine(t, unregistered), locale).toBeNull();
-      // The hero line is three facts in both states, so the layout does not move with the flip.
-      expect(heroFacts(t, registered), locale).toHaveLength(3);
-      expect(heroFacts(t, unregistered), locale).toHaveLength(3);
     }
   });
 });
@@ -166,6 +163,29 @@ describe("Egyptian Arabic", () => {
     for (const [a, b] of [[t.home.h1, en.home.h1], [t.home.lede, en.home.lede], [t.hosting.lede, en.hosting.lede], [t.contact.h2, en.contact.h2]]) {
       expect(a).not.toBe(b);
       expect(a).toMatch(/[؀-ۿ]/);
+    }
+  });
+});
+
+describe("home page copy the layout depends on", () => {
+  it("keeps four reasons, four included items and six FAQ entries in both languages", () => {
+    // screens/home.tsx pairs REASON_ICONS and WHY_ICONS with these arrays by position, and the FAQ is published as FAQPage JSON-LD.
+    for (const locale of locales) {
+      const t = messagesFor(locale);
+      expect(t.home.reasons, locale).toHaveLength(4);
+      expect(t.home.why, locale).toHaveLength(4);
+      expect(t.home.faq, locale).toHaveLength(6);
+      for (const item of [...t.home.reasons, ...t.home.why]) expect(item.title.trim() && item.body.trim(), locale).toBeTruthy();
+      for (const item of t.home.faq) expect(item.q.trim() && item.a.trim(), locale).toBeTruthy();
+    }
+  });
+
+  it("states no VAT rate in the reasons, the payments line or the FAQ", () => {
+    // Whether VAT is charged is the catalogue's to say (lib/vat.ts); copy written by hand may only say "where it applies".
+    for (const locale of locales) {
+      const t = messagesFor(locale);
+      const copy = [t.home.paymentsLine, ...t.home.reasons.map((r) => r.body), ...t.home.faq.map((f) => f.a)].join(" ");
+      expect(copy, locale).not.toMatch(/\d+\s*[%٪]/);
     }
   });
 });

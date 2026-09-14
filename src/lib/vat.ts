@@ -16,12 +16,3 @@ export function vatShown(catalogue: Catalogue): boolean {
 export function vatLine(t: Messages, catalogue: Catalogue): string | null {
   return vatShown(catalogue) ? fill(t.common.vatIncluded, { rate: catalogue.vat.rateBp / 100 }) : null;
 }
-
-/**
- * The proof line under the hero buttons. Always three items so the line keeps its shape: the third
- * is "VAT included" only while that is what the invoice says, and otherwise a fact that is true
- * either way.
- */
-export function heroFacts(t: Messages, catalogue: Catalogue): string[] {
-  return [...t.home.facts, vatShown(catalogue) ? t.home.factVat : t.home.factNoVat];
-}

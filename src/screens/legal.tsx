@@ -2,7 +2,7 @@ import { Container, PageIntro } from "@/components/blocks";
 import { Shell } from "@/components/shell";
 import { pageMetadata } from "@/lib/metadata";
 import { pathFor, type Locale } from "@/lib/i18n";
-import { fill, messagesFor } from "@/messages";
+import { fill } from "@/messages";
 import { screenContext } from "./shared";
 
 /** The catalogue does not carry a terms version; this matches settings.legal.termsVersion on the platform. */
@@ -13,9 +13,15 @@ const LEGAL_PAGES = ["terms", "privacy", "delivery", "refunds"] as const;
 
 function legalScreen(page: (typeof LEGAL_PAGES)[number]) {
   return {
-    metadata(locale: Locale) {
-      const t = messagesFor(locale);
-      return pageMetadata(page, locale, t[page].title, fill(t[page].intro, { legalName: "3enwank", version: TERMS_VERSION }, { isolate: false }).slice(0, 160));
+    /*
+     * Async, and reading the catalogue, so the description names the same company the page body
+     * does. It filled {legalName} with the brand instead, which in the intro's own words made it
+     * "3enwank ("3enwank")" in every search result while the page said the registered name. The
+     * length is pageMetadata's to cut, between words.
+     */
+    async metadata(locale: Locale) {
+      const { t, company } = await screenContext(locale);
+      return pageMetadata(page, locale, t[page].title, fill(t[page].intro, { legalName: company.legalName, version: TERMS_VERSION }, { isolate: false }));
     },
     async render(locale: Locale) {
       const { t, catalogue, company, trust } = await screenContext(locale);

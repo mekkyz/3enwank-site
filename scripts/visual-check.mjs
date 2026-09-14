@@ -75,6 +75,20 @@ for (const w of widths) {
         for (const el of document.querySelectorAll("body *")) {
           const cs = getComputedStyle(el);
           if (cs.display === "none" || cs.visibility === "hidden" || el.closest("[data-scroll], .overflow-x-auto")) continue;
+          /*
+           * Decoration that is clipped by its own box cannot push the page sideways: the home hero's
+           * glow (aria-hidden, inside .hero-bg with overflow hidden) is wider than the screen on
+           * purpose and drifts. Skipped only when BOTH hold, so real content that spills out of a
+           * clipping card is still reported.
+           */
+          if (el.closest('[aria-hidden="true"]')) {
+            let clipped = false;
+            for (let a = el.parentElement; a && a !== document.body; a = a.parentElement) {
+              const ox = getComputedStyle(a).overflowX;
+              if (ox === "hidden" || ox === "clip") { clipped = true; break; }
+            }
+            if (clipped) continue;
+          }
           const r = el.getBoundingClientRect();
           if (r.width === 0) continue;
           if (r.right > vw + 1 || r.left < -1) out.push(`overflows viewport: <${el.tagName.toLowerCase()} class="${(el.getAttribute("class") || "").slice(0, 60)}"> right=${Math.round(r.right)} left=${Math.round(r.left)} vw=${vw}`);

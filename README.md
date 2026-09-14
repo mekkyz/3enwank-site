@@ -185,10 +185,25 @@ Arabic is never forced LTR. Table labels never wrap (`.nowrap`); the table scrol
 
 ## Theme
 
-Dark is the default; the footer switch stores "light" in `localStorage` (`3enwank.theme`) and an
-inline script in `<head>` applies the stored theme before the first paint. Every colour is a token
-in `src/app/globals.css` with a value per theme; components never hard-code a colour except the two
-brand hues in gradients.
+The theme follows the visitor's system setting until the footer switch is used; the switch stores
+"light" or "dark" in `localStorage` (`3enwank.theme`), and an inline script at the top of `<body>`
+stamps `data-theme` from the stored choice or `prefers-color-scheme` before the first paint. A
+visitor without JavaScript gets the `prefers-color-scheme: light` block in `globals.css`, which
+repeats the light tokens: the two blocks must stay identical. Every colour is a token in
+`src/app/globals.css` with a value per theme; components never hard-code a colour except the two
+brand hues in gradients. The home hero's glow and grid are CSS on those tokens (`.hero-glow`,
+`.hero-grid`), toned down in light.
+
+## Motion
+
+All decoration, all flattened by `prefers-reduced-motion`. The tab strip (`TabStrip` in
+`src/components/tabs.tsx`) is the only one on the site and slides a pill to the chosen tab; the
+plans' panels share a grid cell so the page never jumps, the domain search eases between panel
+heights. Section headings, cards, the FAQ and the band fade up once as they scroll into view
+(`REVEAL_SCRIPT` in `src/components/root.tsx`), which is skipped for anything on the first screen,
+for reduced motion and for automated browsers, so `pnpm check` screenshots the finished page.
+Prices fade on a currency change, FAQ answers slide open (Chromium), card icons fill on hover and
+the hero glow breathes on a 20 second loop.
 
 ## Render check before a review
 

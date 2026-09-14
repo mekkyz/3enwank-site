@@ -1,6 +1,9 @@
 import { screens } from "@/screens";
 
-export const metadata = screens.refunds.metadata("en");
+// A function, not a constant: this screen's metadata reads the catalogue (screens/legal.tsx).
+export function generateMetadata() {
+  return screens.refunds.metadata("en");
+}
 
 export default function Page() {
   return screens.refunds.render("en");

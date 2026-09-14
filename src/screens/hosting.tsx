@@ -1,6 +1,8 @@
 import { Empty, PageIntro, Section, SectionHeader } from "@/components/blocks";
 import { CompareTable, PlanCard } from "@/components/plans";
 import { Shell } from "@/components/shell";
+import { JsonLd } from "@/components/json-ld";
+import { graph, productLd } from "@/lib/structured-data";
 import { pageMetadata } from "@/lib/metadata";
 import type { Locale } from "@/lib/i18n";
 import { messagesFor } from "@/messages";
@@ -18,6 +20,8 @@ export const hosting = {
     const plans = catalogue.products.hosting;
     return (
       <Shell locale={locale} page="hosting" storeUrl={catalogue.store.url} legalName={company.legalName} supportEmail={company.contactEmail} trust={trust} assistantEnabled={catalogue.assistant.enabled} turnstileSiteKey={catalogue.assistant.turnstileSiteKey}>
+        {/* Each plan on this page as a schema.org Product with its offers, from the same catalogue rows the cards draw. */}
+        {plans.length ? <JsonLd data={graph(plans.map((p) => productLd(p, locale, "hosting")))} /> : null}
         <PageIntro kicker={t.hosting.title} title={t.hosting.h2} lede={t.hosting.lede} />
         <Section>
           {vat ? <p className="mb-8 text-sm text-muted">{vat}</p> : null}

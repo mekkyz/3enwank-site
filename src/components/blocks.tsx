@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 
 /** Layout primitives shared by the screens. Server components; RTL-safe through logical properties. */
 export function Container({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return <div className={`mx-auto w-full max-w-6xl px-5 sm:px-8 ${className}`}>{children}</div>;
+  return <div className={`mx-auto w-full max-w-7xl px-5 sm:px-8 ${className}`}>{children}</div>;
 }
 
 type Tone = "plain" | "alt" | "dark";
@@ -21,7 +21,7 @@ export function Section({
   className?: string;
 }) {
   return (
-    <section id={id} className={`py-14 sm:py-20 ${TONES[tone]} ${className}`}>
+    <section id={id} className={`py-12 sm:py-16 ${TONES[tone]} ${className}`}>
       <Container>{children}</Container>
     </section>
   );
@@ -52,7 +52,7 @@ export function SectionHeader({
   light?: boolean;
 }) {
   return (
-    <header className="mb-8 flex flex-wrap items-end justify-between gap-5 sm:mb-10">
+    <header data-reveal="" className="mb-8 flex flex-wrap items-end justify-between gap-5 sm:mb-10">
       <div className="max-w-2xl">
         {kicker ? <Kicker tone={light ? "light" : "brand"}>{kicker}</Kicker> : null}
         <h2 className={`text-balance text-3xl font-extrabold tracking-tight sm:text-4xl ${light ? "text-white" : "text-ink"}`}>
@@ -118,6 +118,7 @@ export function Card({
   // retired purple through the vibrancy pass.
   return (
     <Tag
+      data-reveal=""
       className={`lift relative rounded-xl border bg-panel p-6 sm:p-7 ${highlight ? "pulse-glow border-2 border-brand shadow-[0_24px_50px_-30px_var(--color-brand-ink)]" : "border-line"} ${className}`}
     >
       {children}
@@ -160,7 +161,7 @@ export function ButtonLink({
   return (
     <a
       href={href}
-      className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-full font-bold transition ${pad} ${VARIANTS[variant]} ${className}`}
+      className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-full font-bold transition active:scale-[0.98] ${pad} ${VARIANTS[variant]} ${className}`}
       {...(external ? { rel: "noopener" } : {})}
     >
       {children}
@@ -181,7 +182,7 @@ export function ArrowLink({
   return (
     <a
       href={href}
-      className={`arrow-link inline-flex items-center gap-1.5 text-sm font-bold text-brand-strong hover:text-brand ${className}`}
+      className={`arrow-link inline-flex min-h-11 items-center gap-1.5 text-sm font-bold text-brand-strong hover:text-brand ${className}`}
     >
       {children}
       {/*

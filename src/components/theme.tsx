@@ -5,16 +5,50 @@ import { MoonIcon, SunIcon } from "@phosphor-icons/react/dist/ssr";
 import { THEME_KEY, type Theme } from "@/lib/theme";
 
 /**
- * Dark is the default. The choice is kept in localStorage and applied by the inline script in
- * <head> (see root.tsx) before the first paint, so there is no flash on the next page.
+ * The theme follows the visitor's system setting until the switch is used; a choice is kept in
+ * localStorage and applied by the inline script at the top of <body> (see root.tsx) before the
+ * first paint, so there is no flash on the next page. While nothing is saved, a change of the
+ * system setting is followed live on the open page too.
  */
 export { THEME_KEY };
+
+const LIGHT_QUERY = "(prefers-color-scheme: light)";
+function systemTheme(): Theme {
+  try {
+    return window.matchMedia(LIGHT_QUERY).matches ? "light" : "dark";
+  } catch {
+    return "dark";
+  }
+}
+function savedTheme(): Theme | null {
+  try {
+    const v = window.localStorage.getItem(THEME_KEY);
+    return v === "light" || v === "dark" ? v : null;
+  } catch {
+    return null;
+  }
+}
+let watching = false;
+function watchSystem() {
+  if (watching) return;
+  watching = true;
+  try {
+    window.matchMedia(LIGHT_QUERY).addEventListener("change", () => {
+      if (current || savedTheme()) return;
+      document.documentElement.setAttribute("data-theme", systemTheme());
+      for (const l of listeners) l();
+    });
+  } catch {
+    // No matchMedia: the page keeps whatever it painted with.
+  }
+}
 
 const listeners = new Set<() => void>();
 /** The choice made on this page, so the switch reflects it even when storage is blocked. */
 let current: Theme | null = null;
 
 function subscribe(listener: () => void) {
+  watchSystem();
   listeners.add(listener);
   return () => {
     listeners.delete(listener);
@@ -22,11 +56,7 @@ function subscribe(listener: () => void) {
 }
 function getSnapshot(): Theme {
   if (current) return current;
-  try {
-    return window.localStorage.getItem(THEME_KEY) === "light" ? "light" : "dark";
-  } catch {
-    return "dark";
-  }
+  return savedTheme() ?? systemTheme();
 }
 function getServerSnapshot(): Theme {
   return "dark";
@@ -68,13 +98,22 @@ export function ThemeSwitch({ label, dark, light }: { label: string; dark: strin
       aria-label={label}
       className="inline-flex rounded-full border border-line bg-panel p-0.5 text-xs font-bold"
     >
+      {/*
+       * Which button looks pressed is decided by CSS from html[data-theme] (globals.css,
+       * `.theme-option`), not by `theme` here. The server renders "dark" as the snapshot, so a
+       * visitor who chose Light saw the Dark button lit until hydration; <html> already carries the
+       * right theme before paint, so keying the highlight off it is correct from the first frame.
+       * aria-pressed still comes from React: it catches up at hydration, before anyone can reach
+       * the footer with a screen reader. min-h-11 so each half is a 44px target.
+       */}
       {(["dark", "light"] as const).map((t) => (
         <button
           key={t}
           type="button"
           aria-pressed={theme === t}
+          data-option={t}
           onClick={() => apply(t)}
-          className={`inline-flex min-h-8 items-center gap-1.5 rounded-full px-3 transition ${theme === t ? "bg-brand-soft text-brand-strong" : "text-muted hover:text-ink"}`}
+          className="theme-option inline-flex min-h-11 items-center gap-1.5 rounded-full px-3 transition"
         >
           {t === "dark" ? (
             <MoonIcon aria-hidden="true" size={14} weight="bold" className="shrink-0" />

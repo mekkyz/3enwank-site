@@ -2,6 +2,8 @@ import { ButtonLink, Card, Empty, PageIntro, Section } from "@/components/blocks
 import { Price } from "@/components/currency";
 import { FeatureList } from "@/components/plans";
 import { Shell } from "@/components/shell";
+import { JsonLd } from "@/components/json-ld";
+import { graph, productLd } from "@/lib/structured-data";
 import { deliveryFrom, depositSplit, localizedFeatures, localizedSummary, summaryWithoutDelivery } from "@/lib/format";
 import { pageMetadata } from "@/lib/metadata";
 import { anchorFor, storeLink, type Locale } from "@/lib/i18n";
@@ -20,6 +22,8 @@ export const websites = {
     const packages = catalogue.products.build;
     return (
       <Shell locale={locale} page="websites" storeUrl={catalogue.store.url} legalName={company.legalName} supportEmail={company.contactEmail} trust={trust} assistantEnabled={catalogue.assistant.enabled} turnstileSiteKey={catalogue.assistant.turnstileSiteKey}>
+        {/* Each plan on this page as a schema.org Product with its offers, from the same catalogue rows the cards draw. */}
+        {packages.length ? <JsonLd data={graph(packages.map((p) => productLd(p, locale, "websites")))} /> : null}
         <PageIntro kicker={t.websites.title} title={t.websites.h2} lede={t.websites.lede} />
         <Section>
           {vat ? <p className="mb-8 text-sm text-muted">{vat}</p> : null}
@@ -34,7 +38,7 @@ export const websites = {
                 return (
                   <li key={p.slug}>
                     <Card highlight={highlight} className="flex h-full flex-col" as="article">
-                      {highlight ? <p className="absolute -top-3.5 start-6 rounded-full bg-brand px-2.5 py-1 text-[11px] font-extrabold uppercase tracking-wider text-white">{t.common.mostChosen}</p> : null}
+                      {highlight ? <p className="absolute -top-3.5 start-6 rounded-full bg-brand-soft px-2.5 py-1 text-[11px] font-extrabold uppercase tracking-wider text-brand-strong">{t.common.mostChosen}</p> : null}
                       <h2 className="text-2xl font-extrabold text-ink">{loc(p.name, locale)}</h2>
                       {summary ? <p className="mt-1 text-sm text-muted">{summaryWithoutDelivery(summary) || summary}</p> : null}
                       <p className="mt-5 flex flex-wrap items-baseline gap-x-2">

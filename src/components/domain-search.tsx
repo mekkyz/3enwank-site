@@ -8,6 +8,7 @@ import type { Currency } from "@/lib/money";
 import { domainQuery, formatPrice } from "@/lib/format";
 import type { Locale } from "@/lib/i18n";
 import { useCurrency } from "./currency";
+import { HeightTween, TabStrip } from "./tabs";
 import { turnstileToken } from "@/lib/turnstile";
 
 /** Every string the widget shows; passed from the server so the dictionaries stay out of the browser bundle. */
@@ -258,7 +259,7 @@ function Row({
               <button
                 type="submit"
                 disabled={added}
-                className={`inline-flex min-h-10 items-center gap-1.5 whitespace-nowrap rounded-full px-4 text-sm font-bold transition ${added ? "border-[1.5px] border-line-strong bg-panel text-muted" : "btn-primary"}`}
+                className={`inline-flex min-h-11 items-center gap-1.5 whitespace-nowrap rounded-full px-4 text-sm font-bold transition ${added ? "border-[1.5px] border-line-strong bg-panel text-muted" : "btn-primary"}`}
               >
                 {added ? (
                   <>
@@ -276,13 +277,13 @@ function Row({
               </button>
             </form>
           ) : (
-            <a href={contactHref} className="whitespace-nowrap text-sm font-bold text-brand-strong hover:text-brand">
+            <a href={contactHref} className="inline-flex min-h-11 items-center whitespace-nowrap text-sm font-bold text-brand-strong hover:text-brand">
               {labels.askUs}
             </a>
           )
         ) : r.available === false && onTransfer ? (
           // Taken is only a dead end if it is not yours.
-          <button type="button" onClick={() => onTransfer(r.name)} className="whitespace-nowrap text-sm font-bold text-brand-strong hover:text-brand">
+          <button type="button" onClick={() => onTransfer(r.name)} className="inline-flex min-h-11 items-center whitespace-nowrap text-sm font-bold text-brand-strong hover:text-brand">
             {labels.transferThis}
           </button>
         ) : null}
@@ -538,7 +539,24 @@ export function DomainSearch({
   }
 
   const [desc, setDesc] = useState("");
-  const [tab, setTab] = useState<"register" | "transfer" | "ideas">(initialError ? "transfer" : "register");
+  /*
+   * A refusal opens the tab whose form was refused. It always opened Transfer, so a "Register" post
+   * the store turned down (a name taken meanwhile, a full cart) came back on the transfer form with
+   * the transfer wording above it. The two posts return differently, which is how they are told
+   * apart: a Register row returns to `?q=<name>` (see Row) and the transfer form to the bare page.
+   */
+  const errorTab: "register" | "transfer" | null = initialError ? (initialQuery ? "register" : "transfer") : null;
+  const [tab, setTab] = useState<"register" | "transfer" | "ideas">(errorTab ?? "register");
+  /*
+   * Whether a tab has been chosen on this page. The panel that opens fades up only then: the fade is
+   * a CSS animation keyed on data-tab-fade, and setting that attribute at hydration would fade in the
+   * search every visitor lands on.
+   */
+  const [switched, setSwitched] = useState(false);
+  const selectTab = useCallback((key: "register" | "transfer" | "ideas") => {
+    setSwitched(true);
+    setTab(key);
+  }, []);
   const [transferName, setTransferName] = useState("");
 
   /**
@@ -548,6 +566,7 @@ export function DomainSearch({
    */
   const transferThis = useCallback((name: string) => {
     setTransferName(name);
+    setSwitched(true);
     setTab("transfer");
   }, []);
   const [ideasStatus, setIdeasStatus] = useState<IdeasStatus>("idle");
@@ -621,6 +640,9 @@ export function DomainSearch({
   const rowProps = { enabled, locale, cartUrl, searchPath, contactHref, labels, onAdd: add, onTransfer: transferThis };
   const freeIdeas = ideasData?.ideas.filter((r) => r.available !== false) ?? [];
   const tabs = ([["register", labels.tabRegister], ["transfer", labels.tabTransfer], ...(ideas ? [["ideas", labels.tabIdeas] as const] : [])] as const).filter(Boolean);
+  // The ids that tie each tab to its panel.
+  const tabId = (key: string) => `${id}-tab-${key}`;
+  const panelId = (key: string) => `${id}-panel-${key}`;
   return (
     <div>
       {/*
@@ -629,21 +651,21 @@ export function DomainSearch({
        * which made the third of them a wall of text under a divider that most visitors scrolled
        * past on their way to the only field they wanted.
        */}
-      <div role="tablist" aria-label={labels.label} className="mb-5 inline-flex rounded-full border border-line bg-surface-alt p-1 text-sm font-bold">
-        {tabs.map(([key, text]) => (
-          <button
-            key={key}
-            type="button"
-            role="tab"
-            aria-selected={tab === key}
-            onClick={() => setTab(key)}
-            className={`min-h-9 rounded-full px-4 transition ${tab === key ? "bg-panel text-ink shadow-sm" : "text-muted hover:text-ink"}`}
-          >
-            {text}
-          </button>
-        ))}
-      </div>
+      {/*
+       * Keyboard: one tab stop for the list, arrows and Home/End between tabs (tabKeys in tabs.tsx),
+       * and every tab names its panel. The panels below are always in the DOM, so aria-controls
+       * never points at nothing; only what is inside them comes and goes.
+       *
+       * Width: the three tabs were 294px on a 390 phone inside the domains page's panel, whose
+       * content box is 263px there, so "Suggest names" broke onto two lines. The tabs share the
+       * list's width below sm and never wrap their label; from sm up they are pills. min-h-11 makes
+       * each a 44px target. The strip itself is TabStrip (tabs.tsx), the same one the plans use.
+       */}
+      <TabStrip label={labels.label} tabs={tabs.map(([key, text]) => ({ id: key, label: text }))} current={tab} onSelect={selectTab} tabId={tabId} panelId={panelId} />
+      {/* The panels ease between their heights instead of jumping, and the one just chosen fades up (tabs.tsx). */}
+      <HeightTween tweenKey={tab} fade={switched}>
 
+      <div role="tabpanel" id={panelId("transfer")} aria-labelledby={tabId("transfer")} hidden={tab !== "transfer"}>
       {tab === "transfer" ? (
         /*
          * A plain post, not intercepted: the store checks that the name really is registered
@@ -657,7 +679,7 @@ export function DomainSearch({
            * page redrew as if nothing had happened. A form whose failures are invisible is worse
            * than one that cannot fail.
            */}
-          {initialError ? (
+          {errorTab === "transfer" && initialError ? (
             <p className="mb-3 rounded-2xl bg-warn-soft px-4 py-3 text-sm text-warn">{labels.cartErrors[initialError] ?? labels.cartErrors.generic}</p>
           ) : null}
           <input type="hidden" name="kind" value="transfer" />
@@ -703,8 +725,15 @@ export function DomainSearch({
           </SearchBar>
         </form>
       ) : null}
+      </div>
 
-      <form action={searchPath} method="get" onSubmit={submit} role="search" hidden={tab !== "register"}>
+      {/* The register panel: the search, the endings under it and the answers. Hidden rather than unmounted, so a search in progress survives a look at another tab. */}
+      <div role="tabpanel" id={panelId("register")} aria-labelledby={tabId("register")} hidden={tab !== "register"}>
+      {/* A refused no-JavaScript "Register", on the tab it came from and above the search that made it. */}
+      {errorTab === "register" && initialError ? (
+        <p className="mb-3 rounded-2xl bg-warn-soft px-4 py-3 text-sm text-warn">{labels.cartErrors[initialError] ?? labels.cartErrors.generic}</p>
+      ) : null}
+      <form action={searchPath} method="get" onSubmit={submit} role="search">
         <SearchBar
           id={`${id}-q`}
           label={labels.label}
@@ -745,8 +774,12 @@ export function DomainSearch({
        * empty screen. These are not a picture of the table: they are the shortest path to a result
        * for the visitor who has a name but no idea what to put after it, and they disappear the
        * moment a search answers, because then the answer is the thing worth looking at.
+       *
+       * Only an answer hides them. They were tied to "nothing searched yet" (`!data && idle`), so a
+       * rate limit, a network error or a name the store called invalid took them away until a
+       * reload, which is exactly when a visitor needs another way in.
        */}
-      {tab === "register" && tlds.length && !data && status === "idle" ? (
+      {tlds.length && status !== "done" && status !== "loading" ? (
         <div className="mt-6 border-t border-line pt-5">
           <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-faint">{labels.allExtensions}</p>
           {needName ? (
@@ -757,10 +790,11 @@ export function DomainSearch({
           <ul className="mt-3 flex flex-wrap gap-2">
             {tlds.map((t) => (
               <li key={t}>
+                {/* 44px tall (min-h-11), like every control on this page: they were 34px, under a thumb's reliable reach. */}
                 <button
                   type="button"
                   onClick={() => pick(t)}
-                  className="tabular rounded-full border border-line px-3 py-1.5 text-sm font-bold text-muted transition hover:border-brand hover:bg-brand-soft hover:text-brand-strong"
+                  className="tabular inline-flex min-h-11 items-center rounded-full border border-line px-3 text-sm font-bold text-muted transition hover:border-brand hover:bg-brand-soft hover:text-brand-strong"
                 >
                   <bdi dir="ltr">.{t}</bdi>
                 </button>
@@ -770,7 +804,7 @@ export function DomainSearch({
         </div>
       ) : null}
 
-      <div aria-live="polite" hidden={tab !== "register"}>
+      <div aria-live="polite">
         {status === "error" ? <p className="mt-4 text-sm text-warn">{labels.error}</p> : null}
         {status === "limited" ? <p className="mt-4 text-sm text-warn">{labels.rateLimited}</p> : null}
         {/* Bad input is the visitor's to fix; the network-failure wording sent them off to retry the same name. */}
@@ -840,8 +874,11 @@ export function DomainSearch({
           </div>
         ) : null}
       </div>
+      </div>
 
-      {ideas && tab === "ideas" ? (
+      {ideas ? (
+      <div role="tabpanel" id={panelId("ideas")} aria-labelledby={tabId("ideas")} hidden={tab !== "ideas"}>
+      {tab === "ideas" ? (
         <div>
           <form onSubmit={suggest}>
             <SearchBar
@@ -900,6 +937,9 @@ export function DomainSearch({
           </div>
         </div>
       ) : null}
+      </div>
+      ) : null}
+      </HeightTween>
     </div>
   );
 }

@@ -95,9 +95,14 @@ export function ContactSection({
             <div className="py-4 first:pt-1">
               <dt className={eyebrow}>{c.email}</dt>
               <dd className="mt-1.5">
+                {/*
+                 * This link and the ones under "Already a customer?" are 44px tall (min-h-11), the
+                 * smallest target a thumb reliably hits on a phone. They stand on lines of their
+                 * own, not inside a sentence, so the inline-text exemption does not cover them.
+                 */}
                 <a
                   href={`mailto:${contactEmail}`}
-                  className="block break-all font-bold text-brand-strong hover:underline"
+                  className="flex min-h-11 items-center break-all font-bold text-brand-strong hover:underline"
                   dir="ltr"
                 >
                   {contactEmail}
@@ -124,7 +129,7 @@ export function ContactSection({
                 <a
                   href={storeLink(`${storeUrl}/login`, locale)}
                   rel="noopener"
-                  className="inline-block text-sm font-bold text-brand-strong hover:text-brand"
+                  className="inline-flex min-h-11 items-center text-sm font-bold text-brand-strong hover:text-brand"
                 >
                   {c.existingCta}
                 </a>
@@ -135,28 +140,28 @@ export function ContactSection({
                  * above but carrying the urgent first line.
                  */}
                 <p className="mt-4 text-sm font-bold text-ink">{c.urgent.label}</p>
-                <ul className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-sm font-bold">
+                <ul className="mt-0.5 flex flex-wrap gap-x-4 text-sm font-bold">
                   {whatsapp ? (
                     <li>
                       <a
                         href={waHref(whatsapp, c.urgent.waText)}
                         rel="noopener"
                         target="_blank"
-                        className="text-brand-strong hover:text-brand"
+                        className="inline-flex min-h-11 items-center text-brand-strong hover:text-brand"
                       >
                         {c.urgent.wa}
                       </a>
                     </li>
                   ) : null}
                   <li>
-                    <a href={storeLink(`${storeUrl}/tickets`, locale)} rel="noopener" className="text-brand-strong hover:text-brand">
+                    <a href={storeLink(`${storeUrl}/tickets`, locale)} rel="noopener" className="inline-flex min-h-11 items-center text-brand-strong hover:text-brand">
                       {c.urgent.ticket}
                     </a>
                   </li>
                   <li>
                     <a
                       href={`mailto:${supportEmail}?subject=${encodeURIComponent(c.urgent.emailSubject)}`}
-                      className="break-all text-brand-strong hover:text-brand"
+                      className="inline-flex min-h-11 items-center break-all text-brand-strong hover:text-brand"
                       dir="ltr"
                     >
                       {supportEmail}

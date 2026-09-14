@@ -137,7 +137,8 @@ export function LeadForm({
         <p className="text-lg font-extrabold text-ink">{labels.sentTitle}</p>
         <p className="mt-2 text-sm text-muted">{labels.sentBody.replace("{reach}", reach.trim())}</p>
         <p className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
-          <a href={waHref} rel="noopener" target="_blank" className="font-bold text-brand-strong hover:text-brand">
+          {/* Both 44px tall: the two things to do next, on a phone, right after sending. */}
+          <a href={waHref} rel="noopener" target="_blank" className="inline-flex min-h-11 items-center font-bold text-brand-strong hover:text-brand">
             {labels.sentWa}
           </a>
           <button
@@ -149,7 +150,7 @@ export function LeadForm({
               setReach("");
               setNote("");
             }}
-            className="font-bold text-muted hover:text-ink"
+            className="min-h-11 font-bold text-muted hover:text-ink"
           >
             {labels.sentAgain}
           </button>

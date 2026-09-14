@@ -79,9 +79,15 @@ export const en: Messages = {
     metaTitle: "Hosting, websites and domains, servers in Germany",
     ctaPlans: "See hosting plans",
     ctaBuild: "Build me a website",
-    facts: ["Free migration", "No setup fees"],
-    factVat: "VAT included",
-    factNoVat: "Prices in EGP and USD",
+    reasonsTitle: "Why 3enwank",
+    reasons: [
+      { title: "Servers in Germany", body: "Hardware we own and run ourselves, in a German data centre. No reseller between you and the machine." },
+      { title: "Support in Arabic and English", body: "A person who can see your server reads your ticket and replies in the language you wrote in." },
+      { title: "Prices in Egyptian pounds", body: "Pay in EGP by transfer, wallet or card. Customers outside Egypt pay in dollars." },
+      { title: "Free migration", body: "We move your site and email from your current host, and the site stays online while we do it." },
+    ],
+    /* Card is named at the owner's request (2026-09-14); the store offers it once Paymob is live. */
+    paymentsLine: "Pay by bank transfer, InstaPay, Vodafone Cash or card.",
     productsTitle: "What we do",
     products: {
       /*
@@ -126,6 +132,22 @@ export const en: Messages = {
     moveTitle: "Hosted somewhere else?",
     moveBody: "Free website & email migration. Your site stays online.",
     moveCta: "See plans",
+    faqTitle: "Questions we get asked",
+    /*
+     * Six, each answered in the words the terms use for the same thing, so the FAQ never promises
+     * more than the contract does: the renewal price is "the normal price", VAT is "where it applies",
+     * a domain leaves "after the first 60 days" because every registrar locks a new name that long, and
+     * leaving promises the terms' own "active until the end of the paid period", with the copy taken by
+     * the customer (the terms call backups "not a substitute for your own copy").
+     */
+    faq: [
+      { q: "Can you move my site from my current host?", a: "Yes, free. Send us the login to your current hosting and we copy the site, the email and the database, then switch the domain once everything checks out. The site stays online the whole time." },
+      { q: "Where are the servers?", a: "In a data centre in Germany, on hardware we own and run ourselves. Nobody sits between you and the machine your site runs on." },
+      { q: "What do I pay from the second year?", a: "The normal price of the plan. It is printed on the plan next to the first-year price and on your first invoice, and the renewal invoice reaches you before the due date." },
+      { q: "How do I pay, and is VAT included?", a: "By bank transfer, InstaPay, Vodafone Cash or card, in Egyptian pounds; customers outside Egypt pay in dollars by transfer. The price you see is the full amount. Where value added tax applies, it is included in it and stated on the invoice." },
+      { q: "Do you answer in Arabic?", a: "Yes. Write in Arabic or English and the reply comes in the same language, from a person who can see your account and your server." },
+      { q: "What if I want to leave?", a: "Cancel from your account or by writing to us. The service stays active until the end of the period you paid for, so there is time to take your own copy of the site and email from cPanel. A domain registered with us can be transferred out after its first 60 days, as with every registrar." },
+    ],
   },
   hosting: {
     title: "Web hosting",

@@ -48,13 +48,13 @@ export function ProductCard({
   const Glyph = ICONS[kind];
   return (
     <Card className="flex h-full flex-col" as="li">
-      <div className={`flex h-11 w-11 items-center justify-center rounded-full ${TINT[kind]}`}>
+      <div data-tone={kind === "websites" || kind === "domains" ? "accent" : "brand"} className={`card-icon flex h-11 w-11 items-center justify-center rounded-full ${TINT[kind]}`}>
         {/* Still 22px inside the 44px disc, and the tint on the disc is what colours it: currentColor. */}
         <Glyph aria-hidden="true" size={22} weight="bold" />
       </div>
       <h3 className="mt-4 text-xl font-extrabold text-ink">{title}</h3>
       <p className="mt-2 text-[15px] text-muted">{body}</p>
-      {meta ? <p className="mt-auto pt-4 text-sm text-muted">{meta}</p> : <span className="mt-auto" />}
+      {meta ? <div className="mt-auto pt-4 text-sm text-muted">{meta}</div> : <span className="mt-auto" />}
       <ArrowLink href={href} className="mt-2">
         {link}
       </ArrowLink>

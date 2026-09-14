@@ -1,6 +1,9 @@
 import { screens } from "@/screens";
 
-export const metadata = screens.domains.metadata("en");
+// A function rather than a constant, like every page here: a screen's metadata may be async (screens/index.ts).
+export function generateMetadata() {
+  return screens.domains.metadata("en");
+}
 
 /**
  * `?q=` makes this page dynamic, which is the point: without JavaScript the search form comes back

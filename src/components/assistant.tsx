@@ -278,16 +278,17 @@ export function Assistant({
                 <button
                   type="button"
                   onClick={clear}
-                  className="rounded-full px-2 py-1.5 text-xs font-bold text-muted hover:bg-surface-alt hover:text-ink"
+                  className="inline-flex min-h-11 items-center rounded-full px-2 text-xs font-bold text-muted hover:bg-surface-alt hover:text-ink"
                 >
                   {labels.clear}
                 </button>
               ) : null}
+              {/* 44px, the smallest target a thumb reliably hits; it was 36, and the header row grows by 8px to hold it. */}
               <button
                 type="button"
                 onClick={() => setOpen(false)}
                 aria-label={labels.close}
-                className="flex h-9 w-9 items-center justify-center rounded-full text-muted hover:bg-surface-alt hover:text-ink"
+                className="flex h-11 w-11 items-center justify-center rounded-full text-muted hover:bg-surface-alt hover:text-ink"
               >
                 {/* Decorative: the button already says "close" to a screen reader, so the mark stays hidden. */}
                 <XIcon aria-hidden="true" size={20} weight="bold" className="shrink-0" />
@@ -311,7 +312,7 @@ export function Assistant({
                     <button
                       type="button"
                       onClick={() => void send(question)}
-                      className="rounded-full border border-line-strong bg-surface px-3 py-1.5 text-start text-xs font-bold text-muted transition-colors hover:border-brand hover:text-ink"
+                      className="min-h-11 rounded-full border border-line-strong bg-surface px-3 py-1.5 text-start text-xs font-bold text-muted transition-colors hover:border-brand hover:text-ink"
                     >
                       {question}
                     </button>

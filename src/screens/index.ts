@@ -11,6 +11,7 @@ import { websites } from "./websites";
 
 /** Query parameters a screen may care about. Only the domain search uses them today. */
 export type ScreenParams = { q?: string; added?: string; error?: string };
-export type Screen = { metadata(locale: Locale): Metadata; render(locale: Locale, params?: ScreenParams): Promise<ReactNode> };
+/** `metadata` may be async: the legal pages read the company's legal name from the catalogue for their description. */
+export type Screen = { metadata(locale: Locale): Metadata | Promise<Metadata>; render(locale: Locale, params?: ScreenParams): Promise<ReactNode> };
 
 export const screens: Record<PageKey, Screen> = { home, hosting, websites, care, domains, about, terms, privacy, delivery, refunds };

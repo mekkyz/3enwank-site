@@ -2,19 +2,43 @@
 
 import { createContext, useContext, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 // From money.ts, not catalogue.ts: this is a client island, and the catalogue module carries zod.
-import { currencies, type Currency, type Money } from "@/lib/money";
+import { CURRENCY_KEY, DEFAULT_CURRENCY, currencies, type Currency, type Money } from "@/lib/money";
 import { formatPrice } from "@/lib/format";
 import { ltrRun } from "@/lib/bidi";
 import type { Locale } from "@/lib/i18n";
 import { CurrencyIcon } from "./icons";
 
 /**
- * The EGP/USD switch. Pages render EGP on the server (what most visitors want and what search
- * engines index); after hydration the visitor's last choice is restored from localStorage and every
- * <Price> re-renders. No network, no cookie.
+ * The EGP/USD switch. No network, no cookie.
+ *
+ * Every <Price> and <RenewalNote> is rendered in both currencies, each in its own
+ * `span[data-currency]`, and globals.css hides the ones <html data-currency> does not name. The
+ * attribute is stamped from localStorage by the before-paint script in root.tsx and moved by
+ * setCurrency below. This used to be done by re-rendering after hydration, which painted EGP first
+ * for a visitor who had chosen USD; with CSS choosing, the first frame is already right, and
+ * without JavaScript the page is EGP, which is what search engines index.
  */
-const STORAGE_KEY = "3enwank.currency";
-const DEFAULT: Currency = "EGP";
+const STORAGE_KEY = CURRENCY_KEY;
+const DEFAULT: Currency = DEFAULT_CURRENCY;
+
+/** The price shown for one currency: its own, or, when the store has none in it, the first it does have. */
+function pick<T>(prices: Partial<Record<Currency, T>>, c: Currency): Currency | undefined {
+  return prices[c] ? c : currencies.find((x) => prices[x]);
+}
+
+/**
+ * Moves the CSS switch. Written straight to <html>, not through React, so it cannot lag a render
+ * behind. A real change also sets `currency-switching` for a moment, which fades the prices in
+ * (globals.css), so the figures visibly change rather than blinking; stamping the value the page
+ * already has does nothing, so a page load never fades.
+ */
+function stamp(c: Currency) {
+  const root = document.documentElement;
+  if (root.dataset.currency === c) return;
+  root.classList.add("currency-switching");
+  window.setTimeout(() => root.classList.remove("currency-switching"), 400);
+  root.dataset.currency = c;
+}
 
 function isCurrency(v: unknown): v is Currency {
   return typeof v === "string" && (currencies as readonly string[]).includes(v);
@@ -27,10 +51,15 @@ function isCurrency(v: unknown): v is Currency {
 const listeners = new Set<() => void>();
 function subscribe(listener: () => void) {
   listeners.add(listener);
-  window.addEventListener("storage", listener);
+  // A choice made in another tab moves this tab's prices too, which now means moving the attribute.
+  const onStorage = (e: StorageEvent) => {
+    if (e.key === STORAGE_KEY) stamp(getSnapshot());
+    listener();
+  };
+  window.addEventListener("storage", onStorage);
   return () => {
     listeners.delete(listener);
-    window.removeEventListener("storage", listener);
+    window.removeEventListener("storage", onStorage);
   };
 }
 function getSnapshot(): Currency {
@@ -45,6 +74,8 @@ function getServerSnapshot(): Currency {
   return DEFAULT;
 }
 function store(c: Currency) {
+  // First, and outside the try: a visitor whose storage is blocked still sees the switch take effect.
+  stamp(c);
   try {
     window.localStorage.setItem(STORAGE_KEY, c);
   } catch {
@@ -88,21 +119,32 @@ export function Price({
   fallback: string;
   normal?: Partial<Record<Currency, Money>>;
 }) {
-  const { currency } = useCurrency();
-  const chosen = prices[currency] ? currency : currencies.find((c) => prices[c]);
-  const money = chosen ? prices[chosen] : undefined;
-  const was = chosen && normal?.[chosen] && normal[chosen]!.gross > (money?.gross ?? 0) ? normal[chosen] : undefined;
-  if (!money || !chosen) return <span className={className}>{fallback}</span>;
+  if (!currencies.some((c) => prices[c])) return <span className={className}>{fallback}</span>;
+  /*
+   * One span per currency, and CSS shows the one <html data-currency> names (see the note at the
+   * top of this file). `contents` keeps each span out of the layout, so the struck-out figure and
+   * the price are still the flex row's own items and the gap between them is unchanged. A currency
+   * the store has no price in shows the first one it does have, as before.
+   */
   return (
     <span className={`inline-flex flex-wrap items-baseline gap-x-1.5 ${className}`}>
-      {was ? (
-        <bdi dir="ltr" className="tabular whitespace-nowrap text-xs font-medium text-faint line-through">
-          {formatPrice(was, chosen, locale)}
-        </bdi>
-      ) : null}
-      <bdi dir="ltr" className="tabular whitespace-nowrap">
-        {formatPrice(money, chosen, locale)}
-      </bdi>
+      {currencies.map((c) => {
+        const chosen = pick(prices, c)!;
+        const money = prices[chosen]!;
+        const was = normal?.[chosen] && normal[chosen]!.gross > money.gross ? normal[chosen] : undefined;
+        return (
+          <span key={c} data-currency={c} className="contents">
+            {was ? (
+              <bdi dir="ltr" className="tabular whitespace-nowrap text-xs font-medium text-faint line-through">
+                {formatPrice(was, chosen, locale)}
+              </bdi>
+            ) : null}
+            <bdi dir="ltr" className="tabular whitespace-nowrap">
+              {formatPrice(money, chosen, locale)}
+            </bdi>
+          </span>
+        );
+      })}
     </span>
   );
 }
@@ -151,7 +193,7 @@ export function CurrencySwitch({ label }: { label: string }) {
               type="button"
               onClick={() => choose(c)}
               aria-pressed={currency === c}
-              className={`tabular block w-full whitespace-nowrap rounded-full px-3 py-1.5 text-start font-bold ${currency === c ? "bg-brand-soft text-brand-strong" : "text-muted hover:bg-brand-soft hover:text-ink"}`}
+              className={`tabular flex min-h-11 w-full items-center whitespace-nowrap rounded-full px-3 text-start font-bold ${currency === c ? "bg-brand-soft text-brand-strong" : "text-muted hover:bg-brand-soft hover:text-ink"}`}
             >
               {c}
             </button>
@@ -180,10 +222,19 @@ export function RenewalNote({
   label: string;
   className?: string;
 }) {
-  const { currency } = useCurrency();
-  const chosen = prices[currency] ? currency : currencies.find((c) => prices[c]);
-  const money = chosen ? prices[chosen] : undefined;
-  if (!money || !chosen) return null;
-  // Its own left-to-right run, as fill() does for the dictionary: "2,499 EGP" after "بـ" came out as "EGP 2,499".
-  return <p className={className}>{label.replace("{price}", ltrRun(formatPrice(money, chosen, locale)))}</p>;
+  if (!currencies.some((c) => prices[c])) return null;
+  // Both sentences, one per currency, and CSS shows the chosen one, as <Price> does.
+  return (
+    <p className={className}>
+      {currencies.map((c) => {
+        const chosen = pick(prices, c)!;
+        // Its own left-to-right run, as fill() does for the dictionary: "2,499 EGP" after "بـ" came out as "EGP 2,499".
+        return (
+          <span key={c} data-currency={c} className="contents">
+            {label.replace("{price}", ltrRun(formatPrice(prices[chosen]!, chosen, locale)))}
+          </span>
+        );
+      })}
+    </p>
+  );
 }

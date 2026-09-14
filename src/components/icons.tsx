@@ -22,11 +22,11 @@
  * call sites in this repo unchanged, and it keeps this file in step with the platform repo's copy
  * of it.
  *
- * None of the four takes Phosphor's `mirrored` prop, because none of them is directional. The three
- * objects are symmetric about the vertical axis, and the WhatsApp mark is a logo: flipping its tail
+ * None of them takes Phosphor's `mirrored` prop, because none of them is directional. The objects
+ * are symmetric about the vertical axis, and the WhatsApp mark is a logo: flipping its tail
  * on Arabic pages would make it a different mark, not a mirrored one.
  */
-import { MoneyIcon, ShoppingBagIcon, GlobeIcon, UserCircleIcon, WhatsappLogoIcon } from "@phosphor-icons/react/dist/ssr";
+import { TranslateIcon, ShoppingCartIcon, UserCircleIcon, WhatsappLogoIcon } from "@phosphor-icons/react/dist/ssr";
 
 type IconProps = { className?: string };
 
@@ -37,19 +37,37 @@ type IconProps = { className?: string };
 const WEIGHT = "bold" as const;
 
 /**
- * A banknote.
+ * Two coins changing hands: a pound and a dollar with an arrow each way.
  *
- * Not "Coins", which collapses into a blob at 19px, and none of the Currency* variants, every one
- * of which is a dollar sign — legible and wrong for a company whose prices are in pounds first. An
- * EGP mark is not a shape anyone recognises at this size either, so the icon names money and leaves
- * the code itself to the menu that opens underneath.
+ * The one icon in the bar that is drawn rather than taken from Phosphor, because the set has no
+ * exchange icon: its Coins is a stack, its Currency* icons are one sign each, and Swap is two bare
+ * arrows that say nothing about money. The owner chose this shape (2026-09-14). It is drawn on the
+ * set's 24-unit grid with the bold weight's stroke so it sits between the Phosphor icons without
+ * looking foreign; the signs inside the coins use a lighter stroke so they stay readable at 19px.
+ * Symmetric enough not to mirror: the arrows already point both ways.
  */
 export function CurrencyIcon({ className = "shrink-0" }: IconProps) {
-  return <MoneyIcon size={19} weight={WEIGHT} aria-hidden="true" className={className} />;
+  return (
+    <svg width={19} height={19} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className={className}>
+      <circle cx="7.5" cy="7.5" r="5.25" />
+      <circle cx="16.5" cy="16.5" r="5.25" />
+      <g strokeWidth={1.6}>
+        {/* pound in the first coin */}
+        <path d="M9 10.1H5.9c.6-.6.8-1.2.8-1.9V6.7c0-.9.7-1.6 1.6-1.6.5 0 .9.2 1.2.5" />
+        <path d="M5.9 7.9h2.6" />
+        {/* dollar in the second coin */}
+        <path d="M16.5 13.2v6.6" />
+        <path d="M18.2 14.9c-.3-.5-.9-.8-1.7-.8-1 0-1.8.6-1.8 1.3s.8 1.1 1.8 1.3c1 .2 1.8.6 1.8 1.3s-.8 1.3-1.8 1.3c-.8 0-1.4-.3-1.7-.8" />
+      </g>
+      <path d="M14.5 4.5h6.5M19 2.5l2 2-2 2" />
+      <path d="M9.5 19.5H3M5 17.5l-2 2 2 2" />
+    </svg>
+  );
 }
 
 /**
- * A globe.
+ * Phosphor's Translate: a Latin A beside an Arabic-looking letter, which is what the menu under it
+ * offers. It replaced a globe on 2026-09-14 at the owner's choice.
  *
  * Worth remembering why it is a drawing and not lettering: this icon was once an "A" and a "ع"
  * set as two SVG <text> glyphs, and text inside an SVG takes the page's font and the page's
@@ -59,15 +77,16 @@ export function CurrencyIcon({ className = "shrink-0" }: IconProps) {
  * Arabic and English bars get identical pixels.
  */
 export function LanguageIcon({ className = "shrink-0" }: IconProps) {
-  return <GlobeIcon size={19} weight={WEIGHT} aria-hidden="true" className={className} />;
+  return <TranslateIcon size={19} weight={WEIGHT} aria-hidden="true" className={className} />;
 }
 
 /**
- * A shopping bag, at 18px rather than 19 — the size the hand-drawn one carried, kept because the
- * header has only about 9px of slack at 390px and this sits under the count badge.
+ * A shopping cart (the owner's choice over the bag, 2026-09-14), at 18px rather than 19: the size
+ * the hand-drawn one carried, kept because the header has only about 9px of slack at 390px and this
+ * sits under the count badge.
  */
 export function CartIcon({ className = "shrink-0" }: IconProps) {
-  return <ShoppingBagIcon size={18} weight={WEIGHT} aria-hidden="true" className={className} />;
+  return <ShoppingCartIcon size={18} weight={WEIGHT} aria-hidden="true" className={className} />;
 }
 
 /**

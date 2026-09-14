@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { fallbackCatalogue } from "./catalogue";
-import { heroFacts, vatLine, vatShown } from "./vat";
+import { vatLine, vatShown } from "./vat";
 import { locales } from "./i18n";
 import { messagesFor } from "@/messages";
 
@@ -20,9 +20,6 @@ describe("VAT copy follows the catalogue", () => {
     for (const locale of locales) {
       const t = messagesFor(locale);
       expect(vatLine(t, catalogue), locale).toBeNull();
-      const facts = heroFacts(t, catalogue);
-      expect(facts, locale).toHaveLength(3);
-      expect(facts.join(" "), locale).not.toMatch(VAT);
     }
   });
 
@@ -34,9 +31,6 @@ describe("VAT copy follows the catalogue", () => {
       const line = vatLine(t, catalogue);
       expect(line, locale).toContain("14");
       expect(line?.match(VAT), locale).toHaveLength(1);
-      const facts = heroFacts(t, catalogue);
-      expect(facts, locale).toHaveLength(3);
-      expect(facts.filter((f) => VAT.test(f)), locale).toHaveLength(1);
     }
   });
 

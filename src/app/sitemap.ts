@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { alternatesFor, locales, pageKeys, pathFor, type PageKey } from "@/lib/i18n";
-import { SITE_URL } from "@/lib/site";
+import { LAST_CHANGED, SITE_URL } from "@/lib/site";
 
 export const dynamic = "force-static";
 
@@ -11,11 +11,11 @@ const LEGAL_PAGES: readonly PageKey[] = ["terms", "privacy", "delivery", "refund
 
 /** Every page in every locale, each entry listing its translations. */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date();
+  // Each page's own content date (lib/site.ts), not the build's clock: a lastmod that moves on every deploy tells a crawler nothing.
   return pageKeys.flatMap((page) =>
     locales.map((locale) => ({
       url: `${SITE_URL}${pathFor(page, locale)}`,
-      lastModified,
+      lastModified: LAST_CHANGED[page],
       changeFrequency: LEGAL_PAGES.includes(page) ? ("yearly" as const) : ("monthly" as const),
       priority: PRIORITY[page] ?? 0.5,
       alternates: { languages: alternatesFor(page, SITE_URL) },

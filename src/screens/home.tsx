@@ -5,6 +5,8 @@ import { DomainSearch } from "@/components/domain-search";
 import { ContactSection } from "@/components/contact";
 import { ProductCard } from "@/components/products";
 import { Shell } from "@/components/shell";
+import { JsonLd } from "@/components/json-ld";
+import { faqLd, graph, organizationLd, websiteLd } from "@/lib/structured-data";
 import { Tabs } from "@/components/tabs";
 import { localizedFeatures, localizedSummary, normalPrices, parseFeature, summaryWithoutDelivery } from "@/lib/format";
 import { pageMetadata } from "@/lib/metadata";
@@ -14,7 +16,8 @@ import { messagesFor, type Messages } from "@/messages";
 import type { Catalogue, Product } from "@/lib/catalogue";
 import type { Currency, Money } from "@/lib/money";
 import { HIGHLIGHT, assistantOn, domainSearchLabels, loc, screenContext, storeApi } from "./shared";
-import { heroFacts, vatLine } from "@/lib/vat";
+import { vatLine } from "@/lib/vat";
+import { MapPinIcon, HeadsetIcon, WalletIcon, ArrowsLeftRightIcon, CloudArrowUpIcon, LockKeyIcon, WallIcon, UserSoundIcon, CaretDownIcon } from "@phosphor-icons/react/dist/ssr";
 
 /**
  * Home: hero, the four products, what every account includes, three plans of each family on three
@@ -24,12 +27,12 @@ import { heroFacts, vatLine } from "@/lib/vat";
 export const home = {
   metadata(locale: Locale) {
     const t = messagesFor(locale);
-    return pageMetadata("home", locale, t.home.h1, t.meta.description);
+    // home.metaTitle, not the h1: the h1 is a 77-character hero line and made the title the heading verbatim, cut by every search result.
+    return pageMetadata("home", locale, t.home.metaTitle, t.meta.description);
   },
   async render(locale: Locale) {
     const { t, catalogue, company, trust } = await screenContext(locale);
     const vat = vatLine(t, catalogue);
-    const facts = heroFacts(t, catalogue);
     /*
      * The three families, in the order a visitor meets them in the menu, three plans each and three
      * specs on each plan. Every tier used to be listed here, which put six hosting plans on the page
@@ -92,22 +95,38 @@ export const home = {
      * its prices go to the island; the store prices every product in both currencies, so the
      * cheapest in pounds is the cheapest in dollars too.
      */
-    const from = (prices: Partial<Record<Currency, Money>> | undefined) =>
+    /*
+     * With the renewal under it wherever the thing renews at a different price: the owner's rule is
+     * that a first-year price is never shown without what it renews at (2026-09-14), and these four
+     * teasers were the one place left that quoted the first year alone. A build is paid once and a
+     * care plan renews at its price, so those two carry no second line; RenewalNote renders nothing
+     * for an empty price set.
+     */
+    const from = (prices: Partial<Record<Currency, Money>> | undefined, renewal?: Partial<Record<Currency, Money>>) =>
       prices && Object.keys(prices).length ? (
         <>
-          {t.common.from} <Price prices={prices} locale={locale} fallback={t.common.notAvailable} />
+          <span className="block">
+            {t.common.from} <Price prices={prices} locale={locale} fallback={t.common.notAvailable} />
+          </span>
+          {renewal ? <RenewalNote prices={renewal} locale={locale} label={t.common.renewsAt} className="mt-1 text-xs text-muted" /> : null}
         </>
       ) : undefined;
     const fromPrice = (kind: "hosting" | "build" | "care") => {
       const list = catalogue.products[kind];
       const cheapest = list.reduce<(typeof list)[number] | null>((min, p) => (!min || (p.prices.EGP?.gross ?? Infinity) < (min.prices.EGP?.gross ?? Infinity) ? p : min), null);
-      return from(cheapest?.prices);
+      return from(cheapest?.prices, cheapest ? normalPrices(cheapest) : undefined);
     };
     // Domains price from the cheapest ending we sell, so the card carries a number like the other three.
     const cheapestTld = catalogue.tlds.reduce<(typeof catalogue.tlds)[number] | null>(
       (min, x) => (x.prices.EGP && (!min || x.prices.EGP.register.gross < min.prices.EGP!.register.gross) ? x : min),
       null,
     );
+    // A name's renewal, per currency, only where it is not the registration price.
+    const tldRenewal: Partial<Record<Currency, Money>> = {};
+    for (const c of ["EGP", "USD"] as const) {
+      const p = cheapestTld?.prices[c];
+      if (p && p.renew.gross !== p.register.gross) tldRenewal[c] = p.renew;
+    }
     const fromDomain = from(
       cheapestTld
         ? {
@@ -115,6 +134,7 @@ export const home = {
             ...(cheapestTld.prices.USD ? { USD: cheapestTld.prices.USD.register } : {}),
           }
         : undefined,
+      tldRenewal,
     );
     const api = storeApi(catalogue);
     // A telephone number is not a WhatsApp number. WHATSAPP_NUMBER is the only thing that puts a
@@ -130,27 +150,35 @@ export const home = {
     const whatsapp = WHATSAPP_NUMBER || (phone ?? "").replace(/[^0-9]/g, "") || null;
     return (
       <Shell locale={locale} page="home" storeUrl={catalogue.store.url} legalName={company.legalName} supportEmail={company.contactEmail} trust={trust} assistantEnabled={catalogue.assistant.enabled} turnstileSiteKey={catalogue.assistant.turnstileSiteKey}>
+        {/* Who the company is and what this site is, for search engines; the plan pages add a Product per plan. */}
+        <JsonLd data={graph([organizationLd(catalogue, locale), websiteLd(catalogue, locale), faqLd(t.home.faq)])} />
         {/*
-         * The hero: one statement, the line under it, the two ways in, and the small print under
-         * those. One column, half the height it was.
+         * The hero: one statement, the line under it, and the two ways in, over a glow and a grid.
          *
-         * Three earlier tries are in this file's history: a 50/50 grid with a drawing on the right, a
-         * statement across the full width whose lede started at the middle of the page, and a
-         * seven-column measure beside a four-column rail. The last one also held the domain search,
-         * which took more of the eye than either button and framed the company as a registrar; the
-         * search is its own section under the plans now. The rail went with it, and the three facts
-         * it carried are one quiet line here, which is all the weight small print should have.
+         * Four earlier tries are in this file's history: a 50/50 grid with a drawing on the right, a
+         * statement across the full width whose lede started at the middle of the page, a
+         * seven-column measure beside a four-column rail that also held the domain search, and one
+         * column of text over a bare surface. The last one left the right half of the first screen
+         * empty, so the page opened like a document (owner, 2026-09-14). What fills it now is not a
+         * drawing but light: a soft brand-coloured glow and a faint grid, both CSS, both still under
+         * reduced motion, both toned down in the light theme. The type is one size up for the same
+         * reason. The facts line that sat under the buttons became the "Why 3enwank" section below,
+         * where the four claims a visitor decides on get a card each instead of 12px.
          *
          * No tracking-* utility in this block. globals.css zeroes letter-spacing under dir="rtl", so
          * a heading tuned with negative tracking is a different heading in Arabic; this one is tuned
          * with size and leading, which both locales get.
          */}
-        <section>
-          <Container className="pb-9 pt-8 sm:pb-11 sm:pt-10 lg:pb-12 lg:pt-11">
-            {/* One measure for all four lines: statement, lede, buttons and facts share the left edge. */}
+        <section className="relative overflow-hidden">
+          <div aria-hidden="true" className="hero-bg">
+            <div className="hero-glow" />
+            <div className="hero-grid" />
+          </div>
+          <Container className="relative pb-14 pt-12 sm:pb-16 sm:pt-16 lg:pb-20 lg:pt-20">
+            {/* One measure for all three: statement, lede and buttons share the left edge. */}
             <div className="max-w-3xl">
-              <h1 className="rise text-balance text-[1.7rem] font-extrabold leading-[1.16] text-ink sm:text-[2.1rem] sm:leading-[1.12] lg:text-[2.4rem]">{t.home.h1}</h1>
-              <p className="rise-2 mt-3 max-w-2xl text-pretty text-base leading-relaxed text-muted sm:mt-4 sm:text-[1.0625rem]">{t.home.lede}</p>
+              <h1 className="rise text-balance text-[2rem] font-extrabold leading-[1.14] text-ink sm:text-[2.5rem] sm:leading-[1.1] lg:text-[3rem]">{t.home.h1}</h1>
+              <p className="rise-2 mt-4 max-w-2xl text-pretty text-base leading-relaxed text-muted sm:mt-5 sm:text-lg">{t.home.lede}</p>
               {/*
                * The two ways in, as buttons. They were a pair of arrow links in the rail, which put
                * the only two commercial paths on the page in the margin, in the weight this site
@@ -161,7 +189,7 @@ export const home = {
                * visitor who wants it built clicks the other, and the search further down still
                * catches the one who came for a name.
                */}
-              <div className="rise-3 mt-5 flex flex-wrap gap-3 sm:mt-6">
+              <div className="rise-3 mt-6 flex flex-wrap gap-3 sm:mt-7">
                 <ButtonLink href={pathFor("hosting", locale)} size="lg">
                   {t.home.ctaPlans}
                 </ButtonLink>
@@ -169,36 +197,33 @@ export const home = {
                   {t.home.ctaBuild}
                 </ButtonLink>
               </div>
-              {/*
-               * The three things a visitor can check against the invoice afterwards, on one line.
-               * They were three check-marked rows in the rail, which is a list where a caption will
-               * do. It wraps onto a second line on a phone instead of running off the edge.
-               *
-               * The middot trails the fact it follows, inside the same <li>, and is hidden from a
-               * screen reader, so the list is read as three facts and not as punctuation. It used to
-               * lead the next fact instead, which put a separator at the head of the second line
-               * every time the line wrapped: at 360 in English and at 360, 375 and 390 in Arabic.
-               * A separator can end a line like a hyphen, it cannot open one.
-               *
-               * The third fact follows the catalogue: "VAT included" is only said while the business
-               * is VAT-registered (see lib/vat.ts), and a fact that holds either way stands in for it
-               * otherwise, so the line is three items long in both states.
-               */}
-              <ul className="rise-4 mt-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm font-semibold text-muted sm:mt-6">
-                {facts.map((f, i) => (
-                  <li key={f}>
-                    {f}
-                    {i < facts.length - 1 ? (
-                      <span aria-hidden="true" className="ps-2">
-                        ·
-                      </span>
-                    ) : null}
-                  </li>
-                ))}
-              </ul>
             </div>
           </Container>
         </section>
+
+        {/*
+         * Why 3enwank: the four claims that used to be the facts line, one card each with an icon,
+         * and under them the ways to pay. Plain ground right after the hero, so the hero's glow
+         * ends where this starts; the tinted product cards follow.
+         */}
+        <Section className="border-t border-line">
+          <SectionHeader title={t.home.reasonsTitle} />
+          <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {t.home.reasons.map((r, i) => {
+              const Glyph = REASON_ICONS[i] ?? REASON_ICONS[0]!;
+              return (
+                <Card key={r.title} as="li" className="flex h-full flex-col">
+                  <div data-tone={i % 2 ? "accent" : "brand"} className={`card-icon flex h-11 w-11 items-center justify-center rounded-full ${i % 2 ? "bg-accent-soft text-accent" : "bg-brand-soft text-brand"}`}>
+                    <Glyph aria-hidden="true" size={22} weight="bold" />
+                  </div>
+                  <h3 className="mt-4 text-lg font-extrabold text-ink">{r.title}</h3>
+                  <p className="mt-2 text-[15px] leading-relaxed text-muted">{r.body}</p>
+                </Card>
+              );
+            })}
+          </ul>
+          <p className="mt-6 text-sm font-semibold text-muted">{t.home.paymentsLine}</p>
+        </Section>
 
         <Section tone="alt">
           <SectionHeader title={t.home.productsTitle} />
@@ -218,12 +243,17 @@ export const home = {
         <Section>
           <SectionHeader title={t.home.whyTitle} />
           <ul className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            {t.home.why.map((f) => (
-              <li key={f.title} className="border-t border-line pt-5">
-                <h3 className="text-xl font-extrabold text-ink">{f.title}</h3>
-                <p className="mt-2 text-[15px] leading-relaxed text-muted">{f.body}</p>
-              </li>
-            ))}
+            {t.home.why.map((f, i) => {
+              const Glyph = WHY_ICONS[i] ?? WHY_ICONS[0]!;
+              return (
+                <li key={f.title} data-reveal="" className="border-t border-line pt-5">
+                  {/* Same 22px glyph the product cards carry, on the line rather than in a disc: a list, not a card. */}
+                  <Glyph aria-hidden="true" size={22} weight="bold" className="text-brand" />
+                  <h3 className="mt-3 text-xl font-extrabold text-ink">{f.title}</h3>
+                  <p className="mt-2 text-[15px] leading-relaxed text-muted">{f.body}</p>
+                </li>
+              );
+            })}
           </ul>
         </Section>
 
@@ -291,7 +321,7 @@ export const home = {
          */}
         <Section>
           <div>
-            <div className="band flex flex-wrap items-center justify-between gap-6 rounded-2xl px-7 py-9 sm:px-10">
+            <div data-reveal="" className="band flex flex-wrap items-center justify-between gap-6 rounded-2xl px-7 py-9 sm:px-10">
               <div>
                 <h2 className="text-2xl font-extrabold tracking-tight sm:text-3xl">{t.home.moveTitle}</h2>
                 <p className="mt-2 max-w-xl text-white/90">{t.home.moveBody}</p>
@@ -300,6 +330,26 @@ export const home = {
                 {t.home.moveCta}
               </ButtonLink>
             </div>
+          </div>
+        </Section>
+
+        {/*
+         * Six questions, each a details/summary so the page stays short and needs no script; the
+         * answers use the terms' own words for the same things. Tinted, like the plans and the
+         * domain search, so the plain band above it stays the odd one out.
+         */}
+        <Section tone="alt">
+          <SectionHeader title={t.home.faqTitle} />
+          <div className="grid gap-4 md:grid-cols-2">
+            {t.home.faq.map((item) => (
+              <details key={item.q} data-reveal="" className="faq-item group rounded-2xl border border-line bg-panel px-5 py-1">
+                <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-4 py-3 text-base font-bold text-ink [&::-webkit-details-marker]:hidden">
+                  {item.q}
+                  <CaretDownIcon aria-hidden="true" size={18} weight="bold" className="shrink-0 text-muted transition-transform group-open:rotate-180" />
+                </summary>
+                <p className="pb-4 text-[15px] leading-relaxed text-muted">{item.a}</p>
+              </details>
+            ))}
           </div>
         </Section>
 
@@ -320,6 +370,15 @@ export const home = {
     );
   },
 };
+
+/*
+ * One glyph per "Why 3enwank" card and per "Included on every account" row, in the order of the
+ * dictionaries' arrays (both languages keep the same order): where the servers are, who answers,
+ * what you pay in, how you get here; then backups, SSL, the firewall, the person. Typed off one of
+ * the components, as products.tsx does, because /dist/ssr exports no Icon type.
+ */
+const REASON_ICONS: ReadonlyArray<typeof MapPinIcon> = [MapPinIcon, HeadsetIcon, WalletIcon, ArrowsLeftRightIcon];
+const WHY_ICONS: ReadonlyArray<typeof MapPinIcon> = [CloudArrowUpIcon, LockKeyIcon, WallIcon, UserSoundIcon];
 
 /** One row on a plan card. A free-text feature has no label and takes the whole row. */
 type Spec = { label?: string; value: string };

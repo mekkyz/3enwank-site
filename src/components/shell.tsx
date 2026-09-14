@@ -95,10 +95,11 @@ export function Shell({
          * four gaps of 2, row gap 8. Arabic is narrower (كلمنا is 32px to Contact's 57) and keeps
          * the full 142 at every width from 360 up.
          */}
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-5 py-3 sm:gap-4 sm:px-8">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 px-5 py-3 sm:gap-4 sm:px-8">
+          {/* min-h-11: the row is already 44px tall from the icon controls, so the home link can be a full-height target at no cost to the layout. */}
           <a
             href={pathFor("home", locale)}
-            className="flex min-w-0 items-center sm:shrink-0"
+            className="flex min-h-11 min-w-0 items-center sm:shrink-0"
             aria-label={t.meta.siteName}
           >
             <Logo className="h-auto max-h-6 max-w-full sm:max-h-8" />
@@ -140,7 +141,7 @@ export function Shell({
                       lang={l.lang}
                       dir={l.dir}
                       aria-current={l.current ? "true" : undefined}
-                      className={`block whitespace-nowrap rounded-full px-3 py-1.5 font-bold ${l.current ? "bg-brand-soft text-brand-strong" : "text-muted hover:bg-brand-soft hover:text-ink"}`}
+                      className={`flex min-h-11 items-center whitespace-nowrap rounded-full px-3 font-bold ${l.current ? "bg-brand-soft text-brand-strong" : "text-muted hover:bg-brand-soft hover:text-ink"}`}
                     >
                       {l.name}
                     </a>
@@ -166,16 +167,24 @@ export function Shell({
             </a>
           </div>
         </div>
+        {/*
+         * The phone row. Each link is a 44px target (min-h-11) where it was its 20px line of text,
+         * and the row pays for that with its padding rather than with the page: -mt-3 tucks it into
+         * the 12px under the logo row, which holds no control, and pb-0 replaces the 10px under it.
+         * The text sits on the same pixels it did, and the bar is 101px rather than 99, which
+         * --header-h in globals.css follows. `nav-fade` fades the end of the row when it scrolls
+         * (320px in English), which was cutting "Domains" off with nothing to say more was there.
+         */}
         <nav
           aria-label={t.nav.menu}
-          className="mx-auto flex max-w-6xl gap-5 overflow-x-auto px-5 pb-2.5 text-sm font-semibold sm:px-8 lg:hidden"
+          className="nav-fade mx-auto -mt-3 flex max-w-7xl gap-5 overflow-x-auto px-5 text-sm font-semibold sm:px-8 lg:hidden"
         >
           {items.map(([href, label, active]) => (
             <a
               key={href}
               href={href}
               aria-current={active ? "page" : undefined}
-              className={`whitespace-nowrap ${active ? "text-ink" : "text-muted"}`}
+              className={`flex min-h-11 items-center whitespace-nowrap ${active ? "text-ink" : "text-muted"}`}
             >
               {label}
             </a>
@@ -186,7 +195,7 @@ export function Shell({
         {children}
       </main>
       <footer className="mt-16 bg-surface-alt">
-        <div className="mx-auto max-w-6xl px-5 py-12 sm:px-8">
+        <div className="mx-auto max-w-7xl px-5 py-12 sm:px-8">
           {/*
            * Equal columns put the free space in the wrong places: the brand column's logo filled its
            * track while a link column's "Hosting" filled a third of its own, so the eye saw 64px
@@ -240,10 +249,18 @@ export function Shell({
           </div>
         </div>
         <div className="border-t border-line">
-          <div className="mx-auto max-w-6xl px-5 py-5 text-xs text-faint sm:px-8">
+          {/*
+           * text-muted, not text-faint: faint on the footer's surface-alt is 4.2:1 in the light
+           * theme, under the 4.5:1 that 12px text needs. Muted is well clear in both themes.
+           */}
+          <div className="mx-auto max-w-7xl px-5 py-5 text-xs text-muted sm:px-8">
             <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
               <p>
-                © <span className="tabular">{currentYear()}</span> {t.meta.siteName}. {t.footer.copyright}
+                {/* The Latin run isolated left to right: on the Arabic pages it laid out as "© 3enwank 2026." */}
+                <bdi dir="ltr" className="tabular">
+                  © {currentYear()} {t.meta.siteName}.
+                </bdi>{" "}
+                {t.footer.copyright}
               </p>
               <ThemeSwitch label={t.footer.theme} dark={t.footer.themeDark} light={t.footer.themeLight} />
             </div>
@@ -267,10 +284,15 @@ function FooterColumn({ title, links }: { title: string; links: Array<[string, s
   return (
     <nav aria-label={title} className="text-sm">
       <p className="mb-3 font-extrabold text-ink">{title}</p>
-      <ul className="space-y-2.5">
+      {/*
+       * Below sm each link is a 44px row (min-h-11) instead of a 19px line 10px from the next: a
+       * footer on a phone is tapped, and the rows touch rather than overlap. From sm up, where a
+       * pointer is the likelier way in, the list keeps the spacing it was designed with.
+       */}
+      <ul className="sm:space-y-2.5">
         {links.map(([href, label]) => (
           <li key={href + label}>
-            <a href={href} className="text-muted hover:text-ink">
+            <a href={href} className="flex min-h-11 items-center text-muted hover:text-ink sm:inline sm:min-h-0">
               {label}
             </a>
           </li>

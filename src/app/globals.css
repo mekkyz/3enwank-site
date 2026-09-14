@@ -1,8 +1,9 @@
 @import "tailwindcss";
 
 /*
- * Brand: the logo's purple and blue (3enwank-logo/palette.json). Dark is the default theme; the
- * footer switch stores "light" in localStorage and a tiny script in <head> applies it before paint.
+ * Brand: the logo's purple and blue (3enwank-logo/palette.json). The theme follows the visitor's
+ * system setting unless the footer switch stored a choice; a tiny script at the top of <body> stamps
+ * data-theme from one or the other before paint, so these tokens are keyed on that attribute.
  */
 :root,
 [data-theme="dark"] {
@@ -90,6 +91,57 @@
   --illus-bar: #dcd3ea;
   --illus-bar-2: #e8e9ee;
   --illus-label: #2a2f45;
+}
+
+/*
+ * The same light tokens again, for a visitor whose system asks for light and who has made no choice
+ * on the footer switch (owner, 2026-09-14: the theme follows the system, the switch overrides). The
+ * before-paint script stamps data-theme from the saved choice or the system setting, so with
+ * JavaScript this block never decides anything; it is what a no-JavaScript visitor gets. The two
+ * blocks must stay identical: edit one, copy it to the other.
+ */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    color-scheme: light;
+    --color-surface: #ffffff;
+    --color-surface-alt: #f6f4fb;
+    --color-panel: #ffffff;
+    --color-panel-raised: #ffffff;
+    --color-ink: #1c1f2e;
+    --color-muted: #4b5169;
+    --color-faint: #6f7681;
+    --color-line: #d7d9e3;
+    --color-line-strong: #7a80a0;
+    --color-brand: #7024db;
+    --color-brand-strong: #5e1eb8;
+    --color-brand-soft: #f2eafd;
+    --color-brand-ink: #7024db;
+    /*
+     * Dark enough to carry text on its own tint: the category labels render accent on accent-soft,
+     * which at the previous #0c80b6 was 3.90:1. Same hue to a tenth of a degree, 4.53:1 there and
+     * 5.11:1 on white.
+     */
+    --color-accent: #0b75a6;
+    --color-accent-strong: #086691;
+    --color-accent-soft: #e3f4fd;
+    --color-ok: #067647;
+    --color-ok-soft: #e6f4ec;
+    --color-warn: #b54708;
+    --color-warn-soft: #fef3e6;
+    --color-dark: #14172b;
+    --color-dark-line: #2c3050;
+    --color-dark-muted: #c4c8dc;
+    --color-danger: #b42318;
+    --color-band: #7024db;
+    --illus-bg: #f3effa;
+    --illus-ring: #dcd3ea;
+    --illus-link: #cfe7f2;
+    --illus-node: #ffffff;
+    --illus-node-line: #231f20;
+    --illus-bar: #dcd3ea;
+    --illus-bar-2: #e8e9ee;
+    --illus-label: #2a2f45;
+  }
 }
 
 @theme inline {
@@ -328,6 +380,75 @@ html.theme-switching *::after {
   outline-offset: 2px;
 }
 
+/*
+ * The currency switch, decided before paint.
+ *
+ * <Price> and <RenewalNote> (components/currency.tsx) render one span per currency, and the inline
+ * script in root.tsx stamps html[data-currency] from localStorage before the first paint. These
+ * rules show the one it names. When prices were re-rendered after hydration instead, a visitor who
+ * had chosen USD saw EGP for a frame first. With no attribute at all (no JavaScript) EGP shows,
+ * which is what the server renders for everyone else. Unlayered on purpose: it has to beat the
+ * `contents` utility the spans carry.
+ */
+html:not([data-currency="USD"]) [data-currency="USD"],
+html[data-currency="USD"] [data-currency="EGP"] {
+  display: none;
+}
+
+/*
+ * The footer's Dark/Light pill, lit from html[data-theme] rather than from React state, for the same
+ * first-frame reason: the server can only guess "dark", and <html> already knows. Dark is lit
+ * whenever the root is not explicitly light, matching THEME_SCRIPT's default.
+ */
+.theme-option {
+  color: var(--color-muted);
+}
+.theme-option:hover {
+  color: var(--color-ink);
+}
+html[data-theme="dark"] .theme-option[data-option="dark"],
+html[data-theme="light"] .theme-option[data-option="light"] {
+  background-color: var(--color-brand-soft);
+  color: var(--color-brand-strong);
+}
+/*
+ * No data-theme at all means no JavaScript ran, and the tokens then follow the system setting (the
+ * prefers-color-scheme block near the top). The pill has to say the same thing, or a light-system
+ * visitor reads "Dark" lit on a light page.
+ */
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme]) .theme-option[data-option="dark"] {
+    background-color: var(--color-brand-soft);
+    color: var(--color-brand-strong);
+  }
+}
+@media (prefers-color-scheme: light) {
+  html:not([data-theme]) .theme-option[data-option="light"] {
+    background-color: var(--color-brand-soft);
+    color: var(--color-brand-strong);
+  }
+}
+
+/*
+ * The phone nav row scrolls sideways once its four links outgrow the screen (320px in English), and
+ * a word cut at the edge looked like a layout fault rather than a row to swipe. The last 2rem fades
+ * out instead, toward whichever edge the language runs to. Most of that 2rem is the row's own end
+ * padding, which is empty whenever nothing overflows, so a row that fits shows no fade on any word.
+ */
+/* The fade is exactly the row's end padding (px-5 below sm, px-8 from sm), so a row that fits fades no letter. */
+.nav-fade {
+  --nav-fade: 1.25rem;
+  mask-image: linear-gradient(to right, #000 calc(100% - var(--nav-fade)), transparent);
+}
+html[dir="rtl"] .nav-fade {
+  mask-image: linear-gradient(to left, #000 calc(100% - var(--nav-fade)), transparent);
+}
+@media (min-width: 40rem) {
+  .nav-fade {
+    --nav-fade: 2rem;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -398,8 +519,9 @@ html.js:not(.is-scrolled) header[data-bar] {
  * own lg, so the switch happens on the same pixel as the header's.
  */
 @layer base {
+  /* 101, not 99, since the phone nav links became 44px targets (shell.tsx). */
   :root {
-    --header-h: 99px;
+    --header-h: 101px;
   }
 
   @media (min-width: 64rem) {
@@ -483,4 +605,202 @@ html.js:not(.is-scrolled) header[data-bar] {
 .waiting {
   background-color: var(--color-surface-alt);
   animation: waiting 1.4s ease-in-out infinite;
+}
+
+/*
+ * The hero's ground: a soft glow in the brand colours off to the end side, and a faint grid that
+ * fades out toward the text, under the first screen of the home page. It fills the half of the
+ * hero that carried nothing (owner, 2026-09-14) without a drawing. Both are decoration: the block
+ * is aria-hidden and pointer-events: none, and neither moves, so reduced motion needs no rule. The
+ * grid is drawn from the same hairline token as the cards and masked so it is loudest where the
+ * text is not; the glow is quieter on white, where a purple haze reads as a stain.
+ */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.hero-glow {
+  position: absolute;
+  inset-block: -30% -10%;
+  inset-inline-end: -12%;
+  width: 62%;
+  background:
+    radial-gradient(closest-side at 62% 38%, color-mix(in srgb, var(--color-brand-ink) 42%, transparent), transparent 72%),
+    radial-gradient(closest-side at 28% 74%, color-mix(in srgb, var(--color-accent) 26%, transparent), transparent 72%);
+  filter: blur(48px);
+  opacity: var(--glow-o);
+  will-change: transform, opacity;
+  animation: glow-breathe 20s ease-in-out infinite alternate;
+}
+/*
+ * The glow breathes: it drifts a few percent and brightens and dims on a twenty-second loop (owner,
+ * 2026-09-14). Slow enough not to pull the eye from the headline; the reduced-motion block stops it
+ * on its first frame, which is the resting glow. --glow-o is the theme's resting strength.
+ */
+.hero-glow {
+  --glow-o: 0.85;
+}
+@keyframes glow-breathe {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: var(--glow-o);
+  }
+  50% {
+    transform: translate3d(-4%, 3%, 0) scale(1.08);
+    opacity: calc(var(--glow-o) * 1.2);
+  }
+  100% {
+    transform: translate3d(3%, -2%, 0) scale(0.96);
+    opacity: calc(var(--glow-o) * 0.8);
+  }
+}
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--color-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-line) 1px, transparent 1px);
+  background-size: 44px 44px;
+  opacity: 0.32;
+  mask-image: radial-gradient(ellipse 60% 90% at 78% 40%, #000 30%, transparent 78%);
+}
+[dir="rtl"] .hero-grid {
+  mask-image: radial-gradient(ellipse 60% 90% at 22% 40%, #000 30%, transparent 78%);
+}
+[data-theme="light"] .hero-glow {
+  --glow-o: 0.45;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .hero-glow {
+    --glow-o: 0.45;
+  }
+  :root:not([data-theme="dark"]) .hero-grid {
+    opacity: 0.55;
+  }
+}
+[data-theme="light"] .hero-grid {
+  opacity: 0.55;
+}
+
+/*
+ * Interaction and motion (owner, 2026-09-14). Every rule here is decoration on top of a page that
+ * works without it, and the reduced-motion block above flattens all of it.
+ */
+
+/* A domain search panel that was just chosen fades up (tabs.tsx HeightTween eases the height). */
+@keyframes tab-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+[data-tab-fade] > [role="tabpanel"]:not([hidden]) {
+  animation: tab-in 0.3s cubic-bezier(0.2, 0.7, 0.2, 1) 0.06s backwards;
+}
+
+/* The chevron on a text link leans the way it points. `translate` composes with the RTL flip, which is `scale`. */
+.arrow-link svg {
+  transition: translate 0.18s ease;
+}
+.arrow-link:hover svg {
+  translate: 3px 0;
+}
+[dir="rtl"] .arrow-link:hover svg {
+  translate: -3px 0;
+}
+
+/* A card's icon disc fills with its colour and turns a little while the card lifts. */
+.card-icon {
+  transition:
+    transform 0.25s ease,
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+.lift:hover .card-icon {
+  transform: scale(1.08) rotate(-6deg);
+  background-color: var(--color-brand-ink);
+  color: #ffffff;
+}
+.lift:hover .card-icon[data-tone="accent"] {
+  background-color: var(--color-accent);
+}
+
+/* Prices fade in when the currency changes; the class is on <html> for 400ms only (currency.tsx stamp). */
+@keyframes price-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+html.currency-switching :has(> [data-currency]) {
+  animation: price-in 0.3s ease-out;
+}
+
+/*
+ * Reveal on scroll, driven by REVEAL_SCRIPT in root.tsx. "pending" is only ever set on something
+ * below the first screen, by the script; "in" runs the fade with `backwards` fill, so the start
+ * frame holds through the stagger delay and nothing is held after the end (a held transform would
+ * beat the card's hover lift). The script sets "done" at animationend.
+ */
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+html.js [data-reveal-state="pending"] {
+  opacity: 0;
+}
+[data-reveal-state="in"] {
+  animation: reveal-up 0.65s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+}
+[data-reveal-state="in"][data-reveal-i="1"] {
+  animation-delay: 70ms;
+}
+[data-reveal-state="in"][data-reveal-i="2"] {
+  animation-delay: 140ms;
+}
+[data-reveal-state="in"][data-reveal-i="3"] {
+  animation-delay: 210ms;
+}
+[data-reveal-state="in"][data-reveal-i="4"] {
+  animation-delay: 280ms;
+}
+[data-reveal-state="in"][data-reveal-i="5"] {
+  animation-delay: 350ms;
+}
+@media print {
+  [data-reveal-state="pending"] {
+    opacity: 1 !important;
+  }
+}
+
+/*
+ * The FAQ answers slide open and shut. ::details-content and interpolate-size are Chromium for now;
+ * a browser without the pseudo-element drops the whole rule and opens instantly, as before.
+ */
+.faq-item {
+  interpolate-size: allow-keywords;
+}
+.faq-item::details-content {
+  block-size: 0;
+  overflow-y: clip;
+  transition:
+    block-size 0.3s cubic-bezier(0.2, 0.7, 0.2, 1),
+    content-visibility 0.3s allow-discrete;
+}
+.faq-item[open]::details-content {
+  block-size: auto;
 }

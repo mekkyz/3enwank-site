@@ -5,7 +5,7 @@ import type { TrustInfo } from "@/components/trust";
 import { loadCatalogue, type Catalogue } from "@/lib/catalogue";
 import { ASSISTANT_PREVIEW } from "@/lib/site";
 import { catalogueLocale, type Locale } from "@/lib/i18n";
-import { fill, messagesFor, type Messages } from "@/messages";
+import { messagesFor, type Messages } from "@/messages";
 
 /** Plans the pages single out, by catalogue slug; a slug that is not in the catalogue simply highlights nothing. */
 export const HIGHLIGHT: Record<"hosting" | "build" | "care", string> = { hosting: "hosting-m", build: "business-website", care: "care-plus" };
@@ -25,11 +25,6 @@ export async function screenContext(locale: Locale): Promise<{ t: Messages; cata
   };
   const trust: TrustInfo = { taxId: catalogue.company.taxId, commercialRegistry: catalogue.company.commercialRegistry };
   return { t: messagesFor(locale), catalogue, company, trust };
-}
-
-/** The one VAT sentence, shown once near every price list. */
-export function vatLine(t: Messages, catalogue: Catalogue): string {
-  return fill(t.common.vatIncluded, { rate: catalogue.vat.rateBp / 100 });
 }
 
 /** The store's public API, next to its catalogue endpoint. */

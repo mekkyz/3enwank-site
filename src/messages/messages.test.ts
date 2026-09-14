@@ -1,6 +1,8 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { describe, expect, it } from "vitest";
+import { fallbackCatalogue } from "@/lib/catalogue";
 import { locales } from "@/lib/i18n";
+import { heroFacts, vatLine } from "@/lib/vat";
 import { fill, messagesFor } from "./index";
 
 type Tree = { [k: string]: unknown };
@@ -36,12 +38,33 @@ describe("message placeholders", () => {
     }
   });
 
-  it("uses {legalName}, {version} and {rate} where the screens fill them", () => {
+  it("uses {legalName} and {version} where the screens fill them", () => {
     for (const locale of locales) {
       const t = messagesFor(locale);
       expect(t.about.lede, locale).toContain("{legalName}");
       expect(t.terms.intro, locale).toContain("{version}");
+    }
+  });
+
+  it("states VAT once near prices with the catalogue's rate, and not at all while the business is not registered", () => {
+    /*
+     * This used to only check that vatIncluded carries {rate}. The business is below Egypt's VAT
+     * registration threshold, so the catalogue publishes rateBp 0 until the owner flips registration
+     * on, and the sentence must then not appear rather than read "0% VAT". The dictionary keeps the
+     * sentence, with the placeholder and no rate typed into it, and the screens render it only when
+     * the rate is above zero (lib/vat.ts); both halves are what a flip relies on.
+     */
+    const registered = { ...fallbackCatalogue(), vat: { rateBp: 1400, pricesIncludeVat: true } };
+    const unregistered = { ...registered, vat: { rateBp: 0, pricesIncludeVat: true } };
+    for (const locale of locales) {
+      const t = messagesFor(locale);
       expect(t.common.vatIncluded.match(/\{rate\}/g), locale).toHaveLength(1);
+      expect(t.common.vatIncluded, locale).not.toMatch(/\d/);
+      expect(vatLine(t, registered), locale).toContain("14");
+      expect(vatLine(t, unregistered), locale).toBeNull();
+      // The hero line is three facts in both states, so the layout does not move with the flip.
+      expect(heroFacts(t, registered), locale).toHaveLength(3);
+      expect(heroFacts(t, unregistered), locale).toHaveLength(3);
     }
   });
 });

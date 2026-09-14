@@ -6,7 +6,8 @@ import { deliveryFrom, depositSplit, localizedFeatures, localizedSummary, summar
 import { pageMetadata } from "@/lib/metadata";
 import { anchorFor, storeLink, type Locale } from "@/lib/i18n";
 import { fill, messagesFor } from "@/messages";
-import { HIGHLIGHT, loc, screenContext, vatLine } from "./shared";
+import { HIGHLIGHT, loc, screenContext } from "./shared";
+import { vatLine } from "@/lib/vat";
 
 export const websites = {
   metadata(locale: Locale) {
@@ -15,12 +16,13 @@ export const websites = {
   },
   async render(locale: Locale) {
     const { t, catalogue, company, trust } = await screenContext(locale);
+    const vat = vatLine(t, catalogue);
     const packages = catalogue.products.build;
     return (
       <Shell locale={locale} page="websites" storeUrl={catalogue.store.url} legalName={company.legalName} supportEmail={company.contactEmail} trust={trust} assistantEnabled={catalogue.assistant.enabled} turnstileSiteKey={catalogue.assistant.turnstileSiteKey}>
         <PageIntro kicker={t.websites.title} title={t.websites.h2} lede={t.websites.lede} />
         <Section>
-          <p className="mb-8 text-sm text-muted">{vatLine(t, catalogue)}</p>
+          {vat ? <p className="mb-8 text-sm text-muted">{vat}</p> : null}
           {packages.length ? (
             <ol className="grid gap-5 pt-3 sm:grid-cols-2 lg:grid-cols-3">
               {packages.map((p) => {

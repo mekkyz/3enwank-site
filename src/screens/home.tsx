@@ -12,7 +12,8 @@ import { anchorFor, pathFor, storeLink, type Locale } from "@/lib/i18n";
 import { WHATSAPP_NUMBER } from "@/lib/site";
 import { messagesFor, type Messages } from "@/messages";
 import type { Catalogue, Product } from "@/lib/catalogue";
-import { HIGHLIGHT, assistantOn, domainSearchLabels, loc, screenContext, storeApi, vatLine } from "./shared";
+import { HIGHLIGHT, assistantOn, domainSearchLabels, loc, screenContext, storeApi } from "./shared";
+import { heroFacts, vatLine } from "@/lib/vat";
 
 /**
  * Home: hero, the four products, what every account includes, three plans of each family on three
@@ -26,6 +27,8 @@ export const home = {
   },
   async render(locale: Locale) {
     const { t, catalogue, company, trust } = await screenContext(locale);
+    const vat = vatLine(t, catalogue);
+    const facts = heroFacts(t, catalogue);
     /*
      * The three families, in the order a visitor meets them in the menu, three plans each and three
      * specs on each plan. Every tier used to be listed here, which put six hosting plans on the page
@@ -154,12 +157,16 @@ export const home = {
                * lead the next fact instead, which put a separator at the head of the second line
                * every time the line wrapped: at 360 in English and at 360, 375 and 390 in Arabic.
                * A separator can end a line like a hyphen, it cannot open one.
+               *
+               * The third fact follows the catalogue: "VAT included" is only said while the business
+               * is VAT-registered (see lib/vat.ts), and a fact that holds either way stands in for it
+               * otherwise, so the line is three items long in both states.
                */}
               <ul className="rise-4 mt-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm font-semibold text-muted sm:mt-6">
-                {t.home.facts.map((f, i) => (
+                {facts.map((f, i) => (
                   <li key={f}>
                     {f}
-                    {i < t.home.facts.length - 1 ? (
+                    {i < facts.length - 1 ? (
                       <span aria-hidden="true" className="ps-2">
                         ·
                       </span>
@@ -217,7 +224,7 @@ export const home = {
                 panel: <PlanCards items={family.items} cycle={family.cycle} specs={family.specs} link={family.link} highlight={family.highlight} locale={locale} t={t} />,
               }))}
             />
-            <p className="mt-4 text-sm text-muted">{vatLine(t, catalogue)}</p>
+            {vat ? <p className="mt-4 text-sm text-muted">{vat}</p> : null}
           </Section>
         ) : null}
 

@@ -4,7 +4,8 @@ import { Shell } from "@/components/shell";
 import { pageMetadata } from "@/lib/metadata";
 import type { Locale } from "@/lib/i18n";
 import { messagesFor } from "@/messages";
-import { HIGHLIGHT, screenContext, vatLine } from "./shared";
+import { HIGHLIGHT, screenContext } from "./shared";
+import { vatLine } from "@/lib/vat";
 
 export const care = {
   metadata(locale: Locale) {
@@ -13,12 +14,13 @@ export const care = {
   },
   async render(locale: Locale) {
     const { t, catalogue, company, trust } = await screenContext(locale);
+    const vat = vatLine(t, catalogue);
     const plans = catalogue.products.care;
     return (
       <Shell locale={locale} page="care" storeUrl={catalogue.store.url} legalName={company.legalName} supportEmail={company.contactEmail} trust={trust} assistantEnabled={catalogue.assistant.enabled} turnstileSiteKey={catalogue.assistant.turnstileSiteKey}>
         <PageIntro kicker={t.care.title} title={t.care.h2} lede={t.care.lede} />
         <Section>
-          <p className="mb-8 text-sm text-muted">{vatLine(t, catalogue)}</p>
+          {vat ? <p className="mb-8 text-sm text-muted">{vat}</p> : null}
           {plans.length ? (
             <ul className="grid gap-5 pt-3 sm:grid-cols-2 lg:grid-cols-3">
               {plans.map((p) => (

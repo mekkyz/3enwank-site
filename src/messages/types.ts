@@ -47,7 +47,7 @@ export type Messages = {
     order: string;
     choose: string;
     details: string;
-    /** Exactly one {rate}. Shown once near every price list. */
+    /** Exactly one {rate}. Shown once near every price list, and only while vat.rateBp is above zero (lib/vat.ts). */
     vatIncluded: string;
     renewsAt: string;
     currency: string;
@@ -70,8 +70,16 @@ export type Messages = {
     metaTitle: string;
     ctaPlans: string;
     ctaBuild: string;
-    /** The proof line under the hero buttons. Three short facts, joined by middots; it has to stay one line on a laptop. */
+    /**
+     * The proof line under the hero buttons: three short facts joined by middots; it has to stay one
+     * line on a laptop. `facts` carries the two that hold whatever the catalogue says; the third is
+     * factVat while the catalogue's vat.rateBp is above zero and factNoVat otherwise, because the
+     * business is only VAT-registered once the owner flips it on, and "VAT included" before that
+     * would be a claim the invoice contradicts. Both are short, so the line keeps its shape.
+     */
     facts: string[];
+    factVat: string;
+    factNoVat: string;
     /** What every account runs on; the hosting page prints it as one line. */
     productsTitle: string;
     products: { hosting: ProductTeaser; websites: ProductTeaser; care: ProductTeaser; domains: ProductTeaser };
@@ -106,6 +114,9 @@ export type Messages = {
     compareCaption: string;
     plan: string;
     perYear: string;
+    /** Row labels for the compare table once a plan carries a renewal price. */
+    firstYear: string;
+    renewsAt: string;
     /** Exactly one {price}; the hosting page renders the live price in its place. */
     empty: string;
   };
@@ -240,6 +251,3 @@ export type Messages = {
    */
   features: { labels: Record<string, string>; values: Record<string, string>; texts: Record<string, string>; summaries: Record<string, string> };
 };
-    /** Row labels for the compare table once a plan carries a renewal price. */
-    firstYear: string;
-    renewsAt: string;

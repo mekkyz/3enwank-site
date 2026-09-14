@@ -79,7 +79,9 @@ export const en: Messages = {
     metaTitle: "Hosting, websites and domains, servers in Germany",
     ctaPlans: "See hosting plans",
     ctaBuild: "Build me a website",
-    facts: ["Free migration", "No setup fees", "VAT included"],
+    facts: ["Free migration", "No setup fees"],
+    factVat: "VAT included",
+    factNoVat: "Prices in EGP and USD",
     productsTitle: "What we do",
     products: {
       /*
@@ -134,6 +136,8 @@ export const en: Messages = {
     compareCaption: "Hosting plans compared feature by feature",
     plan: "Plan",
     perYear: "Per year",
+    firstYear: "First year",
+    renewsAt: "Renews at",
     empty: "Hosting plans are being updated. Check the customer area or contact us.",
   },
   websites: {
@@ -262,7 +266,8 @@ export const en: Messages = {
        * where their site actually runs now that the home page names a country.
        */
       { title: "We manage the servers ourselves", body: "No reselling. The machines your account runs on are ours, in a data centre in Germany. We patch them, and every account is copied off the server nightly." },
-      { title: "Prices are the whole price", body: "Every price is quoted with VAT included and billed once a year. No setup fees. Renewals are at the price on the invoice." },
+      /* "The whole amount you pay", not "with VAT included": true whether or not the business is VAT-registered, which the catalogue decides, not this file. */
+      { title: "Prices are the whole price", body: "Every price is the whole amount you pay, billed once a year. No setup fees. Renewals are at the price on the invoice." },
       { title: "Moving in is free", body: "We move your site and your email, and check that everything works before your domain is switched over." },
       { title: "Straight answers", body: "You write in English or Arabic and get a reply from a real person who can fix the problem." },
     ],
@@ -323,7 +328,12 @@ export const en: Messages = {
     title: "Terms of service",
     intro: "These terms apply to every hosting plan, website build, care plan and domain name bought from {legalName} (\"3enwank\"). Version {version}. By placing an order in the customer area you accept them.",
     sections: [
-      { title: "Prices and billing", body: ["Prices are shown in Egyptian pounds and US dollars with VAT included. Invoices are paid by bank transfer, using the account details printed on the invoice. Hosting, care plans and domains are billed once a year in advance. Where a plan advertises a price below its normal price, that lower price buys the first year only and the plan renews at the normal price, which is shown on the plan and on your first invoice. The renewal invoice is issued before the due date.", "Website builds are invoiced in two parts: a deposit to start and the rest when you approve the work. Work starts when the deposit is paid."] },
+      /*
+       * "Where value added tax applies" rather than "with VAT included": the business is below the
+       * registration threshold and charges no VAT until the owner flips registration on, and a term
+       * that says VAT is charged would be false until then. This sentence is true in both states.
+       */
+      { title: "Prices and billing", body: ["Prices are shown in Egyptian pounds and US dollars and are the full amount payable. Where value added tax applies, it is included in the price shown and stated on the invoice. Invoices are paid by bank transfer, using the account details printed on the invoice. Hosting, care plans and domains are billed once a year in advance. Where a plan advertises a price below its normal price, that lower price buys the first year only and the plan renews at the normal price, which is shown on the plan and on your first invoice. The renewal invoice is issued before the due date.", "Website builds are invoiced in two parts: a deposit to start and the rest when you approve the work. Work starts when the deposit is paid."] },
       { title: "Hosting", body: ["A hosting plan gives you one cPanel account with the storage, bandwidth, email and database limits of the plan. Accounts are for lawful content only. Spam, phishing, malware and anything that harms other customers on the server leads to suspension without refund.", "An unpaid hosting renewal is suspended five days after the due date and can be reactivated by paying the invoice. Care plans and website builds are never suspended for late payment; upkeep stops. We do not delete accounts automatically. A cancelled account is removed after you tell us, or after the cancellation grace period on your invoice."] },
       { title: "Backups", body: ["Every account is copied off the server nightly and kept for three months. Backups are a safety net, not a substitute for your own copy. Keep one of anything you cannot afford to lose."] },
       { title: "Care plans", body: ["A care plan covers updates, malware scanning, the number of content changes on the plan and a first-response time for requests. A content change is one clear edit that takes half an hour or less with the existing design and content. New pages, new features and design work are quoted separately."] },
@@ -338,7 +348,7 @@ export const en: Messages = {
     intro: "How {legalName} (\"3enwank\") handles personal data on this website and in the customer area. Version {version}.",
     sections: [
       { title: "This website", body: ["These pages run no analytics and load nothing from third parties. The only requests your browser makes are to this site itself. They set no cookies of their own, but the customer area at 3enwank.com/account is part of the same address, so if you are signed in your session cookie and your cart cookie travel with every request here too. Your session and the contents of your cart are read only by the customer area. These pages read one thing: how many items are in your cart, which the customer area publishes separately for the basket in the menu bar. Your choice of currency and of light or dark is kept in your browser and is never sent anywhere."] },
-      { title: "The customer area", body: ["When you open an account at 3enwank.com/account we store your name, email address, phone or WhatsApp number, address and, for businesses, the company name and tax registration number, because tax invoices require them. The customer area uses one session cookie to keep you signed in and nothing else."] },
+      { title: "The customer area", body: ["When you open an account at 3enwank.com/account we store your name, email address, phone or WhatsApp number, address and, for businesses, the company name and tax registration number, because invoices reported to the tax authority require them. The customer area uses one session cookie to keep you signed in and nothing else."] },
       /*
        * Where the data lives, which this policy never said. It is worth a section of its own now that
        * the site names a country in public: the servers and the backups on one side, and Egypt on the
@@ -355,7 +365,7 @@ export const en: Messages = {
     title: "Delivery policy",
     intro: "Everything {legalName} (\"3enwank\") sells is delivered online. Nothing is posted or shipped, and there is no delivery charge. Version {version}.",
     sections: [
-      { title: "Nothing is shipped", body: ["Hosting plans, website builds, care plans and domain names are digital services. They are delivered to the customer area at 3enwank.com/account and to your email address. There is no physical product, no courier and no shipping cost. The address you give us is the address on your tax invoice, not a delivery address."] },
+      { title: "Nothing is shipped", body: ["Hosting plans, website builds, care plans and domain names are digital services. They are delivered to the customer area at 3enwank.com/account and to your email address. There is no physical product, no courier and no shipping cost. The address you give us is the address on your invoice, not a delivery address."] },
       { title: "Hosting and care plans", body: ["A hosting plan is set up as soon as the invoice is paid, and the login details go to your account email. A care plan starts the same day and runs for the year on the invoice.", "An invoice paid by bank transfer is activated as soon as the transfer is confirmed, usually the same business day."] },
       { title: "Domain names", body: ["A domain is sent to the registrar as soon as the invoice is paid. Most names are live within minutes, and some extensions take longer at the registry. You get an email as soon as the name is live. If the registry refuses the name, that line is refunded in full."] },
       { title: "Website builds", body: ["Every package states its own delivery time on its page, from a few working days for a landing page to several weeks for a store. The time starts when the deposit is paid and the text and images we asked for are with us.", "A build is delivered on your own hosting or on a plan you buy from us. You see the work and approve it before it goes live."] },
@@ -368,7 +378,7 @@ export const en: Messages = {
     intro: "How to cancel a service bought from {legalName} (\"3enwank\"), and when money is returned. Version {version}.",
     sections: [
       { title: "Cancelling", body: ["Write to the support address below, or open a ticket in the customer area, and say which service you want to cancel. It stays active until the end of the period you have paid for and is not renewed after that. Nothing is deleted on the day you cancel."] },
-      { title: "Refunds", body: ["A period you have already paid for is not refunded. If we cannot deliver what you bought, you get the unused amount back, either to the way you paid or as credit on your account, whichever you prefer.", "Invoices are tax documents and cannot be altered after they are issued, so a correction is made with a credit note."] },
+      { title: "Refunds", body: ["A period you have already paid for is not refunded. If we cannot deliver what you bought, you get the unused amount back, either to the way you paid or as credit on your account, whichever you prefer.", "Invoices are reported to the tax authority and cannot be altered after they are issued, so a correction is made with a credit note."] },
       { title: "Domain names", body: ["A domain is registered in your name at the registry on the day you pay, and the registry does not take it back, so a registered name is not refunded. If the registration fails, that line is refunded in full."] },
       { title: "Website builds", body: ["The deposit pays for the work that starts when you pay it. If you stop a build after work has started, the deposit stays with us, and anything invoiced but not yet started is refunded."] },
       { title: "How to ask", body: ["Write to the support address below with the invoice number and what you want refunded. We answer within one working day. Money goes back the way it came, and your bank sets how long it takes to appear."] },
@@ -381,5 +391,3 @@ export const en: Messages = {
   },
   features: { labels: {}, values: {}, texts: {}, summaries: {} },
 };
-    firstYear: "First year",
-    renewsAt: "Renews at",

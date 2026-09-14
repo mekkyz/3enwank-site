@@ -526,3 +526,5 @@ export const ar: Messages = {
     },
   },
 };
+    firstYear: "أول سنة",
+    renewsAt: "سعر التجديد",

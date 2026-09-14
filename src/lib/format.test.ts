@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { fallbackCatalogue } from "./catalogue";
-import { cardFeatures, compareRows, deliveryFrom, depositSplit, formatPrice, localizedFeatures, localizedSummary, localizedValue, noteFeatures, parseFeature, summaryWithoutDelivery } from "./format";
+import { cardFeatures, compareRows, deliveryFrom, depositSplit, domainQuery, formatPrice, localizedFeatures, localizedSummary, localizedValue, normalPrices, noteFeatures, parseFeature, summaryWithoutDelivery } from "./format";
 import { messagesFor } from "@/messages";
 
 describe("prices", () => {
@@ -134,5 +134,27 @@ describe("value normalisation", () => {
     const product = { ...fallbackCatalogue().products.hosting[0]!, features: { en: ["Bandwidth: 8 GB / month", "Storage: 1 GB NVMe"], ar: ["Bandwidth: 8 GB / month", "Storage: 1 GB NVMe"] } };
     expect(localizedFeatures(product, "ar", messagesFor("ar"))[0]).toEqual({ label: "الترافيك في الشهر", value: "8 GB" });
     expect(localizedFeatures(product, "en", messagesFor("en"))[0]).toEqual({ label: "Bandwidth", value: "8 GB / month" });
+  });
+});
+
+describe("renewal prices", () => {
+  it("prefers the store's published renewal prices and falls back to the feature line", () => {
+    const xs = fallbackCatalogue().products.hosting[0]!;
+    expect(normalPrices(xs)).toEqual(xs.renewalPrices);
+    expect(normalPrices({ features: { en: ["Billed once a year. Normal price 2,499 EGP - you pay 1,999 EGP per year"], ar: [] }, renewalPrices: {} })).toEqual({ EGP: { gross: 249900, formatted: "EGP 2,499" } });
+    expect(normalPrices({ features: { en: ["Storage: 1 GB"], ar: [] }, renewalPrices: {} })).toEqual({});
+  });
+});
+
+describe("domain query", () => {
+  it("reduces a pasted address to the name and leaves a plain name alone", () => {
+    expect(domainQuery("https://www.mybakery.com/menu?x=1#top")).toBe("mybakery.com");
+    expect(domainQuery("HTTP://MyBakery.COM/")).toBe("mybakery.com");
+    expect(domainQuery("  mybakery.com. ")).toBe("mybakery.com");
+    expect(domainQuery("mybakery")).toBe("mybakery");
+    // Only the leading www. is a browser habit; a name that is www-something is a name.
+    expect(domainQuery("wwwshop.com")).toBe("wwwshop.com");
+    // Still not a domain: that verdict stays with the store, which answers with its own message.
+    expect(domainQuery("foo bar!!")).toBe("foo bar!!");
   });
 });

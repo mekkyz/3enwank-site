@@ -14,7 +14,8 @@ export function PlanCard({ product, locale, highlight = false, cycleLabel, cta, 
   const name = product.name[locale === "en" ? "en" : "ar"] || product.name.en;
   return (
     <Card highlight={highlight} className="flex h-full flex-col" as="article">
-      {highlight ? <p className="absolute -top-3.5 start-6 rounded-full bg-brand px-2.5 py-1 text-[11px] font-extrabold uppercase tracking-wider text-white">{t.common.mostChosen}</p> : null}
+      {/* Brand-strong on brand-soft, as the home page's pill: white on the dark theme's brand purple was 3.37:1 at 11px. */}
+      {highlight ? <p className="absolute -top-3.5 start-6 rounded-full bg-brand-soft px-2.5 py-1 text-[11px] font-extrabold uppercase tracking-wider text-brand-strong">{t.common.mostChosen}</p> : null}
       <h3 className="text-2xl font-extrabold text-ink">
         <Val>{name}</Val>
       </h3>
@@ -64,6 +65,7 @@ export function CompareTable({ products, locale, caption, exclude = [], perYear,
   const rows: CompareRow[] = compareRows(products, locale, t, exclude);
   if (products.length < 2 || rows.length === 0) return null;
   const name = (p: Product) => p.name[locale === "en" ? "en" : "ar"] || p.name.en;
+  const anyRenewal = products.some((p) => Object.keys(normalPrices(p)).length > 0);
   return (
     <div className="overflow-x-auto rounded-xl border border-line bg-panel">
       <table className="w-full min-w-[44rem] text-sm">
@@ -93,16 +95,35 @@ export function CompareTable({ products, locale, caption, exclude = [], perYear,
               ))}
             </tr>
           ))}
+          {/*
+           * Two rows, not one. The first-year price and the renewal price are the two figures a
+           * visitor needs, and putting the "Renews at" note under the price wrapped a cell the
+           * render check requires to stay on one line. As separate rows each cell is one figure,
+           * and the first row is only called "First year" when something actually renews at a
+           * different price; on a catalogue without renewal prices it stays "Per year".
+           */}
           <tr className="border-t-2 border-line bg-surface-alt">
             <th scope="row" className="nowrap px-4 py-3 text-start font-semibold text-muted">
-              {perYear}
+              {anyRenewal ? t.hosting.firstYear : perYear}
             </th>
             {products.map((p) => (
               <td key={p.slug} className="nowrap px-4 py-3 text-center">
-                <Price prices={p.prices} locale={locale} fallback={t.common.notAvailable} className="font-extrabold text-ink" />
+                <Price prices={p.prices} locale={locale} fallback={t.common.notAvailable} className="justify-center font-extrabold text-ink" />
               </td>
             ))}
           </tr>
+          {anyRenewal ? (
+            <tr className="border-b border-line bg-surface-alt">
+              <th scope="row" className="nowrap px-4 py-2.5 text-start font-medium text-muted">
+                {t.hosting.renewsAt}
+              </th>
+              {products.map((p) => (
+                <td key={p.slug} className="nowrap px-4 py-2.5 text-center">
+                  <Price prices={normalPrices(p)} locale={locale} fallback={t.common.notAvailable} className="justify-center font-semibold text-ink" />
+                </td>
+              ))}
+            </tr>
+          ) : null}
           <tr>
             <td className="px-4 py-3" />
             {products.map((p) => (

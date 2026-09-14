@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useRef, useState, type FormEvent } from "react";
+import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import { turnstileToken } from "@/lib/turnstile";
 
 /** Every string the form shows, passed from the server so no dictionary reaches the browser bundle. */
@@ -41,6 +41,9 @@ export function reachLooksReal(raw: string): boolean {
 
 type State = "idle" | "sending" | "sent" | "failed" | "limited" | "blocked";
 
+/** One thing wrong, and which field it is about, so the field can be marked as well as the list. */
+type Fault = { field: "need" | "name" | "reach"; message: string };
+
 export function LeadForm({
   endpoint,
   labels,
@@ -60,24 +63,36 @@ export function LeadForm({
   const [reach, setReach] = useState("");
   const [note, setNote] = useState("");
   const [state, setState] = useState<State>("idle");
-  const [errors, setErrors] = useState<string[]>([]);
+  const [errors, setErrors] = useState<Fault[]>([]);
   const errorBox = useRef<HTMLDivElement | null>(null);
   // Left empty by people, filled in by anything submitting every field it finds.
   const honeypot = useRef<HTMLInputElement | null>(null);
 
+  /*
+   * Say it in text and move to it, rather than turning three boxes red and hoping. Done here and
+   * not in submit: the box is only rendered once `errors` is set, so a focus() in the same tick as
+   * setErrors() ran against a null ref and the first failed submit moved nothing. On a phone the
+   * box also sits five fields above the button, out of the viewport, so it is scrolled to as well.
+   * A new array on every failed submit, so a second tap re-runs this and brings the box back.
+   */
+  useEffect(() => {
+    if (!errors.length || !errorBox.current) return;
+    errorBox.current.focus({ preventScroll: true });
+    errorBox.current.scrollIntoView({ block: "nearest" });
+  }, [errors]);
+  const faulty = (field: Fault["field"]) => errors.some((f) => f.field === field);
+  /** The id of the list item that names the fault, for aria-describedby; undefined when the field is fine. */
+  const describedBy = (field: Fault["field"]) => (faulty(field) ? `${id}-fault-${field}` : undefined);
+
   const submit = async (e: FormEvent) => {
     e.preventDefault();
-    const found: string[] = [];
-    if (!need) found.push(labels.errors.need);
-    if (!name.trim()) found.push(labels.errors.name);
-    if (!reach.trim()) found.push(labels.errors.reach);
-    else if (!reachLooksReal(reach)) found.push(labels.errors.reachFormat);
+    const found: Fault[] = [];
+    if (!need) found.push({ field: "need", message: labels.errors.need });
+    if (!name.trim()) found.push({ field: "name", message: labels.errors.name });
+    if (!reach.trim()) found.push({ field: "reach", message: labels.errors.reach });
+    else if (!reachLooksReal(reach)) found.push({ field: "reach", message: labels.errors.reachFormat });
     setErrors(found);
-    if (found.length) {
-      // Say it in text and move to it, rather than turning three boxes red and hoping.
-      errorBox.current?.focus();
-      return;
-    }
+    if (found.length) return;
     setState("sending");
     try {
       // Null when the challenge is off, blocked, or slow. Omitted rather than sent as null: the
@@ -142,8 +157,9 @@ export function LeadForm({
    * painted, which used to nudge the text by a pixel as you clicked in.
    */
   // Pill for the two single-line fields; a pill textarea is not a shape, so that one is a card.
+  // A field named in the error list takes the danger ring, so it is also findable when tabbing back through.
   const field =
-    "block w-full bg-surface px-4 py-3 text-sm text-ink ring-1 ring-line-strong transition placeholder:text-faint focus:outline-none focus:ring-2 focus:ring-brand";
+    "block w-full bg-surface px-4 py-3 text-sm text-ink ring-1 ring-line-strong transition placeholder:text-faint focus:outline-none focus:ring-2 focus:ring-brand aria-invalid:ring-danger";
 
   return (
     <form onSubmit={submit} noValidate className="space-y-6">
@@ -156,14 +172,17 @@ export function LeadForm({
         >
           <p className="font-bold text-ink">{labels.errorTitle}</p>
           <ul className="mt-2 list-disc space-y-1 ps-5 text-muted">
-            {errors.map((m) => (
-              <li key={m}>{m}</li>
+            {errors.map((f) => (
+              <li key={f.message} id={`${id}-fault-${f.field}`}>
+                {f.message}
+              </li>
             ))}
           </ul>
         </div>
       ) : null}
 
-      <fieldset>
+      {/* aria-invalid is supported by neither a group nor a radio, so the fieldset points at the message and the chips take the danger ring. */}
+      <fieldset aria-describedby={describedBy("need")}>
         <legend className="mb-2 block text-sm font-bold text-ink">{labels.needLegend}</legend>
         {/*
          * Two columns at every width. Three columns made each chip too narrow for its own label, so
@@ -193,7 +212,7 @@ export function LeadForm({
                 className={`flex min-h-12 items-center gap-2.5 rounded-full px-3.5 text-sm font-bold transition peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-brand ${
                   need === k
                     ? "bg-brand-soft text-brand-strong ring-2 ring-brand"
-                    : "bg-surface text-muted ring-1 ring-line-strong hover:bg-brand-soft/40 hover:text-ink hover:ring-brand"
+                    : `bg-surface text-muted ring-1 ${faulty("need") ? "ring-danger" : "ring-line-strong"} hover:bg-brand-soft/40 hover:text-ink hover:ring-brand`
                 }`}
               >
                 <span
@@ -221,6 +240,8 @@ export function LeadForm({
             dir="auto"
             autoComplete="name"
             maxLength={80}
+            aria-invalid={faulty("name") || undefined}
+            aria-describedby={describedBy("name")}
             className={`${field} min-h-12 rounded-full`}
           />
         </div>
@@ -237,6 +258,8 @@ export function LeadForm({
             className={`${field} min-h-12 rounded-full text-start`}
             autoComplete="off"
             maxLength={120}
+            aria-invalid={faulty("reach") || undefined}
+            aria-describedby={describedBy("reach")}
           />
         </div>
       </div>

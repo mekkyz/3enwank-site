@@ -1,6 +1,11 @@
 import { z } from "zod";
 import fallbackJson from "../../catalogue.fallback.json";
+import { currencies, type Currency, type Money } from "./money";
 import { CATALOGUE_AUTH, CATALOGUE_SOURCE, CATALOGUE_URL } from "./site";
+
+// Re-exported so nothing that imports them from here has to move; the client islands import
+// ./money directly, which is what keeps zod out of the browser bundle.
+export { currencies, type Currency, type Money };
 
 /**
  * The platform's public catalogue (GET /api/public/catalogue on the store; contract in the platform
@@ -9,11 +14,9 @@ import { CATALOGUE_AUTH, CATALOGUE_SOURCE, CATALOGUE_URL } from "./site";
  * printed in the build log. Refresh the fallback with the platform's scripts/export-catalogue.ts.
  */
 const localized = z.object({ en: z.string(), ar: z.string() });
-const money = z.object({ gross: z.number().int().nonnegative(), formatted: z.string() });
+// Typed against Money so the schema cannot drift from the shape the islands are compiled against.
+const money: z.ZodType<Money> = z.object({ gross: z.number().int().nonnegative(), formatted: z.string() });
 const prices = z.object({ EGP: money.optional(), USD: money.optional() });
-
-export const currencies = ["EGP", "USD"] as const;
-export type Currency = (typeof currencies)[number];
 
 const product = z.object({
   slug: z.string().min(1),
@@ -89,7 +92,6 @@ export const catalogueSchema = z.object({
 export type Catalogue = z.infer<typeof catalogueSchema>;
 export type Product = Catalogue["products"]["hosting"][number];
 export type Tld = Catalogue["tlds"][number];
-export type Money = z.infer<typeof money>;
 
 export type CatalogueSource = "remote" | "fallback";
 export type LoadedCatalogue = { catalogue: Catalogue; source: CatalogueSource; reason: string | null };

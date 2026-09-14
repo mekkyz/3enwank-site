@@ -1,5 +1,6 @@
-import type { Currency, Money, Product } from "./catalogue";
+import type { Product } from "./catalogue";
 import { catalogueLocale, dirFor, type Locale } from "./i18n";
+import type { Currency, Money } from "./money";
 import type { Messages } from "@/messages";
 
 /**
@@ -157,4 +158,23 @@ export function normalPrices(product: Pick<Product, "features" | "renewalPrices"
     }
   }
   return out;
+}
+
+/**
+ * What a visitor typed into the domain box, reduced to the name they meant.
+ *
+ * A pasted address bar arrives as "https://www.mybakery.com/menu?x=1"; the store's parser rightly
+ * calls that invalid, and the visitor was then told the check had failed. Scheme, a leading "www.",
+ * and anything from the first slash, query or hash on are dropped; a trailing dot goes too, as the
+ * ending picker already did. Whatever is left is still the store's to judge.
+ */
+export function domainQuery(raw: string): string {
+  return raw
+    .trim()
+    .toLowerCase()
+    .replace(/^[a-z][a-z0-9+.-]*:\/\//, "")
+    .replace(/[/?#].*$/, "")
+    .replace(/^www\./, "")
+    .replace(/\.$/, "")
+    .trim();
 }

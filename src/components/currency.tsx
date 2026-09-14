@@ -1,7 +1,8 @@
 "use client";
 
-import { createContext, useContext, useState, useSyncExternalStore, type ReactNode } from "react";
-import { currencies, type Currency, type Money } from "@/lib/catalogue";
+import { createContext, useContext, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
+// From money.ts, not catalogue.ts: this is a client island, and the catalogue module carries zod.
+import { currencies, type Currency, type Money } from "@/lib/money";
 import { formatPrice } from "@/lib/format";
 import type { Locale } from "@/lib/i18n";
 import { CurrencyIcon } from "./icons";
@@ -119,9 +120,23 @@ export function Price({
  */
 export function CurrencySwitch({ label }: { label: string }) {
   const { currency, setCurrency } = useCurrency();
+  const menu = useRef<HTMLDetailsElement | null>(null);
+  const summary = useRef<HTMLElement | null>(null);
+  /*
+   * Choosing closes the menu. A <details> only closes itself on a click outside or on Escape (the
+   * script in root.tsx), so after a choice the list stayed open over the page with the pressed
+   * button highlighted, and a keyboard user was left inside a menu that had already done its job.
+   * Focus goes back to the summary, which is where it was before the menu opened.
+   */
+  const choose = (c: Currency) => {
+    setCurrency(c);
+    if (menu.current) menu.current.open = false;
+    summary.current?.focus();
+  };
   return (
-    <details data-menu className="relative">
+    <details data-menu ref={menu} className="relative">
       <summary
+        ref={summary}
         className="flex min-h-11 cursor-pointer list-none items-center rounded-full px-1.5 text-sm font-bold text-muted hover:text-ink sm:px-2 [&::-webkit-details-marker]:hidden"
         aria-label={`${label}: ${currency}`}
         title={label}
@@ -133,7 +148,7 @@ export function CurrencySwitch({ label }: { label: string }) {
           <li key={c}>
             <button
               type="button"
-              onClick={() => setCurrency(c)}
+              onClick={() => choose(c)}
               aria-pressed={currency === c}
               className={`tabular block w-full whitespace-nowrap rounded-full px-3 py-1.5 text-start font-bold ${currency === c ? "bg-brand-soft text-brand-strong" : "text-muted hover:bg-brand-soft hover:text-ink"}`}
             >

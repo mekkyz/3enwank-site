@@ -240,3 +240,6 @@ export type Messages = {
    */
   features: { labels: Record<string, string>; values: Record<string, string>; texts: Record<string, string>; summaries: Record<string, string> };
 };
+    /** Row labels for the compare table once a plan carries a renewal price. */
+    firstYear: string;
+    renewsAt: string;

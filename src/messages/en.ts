@@ -381,3 +381,5 @@ export const en: Messages = {
   },
   features: { labels: {}, values: {}, texts: {}, summaries: {} },
 };
+    firstYear: "First year",
+    renewsAt: "Renews at",

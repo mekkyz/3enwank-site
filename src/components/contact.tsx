@@ -2,7 +2,7 @@ import { ButtonLink, Section, SectionHeader } from "./blocks";
 import { LeadForm, type LeadFormLabels } from "./lead-form";
 import { WhatsAppIcon } from "./icons";
 import type { Messages } from "@/messages";
-import type { Locale } from "@/lib/i18n";
+import { storeLink, type Locale } from "@/lib/i18n";
 
 /** wa.me takes a bare international number and a pre-written first message. */
 function waHref(number: string, text: string): string {
@@ -116,8 +116,13 @@ export function ContactSection({
             <div className="py-4 last:pb-0">
               <dt className={eyebrow}>{c.existing}</dt>
               <dd className="mt-1.5">
+                {/*
+                 * Through storeLink like every other store link on the site: the store keeps its
+                 * language in a cookie set from ?lang=, so a bare URL sent a first-time Arabic
+                 * visitor to an English login page. These two were the only bare ones.
+                 */}
                 <a
-                  href={`${storeUrl}/login`}
+                  href={storeLink(`${storeUrl}/login`, locale)}
                   rel="noopener"
                   className="inline-block text-sm font-bold text-brand-strong hover:text-brand"
                 >
@@ -144,7 +149,7 @@ export function ContactSection({
                     </li>
                   ) : null}
                   <li>
-                    <a href={`${storeUrl}/tickets`} rel="noopener" className="text-brand-strong hover:text-brand">
+                    <a href={storeLink(`${storeUrl}/tickets`, locale)} rel="noopener" className="text-brand-strong hover:text-brand">
                       {c.urgent.ticket}
                     </a>
                   </li>

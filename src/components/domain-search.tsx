@@ -3,8 +3,9 @@
 import { CheckIcon } from "@phosphor-icons/react/dist/ssr";
 import type { ReactNode } from "react";
 import { useCallback, useEffect, useId, useRef, useState, type FormEvent } from "react";
-import type { Currency } from "@/lib/catalogue";
-import { formatPrice } from "@/lib/format";
+// From money.ts, not catalogue.ts: this is a client island, and the catalogue module carries zod.
+import type { Currency } from "@/lib/money";
+import { domainQuery, formatPrice } from "@/lib/format";
 import type { Locale } from "@/lib/i18n";
 import { useCurrency } from "./currency";
 import { turnstileToken } from "@/lib/turnstile";
@@ -495,7 +496,7 @@ export function DomainSearch({
    */
   const pick = useCallback(
     (tld: string) => {
-      const base = query.trim().toLowerCase().replace(/\.$/, "");
+      const base = domainQuery(query);
       const label = base.includes(".") ? base.slice(0, base.indexOf(".")) : base;
       if (!label) {
         /*
@@ -517,9 +518,15 @@ export function DomainSearch({
   );
 
   function submit(e: FormEvent<HTMLFormElement>) {
-    const q = query.trim();
+    /*
+     * People paste what is in their address bar. "https://mybakery.com/menu" went to the store as
+     * typed, came back invalid, and the visitor was told the check had failed rather than that the
+     * scheme and path were the problem. The field shows what was actually searched.
+     */
+    const q = domainQuery(query);
     if (!q) return;
     e.preventDefault();
+    if (q !== query) setQuery(q);
     void run(q, currency);
   }
 
@@ -567,9 +574,18 @@ export function DomainSearch({
    * Seeded from ?added= for the no-JavaScript round trip, which comes back to this page.
    */
   const [added, setAdded] = useState<string[]>(initialAdded);
+  /**
+   * Why the store refused the last "Register", in the visitor's words. It used to be swallowed: the
+   * button flipped back to "Register" and nothing else moved, so a name taken between the search
+   * and the click, a full cart or domains switched off all looked like a button that does nothing.
+   * The store answers `{ ok: false, error: <code> }` with the same codes the no-JavaScript round
+   * trip already translates through labels.cartErrors.
+   */
+  const [addError, setAddError] = useState<string | null>(null);
   const add = useCallback(
     async (name: string) => {
       setAdded((prev) => (prev.includes(name) ? prev : [...prev, name]));
+      setAddError(null);
       try {
         const res = await fetch(cartUrl, {
           method: "POST",
@@ -577,15 +593,22 @@ export function DomainSearch({
           headers: { "Content-Type": "application/json", Accept: "application/json" },
           body: JSON.stringify({ name, years: 1 }),
         });
-        if (!res.ok) throw new Error(String(res.status));
+        if (!res.ok) {
+          // A body that is not JSON (a proxy error page, say) reads as no code, and no code is the generic failure.
+          const body = (await res.json().catch(() => null)) as { error?: unknown } | null;
+          const code = typeof body?.error === "string" ? body.error : "";
+          throw new Error(code);
+        }
         // Tell the basket in the bar without waiting for a navigation.
         window.dispatchEvent(new CustomEvent("enwank:cart"));
-      } catch {
-        // Put the button back rather than claim something is in a cart that it is not.
+      } catch (e) {
+        // Put the button back rather than claim something is in a cart that it is not, and say why.
         setAdded((prev) => prev.filter((n) => n !== name));
+        const code = e instanceof Error ? e.message : "";
+        setAddError(labels.cartErrors[code] ?? labels.error);
       }
     },
-    [cartUrl],
+    [cartUrl, labels],
   );
 
   const rowProps = { enabled, locale, cartUrl, searchPath, contactHref, labels, onAdd: add, onTransfer: transferThis };
@@ -743,7 +766,8 @@ export function DomainSearch({
       <div aria-live="polite" hidden={tab !== "register"}>
         {status === "error" ? <p className="mt-4 text-sm text-warn">{labels.error}</p> : null}
         {status === "limited" ? <p className="mt-4 text-sm text-warn">{labels.rateLimited}</p> : null}
-        {status === "invalid" ? <p className="mt-4 text-sm text-warn">{labels.error}</p> : null}
+        {/* Bad input is the visitor's to fix; the network-failure wording sent them off to retry the same name. */}
+        {status === "invalid" ? <p className="mt-4 text-sm text-warn">{labels.cartErrors.invalid ?? labels.error}</p> : null}
         {status === "loading" && !data ? (
           <div className="mt-6">
             <ul>
@@ -761,6 +785,7 @@ export function DomainSearch({
         ) : null}
         {data && (status === "done" || status === "loading") ? (
           <div className="mt-6">
+            {addError ? <p className="mb-3 rounded-2xl bg-warn-soft px-4 py-3 text-sm text-warn">{addError}</p> : null}
             {added.length ? (
               // What is in the cart, where the adding happens: the badge is up in the navigation bar,
               // which is off screen by the time a visitor has scrolled through forty endings.
@@ -833,6 +858,8 @@ export function DomainSearch({
             </SearchBar>
           </form>
           <div aria-live="polite">
+            {/* The same refusal, on the tab whose rows have their own "Register" buttons. */}
+            {addError && ideasStatus === "done" ? <p className="mt-3 rounded-2xl bg-warn-soft px-4 py-3 text-sm text-warn">{addError}</p> : null}
             {ideasStatus === "loading" ? (
               <ul className="mt-3">
                 {Array.from({ length: 5 }, (_, i) => (

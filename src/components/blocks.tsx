@@ -134,7 +134,10 @@ type ButtonVariant = "primary" | "secondary" | "white" | "outline";
 const VARIANTS: Record<ButtonVariant, string> = {
   primary: "btn-primary shadow-[0_10px_24px_-14px_var(--color-brand-ink)]",
   secondary: "border-[1.5px] border-line-strong bg-panel text-ink hover:border-brand hover:text-brand-strong",
-  white: "bg-white text-[#5e1eb8] hover:bg-[#f2eafd]",
+  // Its own focus ring. This variant only ever sits on the purple band, and the global ring
+  // (globals.css :focus-visible) is brand purple: 1.0:1 against the band in the light theme, so the
+  // only control in the band had no visible focus. White is what the band's text already is.
+  white: "bg-white text-[#5e1eb8] hover:bg-[#f2eafd] focus-visible:outline-white",
   outline: "border-[1.5px] border-brand text-brand-strong hover:bg-brand-soft",
 };
 

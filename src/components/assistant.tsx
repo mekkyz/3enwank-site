@@ -1,34 +1,35 @@
 "use client";
 
-import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
-import { CaretDownIcon, ChatCircleDotsIcon, XIcon } from "@phosphor-icons/react/dist/ssr";
-import type { Locale } from "@/lib/i18n";
+import { useEffect, useRef, useState, useSyncExternalStore, type FormEvent, type KeyboardEvent } from "react";
+import { ChatCircleDotsIcon, XIcon } from "@phosphor-icons/react/dist/ssr";
+import { contactHref, storeLink, type Locale } from "@/lib/i18n";
 import { turnstileToken } from "@/lib/turnstile";
 import { parseRichText, type Inline } from "@/lib/rich-text";
+import { HANDOFF_NOTE_MAX, buildHandoff, plainLine, ticketHref } from "@/lib/handoff";
+import { waHref } from "@/lib/whatsapp";
+import { WhatsAppIcon } from "./icons";
+import type { Messages } from "@/messages";
 
-export type AssistantLabels = {
-  open: string;
-  close: string;
-  /** The launcher's name while the panel is open; the panel's X button keeps `close`. */
-  hide: string;
-  title: string;
-  intro: string;
-  placeholder: string;
-  send: string;
-  thinking: string;
-  error: string;
-  unavailable: string;
-  note: string;
-  stop: string;
-  retry: string;
-  clear: string;
-  suggestions: readonly string[];
-};
+export type AssistantLabels = Messages["assistant"];
 type Msg = { role: "user" | "assistant"; content: string };
 type Status = "idle" | "streaming" | "error" | "unavailable";
 
 const KEY = "3enwank.assistant";
 const MAX_TURNS = 20;
+/** The width below which the assistant is a full sheet and its button steps aside from content: Tailwind's md. */
+const PHONE = "(max-width: 47.99rem)";
+/**
+ * What the corner button must never sit on while a phone reader looks at it (owner, 2026-09-15, S8):
+ * tables, forms and their fields, every price (each <Price> span carries data-currency), the rows
+ * marked data-float-avoid (plan specs, feature lists, domain results), and anything that is tapped (a
+ * link, a button, a tab, an FAQ question): the first screenshots had it sitting on the Care plans tab.
+ *
+ * `[data-currency]:not(html)`: root.tsx also stamps data-currency on <html> for the currency switch, and
+ * every element's closest() reached it, so the button stayed tucked on every phone page (verify, S8).
+ * Only the <Price> spans are meant.
+ */
+const AVOID = "table, form, input, select, textarea, [data-currency]:not(html), [data-float-avoid], a[href], button, summary, [role=tab]";
+const FOCUSABLE = 'a[href], button:not([disabled]), textarea, [tabindex]:not([tabindex="-1"])';
 
 function restore(): Msg[] {
   if (typeof window === "undefined") return [];
@@ -44,6 +45,15 @@ function restore(): Msg[] {
     return [];
   }
 }
+
+/** Whether the viewport is phone-sized, as an external store: false on the server, where nothing is open anyway. */
+function subscribePhone(onChange: () => void) {
+  const mq = window.matchMedia(PHONE);
+  mq.addEventListener("change", onChange);
+  return () => mq.removeEventListener("change", onChange);
+}
+const isPhoneNow = () => window.matchMedia(PHONE).matches;
+const isPhoneOnServer = () => false;
 
 /** Three dots while the answer is still on its way, so the panel is never silently blank. */
 function Dots({ label }: { label: string }) {
@@ -112,47 +122,62 @@ function Rich({ text }: { text: string }) {
 }
 
 /**
- * The chat bubble in the corner. Talks to the store's public assistant endpoint, which streams
- * plain text; the conversation lives in this tab only. The panel is closed on the server render,
- * so restoring the conversation on the client changes no markup.
+ * The assistant, as the owner set it on 2026-09-15 (S8).
  *
- * The three marks used to be hand-drawn inline SVG on a 24 grid; they are Phosphor now, at the same
- * rendered pixel sizes (20 in the panel header, 24 on the launcher) so nothing reflows. The import
- * is `@phosphor-icons/react/dist/ssr` and that entry specifically: the package root entry renders
- * through IconBase, which calls `useContext` with no "use client" of its own, while /dist/ssr
- * renders through SSRBase with no hooks at all. This file is a client component so either would run
- * here, but the whole repo imports the one entry that also works in a server component, and the ssr
- * entry ships no client JS.
+ * A labelled corner button, a small pill reading "Ask" with a speech mark and no rings, replacing a
+ * 56px purple disc that sat on plan specs, prices and form fields on a phone. On a phone it tucks away
+ * below the screen edge while the reader scrolls down, and stays away whenever it would cover a table,
+ * a price, a form or a marked row (AVOID); it comes back when scrolling stops or turns up over plain
+ * text. The slide says where it went, which is the one kind of motion this site keeps. A keyboard user
+ * who tabs to it gets it back whatever the page is doing (focus-visible).
  *
- * The weight is bold. Measured against the outgoing set at 19px: "regular" is as light as the
- * 1.7-stroke version the owner already rejected and "fill" is too heavy, while "bold" lands on the
- * 2.2 stroke these were drawn at — the same weight the bar's icons use.
+ * Opened, it is a full sheet on a phone (modal: Tab stays inside, the page behind does not scroll) and
+ * a docked panel down the end side on a wider screen, where the page beside it stays usable. It was a
+ * 24rem popup floating over the page at every width.
  *
- * None of the three takes Phosphor's `mirrored` prop. The close mark is symmetric, the launcher's
- * open-state caret points down so there is nothing to flip, and the speech bubble is a decorative
- * object rather than a direction: mirroring only its tail would be a cosmetic change to a mark the
- * hand-drawn version already drew tail-down-left on Arabic pages.
+ * Handing over to a person: once the visitor has asked something, "Continue on WhatsApp" opens WhatsApp
+ * with the question and a short summary written, "Send as a support ticket" opens the customer area's
+ * new ticket page with the subject and message written (a signed-out visitor is sent through log in
+ * first, with the address kept), and the contact form takes the question as its note for someone without
+ * an account. The links are built here (lib/handoff.ts says why not from the store's handoff route).
+ * Nothing in it tells people to email about an account problem any more.
+ *
+ * Talks to the store's public assistant endpoint, which streams plain text; the conversation lives in
+ * this tab only. Closed on the server render, so restoring the conversation changes no markup.
+ *
+ * Icons are Phosphor's /dist/ssr entry at the bold weight, as everywhere else in the repo (see
+ * components/icons.tsx); none takes `mirrored`, the speech mark being an object rather than a direction.
  */
 export function Assistant({
   url,
+  store,
   locale,
   labels,
-  supportEmail,
+  whatsapp,
   turnstileSiteKey = null,
 }: {
   url: string;
+  /** The store's URL, basePath included, for the ticket link. */
+  store: string;
   locale: Locale;
   labels: AssistantLabels;
-  supportEmail?: string;
+  whatsapp: string | null;
   turnstileSiteKey?: string | null;
 }) {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Msg[]>(restore);
   const [input, setInput] = useState("");
   const [status, setStatus] = useState<Status>("idle");
+  const [tucked, setTucked] = useState(false);
+  const phone = useSyncExternalStore(subscribePhone, isPhoneNow, isPhoneOnServer);
   const listRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const bubbleRef = useRef<HTMLButtonElement>(null);
+  const sheetRef = useRef<HTMLElement>(null);
+  const launcherRef = useRef<HTMLButtonElement>(null);
+  /** The fixed box the launcher sits in. It is never transformed, so it still measures where the button belongs while the button is tucked. */
+  const dockRef = useRef<HTMLDivElement>(null);
+  /** Set when the panel is closed by the visitor, so focus goes back to the launcher once it is rendered again. */
+  const returnFocus = useRef(false);
   const abortRef = useRef<AbortController | null>(null);
   /** Follow the answer only while the reader is already at the bottom; never yank them back up. */
   const stickRef = useRef(true);
@@ -167,8 +192,67 @@ export function Assistant({
   }, [messages, open]);
 
   useEffect(() => {
-    if (open) inputRef.current?.focus();
-    else abortRef.current?.abort();
+    if (open) {
+      inputRef.current?.focus();
+      return;
+    }
+    abortRef.current?.abort();
+    if (returnFocus.current) {
+      returnFocus.current = false;
+      launcherRef.current?.focus();
+    }
+  }, [open]);
+
+  /*
+   * Tucking on a phone. Scrolling down tucks the button; a pause of 600ms, or scrolling up, brings it
+   * back unless the spot it would occupy is over something in AVOID. Measured at the centre and the
+   * four inset corners of the dock with elementsFromPoint, skipping the button's own elements. Every
+   * state change happens inside a frame or a timer callback, never in the effect body.
+   */
+  useEffect(() => {
+    if (open) return;
+    let lastY = window.scrollY;
+    let frame = 0;
+    let idle = 0;
+    const covers = () => {
+      const dock = dockRef.current;
+      if (!dock) return false;
+      const r = dock.getBoundingClientRect();
+      const points: Array<[number, number]> = [
+        [r.left + r.width / 2, r.top + r.height / 2],
+        [r.left + 4, r.top + 4],
+        [r.right - 4, r.top + 4],
+        [r.left + 4, r.bottom - 4],
+        [r.right - 4, r.bottom - 4],
+      ];
+      return points.some(([x, y]) => {
+        const under = document.elementsFromPoint(x, y).find((el) => !dock.contains(el));
+        return !!under?.closest(AVOID);
+      });
+    };
+    const settle = () => setTucked(window.matchMedia(PHONE).matches && covers());
+    const onScroll = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const y = window.scrollY;
+        const phoneNow = window.matchMedia(PHONE).matches;
+        if (!phoneNow) setTucked(false);
+        else if (y > lastY + 2) setTucked(true);
+        else if (y < lastY - 2) setTucked(covers());
+        lastY = y;
+        window.clearTimeout(idle);
+        idle = window.setTimeout(settle, 600);
+      });
+    };
+    frame = requestAnimationFrame(settle);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    return () => {
+      cancelAnimationFrame(frame);
+      window.clearTimeout(idle);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
   }, [open]);
 
   function onScroll() {
@@ -242,6 +326,11 @@ export function Assistant({
     inputRef.current?.focus();
   }
 
+  function close() {
+    returnFocus.current = true;
+    setOpen(false);
+  }
+
   function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     void send();
@@ -254,185 +343,231 @@ export function Assistant({
     }
   }
 
-  const mail = supportEmail ? (
-    <a href={`mailto:${supportEmail}`} className="font-bold text-brand-strong hover:text-brand" dir="ltr">
-      {supportEmail}
-    </a>
-  ) : null;
+  /** Escape closes at every width; on a phone, where the sheet is modal, Tab also wraps inside it. */
+  function sheetKeys(e: KeyboardEvent<HTMLElement>) {
+    if (e.key === "Escape") {
+      e.stopPropagation();
+      close();
+      return;
+    }
+    const sheet = sheetRef.current;
+    if (e.key !== "Tab" || !phone || !sheet) return;
+    const items = Array.from(sheet.querySelectorAll<HTMLElement>(FOCUSABLE));
+    if (!items.length) return;
+    const first = items[0]!;
+    const last = items[items.length - 1]!;
+    const active = document.activeElement;
+    if (e.shiftKey && (active === first || !sheet.contains(active))) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && (active === last || !sheet.contains(active))) {
+      e.preventDefault();
+      first.focus();
+    }
+  }
+
+  // Only once the answer has stopped arriving: a summary of half an answer is not one to send.
+  const handoff = status === "streaming" ? null : buildHandoff(messages, labels.handoff);
+  const h = labels.handoff;
+
+  if (!open) {
+    return (
+      <div ref={dockRef} data-assistant="" /* 16px in from the corner at every width: at 24px it reached into the cards' 105px side margin on a 1440 screen. */ className="fixed bottom-4 end-4 z-40 print:hidden">
+        <button
+          ref={launcherRef}
+          type="button"
+          data-assistant-launcher=""
+          data-tucked={tucked ? "" : undefined}
+          onClick={() => setOpen(true)}
+          aria-haspopup="dialog"
+          aria-expanded="false"
+          aria-label={labels.open}
+          /*
+           * The pill: "Ask" and a speech mark, 44px tall, a neutral shadow so it reads as above the page
+           * in the light theme, no brand glow. Tucked, it slides below the screen edge and ignores the
+           * pointer; focus-visible brings it back for a keyboard.
+           */
+          className={`btn-primary inline-flex min-h-11 items-center gap-2 rounded-full ps-3.5 pe-4 text-sm font-bold shadow-[0_2px_8px_rgba(16,24,40,0.25)] transition-[transform,opacity,background-color] duration-200 focus-visible:pointer-events-auto focus-visible:translate-y-0 focus-visible:opacity-100 ${tucked ? "pointer-events-none translate-y-[calc(100%+2rem)] opacity-0" : ""}`}
+        >
+          <ChatCircleDotsIcon aria-hidden="true" size={20} weight="bold" className="shrink-0" />
+          {labels.launcher}
+        </button>
+      </div>
+    );
+  }
 
   return (
-    <div className="fixed bottom-5 end-5 z-50 flex flex-col items-end gap-3 print:hidden">
-      {open ? (
-        <section
-          role="dialog"
-          aria-label={labels.title}
-          onKeyDown={(e) => {
-            if (e.key !== "Escape") return;
-            setOpen(false);
-            bubbleRef.current?.focus();
-          }}
-          className="chat-in flex h-[min(34rem,calc(100dvh-7rem))] w-[min(24rem,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-2xl border border-line bg-panel shadow-[0_30px_60px_-20px_rgba(0,0,0,0.45)]"
-        >
-          <header className="flex items-center justify-between gap-3 border-b border-line px-4 py-3">
-            <h2 className="text-sm font-extrabold text-ink">{labels.title}</h2>
-            <div className="flex items-center gap-1">
-              {messages.length ? (
-                <button
-                  type="button"
-                  onClick={clear}
-                  className="inline-flex min-h-11 items-center rounded-full px-2 text-xs font-bold text-muted hover:bg-surface-alt hover:text-ink"
-                >
-                  {labels.clear}
-                </button>
-              ) : null}
-              {/* 44px, the smallest target a thumb reliably hits; it was 36, and the header row grows by 8px to hold it. */}
-              <button
-                type="button"
-                onClick={() => setOpen(false)}
-                aria-label={labels.close}
-                className="flex h-11 w-11 items-center justify-center rounded-full text-muted hover:bg-surface-alt hover:text-ink"
-              >
-                {/* Decorative: the button already says "close" to a screen reader, so the mark stays hidden. */}
-                <XIcon aria-hidden="true" size={20} weight="bold" className="shrink-0" />
-              </button>
-            </div>
-          </header>
-          <div
-            ref={listRef}
-            onScroll={onScroll}
-            role="log"
-            aria-live="polite"
-            className="flex-1 space-y-3 overflow-y-auto px-4 py-4 text-sm"
+    <section
+      ref={sheetRef}
+      role="dialog"
+      aria-modal={phone ? "true" : undefined}
+      aria-labelledby="assistant-title"
+      data-assistant-sheet=""
+      onKeyDown={sheetKeys}
+      /*
+       * A full sheet on a phone; from md a panel docked down the end side at full height, with a hairline
+       * on its inner edge. No rounded popup and no coloured shadow.
+       */
+      className="fixed inset-0 z-50 flex flex-col bg-panel text-ink print:hidden md:start-auto md:w-[26rem] md:border-s md:border-line md:shadow-[0_0_24px_rgba(16,24,40,0.18)]"
+    >
+      <header className="flex min-h-[68px] items-center justify-between gap-3 border-b border-line px-4">
+        <h2 id="assistant-title" className="text-base font-extrabold text-ink">
+          {labels.title}
+        </h2>
+        <div className="flex items-center gap-1">
+          {messages.length ? (
+            <button
+              type="button"
+              onClick={clear}
+              className="inline-flex min-h-11 items-center rounded-full px-3 text-sm font-bold text-muted hover:text-ink"
+            >
+              {labels.clear}
+            </button>
+          ) : null}
+          <button
+            type="button"
+            onClick={close}
+            aria-label={labels.close}
+            className="flex h-11 w-11 items-center justify-center rounded-full text-muted hover:bg-surface-alt hover:text-ink"
           >
-            <p className="me-auto max-w-[88%] rounded-2xl rounded-es-sm bg-surface-alt px-3.5 py-2.5 leading-relaxed text-ink">
-              {labels.intro}
-            </p>
-            {messages.length === 0 && status === "idle" ? (
-              <ul className="flex flex-wrap gap-2 pt-1">
-                {labels.suggestions.map((question) => (
-                  <li key={question}>
-                    <button
-                      type="button"
-                      onClick={() => void send(question)}
-                      className="min-h-11 rounded-full border border-line-strong bg-surface px-3 py-1.5 text-start text-xs font-bold text-muted transition-colors hover:border-brand hover:text-ink"
-                    >
-                      {question}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            ) : null}
-            {messages.map((m, i) => {
-              const streaming = status === "streaming" && i === messages.length - 1 && m.role === "assistant";
-              return (
-                <div
-                  key={i}
-                  dir="auto"
-                  className={
-                    m.role === "user"
-                      ? "chat-in ms-auto max-w-[88%] whitespace-pre-wrap rounded-2xl rounded-ee-sm bg-brand px-3.5 py-2.5 leading-relaxed text-white"
-                      : "chat-in me-auto max-w-[88%] rounded-2xl rounded-es-sm bg-surface-alt px-3.5 py-2.5 leading-relaxed text-ink"
-                  }
-                >
-                  {m.role === "assistant" ? (
-                    m.content ? (
-                      <>
-                        <Rich text={m.content} />
-                        {streaming ? (
-                          <span
-                            aria-hidden="true"
-                            className="chat-caret ms-0.5 inline-block h-3.5 w-1.5 translate-y-0.5 rounded-[1px] bg-muted"
-                          />
-                        ) : null}
-                      </>
-                    ) : (
-                      <Dots label={labels.thinking} />
-                    )
-                  ) : (
-                    m.content
-                  )}
-                </div>
-              );
-            })}
-            {status === "streaming" && messages[messages.length - 1]?.role === "user" ? (
-              <div className="me-auto rounded-2xl rounded-es-sm bg-surface-alt px-3.5 py-2.5">
-                <Dots label={labels.thinking} />
-              </div>
-            ) : null}
-            {status === "error" ? (
-              <p className="text-xs text-warn" role="alert">
-                {labels.error} {mail}{" "}
+            <XIcon aria-hidden="true" size={20} weight="bold" className="shrink-0" />
+          </button>
+        </div>
+      </header>
+      <div ref={listRef} onScroll={onScroll} role="log" aria-live="polite" className="flex-1 space-y-4 overflow-y-auto px-4 py-4 text-[15px]">
+        <p className="leading-relaxed text-muted">{labels.intro}</p>
+        {messages.length === 0 && status === "idle" ? (
+          <ul className="flex flex-wrap gap-2">
+            {labels.suggestions.map((question) => (
+              <li key={question}>
                 <button
                   type="button"
-                  onClick={retry}
-                  className="font-bold text-brand-strong underline underline-offset-2 hover:text-brand"
+                  onClick={() => void send(question)}
+                  className="min-h-11 rounded-full border border-line-strong bg-surface px-3.5 py-2 text-start text-sm font-bold text-ink transition-colors hover:border-brand hover:text-brand-strong"
                 >
-                  {labels.retry}
+                  {question}
                 </button>
-              </p>
-            ) : null}
-            {status === "unavailable" ? (
-              <p className="text-xs text-muted" role="status">
-                {labels.unavailable} {mail}
-              </p>
-            ) : null}
-          </div>
-          <form onSubmit={submit} className="flex items-end gap-2 border-t border-line p-3">
-            <label htmlFor="assistant-input" className="sr-only">
-              {labels.placeholder}
-            </label>
-            <textarea
-              id="assistant-input"
-              ref={inputRef}
-              rows={1}
+              </li>
+            ))}
+          </ul>
+        ) : null}
+        {messages.map((m, i) => {
+          const streaming = status === "streaming" && i === messages.length - 1 && m.role === "assistant";
+          return (
+            <div
+              key={i}
               dir="auto"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={keys}
-              maxLength={2000}
-              placeholder={labels.placeholder}
-              className="block max-h-32 min-h-11 w-full resize-none rounded-full border border-line-strong bg-surface px-3 py-2.5 text-sm text-ink placeholder:text-faint focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand-soft"
-            />
-            {status === "streaming" ? (
-              <button
-                type="button"
-                onClick={stop}
-                className="inline-flex h-11 shrink-0 items-center justify-center rounded-full border border-line px-4 text-sm font-bold text-muted hover:text-ink"
+              /*
+               * The visitor's turns in a tinted box on the end side, the assistant's as plain text on the
+               * start side, both at the card radius. Chat bubbles with a clipped corner were the SaaS
+               * widget look the plain pass removes.
+               */
+              className={
+                m.role === "user"
+                  ? "ms-auto max-w-[85%] whitespace-pre-wrap rounded-lg bg-brand-soft px-3.5 py-2.5 leading-relaxed text-ink"
+                  : "me-auto max-w-[95%] leading-relaxed text-ink"
+              }
+            >
+              {m.role === "assistant" ? (
+                m.content ? (
+                  <>
+                    <Rich text={m.content} />
+                    {streaming ? (
+                      <span aria-hidden="true" className="chat-caret ms-0.5 inline-block h-3.5 w-1.5 translate-y-0.5 rounded-[1px] bg-muted" />
+                    ) : null}
+                  </>
+                ) : (
+                  <Dots label={labels.thinking} />
+                )
+              ) : (
+                m.content
+              )}
+            </div>
+          );
+        })}
+        {status === "streaming" && messages[messages.length - 1]?.role === "user" ? <Dots label={labels.thinking} /> : null}
+        {status === "error" ? (
+          <p className="text-sm text-warn" role="alert">
+            {labels.error}{" "}
+            <button type="button" onClick={retry} className="font-bold text-brand-strong underline underline-offset-2 hover:text-brand">
+              {labels.retry}
+            </button>
+          </p>
+        ) : null}
+        {status === "unavailable" ? (
+          <p className="text-sm text-muted" role="status">
+            {labels.unavailable}
+          </p>
+        ) : null}
+      </div>
+      {handoff ? (
+        <div className="border-t border-line px-4 py-3">
+          <p className="text-sm font-bold text-ink">{h.title}</p>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {whatsapp ? (
+              <a
+                href={waHref(whatsapp, handoff.whatsappText)}
+                target="_blank"
+                rel="noopener"
+                className="btn-primary inline-flex min-h-11 items-center gap-2 rounded-full px-4 text-sm font-bold"
               >
-                {labels.stop}
-              </button>
-            ) : (
-              <button
-                type="submit"
-                disabled={!input.trim()}
-                className="btn-primary inline-flex h-11 shrink-0 items-center justify-center rounded-full px-4 text-sm font-bold disabled:opacity-60"
-              >
-                {labels.send}
-              </button>
-            )}
-          </form>
-          <p className="px-4 pb-3 text-[11px] leading-snug text-faint">{labels.note}</p>
-        </section>
+                <WhatsAppIcon />
+                {h.wa}
+              </a>
+            ) : null}
+            {/* Through storeLink, so the ticket page opens in the page's language (the store keeps it in a cookie set from ?lang=). */}
+            <a
+              href={storeLink(ticketHref(store, handoff.ticket), locale)}
+              className="inline-flex min-h-11 items-center rounded-full border-[1.5px] border-line-strong bg-panel px-4 text-sm font-bold text-ink hover:border-brand hover:text-brand-strong"
+            >
+              {h.ticket}
+            </a>
+          </div>
+          <a
+            href={contactHref(locale, { need: "other", note: plainLine(handoff.question, HANDOFF_NOTE_MAX - 3) })}
+            className="mt-1 inline-flex min-h-11 items-center text-sm font-bold text-brand-strong hover:text-brand"
+          >
+            {h.form}
+          </a>
+        </div>
       ) : null}
-      {/*
-        "pulse-once" rings twice a few seconds in (globals.css). The animation is on this button's
-        ::after, not on the mark inside it, so swapping the mark leaves it alone.
-      */}
-      <button
-        ref={bubbleRef}
-        type="button"
-        onClick={() => setOpen((o) => !o)}
-        aria-expanded={open}
-        aria-label={open ? labels.hide : labels.open}
-        title={open ? labels.hide : labels.open}
-        className="btn-primary pulse-once flex h-14 w-14 items-center justify-center rounded-full shadow-[0_16px_32px_-12px_rgba(124,95,165,0.9)]"
-      >
-        {open ? (
-          <CaretDownIcon aria-hidden="true" size={24} weight="bold" className="shrink-0" />
+      <form onSubmit={submit} className="flex items-end gap-2 border-t border-line p-3">
+        <label htmlFor="assistant-input" className="sr-only">
+          {labels.placeholder}
+        </label>
+        <textarea
+          id="assistant-input"
+          ref={inputRef}
+          rows={1}
+          dir="auto"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={keys}
+          maxLength={2000}
+          placeholder={labels.placeholder}
+          /* The field radius (rounded-lg) shared by every input on the site, not a pill: pills are for buttons (A3). */
+          className="block max-h-32 min-h-11 w-full resize-none rounded-lg border border-line-strong bg-surface px-3 py-2.5 text-[15px] text-ink placeholder:text-faint focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand-soft"
+        />
+        {status === "streaming" ? (
+          <button
+            type="button"
+            onClick={stop}
+            className="inline-flex h-11 shrink-0 items-center justify-center rounded-full border border-line-strong px-4 text-sm font-bold text-muted hover:text-ink"
+          >
+            {labels.stop}
+          </button>
         ) : (
-          <ChatCircleDotsIcon aria-hidden="true" size={24} weight="bold" className="shrink-0" />
+          <button
+            type="submit"
+            disabled={!input.trim()}
+            className="btn-primary inline-flex h-11 shrink-0 items-center justify-center rounded-full px-4 text-sm font-bold disabled:opacity-60"
+          >
+            {labels.send}
+          </button>
         )}
-      </button>
-    </div>
+      </form>
+      {/* text-xs is the 13px floor (14px in Arabic, globals.css); it was an 11px line. Muted rather than faint, for contrast. */}
+      <p className="px-4 pb-3 text-xs leading-snug text-muted">{labels.note}</p>
+    </section>
   );
 }

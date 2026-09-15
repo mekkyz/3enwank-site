@@ -5,7 +5,8 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Logo } from "@/components/logo";
 import { THEME_SCRIPT } from "@/components/root";
-import { LOCALES, defaultLocale, localeInfo, pathFor, prefixedLocales } from "@/lib/i18n";
+import { LOCALES, defaultLocale, localeInfo, pathFor, prefixedLocales, storeLink } from "@/lib/i18n";
+import { loadCatalogue } from "@/lib/catalogue";
 import { currentYear } from "@/lib/site";
 import { messagesFor } from "@/messages";
 
@@ -62,8 +63,14 @@ function EachLocale({ text, className }: { text: (t: ReturnType<typeof messagesF
   );
 }
 
-export default function GlobalNotFound() {
+export default async function GlobalNotFound() {
   const base = localeInfo(defaultLocale);
+  /*
+   * Log in from the catalogue's store URL, as the Shell builds it: STORE_URL is only the environment's
+   * fallback, and a build without it linked localhost here while every other page linked the store (verify).
+   */
+  const { catalogue } = await loadCatalogue();
+  const store = catalogue.store.url.replace(/\/+$/, "");
   return (
     <html lang={base.lang} dir={base.dir} className="h-full antialiased" suppressHydrationWarning>
       <head>
@@ -78,13 +85,13 @@ export default function GlobalNotFound() {
         >
           <EachLocale text={(t) => t.nav.skip} />
         </a>
-        <div className="w-full max-w-md rounded-xl border border-line bg-panel p-8">
+        <div className="w-full max-w-lg rounded-lg border border-line bg-panel p-8">
           <header>
             <Logo />
           </header>
           <main id="main" tabIndex={-1} className="focus:outline-none">
-            {/* The h1 reads "404" and then the page's own words for it, in the language the path names; the kicker's look is kept. */}
-            <h1 className="mt-6 text-xs font-extrabold uppercase tracking-[0.14em] text-brand tabular">
+            {/* The h1 reads "404" and then the page's own words for it, in the language the path names. Sentence case, no tracked uppercase label (S13). */}
+            <h1 className="mt-6 text-sm font-bold text-muted tabular">
               404
               <EachLocale text={(t) => ` ${t.notFound.title}`} className="sr-only" />
             </h1>
@@ -99,6 +106,28 @@ export default function GlobalNotFound() {
                     <a href={pathFor("home", l.code)} className="mt-3 inline-flex min-h-11 items-center font-bold text-brand-strong hover:underline">
                       {t.notFound.home}
                     </a>
+                    {/*
+                     * A way forward besides the home page (site review justDo): the three things sold
+                     * that a wrong URL most likely meant, the contact page and the customer area.
+                     */}
+                    <p className="mt-2 text-sm text-muted">{t.notFound.elsewhere}</p>
+                    <ul className="flex flex-wrap gap-x-5 text-sm font-bold">
+                      {(
+                        [
+                          [pathFor("hosting", l.code), t.nav.hosting],
+                          [pathFor("websites", l.code), t.nav.websites],
+                          [pathFor("domains", l.code), t.nav.domains],
+                          [pathFor("contact", l.code), t.nav.contact],
+                          [storeLink(`${store}/login`, l.code), t.nav.login],
+                        ] as const
+                      ).map(([href, label]) => (
+                        <li key={href}>
+                          <a href={href} className="inline-flex min-h-11 items-center text-brand-strong hover:underline">
+                            {label}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 );
               })}

@@ -108,7 +108,13 @@ export type LoadedCatalogue = { catalogue: Catalogue; source: CatalogueSource; r
  */
 export function fallbackCatalogue(): Catalogue {
   const snapshot = catalogueSchema.parse(fallbackJson);
-  return { ...snapshot, payments: { ...snapshot.payments, vodafoneCash: false, card: false } };
+  /*
+   * VAT is off too: the business is not VAT-registered and the live store publishes rateBp 0, but the
+   * snapshot predates that and made a fallback build print "All prices include 14% VAT." on every
+   * price page. The same reasoning as the payments: a snapshot cannot vouch for a tax the invoice will
+   * not carry. The flip back on arrives through the live catalogue.
+   */
+  return { ...snapshot, vat: { ...snapshot.vat, rateBp: 0 }, payments: { ...snapshot.payments, vodafoneCash: false, card: false } };
 }
 
 export type FetchLike = (url: string, init?: RequestInit) => Promise<Response>;

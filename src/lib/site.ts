@@ -15,10 +15,17 @@ export const CATALOGUE_URL = (process.env.CATALOGUE_URL ?? "").trim() || `${STOR
 export const CATALOGUE_SOURCE = (process.env.CATALOGUE_SOURCE ?? "remote").trim();
 /** Optional "user:password" for a staging endpoint behind basic auth. */
 export const CATALOGUE_AUTH = (process.env.CATALOGUE_AUTH ?? "").trim();
-/** International format without "+", e.g. 201000000000. Empty hides WhatsApp everywhere. */
+/** International format without "+", e.g. 201000000000. Empty falls back to the store's company phone (screens/shared.ts whatsappNumber). */
 export const WHATSAPP_NUMBER = (process.env.WHATSAPP_NUMBER ?? "").replace(/[^0-9]/g, "");
 /** "1" renders the assistant widget even when the store reports it off, so the design can be reviewed before the key exists. */
 export const ASSISTANT_PREVIEW = (process.env.ASSISTANT_PREVIEW ?? "").trim() === "1";
+/**
+ * The public status page (owner, 2026-09-15, S14). Empty for now: the page is being designed
+ * separately, and until it exists the footer, the Menu sheet and the contact page draw no Status
+ * link at all rather than one that goes nowhere. Read from the environment so the day it is live
+ * needs a restart, not a code change.
+ */
+export const STATUS_URL = (process.env.STATUS_URL ?? "").trim();
 /** Secret the platform's Publish button sends to /api/revalidate; empty disables the endpoint. */
 export const SITE_REVALIDATE_SECRET = (process.env.SITE_REVALIDATE_SECRET ?? "").trim();
 
@@ -32,12 +39,14 @@ export const SITE_REVALIDATE_SECRET = (process.env.SITE_REVALIDATE_SECRET ?? "")
  * 2026-09-14, so that is where they all start.
  */
 export const LAST_CHANGED = {
-  home: "2026-09-14",
-  hosting: "2026-09-14",
-  websites: "2026-09-14",
-  care: "2026-09-14",
-  domains: "2026-09-14",
-  about: "2026-09-14",
+  // The 2026-09-15 plain-look pass rewrote the home page, gave hosting its guide and moving line, websites its steps, care, websites and domains new intros, and About one principle.
+  home: "2026-09-15",
+  hosting: "2026-09-15",
+  websites: "2026-09-15",
+  care: "2026-09-15",
+  domains: "2026-09-15",
+  about: "2026-09-15",
+  contact: "2026-09-15",
   terms: "2026-09-14",
   privacy: "2026-09-14",
   delivery: "2026-09-14",

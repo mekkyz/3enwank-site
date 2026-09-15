@@ -56,8 +56,9 @@ describe("message placeholders", () => {
     const ar = messagesFor("ar");
     const en = messagesFor("en");
     expect(fill(ar.terms.intro, { legalName: "X", version: "2026-09-10" })).toContain("\u20662026-09-10\u2069");
-    expect(fill(ar.websites.deposit, { deposit: 50, rest: 50 })).toBe("\u206650٪\u2069 في الأول، و\u206650٪\u2069 عند الموافقة");
-    expect(fill(ar.common.vatIncluded, { rate: 14 })).toContain("\u206614٪\u2069");
+    // The number left to right inside a right-to-left isolate that holds the sign: read "50٪", drawn with the sign on the left.
+    expect(fill(ar.websites.deposit, { deposit: 50, rest: 50 })).toBe("\u2067\u206650\u2069٪\u2069 في الأول، و\u2067\u206650\u2069٪\u2069 عند الموافقة");
+    expect(fill(ar.common.vatIncluded, { rate: 14 })).toContain("\u2067\u206614\u2069٪\u2069");
     expect(fill(ar.terms.intro, { legalName: "X", version: "2026-09-10" }, { isolate: false })).not.toMatch(/[\u2066\u2069]/);
     expect(fill(en.websites.deposit, { deposit: 50, rest: 50 })).toBe("50% to start, 50% on approval");
   });
@@ -169,15 +170,32 @@ describe("Egyptian Arabic", () => {
 });
 
 describe("home page copy the layout depends on", () => {
-  it("keeps four reasons, four included items and six FAQ entries in both languages", () => {
-    // screens/home.tsx pairs REASON_ICONS and WHY_ICONS with these arrays by position, and the FAQ is published as FAQPage JSON-LD.
+  it("keeps six facts and six FAQ entries in both languages", () => {
+    // The facts list is six rows in a fixed order (S4, 2026-09-15), and the FAQ is published as FAQPage JSON-LD.
     for (const locale of locales) {
       const t = messagesFor(locale);
-      expect(t.home.reasons, locale).toHaveLength(4);
-      expect(t.home.why, locale).toHaveLength(4);
+      expect(t.home.facts, locale).toHaveLength(6);
+      expect(t.home.move.steps, locale).toHaveLength(3);
       expect(t.home.faq, locale).toHaveLength(6);
-      for (const item of [...t.home.reasons, ...t.home.why]) expect(item.title.trim() && item.body.trim(), locale).toBeTruthy();
+      for (const item of [...t.home.facts, ...t.home.move.steps]) expect(item.title.trim() && item.body.trim(), locale).toBeTruthy();
       for (const item of t.home.faq) expect(item.q.trim() && item.a.trim(), locale).toBeTruthy();
+    }
+  });
+
+  it("carries {plan} once in both languages wherever a plan is prefilled", () => {
+    // The contact page fills these in the browser (lib/whatsapp.ts withPlan); a missing placeholder drops the plan silently.
+    for (const locale of locales) {
+      const t = messagesFor(locale);
+      expect(t.contact.wa.planText.match(/\{plan\}/g), locale).toHaveLength(1);
+      expect(t.contact.form.planNote.match(/\{plan\}/g), locale).toHaveLength(1);
+    }
+  });
+
+  it("writes no uppercase label or kicker copy into the headings it replaced", () => {
+    // Section headings are statements now (S13): each ends as a sentence.
+    for (const locale of locales) {
+      const h = messagesFor(locale).home;
+      for (const title of [h.plansTitle, h.factsTitle, h.move.title, h.domainsTitle, h.faqTitle]) expect(title, locale).toMatch(/[.؟]$/);
     }
   });
 
@@ -185,8 +203,7 @@ describe("home page copy the layout depends on", () => {
     // lib/payments.ts fills these from catalogue.payments (D5). A method typed straight into the copy is one the store may not take.
     for (const locale of locales) {
       const t = messagesFor(locale);
-      expect(t.home.payments.line.match(/\{methods\}/g), locale).toHaveLength(1);
-      expect(t.home.reasons.filter((r) => r.body.includes("{kinds}")), locale).toHaveLength(1);
+      expect(t.home.facts.filter((f) => f.body.includes("{methods}")), locale).toHaveLength(1);
       expect(t.home.faq.filter((f) => f.a.includes("{methods}")), locale).toHaveLength(1);
       const { payments, ...homeRest } = t.home;
       void payments;
@@ -194,17 +211,43 @@ describe("home page copy the layout depends on", () => {
     }
   });
 
-  it("states no VAT rate in the hero, the reasons, the payments line or the FAQ", () => {
+  it("states no VAT rate in the hero, the facts or the FAQ", () => {
     // Whether VAT is charged is the catalogue's to say (lib/vat.ts); copy written by hand may only say "where it applies".
     // The hero joined the check when it replaced heroFacts, which carried the old assertion (audit item).
     const every = { ...fallbackCatalogue(), payments: { bankTransfer: true, instapay: true, vodafoneCash: true, card: true } };
     for (const locale of locales) {
       const t = messagesFor(locale);
       const pay = homePaymentsCopy(t, every);
-      const hero = [t.home.h1, t.home.lede, t.home.metaTitle, ...Object.values(t.home.tiles), ...Object.values(t.home.products).map((p) => p.title)];
-      const copy = [...hero, pay.line, ...pay.reasons.map((r) => r.body), ...pay.faq.map((f) => f.a)].join(" ");
+      const hero = [t.home.h1, t.home.lede, t.home.metaTitle];
+      const copy = [...hero, ...pay.facts.map((f) => `${f.title} ${f.body}`), ...pay.faq.map((f) => f.a)].join(" ");
       expect(copy, locale).not.toMatch(/\d+\s*[%٪]/);
     }
+  });
+});
+
+describe("copy the 2026-09-15 pass depends on (S8 to S14)", () => {
+  it("carries {price} once wherever an intro or a package names a price, and none in the statement without it", () => {
+    for (const locale of locales) {
+      const t = messagesFor(locale);
+      for (const s of [t.websites.h2Price, t.websites.needsHosting, t.care.h2Price, t.domains.h2Price]) expect(s.match(/\{price\}/g), `${locale}: ${s}`).toHaveLength(1);
+      for (const s of [t.websites.h2, t.care.h2, t.domains.h2]) expect(s, locale).not.toContain("{price}");
+      expect(t.websites.steps, locale).toHaveLength(4);
+      expect(t.hosting.guide.rows, locale).toHaveLength(3);
+      for (const step of t.websites.steps) expect(step.title.trim() && step.body.trim(), locale).toBeTruthy();
+    }
+  });
+
+  it("says a real person answers once, in contact, outside the legal pages", () => {
+    // S13: it was said nine times with nothing behind it. The legal pages keep their own formal statement.
+    const legal = ["terms.", "privacy.", "delivery.", "refunds."];
+    for (const locale of locales) {
+      const hits = copy(locale).filter(([k, s]) => !legal.some((p) => k.startsWith(p)) && /real person|حد حقيقي/i.test(s)).map(([k]) => k);
+      expect(hits, locale).toEqual(["contact.h2"]);
+    }
+  });
+
+  it("has the assistant send people to WhatsApp or a ticket, never to email", () => {
+    for (const locale of locales) expect(JSON.stringify(messagesFor(locale).assistant), locale).not.toMatch(/e-?mail|إيميل/i);
   });
 });
 

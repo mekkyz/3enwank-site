@@ -1,29 +1,30 @@
-import { ArrowLink, ButtonLink, Card, Container, Section, SectionHeader } from "@/components/blocks";
+import { ArrowLink, ButtonLink, Card, Container, MostChosen, Section, SectionHeader, Steps } from "@/components/blocks";
 import { Val } from "@/components/bidi";
 import { Price, RenewalNote } from "@/components/currency";
 import { DomainSearch } from "@/components/domain-search";
 import { ContactSection } from "@/components/contact";
-import { ProductCard } from "@/components/products";
+import { WhatsAppIcon } from "@/components/icons";
 import { Shell } from "@/components/shell";
 import { JsonLd } from "@/components/json-ld";
 import { faqLd, graph, organizationLd, websiteLd } from "@/lib/structured-data";
 import { Tabs } from "@/components/tabs";
-import { localizedFeatures, localizedSummary, normalPrices, parseFeature, summaryWithoutDelivery } from "@/lib/format";
+import { cheapestPrices, localizedFeatures, localizedSummary, normalPrices, parseFeature, summaryWithoutDelivery } from "@/lib/format";
 import { pageMetadata } from "@/lib/metadata";
-import { anchorFor, pathFor, storeLink, type Locale } from "@/lib/i18n";
-import { WHATSAPP_NUMBER } from "@/lib/site";
+import { contactHref, pathFor, storeLink, type Locale } from "@/lib/i18n";
+import { waHref } from "@/lib/whatsapp";
 import { messagesFor, type Messages } from "@/messages";
 import type { Catalogue, Product } from "@/lib/catalogue";
+import { HIGHLIGHT, assistantOn, buildTerms, domainSearchLabels, loc, screenContext, storeApi, talkFirstHref, whatsappNumber } from "./shared";
 import type { Currency, Money } from "@/lib/money";
-import { HIGHLIGHT, assistantOn, domainSearchLabels, loc, screenContext, storeApi } from "./shared";
 import { vatLine } from "@/lib/vat";
 import { homePaymentsCopy } from "@/lib/payments";
-import { MapPinIcon, HeadsetIcon, WalletIcon, ArrowsLeftRightIcon, CloudArrowUpIcon, LockKeyIcon, WallIcon, UserSoundIcon, CaretDownIcon, HardDrivesIcon, BrowserIcon, GlobeIcon, ShieldCheckIcon } from "@phosphor-icons/react/dist/ssr";
+import { CaretDownIcon } from "@phosphor-icons/react/dist/ssr";
 
 /**
- * Home: hero, the four products, what every account includes, three plans of each family on three
- * tabs, the domain search, the migration offer and contact. Everything a visitor needs to decide is
- * on this page; the product pages carry every tier and the full tables.
+ * Home, in the order the owner set on 2026-09-15 (S1), each thing said once: hero, plans and prices
+ * on three tabs, one facts list, moving to us, the domain search, the FAQ and contact. The hero tiles
+ * and the "What we do" cards are gone: the tabs already carry the three families with their prices,
+ * and the cards said the same thing a second time with an icon disc each.
  */
 export const home = {
   metadata(locale: Locale) {
@@ -34,7 +35,7 @@ export const home = {
   async render(locale: Locale) {
     const { t, catalogue, company, trust } = await screenContext(locale);
     const vat = vatLine(t, catalogue);
-    // The payments line, the "Prices in Egyptian pounds" card and the FAQ answer on paying name only what the store takes now (D5).
+    // The facts row on paying and the FAQ answer on paying name only what the store takes now (D5).
     const pay = homePaymentsCopy(t, catalogue);
     /*
      * The three families, in the order a visitor meets them in the menu, three plans each and three
@@ -44,7 +45,9 @@ export const home = {
      *
      * A family the store has nothing in simply has no tab; with none of them there is no section.
      */
-    const families = [
+    // Up here, before the families: the websites tab's "Talk to us first" opens WhatsApp too (S12).
+    const whatsapp = whatsappNumber(catalogue);
+    const families: Family[] = [
       {
         id: "hosting",
         label: t.nav.hosting,
@@ -74,6 +77,14 @@ export const home = {
         specs: (p: Product) => scopeSpecs(p, locale, t),
         link: [pathFor("websites", locale), t.home.allPlans.websites] as const,
         highlight: HIGHLIGHT.build,
+        /*
+         * What the websites page says on every package, said here too (S12): the delivery time and the
+         * deposit split, the hosting it needs from the catalogue's cheapest plan, and a second button to
+         * talk before ordering. They only show on this tab, so the phone page is no longer for them.
+         */
+        terms: (p: Product) => buildTerms(p, locale, t),
+        hostingFrom: cheapestPrices(catalogue.products.hosting.map((p) => p.prices)),
+        talk: (p: Product) => talkFirstHref(p, locale, t, whatsapp),
       },
       {
         id: "care",
@@ -90,221 +101,50 @@ export const home = {
         highlight: HIGHLIGHT.care,
       },
     ].filter((family) => family.items.length > 0);
-    /*
-     * "From EGP 1,999" on the four product cards, through the same <Price> island the plan cards
-     * use, so it follows the currency switch. It used to be a string built on the server from the
-     * EGP price alone, which left a visitor who chose USD reading dollars on the plan cards and
-     * pounds on the cards above them. The cheapest product is picked by its EGP price and both of
-     * its prices go to the island; the store prices every product in both currencies, so the
-     * cheapest in pounds is the cheapest in dollars too.
-     */
-    /*
-     * With the renewal under it wherever the thing renews at a different price: the owner's rule is
-     * that a first-year price is never shown without what it renews at (2026-09-14), and these four
-     * teasers were the one place left that quoted the first year alone. A build is paid once and a
-     * care plan renews at its price, so those two carry no second line; RenewalNote renders nothing
-     * for an empty price set.
-     */
-    const from = (prices: Partial<Record<Currency, Money>> | undefined, renewal?: Partial<Record<Currency, Money>>) =>
-      prices && Object.keys(prices).length ? (
-        <>
-          <span className="block">
-            {t.common.from} <Price prices={prices} locale={locale} fallback={t.common.notAvailable} />
-          </span>
-          {renewal ? <RenewalNote prices={renewal} locale={locale} label={t.common.renewsAt} className="mt-1 text-xs text-muted" /> : null}
-        </>
-      ) : undefined;
-    const fromPrice = (kind: "hosting" | "build" | "care") => {
-      const list = catalogue.products[kind];
-      const cheapest = list.reduce<(typeof list)[number] | null>((min, p) => (!min || (p.prices.EGP?.gross ?? Infinity) < (min.prices.EGP?.gross ?? Infinity) ? p : min), null);
-      return from(cheapest?.prices, cheapest ? normalPrices(cheapest) : undefined);
-    };
-    // Domains price from the cheapest ending we sell, so the card carries a number like the other three.
-    const cheapestTld = catalogue.tlds.reduce<(typeof catalogue.tlds)[number] | null>(
-      (min, x) => (x.prices.EGP && (!min || x.prices.EGP.register.gross < min.prices.EGP!.register.gross) ? x : min),
-      null,
-    );
-    // A name's renewal, per currency, only where it is not the registration price.
-    const tldRenewal: Partial<Record<Currency, Money>> = {};
-    for (const c of ["EGP", "USD"] as const) {
-      const p = cheapestTld?.prices[c];
-      if (p && p.renew.gross !== p.register.gross) tldRenewal[c] = p.renew;
-    }
-    const fromDomain = from(
-      cheapestTld
-        ? {
-            ...(cheapestTld.prices.EGP ? { EGP: cheapestTld.prices.EGP.register } : {}),
-            ...(cheapestTld.prices.USD ? { USD: cheapestTld.prices.USD.register } : {}),
-          }
-        : undefined,
-      tldRenewal,
-    );
     const api = storeApi(catalogue);
-    // A telephone number is not a WhatsApp number. WHATSAPP_NUMBER is the only thing that puts a
-    // "message us on WhatsApp" card on the page; the company's phone number gets a phone card, and
-    // both can be shown, because they are two different ways to reach the same people.
-    /*
-     * The WhatsApp number, from the store's own company settings unless this site is told otherwise.
-     * WHATSAPP_NUMBER stays as an override for the day the WhatsApp line is not the phone line, but
-     * it is not required: an empty one used to hide the entire WhatsApp panel silently, which on a
-     * page whose whole point is "WhatsApp first" is the worst way for a setting to be missing.
-     */
-    const phone = catalogue.company.phone;
-    const whatsapp = WHATSAPP_NUMBER || (phone ?? "").replace(/[^0-9]/g, "") || null;
+    const moveForm = contactHref(locale, { need: "move" });
     return (
-      <Shell locale={locale} page="home" storeUrl={catalogue.store.url} legalName={company.legalName} supportEmail={company.contactEmail} trust={trust} assistantEnabled={catalogue.assistant.enabled} turnstileSiteKey={catalogue.assistant.turnstileSiteKey}>
+      <Shell locale={locale} page="home" storeUrl={catalogue.store.url} legalName={company.legalName} trust={trust} whatsapp={whatsappNumber(catalogue)} assistantEnabled={catalogue.assistant.enabled} turnstileSiteKey={catalogue.assistant.turnstileSiteKey}>
         {/* Who the company is and what this site is, for search engines; the plan pages add a Product per plan. */}
         <JsonLd data={graph([organizationLd(catalogue, locale), websiteLd(catalogue, locale), faqLd(pay.faq)])} />
         {/*
-         * The hero: one statement, the line under it, and the two ways in, over a glow and a grid.
+         * The hero: one column, the statement large across the width, the line under it and the two
+         * ways in (owner, 2026-09-15, S2). No glow, grid, tiles or entrance: the type does the work.
+         * 64px on a laptop, a clear step over the 44px page H1 and the 32px section H2.
          *
-         * Four earlier tries are in this file's history: a 50/50 grid with a drawing on the right, a
-         * statement across the full width whose lede started at the middle of the page, a
-         * seven-column measure beside a four-column rail that also held the domain search, and one
-         * column of text over a bare surface. The last one left the right half of the first screen
-         * empty, so the page opened like a document (owner, 2026-09-14). What fills it now is not a
-         * drawing but light: a soft brand-coloured glow and a faint grid, both CSS, both still under
-         * reduced motion, both toned down in the light theme. The type is one size up for the same
-         * reason. The facts line that sat under the buttons became the "Why 3enwank" section below,
-         * where the four claims a visitor decides on get a card each instead of 12px.
-         *
-         * No tracking-* utility in this block. globals.css zeroes letter-spacing under dir="rtl", so
-         * a heading tuned with negative tracking is a different heading in Arabic; this one is tuned
-         * with size and leading, which both locales get.
+         * No tracking-* utility in this block. globals.css zeroes letter-spacing under dir="rtl", so a
+         * heading tuned with negative tracking is a different heading in Arabic. Arabic takes more
+         * leading, because its marks above and below the line clip at 1.08.
          */}
-        <section className="relative overflow-hidden">
-          <div aria-hidden="true" className="hero-bg">
-            <div className="hero-glow" />
-            <div className="hero-grid" />
-          </div>
-          <Container className="relative pb-14 pt-12 sm:pb-16 sm:pt-16 lg:pb-20 lg:pt-20">
-            {/*
-             * Two columns from lg: the words, and on the end side the four things the company sells
-             * as tiles over the glow (owner, 2026-09-14: the hero "feels half empty", a subtle
-             * visual of the four things on the right). Below lg there is no empty half to fill and
-             * the four cards are one scroll away, so the tiles are not drawn at all.
-             */}
-            <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-14">
-              {/* One measure for all three: statement, lede and buttons share the left edge. */}
-              <div className="max-w-3xl">
-                <h1 className="rise text-balance text-[2rem] font-extrabold leading-[1.14] text-ink sm:text-[2.5rem] sm:leading-[1.1] lg:text-[3rem]">{t.home.h1}</h1>
-                <p className="rise-2 mt-4 max-w-2xl text-pretty text-base leading-relaxed text-muted sm:mt-5 sm:text-lg">{t.home.lede}</p>
-                {/*
-                 * The two ways in, as buttons. They were a pair of arrow links in the rail, which put
-                 * the only two commercial paths on the page in the margin, in the weight this site
-                 * uses for "read more", while the one filled button in the hero belonged to a domain
-                 * search that is no use to a visitor who already has a domain or does not want one.
-                 *
-                 * Both buttons, one filled: a visitor who knows what they want clicks the plan, a
-                 * visitor who wants it built clicks the other, and the search further down still
-                 * catches the one who came for a name.
-                 */}
-                <div className="rise-3 mt-6 flex flex-wrap gap-3 sm:mt-7">
-                  <ButtonLink href={pathFor("hosting", locale)} size="lg">
-                    {t.home.ctaPlans}
-                  </ButtonLink>
-                  <ButtonLink href={pathFor("websites", locale)} variant="secondary" size="lg">
-                    {t.home.ctaBuild}
-                  </ButtonLink>
-                </div>
-              </div>
-              {/*
-               * Four tiles, two by two, the second column a step lower so they read as a loose
-               * arrangement rather than a table; each drifts a few pixels on its own slow loop
-               * (globals.css .drift), which the reduced-motion block stops. The same four icons and
-               * tints as the product cards under the hero, so the tiles and the cards are one set.
-               * aria-hidden: every word here is on those cards, which are the links.
-               */}
-              <div aria-hidden="true" className="hidden lg:grid lg:grid-cols-2 lg:gap-4">
-                {HERO_TILES.map(([kind, Glyph, tint], i) => (
-                  <div key={kind} className={`rise-${(i % 4) + 1} ${i % 2 ? "lg:translate-y-8" : ""}`}>
-                    <div className={`hero-tile ${i % 2 ? "drift-2" : "drift"} rounded-2xl border border-line bg-panel/75 p-5 shadow-[0_24px_48px_-32px_rgba(0,0,0,0.6)] backdrop-blur-sm`}>
-                      <div className={`flex h-11 w-11 items-center justify-center rounded-full ${tint}`}>
-                        <Glyph size={22} weight="bold" />
-                      </div>
-                      <p className="mt-4 text-base font-extrabold text-ink">{t.home.products[kind].title}</p>
-                      <p className="mt-1 text-sm text-muted">{t.home.tiles[kind]}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
+        <section>
+          {/* 40px above and below on a phone (was 56): part of taking the phone home page back to about seven screens (S1, verify). */}
+          <Container className="pb-10 pt-10 sm:pb-20 sm:pt-20">
+            <h1 className="max-w-6xl text-balance text-[2.5rem] font-extrabold leading-[1.08] text-ink sm:text-[3.25rem] lg:text-[4rem] rtl:leading-[1.35]">{t.home.h1}</h1>
+            <p className="mt-5 max-w-2xl text-pretty text-lg leading-relaxed text-muted sm:mt-6">{t.home.lede}</p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <ButtonLink href={pathFor("hosting", locale)} size="lg">
+                {t.home.ctaPlans}
+              </ButtonLink>
+              <ButtonLink href={pathFor("websites", locale)} variant="secondary" size="lg">
+                {t.home.ctaBuild}
+              </ButtonLink>
             </div>
           </Container>
         </section>
 
         {/*
-         * Why 3enwank: the four claims that used to be the facts line, one card each with an icon,
-         * and under them the ways to pay. Plain ground right after the hero, so the hero's glow
-         * ends where this starts; the tinted product cards follow.
-         */}
-        <Section className="border-t border-line">
-          <SectionHeader title={t.home.reasonsTitle} />
-          <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {pay.reasons.map((r, i) => {
-              const Glyph = REASON_ICONS[i] ?? REASON_ICONS[0]!;
-              return (
-                <Card key={r.title} as="li" className="flex h-full flex-col">
-                  <div data-tone={i % 2 ? "accent" : "brand"} className={`card-icon flex h-11 w-11 items-center justify-center rounded-full ${i % 2 ? "bg-accent-soft text-accent" : "bg-brand-soft text-brand"}`}>
-                    <Glyph aria-hidden="true" size={22} weight="bold" />
-                  </div>
-                  <h3 className="mt-4 text-lg font-extrabold text-ink">{r.title}</h3>
-                  <p className="mt-2 text-[15px] leading-relaxed text-muted">{r.body}</p>
-                </Card>
-              );
-            })}
-          </ul>
-          <p className="mt-6 text-sm font-semibold text-muted">{pay.line}</p>
-        </Section>
-
-        <Section tone="alt">
-          <SectionHeader title={t.home.productsTitle} />
-          <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            <ProductCard kind="hosting" title={t.home.products.hosting.title} body={t.home.products.hosting.body} link={t.home.products.hosting.link} href={pathFor("hosting", locale)} meta={fromPrice("hosting")} />
-            <ProductCard kind="websites" title={t.home.products.websites.title} body={t.home.products.websites.body} link={t.home.products.websites.link} href={pathFor("websites", locale)} meta={fromPrice("build")} />
-            <ProductCard kind="care" title={t.home.products.care.title} body={t.home.products.care.body} link={t.home.products.care.link} href={pathFor("care", locale)} meta={fromPrice("care")} />
-            <ProductCard kind="domains" title={t.home.products.domains.title} body={t.home.products.domains.body} link={t.home.products.domains.link} href={pathFor("domains", locale)} meta={fromDomain} />
-          </ul>
-        </Section>
-
-        {/*
-         * Plain surface-alt, like every other alternating section. It used to be the one block on
-         * the page painted in a colour of its own, which made a list of what every account includes
-         * read as a separate advertisement rather than as part of the same page.
-         */}
-        <Section>
-          <SectionHeader title={t.home.whyTitle} />
-          <ul className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            {t.home.why.map((f, i) => {
-              const Glyph = WHY_ICONS[i] ?? WHY_ICONS[0]!;
-              return (
-                <li key={f.title} data-reveal="" className="border-t border-line pt-5">
-                  {/* Same 22px glyph the product cards carry, on the line rather than in a disc: a list, not a card. */}
-                  <Glyph aria-hidden="true" size={22} weight="bold" className="text-brand" />
-                  <h3 className="mt-3 text-xl font-extrabold text-ink">{f.title}</h3>
-                  <p className="mt-2 text-[15px] leading-relaxed text-muted">{f.body}</p>
-                </li>
-              );
-            })}
-          </ul>
-        </Section>
-
-        {/*
-         * One section for everything that has a price. Hosting used to stand on its own above a
-         * second section that carried websites and care as two lists, which put the same three
-         * questions, what is it, what does it include and what does it cost, in two different shapes
-         * on one page. Three tabs answer them the same way, and each tab answers with three cards
-         * rather than with every tier the family has.
+         * Plans and prices, straight under the hero: everything with a price, one tab per family, three
+         * cards each. The VAT line (when the catalogue has a rate) sits under the cards it is about.
          */}
         {families.length ? (
           <Section tone="alt">
-            <SectionHeader title={t.home.plansTitle} lede={t.home.plansLede} />
-            {/* The three tabs stay: one box, one shape, and the family a visitor came for is one press away rather than two screens down. */}
+            <SectionHeader title={t.home.plansTitle} />
             <Tabs
               label={t.home.plansTabsLabel}
               items={families.map((family) => ({
                 id: family.id,
                 label: family.label,
-                panel: <PlanCards items={family.items} cycle={family.cycle} specs={family.specs} link={family.link} highlight={family.highlight} locale={locale} t={t} />,
+                panel: <PlanCards items={family.items} cycle={family.cycle} specs={family.specs} link={family.link} highlight={family.highlight} terms={family.terms} hostingFrom={family.hostingFrom} talk={family.talk} talkOnWhatsApp={!!whatsapp} locale={locale} t={t} />,
               }))}
             />
             {vat ? <p className="mt-4 text-sm text-muted">{vat}</p> : null}
@@ -312,75 +152,82 @@ export const home = {
         ) : null}
 
         {/*
-         * The domain search, under the plans and above the invitation to move. It was the largest
-         * thing in the hero until now, which made the first offer on the page a name rather than
-         * hosting; here it meets a visitor who has just read what a plan costs and needs the one
-         * thing the plan does not come with.
-         *
-         * id="domains" is kept for old inbound links only. Nothing in the app links to it any more:
-         * the one caller, the Domains product card above, now goes to pathFor("domains", locale),
-         * which is the right destination, since that page carries this same search plus every ending
-         * we sell and what each costs. A link from the home page down to a cut-down copy of that on
-         * the home page would be the worse of the two. The offset the anchor lands with is
-         * scroll-margin-top on section[id] in globals.css, which follows the header's two heights. The
-         * scroll-mt-24 that used to be on this line was inert, and one fixed utility value could not
-         * have cleared both bars anyway.
-         *
-         * A hairline above it, and tinted like the plans section: two tinted bands in a row read as
-         * one page, and the rule is what says they are two sections. The band below is plain, so the
-         * alternation carries on from here.
-         */}
-        <Section id="domains" tone="alt" className="border-t border-line">
-          <SectionHeader kicker={t.nav.domains} title={t.home.domainsTitle} lede={t.home.domainsLede} right={<ArrowLink href={pathFor("domains", locale)}>{t.home.products.domains.link}</ArrowLink>} />
-          {/*
-           * A panel from sm up, and on a phone no panel at all: a card inside a 350px screen costs
-           * 34px of it, which is what pushed the widget's own three tabs wider than the screen. On a
-           * phone the search is a heading and a field, like the rest of the page.
-           *
-           * No `tlds`: the widget draws every ending we sell as a row of pills when it is given them,
-           * which is the right thing on the domains page and forty pills here.
-           */}
-          <div className="sm:rounded-2xl sm:border sm:border-line sm:bg-panel sm:p-8">
-            <DomainSearch locale={locale} searchPath={pathFor("domains", locale)} cartUrl={api.cartDomain} apiUrl={api.domainSearch} ideasUrl={api.domainIdeas} contactHref={anchorFor("contact", locale)} labels={domainSearchLabels(t)} ideas={assistantOn(catalogue)} turnstileSiteKey={catalogue.assistant.turnstileSiteKey} />
-          </div>
-        </Section>
-
-        {/*
-         * A page-level invitation, not the tail of the section above it. Plain ground is what
-         * separates it from the tinted domain section, as it did from the tinted plans section
-         * before the search moved down here.
+         * One facts list (S4): "Why 3enwank" and "Included on every account" were two card grids with
+         * an icon disc on every card, saying the same kind of thing twice. Six rows now, a bold fact and
+         * one line each, two columns from sm, each row topped by a hairline. No cards, no icons.
          */}
         <Section>
-          <div>
-            <div data-reveal="" className="band flex flex-wrap items-center justify-between gap-6 rounded-2xl px-7 py-9 sm:px-10">
-              <div>
-                <h2 className="text-2xl font-extrabold tracking-tight sm:text-3xl">{t.home.moveTitle}</h2>
-                <p className="mt-2 max-w-xl text-white/90">{t.home.moveBody}</p>
-              </div>
-              <ButtonLink href={pathFor("hosting", locale)} variant="white" size="lg">
-                {t.home.moveCta}
+          <SectionHeader title={t.home.factsTitle} />
+          <ul className="grid sm:grid-cols-2 sm:gap-x-12">
+            {pay.facts.map((f) => (
+              // A step tighter on a phone (16px rows, 18px facts), for the seven-screen budget (S1, verify); as before from sm.
+              <li key={f.title} className="border-t border-line py-4 sm:py-5">
+                <h3 className="text-lg font-extrabold text-ink sm:text-xl">{f.title}</h3>
+                <p className="mt-1 text-base text-muted sm:mt-1.5">{f.body}</p>
+              </li>
+            ))}
+          </ul>
+        </Section>
+
+        {/*
+         * Moving to us (S6): the purple band became three numbered steps and one button. The button
+         * opens WhatsApp with the moving line already written; with no number it goes to the contact
+         * form opened on "Move my site", and with one the form is offered beside it as the quieter way.
+         * The step numbers are the list's own numbering drawn large, not icons in circles.
+         */}
+        <Section tone="alt">
+          <SectionHeader title={t.home.move.title} lede={t.home.move.lede} />
+          {/* The shared numbered list (blocks.tsx Steps), which "How a build works" on /websites/ uses too. */}
+          <Steps steps={t.home.move.steps} />
+          <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2">
+            {whatsapp ? (
+              <>
+                <ButtonLink href={waHref(whatsapp, t.home.move.waText)} external size="lg">
+                  <WhatsAppIcon />
+                  {t.home.move.cta}
+                </ButtonLink>
+                <ArrowLink href={moveForm}>{t.home.move.formCta}</ArrowLink>
+              </>
+            ) : (
+              <ButtonLink href={moveForm} size="lg">
+                {t.home.move.cta}
               </ButtonLink>
-            </div>
+            )}
           </div>
         </Section>
 
         {/*
-         * Six questions, each a details/summary so the page stays short and needs no script; the
-         * answers use the terms' own words for the same things. Tinted, like the plans and the
-         * domain search, so the plain band above it stays the odd one out.
+         * The domain search. id="domains" is kept for old inbound links; the offset it lands with is
+         * scroll-margin-top on section[id] in globals.css. A panel from sm up, and on a phone no panel
+         * at all: a card inside a 350px screen costs 34px of it, which pushed the widget's own tabs
+         * wider than the screen. No `tlds`: forty ending pills belong on the domains page, not here.
+         */}
+        <Section id="domains">
+          <SectionHeader title={t.home.domainsTitle} lede={t.home.domainsLede} right={<ArrowLink href={pathFor("domains", locale)}>{t.home.allPlans.domains}</ArrowLink>} />
+          <div className="sm:rounded-lg sm:border sm:border-line sm:bg-panel sm:p-8 sm:shadow-[var(--card-shadow)]">
+            <DomainSearch locale={locale} searchPath={pathFor("domains", locale)} cartUrl={api.cartDomain} apiUrl={api.domainSearch} ideasUrl={api.domainIdeas} contactHref={contactHref(locale, { need: "domains" })} labels={domainSearchLabels(t)} ideas={assistantOn(catalogue)} turnstileSiteKey={catalogue.assistant.turnstileSiteKey} />
+          </div>
+        </Section>
+
+        {/*
+         * Six questions in one column about 720px wide, on the start side, divided by hairlines (site
+         * review justDo). They were a two-column grid of boxes that read left, right, left, right and
+         * split related questions. The caret turning is the one motion here, and it says open or shut.
          */}
         <Section tone="alt">
-          <SectionHeader title={t.home.faqTitle} />
-          <div className="grid gap-4 md:grid-cols-2">
-            {pay.faq.map((item) => (
-              <details key={item.q} data-reveal="" className="faq-item group rounded-2xl border border-line bg-panel px-5 py-1">
-                <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-4 py-3 text-base font-bold text-ink [&::-webkit-details-marker]:hidden">
-                  {item.q}
-                  <CaretDownIcon aria-hidden="true" size={18} weight="bold" className="shrink-0 text-muted transition-transform group-open:rotate-180" />
-                </summary>
-                <p className="pb-4 text-[15px] leading-relaxed text-muted">{item.a}</p>
-              </details>
-            ))}
+          <div className="max-w-[45rem]">
+            <SectionHeader title={t.home.faqTitle} />
+            <div className="border-t border-line">
+              {pay.faq.map((item) => (
+                <details key={item.q} className="faq-item group border-b border-line">
+                  <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-4 py-4 text-base font-bold text-ink hover:text-brand-strong sm:text-lg [&::-webkit-details-marker]:hidden">
+                    {item.q}
+                    <CaretDownIcon aria-hidden="true" size={18} weight="bold" className="shrink-0 text-muted transition-transform group-open:rotate-180" />
+                  </summary>
+                  <p className="pb-5 text-base leading-relaxed text-muted">{item.a}</p>
+                </details>
+              ))}
+            </div>
           </div>
         </Section>
 
@@ -388,7 +235,7 @@ export const home = {
           locale={locale}
           t={t}
           whatsapp={whatsapp}
-          phone={phone}
+          phone={catalogue.company.phone}
           contactEmail={company.contactEmail}
           supportEmail={company.supportEmail}
           legalName={company.legalName}
@@ -402,25 +249,19 @@ export const home = {
   },
 };
 
-/*
- * One glyph per "Why 3enwank" card and per "Included on every account" row, in the order of the
- * dictionaries' arrays (both languages keep the same order): where the servers are, who answers,
- * what you pay in, how you get here; then backups, SSL, the firewall, the person. Typed off one of
- * the components, as products.tsx does, because /dist/ssr exports no Icon type.
- */
-const REASON_ICONS: ReadonlyArray<typeof MapPinIcon> = [MapPinIcon, HeadsetIcon, WalletIcon, ArrowsLeftRightIcon];
-
-/**
- * The hero's four tiles: the product kinds in the order the cards under it use, with the glyph and
- * tint those cards carry (components/products.tsx), so the two are visibly one set.
- */
-const HERO_TILES: ReadonlyArray<readonly ["hosting" | "websites" | "domains" | "care", typeof MapPinIcon, string]> = [
-  ["hosting", HardDrivesIcon, "bg-brand-soft text-brand"],
-  ["websites", BrowserIcon, "bg-accent-soft text-accent"],
-  ["domains", GlobeIcon, "bg-accent-soft text-accent"],
-  ["care", ShieldCheckIcon, "bg-brand-soft text-brand"],
-];
-const WHY_ICONS: ReadonlyArray<typeof MapPinIcon> = [CloudArrowUpIcon, LockKeyIcon, WallIcon, UserSoundIcon];
+/** One family on the plans tabs. `terms`, `hostingFrom` and `talk` are the websites tab's own (S12). */
+type Family = {
+  id: string;
+  label: string;
+  items: Product[];
+  cycle: string;
+  specs: (product: Product) => Spec[];
+  link: readonly [string, string];
+  highlight?: string;
+  terms?: (product: Product) => string[];
+  hostingFrom?: Partial<Record<Currency, Money>>;
+  talk?: (product: Product) => string;
+};
 
 /** One row on a plan card. A free-text feature has no label and takes the whole row. */
 type Spec = { label?: string; value: string };
@@ -491,10 +332,6 @@ function scopeSpecs(product: Product, locale: Locale, t: Messages): Spec[] {
  * Three plans of one family as three cards: the name, the store's own one-line summary, the price,
  * three specs and the way to order. Every one of them comes from the catalogue, including the
  * formatted price, so nothing here can drift from what the store charges.
- *
- * It was one box listing every tier of the family on its own row. Six rows a disk size apart is a
- * table pretending to be a choice; three cards force the tiers far enough apart to be compared at a
- * glance, and the link under them is where the rest still live.
  */
 function PlanCards({
   items,
@@ -502,6 +339,10 @@ function PlanCards({
   specs,
   link,
   highlight,
+  terms,
+  hostingFrom,
+  talk,
+  talkOnWhatsApp = false,
   locale,
   t,
 }: {
@@ -510,18 +351,19 @@ function PlanCards({
   specs: (product: Product) => Spec[];
   link: readonly [string, string];
   highlight?: string;
+  terms?: (product: Product) => string[];
+  hostingFrom?: Partial<Record<Currency, Money>>;
+  talk?: (product: Product) => string;
+  talkOnWhatsApp?: boolean;
   locale: Locale;
   t: Messages;
 }) {
   return (
     <div>
       {/*
-       * Three-up from lg, one column under it. It was md, 768px, where the three cards are 216px
-       * each: every price broke over two lines, and on the care tab seven of the nine spec rows
-       * wrapped. The cards are clean from around 900px on the hosting and care tabs, but the
-       * websites tab has the longest cycle label of the three ("One-time payment"), and its price
-       * only fits beside it on one line from 992px up, so lg is the first standard step where all
-       * three tabs hold together. Measured at 768, 834, 864 and 1024 in both locales.
+       * Three-up from lg, one column under it. At md (768px) the three cards are 216px each: every
+       * price broke over two lines, and the websites tab's longer cycle label only fits beside its
+       * price from 992px up, so lg is the first standard step where all three tabs hold together.
        */}
       <ul className="grid gap-5 lg:grid-cols-3">
         {items.map((product) => {
@@ -534,8 +376,8 @@ function PlanCards({
                 <h3 className="text-xl font-extrabold text-ink">
                   <Val>{loc(product.name, locale)}</Val>
                 </h3>
-                {/* No tracking on the pill: it carries Arabic copy too, and globals.css zeroes letter-spacing under dir="rtl" anyway. */}
-                {chosen ? <span className="rounded-full bg-brand-soft px-2 py-0.5 text-[11px] font-extrabold uppercase text-brand-strong">{t.common.mostChosen}</span> : null}
+                {/* The one badge design, the same as on the product pages (S10). */}
+                {chosen ? <MostChosen>{t.common.mostChosen}</MostChosen> : null}
               </div>
               {summary ? <p className="mt-1.5 text-sm text-muted">{summary}</p> : null}
               <p className="mt-4 flex flex-wrap items-baseline gap-x-1.5">
@@ -543,15 +385,21 @@ function PlanCards({
                 <span className="text-sm text-muted">{cycle}</span>
               </p>
               {/*
-               * The renewal price, as the hosting page's cards state it (plans.tsx). Without it the
-               * "per year" label beside an introductory price read as the price every year, on the
-               * first cards a visitor compares; the plan renews at 20 to 50 percent more. Renders
-               * nothing for a product the catalogue gives no renewal price, so the websites tab,
-               * whose packages are one payment, stays as it is.
+               * The renewal price, as the hosting page's cards state it (plans.tsx). Renders nothing
+               * for a product the catalogue gives no renewal price, so the websites tab, whose
+               * packages are one payment, stays as it is.
                */}
               <RenewalNote prices={normalPrices(product)} locale={locale} label={t.common.renewsAt} className="mt-1.5 text-sm font-semibold text-muted" />
+              {terms?.(product).map((line) => (
+                <p key={line} className="mt-1 text-sm text-muted">
+                  {line}
+                </p>
+              ))}
+              {hostingFrom ? <RenewalNote prices={hostingFrom} locale={locale} label={t.websites.needsHosting} className="mt-1 text-sm text-muted" /> : null}
+              {/* data-float-avoid: the assistant's corner button steps aside from these values on a phone (S8). */}
               {rows.length ? (
-                <ul className="mt-5 space-y-2.5 border-t border-line pt-5 text-sm">
+                // 16px either side of the hairline and 8px rows on a phone, 20px and 10px from sm (S1, verify).
+                <ul data-float-avoid="" className="mt-4 space-y-2 border-t border-line pt-4 text-sm sm:mt-5 sm:space-y-2.5 sm:pt-5">
                   {rows.map((row, i) => (
                     <li key={row.label ?? `${i}`} className="flex items-baseline justify-between gap-3">
                       {row.label ? <span className="text-muted">{row.label}</span> : null}
@@ -561,16 +409,22 @@ function PlanCards({
                   ))}
                 </ul>
               ) : null}
-              <div className="mt-auto pt-6">
-                <ButtonLink href={storeLink(product.storeUrl, locale)} variant={chosen ? "primary" : "outline"} className="w-full" external>
+              {/* "Talk to us first" beside Order on a website package (S12); each takes half the row and wraps under the other when it cannot. */}
+              <div className="mt-auto flex flex-wrap gap-2 pt-5 sm:pt-6">
+                <ButtonLink href={storeLink(product.storeUrl, locale)} variant={chosen ? "primary" : "outline"} className="flex-auto whitespace-nowrap" external>
                   {t.common.order}
                 </ButtonLink>
+                {talk ? (
+                  <ButtonLink href={talk(product)} variant="secondary" className="flex-auto whitespace-nowrap" external={talkOnWhatsApp}>
+                    {talkOnWhatsApp ? <WhatsAppIcon /> : null}
+                    {t.websites.talkFirst}
+                  </ButtonLink>
+                ) : null}
               </div>
             </Card>
           );
         })}
       </ul>
-      {/* The page shows three of the family now, so the way to the rest is part of the panel, not an afterthought on the section header. */}
       <div className="mt-6">
         <ArrowLink href={link[0]}>{link[1]}</ArrowLink>
       </div>

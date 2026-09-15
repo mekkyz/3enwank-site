@@ -2,11 +2,15 @@
 
 import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import { turnstileToken } from "@/lib/turnstile";
+import { withPlan } from "@/lib/whatsapp";
+import { useContactQuery } from "./contact-prefill";
 
 /** Every string the form shows, passed from the server so no dictionary reaches the browser bundle. */
 export type LeadFormLabels = {
   needLegend: string;
-  need: { hosting: string; website: string; domains: string; care: string; other: string };
+  need: { hosting: string; website: string; domains: string; care: string; move: string; other: string };
+  /** One {plan}: the note the form starts with when the page was opened from a plan or package. */
+  planNote: string;
   name: string;
   reach: string;
   note: string;
@@ -24,8 +28,10 @@ export type LeadFormLabels = {
   blocked: string;
 };
 
-const NEEDS = ["hosting", "website", "domains", "care", "other"] as const;
+// "move" is the "Move my site" option the home page's moving section links to (S6).
+const NEEDS = ["hosting", "website", "domains", "care", "move", "other"] as const;
 type Need = (typeof NEEDS)[number];
+const isNeed = (v: unknown): v is Need => typeof v === "string" && (NEEDS as readonly string[]).includes(v);
 
 /**
  * Loose on purpose, and the same rule the store applies.
@@ -51,6 +57,8 @@ export function LeadForm({
   dir,
   turnstileSiteKey,
   waHref,
+  source,
+  prefill = false,
 }: {
   endpoint: string;
   labels: LeadFormLabels;
@@ -63,12 +71,25 @@ export function LeadForm({
   dir: "ltr" | "rtl";
   turnstileSiteKey: string | null;
   waHref: string;
+  /** Which form this is, for the ticket: "home-contact" or "contact-page". */
+  source: string;
+  /** Start from the page's ?need= and ?plan= (the contact page only). */
+  prefill?: boolean;
 }) {
   const id = useId();
-  const [need, setNeed] = useState<Need | "">("");
+  /*
+   * The need and the note start from the address bar on the contact page, and are the visitor's own
+   * once they touch them: `null` means untouched. Derived rather than copied into state in an effect,
+   * so the query is never written over something the visitor already chose or typed.
+   */
+  const query = useContactQuery();
+  const [picked, setNeed] = useState<Need | "" | null>(null);
+  const need: Need | "" = picked ?? (prefill && isNeed(query.need) ? query.need : "");
   const [name, setName] = useState("");
   const [reach, setReach] = useState("");
-  const [note, setNote] = useState("");
+  const [typed, setNote] = useState<string | null>(null);
+  // A handed-over question (?note=, from the assistant) wins over the plan line: it is the visitor's own words.
+  const note = typed ?? (prefill && query.note ? query.note : prefill && query.plan ? withPlan(labels.planNote, query.plan) : "");
   const [state, setState] = useState<State>("idle");
   const [errors, setErrors] = useState<Fault[]>([]);
   const errorBox = useRef<HTMLDivElement | null>(null);
@@ -109,13 +130,19 @@ export function LeadForm({
       const res = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
+        /*
+         * The store's lead schema knows five needs and not "move" (platform src/lib/support/lead.ts
+         * LEAD_NEEDS), and refuses an unknown one with a 400. A move is a hosting lead, so it goes as
+         * one, with the option's own words at the head of the note and its own source, which is how
+         * the ticket still says what was asked for.
+         */
         body: JSON.stringify({
-          need,
+          need: need === "move" ? "hosting" : need,
           name: name.trim(),
           reach: reach.trim(),
-          note: note.trim(),
+          note: (need === "move" ? `${labels.need.move}. ${note.trim()}` : note.trim()).trim().slice(0, 300),
           locale,
-          source: "home-contact",
+          source: need === "move" ? "move-site" : source,
           company: honeypot.current?.value ?? "",
           ...(token ? { turnstileToken: token } : {}),
         }),
@@ -144,7 +171,7 @@ export function LeadForm({
 
   if (state === "sent") {
     return (
-      <div aria-live="polite" className="rounded-xl border border-ok/40 bg-ok-soft p-6">
+      <div aria-live="polite" className="rounded-lg border border-ok/40 bg-ok-soft p-6">
         <p className="text-lg font-extrabold text-ink">{labels.sentTitle}</p>
         <p className="mt-2 text-sm text-muted">{labels.sentBody.replace("{reach}", reach.trim())}</p>
         <p className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
@@ -175,7 +202,7 @@ export function LeadForm({
    * 3:1; on focus the ring changes colour and thickens instead of a border and a ring both being
    * painted, which used to nudge the text by a pixel as you clicked in.
    */
-  // Pill for the two single-line fields; a pill textarea is not a shape, so that one is a card.
+  // The card radius for every field (rounded-lg below): pills are for buttons and tabs only (site review justDo).
   // A field named in the error list takes the danger ring, so it is also findable when tabbing back through.
   const field =
     "block w-full bg-surface px-4 py-3 text-sm text-ink ring-1 ring-line-strong transition placeholder:text-faint focus:outline-none focus:ring-2 focus:ring-brand aria-invalid:ring-danger";
@@ -187,7 +214,7 @@ export function LeadForm({
           ref={errorBox}
           tabIndex={-1}
           role="alert"
-          className="rounded-2xl border border-danger/40 bg-danger/10 p-4 text-sm"
+          className="rounded-lg border border-danger/40 bg-danger/10 p-4 text-sm"
         >
           <p className="font-bold text-ink">{labels.errorTitle}</p>
           <ul className="mt-2 list-disc space-y-1 ps-5 text-muted">
@@ -204,11 +231,12 @@ export function LeadForm({
       <fieldset aria-describedby={describedBy("need")}>
         <legend className="mb-2 block text-sm font-bold text-ink">{labels.needLegend}</legend>
         {/*
-         * Two columns at every width. Three columns made each chip too narrow for its own label, so
-         * "A new website" and "Something else" wrapped onto a second line and the row heights went
-         * uneven; Arabic is longer again. Two wide columns fit every label on one line.
+         * A grid of rectangles, two columns on a phone and three from sm. They were pills, and at 390px
+         * "A new website" broke onto two lines inside a pill shape. Two columns fit every label in both
+         * languages at 390px now that the form has no panel padding on a phone (contact.tsx); a
+         * min-width track fell to one column there and stacked six options down the screen.
          */}
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
           {NEEDS.map((k) => (
             /*
              * The input is hidden but real, and it comes first so the visible span can be styled
@@ -228,7 +256,7 @@ export function LeadForm({
                 className="peer sr-only"
               />
               <span
-                className={`flex min-h-12 items-center gap-2.5 rounded-full px-3.5 text-sm font-bold transition peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-brand ${
+                className={`flex min-h-12 items-center gap-2.5 rounded-lg px-3.5 text-sm font-bold transition peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-brand ${
                   need === k
                     ? "bg-brand-soft text-brand-strong ring-2 ring-brand"
                     : `bg-surface text-muted ring-1 ${faulty("need") ? "ring-danger" : "ring-line-strong"} hover:bg-brand-soft/40 hover:text-ink hover:ring-brand`
@@ -261,7 +289,7 @@ export function LeadForm({
             maxLength={80}
             aria-invalid={faulty("name") || undefined}
             aria-describedby={describedBy("name")}
-            className={`${field} min-h-12 rounded-full`}
+            className={`${field} min-h-12 rounded-lg`}
           />
         </div>
         <div>
@@ -274,7 +302,7 @@ export function LeadForm({
             value={reach}
             onChange={(e) => setReach(e.target.value)}
             dir="ltr"
-            className={`${field} min-h-12 rounded-full text-start`}
+            className={`${field} min-h-12 rounded-lg text-start`}
             autoComplete="off"
             maxLength={120}
             aria-invalid={faulty("reach") || undefined}
@@ -295,7 +323,7 @@ export function LeadForm({
           rows={3}
           maxLength={300}
           placeholder={labels.notePlaceholder}
-          className={`${field} rounded-2xl`}
+          className={`${field} rounded-lg`}
         />
       </div>
 

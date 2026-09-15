@@ -6,6 +6,7 @@ import { useCallback, useEffect, useId, useRef, useState, type FormEvent } from 
 // From money.ts, not catalogue.ts: this is a client island, and the catalogue module carries zod.
 import type { Currency } from "@/lib/money";
 import { domainQuery, formatPrice } from "@/lib/format";
+import { isolateDir } from "@/lib/bidi";
 import type { Locale } from "@/lib/i18n";
 import { useCurrency } from "./currency";
 import { HeightTween, TabStrip } from "./tabs";
@@ -133,8 +134,9 @@ function SearchBar({
   );
 }
 
+// rounded-lg, the site's one radius for cards and fields; the button beside it stays a pill (owner, 2026-09-15).
 const FIELD =
-  "block min-h-12 w-full rounded-full border border-line-strong bg-surface px-4 text-lg text-ink placeholder:text-faint focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand-soft";
+  "block min-h-12 w-full rounded-lg border border-line-strong bg-surface px-4 text-lg text-ink placeholder:text-faint focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand-soft";
 
 function statusOf(r: Result, l: DomainSearchLabels): { text: string; tone: keyof typeof TONE } {
   if (r.available === null)
@@ -146,7 +148,6 @@ function statusOf(r: Result, l: DomainSearchLabels): { text: string; tone: keyof
 function Row({
   r,
   primary = false,
-  index = 0,
   enabled,
   locale,
   cartUrl,
@@ -159,7 +160,6 @@ function Row({
 }: {
   r: Result;
   primary?: boolean;
-  index?: number;
   enabled: boolean;
   locale: Locale;
   cartUrl: string;
@@ -187,14 +187,17 @@ function Row({
   const free = r.available === true && !r.premium;
   return (
     <li
-      className="row-in flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-t border-line py-3.5 first:border-t-0"
-      style={{ animationDelay: `${Math.min(index, 8) * 50}ms` }}
+      // No staggered slide-in: the rows arrive together, and animating them one by one explained nothing.
+      // data-float-avoid: the assistant's corner button steps aside from a result row on a phone (S8).
+      data-float-avoid=""
+      className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-t border-line py-3.5 first:border-t-0"
     >
       <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
         <bdi dir="ltr" className={`break-all font-extrabold text-ink ${primary ? "text-xl sm:text-2xl" : "text-base"}`}>
           {r.name}
         </bdi>
-        <span className={`whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-bold ${TONE[s.tone]}`}>
+        {/* A tag, not a pill: pills are for buttons and tabs only. */}
+        <span className={`whitespace-nowrap rounded-md px-2 py-0.5 text-xs font-bold ${TONE[s.tone]}`}>
           {s.text}
         </span>
       </div>
@@ -209,7 +212,8 @@ function Row({
         {price && free && r.sellable ? (
           <span className="whitespace-nowrap text-sm text-muted">
             <span className="block">
-              <bdi dir="ltr" className="tabular font-bold text-ink">
+              {/* isolateDir: an Arabic EGP price reads "899 جنيه" (S12) and must not be forced left to right. */}
+              <bdi dir={isolateDir(price)} className="tabular font-bold text-ink">
                 {price}
               </bdi>{" "}
               {labels.perYear}
@@ -228,7 +232,7 @@ function Row({
                 ) : (
                   <>
                     {labels.renewsAt}{" "}
-                    <bdi dir="ltr" className="tabular">
+                    <bdi dir={isolateDir(renew ?? "")} className="tabular">
                       {renew}
                     </bdi>
                   </>
@@ -680,7 +684,7 @@ export function DomainSearch({
            * than one that cannot fail.
            */}
           {errorTab === "transfer" && initialError ? (
-            <p className="mb-3 rounded-2xl bg-warn-soft px-4 py-3 text-sm text-warn">{labels.cartErrors[initialError] ?? labels.cartErrors.generic}</p>
+            <p className="mb-3 rounded-lg bg-warn-soft px-4 py-3 text-sm text-warn">{labels.cartErrors[initialError] ?? labels.cartErrors.generic}</p>
           ) : null}
           <input type="hidden" name="kind" value="transfer" />
           <input type="hidden" name="years" value="1" />
@@ -731,7 +735,7 @@ export function DomainSearch({
       <div role="tabpanel" id={panelId("register")} aria-labelledby={tabId("register")} hidden={tab !== "register"}>
       {/* A refused no-JavaScript "Register", on the tab it came from and above the search that made it. */}
       {errorTab === "register" && initialError ? (
-        <p className="mb-3 rounded-2xl bg-warn-soft px-4 py-3 text-sm text-warn">{labels.cartErrors[initialError] ?? labels.cartErrors.generic}</p>
+        <p className="mb-3 rounded-lg bg-warn-soft px-4 py-3 text-sm text-warn">{labels.cartErrors[initialError] ?? labels.cartErrors.generic}</p>
       ) : null}
       <form action={searchPath} method="get" onSubmit={submit} role="search">
         <SearchBar
@@ -781,7 +785,8 @@ export function DomainSearch({
        */}
       {tlds.length && status !== "done" && status !== "loading" ? (
         <div className="mt-6 border-t border-line pt-5">
-          <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-faint">{labels.allExtensions}</p>
+          {/* Sentence case, no tracking: the uppercase labels went everywhere (S13). */}
+          <p className="text-sm font-bold text-muted">{labels.allExtensions}</p>
           {needName ? (
             <p role="status" className="mt-2 text-sm font-bold text-warn">
               {labels.nameFirst}
@@ -814,7 +819,7 @@ export function DomainSearch({
             <ul>
               <Pending name={query.trim().includes(".") ? query.trim().toLowerCase() : undefined} />
             </ul>
-            <ResultHeading className="mt-4 text-xs font-extrabold uppercase tracking-[0.14em] text-muted">
+            <ResultHeading className="mt-4 text-sm font-bold text-muted">
               {labels.otherExtensions}
             </ResultHeading>
             <ul className="mt-1">
@@ -826,7 +831,7 @@ export function DomainSearch({
         ) : null}
         {data && (status === "done" || status === "loading") ? (
           <div className="mt-6">
-            {addError ? <p className="mb-3 rounded-2xl bg-warn-soft px-4 py-3 text-sm text-warn">{addError}</p> : null}
+            {addError ? <p className="mb-3 rounded-lg bg-warn-soft px-4 py-3 text-sm text-warn">{addError}</p> : null}
             {added.length ? (
               // What is in the cart, where the adding happens: the badge is up in the navigation bar,
               // which is off screen by the time a visitor has scrolled through forty endings.
@@ -839,7 +844,7 @@ export function DomainSearch({
             ) : null}
             {data.suggestions.length || awaiting ? (
               <>
-                <ResultHeading className="mt-4 text-xs font-extrabold uppercase tracking-[0.14em] text-muted">
+                <ResultHeading className="mt-4 text-sm font-bold text-muted">
                   {labels.otherExtensions}
                 </ResultHeading>
                 {/*
@@ -853,8 +858,8 @@ export function DomainSearch({
                       const buyable = (x: typeof a) => (x.available === true && x.sellable && !x.premium ? 0 : 1);
                       return buyable(a) - buyable(b) || (a.price?.gross ?? Infinity) - (b.price?.gross ?? Infinity);
                     })
-                    .map((r, i) => (
-                      <Row key={r.name} r={r} index={i + 1} {...rowProps} added={added.includes(r.name)} />
+                    .map((r) => (
+                      <Row key={r.name} r={r} {...rowProps} added={added.includes(r.name)} />
                     ))}
                   {Array.from({ length: awaiting }, (_, i) => (
                     <Pending key={`pending-${i}`} />
@@ -903,7 +908,7 @@ export function DomainSearch({
           </form>
           <div aria-live="polite">
             {/* The same refusal, on the tab whose rows have their own "Register" buttons. */}
-            {addError && ideasStatus === "done" ? <p className="mt-3 rounded-2xl bg-warn-soft px-4 py-3 text-sm text-warn">{addError}</p> : null}
+            {addError && ideasStatus === "done" ? <p className="mt-3 rounded-lg bg-warn-soft px-4 py-3 text-sm text-warn">{addError}</p> : null}
             {ideasStatus === "loading" ? (
               <ul className="mt-3">
                 {Array.from({ length: 5 }, (_, i) => (
@@ -919,11 +924,11 @@ export function DomainSearch({
             {ideasStatus === "done" ? (
               freeIdeas.length ? (
                 <ul className={`mt-3 ${SCROLL_LIST}`}>
-                  {freeIdeas.map((r, i) => (
+                  {/* No index: it only fed the staggered slide-in, which went with the rest of the entrance motion. */}
+                  {freeIdeas.map((r) => (
                     <Row
                       key={r.name}
                       r={r}
-                      index={i}
                       {...rowProps}
                       enabled={enabled || r.sellable}
                       added={added.includes(r.name)}

@@ -16,7 +16,29 @@ export function formatPrice(money: Money, currency: Currency, locale: Locale): s
     maximumFractionDigits: 2,
   });
   const number = formatter.format(major).replace(/[‏‎]/g, "");
-  return dirFor(locale) === "rtl" ? `${number} ${currency}` : `${currency} ${number}`;
+  /*
+   * Arabic pages write the pound as "جنيه" (owner, 2026-09-15, S12): "1,999 EGP" set a Latin code
+   * inside an Arabic sentence. USD stays as it is. The result now carries an Arabic word, so callers
+   * isolate it with isolateDir()/ltrRun() rather than forcing dir="ltr", which would reorder it.
+   */
+  if (dirFor(locale) === "rtl") return `${number} ${currency === "EGP" ? "جنيه" : currency}`;
+  return `${currency} ${number}`;
+}
+
+/**
+ * The lowest price in each currency across some products, for "from {price}" lines: the care,
+ * websites and domains intros and the "Needs hosting, from" line on website packages (S12, S13).
+ * Per currency, so the line follows the currency switch like every other price; a currency no
+ * product is priced in is simply absent.
+ */
+export function cheapestPrices(list: ReadonlyArray<Partial<Record<Currency, Money>>>): Partial<Record<Currency, Money>> {
+  const out: Partial<Record<Currency, Money>> = {};
+  for (const prices of list) {
+    for (const [c, money] of Object.entries(prices) as Array<[Currency, Money | undefined]>) {
+      if (money && (!out[c] || money.gross < out[c]!.gross)) out[c] = money;
+    }
+  }
+  return out;
 }
 
 export type FeatureLine = { label: string; value: string } | { text: string };

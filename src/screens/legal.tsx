@@ -3,7 +3,7 @@ import { Shell } from "@/components/shell";
 import { pageMetadata } from "@/lib/metadata";
 import { pathFor, type Locale } from "@/lib/i18n";
 import { fill } from "@/messages";
-import { screenContext } from "./shared";
+import { screenContext, whatsappNumber } from "./shared";
 
 /**
  * The catalogue does not carry a terms version; this matches settings.legal.termsVersion on the platform.
@@ -31,10 +31,15 @@ function legalScreen(page: (typeof LEGAL_PAGES)[number]) {
       const { t, catalogue, company, trust } = await screenContext(locale);
       const copy = t[page];
       return (
-        <Shell locale={locale} page={page} storeUrl={catalogue.store.url} legalName={company.legalName} supportEmail={company.contactEmail} trust={trust} assistantEnabled={catalogue.assistant.enabled} turnstileSiteKey={catalogue.assistant.turnstileSiteKey}>
+        <Shell locale={locale} page={page} storeUrl={catalogue.store.url} legalName={company.legalName} trust={trust} whatsapp={whatsappNumber(catalogue)} assistantEnabled={catalogue.assistant.enabled} turnstileSiteKey={catalogue.assistant.turnstileSiteKey}>
           <PageIntro title={copy.title} lede={fill(copy.intro, { legalName: company.legalName, version: TERMS_VERSION })} />
-          <Container className="max-w-3xl py-12">
-            <div className="space-y-9">
+          {/*
+           * The measure lives on an inner block. Container's own max-w-7xl beat the max-w-3xl that
+           * used to be passed to it, so the text ran about 1,200px wide; 68ch keeps a line readable
+           * and the block stays on the start side (site review justDo).
+           */}
+          <Container className="py-12">
+            <div className="max-w-[68ch] space-y-9">
               {copy.sections.map((s) => (
                 <section key={s.title}>
                   <h2 className="text-xl font-extrabold text-ink">{s.title}</h2>

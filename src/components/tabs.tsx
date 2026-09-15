@@ -131,7 +131,7 @@ export function TabStrip<K extends string>({
             aria-controls={panelId(tab.id)}
             tabIndex={on ? 0 : -1}
             onClick={() => onSelect(tab.id)}
-            className={`min-h-11 flex-1 whitespace-nowrap rounded-full px-3 transition-[color,background-color,scale] duration-200 active:scale-[0.97] sm:flex-none sm:px-4 ${on ? `text-brand-strong ${pill ? "" : "bg-brand-soft"}` : "text-muted hover:text-ink"}`}
+            className={`min-h-11 flex-1 whitespace-nowrap rounded-full px-3 transition-[color,background-color] duration-200 sm:flex-none sm:px-4 ${on ? `text-brand-strong ${pill ? "" : "bg-brand-soft"}` : "text-muted hover:text-ink"}`}
           >
             {tab.label}
           </button>
@@ -241,7 +241,8 @@ export function Tabs({ items, label, className = "" }: { items: TabItem[]; label
               id={panelId(item.id)}
               aria-labelledby={tabId(item.id)}
               inert={!on}
-              className={`[grid-area:1/1] transition-[opacity,translate,visibility] ease-out ${on ? "visible translate-y-0 opacity-100 delay-100 duration-300" : "pointer-events-none invisible translate-y-1.5 opacity-0 duration-150"}`}
+              // Opacity only (owner, 2026-09-15): the 6px rise under the crossfade was motion for its own sake.
+              className={`[grid-area:1/1] transition-[opacity,visibility] ease-out ${on ? "visible opacity-100 delay-100 duration-300" : "pointer-events-none invisible opacity-0 duration-150"}`}
             >
               {item.panel}
             </div>

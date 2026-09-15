@@ -1,44 +1,14 @@
-import { ButtonLink, Section, SectionHeader } from "./blocks";
+import { EnvelopeSimpleIcon, MapPinIcon } from "@phosphor-icons/react/dist/ssr";
+import { ArrowLink, Section, SectionHeader } from "./blocks";
+import { WaLink } from "./contact-prefill";
 import { LeadForm, type LeadFormLabels } from "./lead-form";
-import { WhatsAppIcon } from "./icons";
+import { AccountIcon, WhatsAppIcon } from "./icons";
 import type { Messages } from "@/messages";
-import { dirFor, storeLink, type Locale } from "@/lib/i18n";
+import { contactHref, dirFor, storeLink, type Locale } from "@/lib/i18n";
+import { waHref } from "@/lib/whatsapp";
+import { STATUS_URL } from "@/lib/site";
 
-/** wa.me takes a bare international number and a pre-written first message. */
-function waHref(number: string, text: string): string {
-  return `https://wa.me/${number}?text=${encodeURIComponent(text)}`;
-}
-
-/**
- * Two doors, and one of them is obviously faster.
- *
- * The page should not ask a visitor to weigh options; it should show one route that is plainly the
- * quickest and one for people who would rather write. So the WhatsApp side sits on its own tinted
- * ground with the number set large and a single filled button on it, and the form side is a quiet
- * panel whose heading names it as the alternative. Size, colour and wording all say the same thing,
- * which is what makes it a choice rather than a menu.
- *
- * The routes for a customer whose site is down live with "Already a customer?" rather than in a
- * strip below the section: everyone they are written for is already reading those words, and a
- * person whose site is down should not be filling in a sales form to reach us.
- *
- * Almost nothing here is a bordered box. Every outline is a line the eye has to resolve before it
- * can read what is inside, and there were six of them on one screen. Ground colour separates the
- * blocks instead, and a single hairline does the rest.
- */
-export function ContactSection({
-  locale,
-  t,
-  whatsapp,
-  phone,
-  contactEmail,
-  supportEmail,
-  legalName,
-  address,
-  storeUrl,
-  leadUrl,
-  turnstileSiteKey,
-}: {
+export type ContactDetails = {
   locale: Locale;
   t: Messages;
   whatsapp: string | null;
@@ -50,144 +20,176 @@ export function ContactSection({
   storeUrl: string;
   leadUrl: string;
   turnstileSiteKey: string | null;
-}) {
+};
+
+/**
+ * "Already a customer? Log in. Site down? WhatsApp us", first on the contact page and first in the
+ * home page's contact section (owner, 2026-09-15, S7). It used to be the last item under the email
+ * and the address, below the fold on a phone, which is where a person whose site is down should not
+ * have to look. A plain row with a hairline box, one glyph on each action so the two read at a glance.
+ */
+export function ContactStrip({ locale, t, whatsapp, supportEmail, storeUrl }: Pick<ContactDetails, "locale" | "t" | "whatsapp" | "supportEmail" | "storeUrl">) {
+  const s = t.contact.strip;
+  const link = "inline-flex min-h-11 items-center gap-1.5 font-bold text-brand-strong hover:text-brand";
+  return (
+    <ul className="flex flex-col gap-x-10 rounded-lg border border-line bg-panel px-5 py-1.5 text-base shadow-[var(--card-shadow)] md:flex-row md:flex-wrap md:items-center">
+      <li className="flex flex-wrap items-center gap-x-3">
+        <span className="font-bold text-ink">{s.customer}</span>
+        {/* Through storeLink: the store keeps its language in a cookie set from ?lang=. */}
+        <a href={storeLink(`${storeUrl}/login`, locale)} className={link}>
+          <AccountIcon />
+          {s.login}
+        </a>
+      </li>
+      <li className="flex flex-wrap items-center gap-x-4">
+        <span className="font-bold text-ink">{s.down}</span>
+        {whatsapp ? (
+          <a href={waHref(whatsapp, t.contact.urgent.waText)} rel="noopener" target="_blank" className={link}>
+            <WhatsAppIcon />
+            {s.wa}
+          </a>
+        ) : null}
+        {/* The new ticket form itself, not the ticket list: a customer whose site is down has nothing to read there yet. */}
+        <a href={storeLink(`${storeUrl}/tickets/new`, locale)} className={link}>
+          {s.ticket}
+        </a>
+        {/* The support address only when there is no WhatsApp: with both, it wrapped the strip to a fourth row on a phone. */}
+        {whatsapp ? null : (
+          <a href={`mailto:${supportEmail}?subject=${encodeURIComponent(t.contact.urgent.emailSubject)}`} dir="ltr" className={`${link} break-all`}>
+            {supportEmail}
+          </a>
+        )}
+      </li>
+    </ul>
+  );
+}
+
+/**
+ * The strip, then the ways to reach us on one side and the form on the other. Shared by the contact
+ * page, where it opens for a plan (`prefill`) and its headings are h2 under the page's h1, and the
+ * home page's closing section, where they are h3 under the section's h2.
+ *
+ * Plain look (owner, 2026-09-15): no tinted panel behind WhatsApp and no uppercase labels over the
+ * channels. WhatsApp is still plainly first, by order, size and the one filled button; the email and
+ * the address follow as a hairline list with a glyph each; the form is the one bordered box.
+ */
+export function ContactBody({
+  heading = "h3",
+  prefill = false,
+  formOnPhone = true,
+  source,
+  ...d
+}: ContactDetails & { heading?: "h2" | "h3"; prefill?: boolean; formOnPhone?: boolean; source: string }) {
+  const { t, whatsapp, phone } = d;
   const c = t.contact;
   const labels: LeadFormLabels = c.form;
-  const eyebrow = "text-xs font-extrabold uppercase tracking-[0.14em] text-faint";
-
+  const H = heading;
   return (
-    <Section id="contact">
-      <SectionHeader kicker={c.title} title={c.h2} />
-
-      <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
-        <div className="space-y-6">
-          {/* Filled, not outlined: the tinted ground is what marks this as the first choice. */}
-          <div className="rounded-2xl bg-brand-soft p-6 sm:p-7">
-            <h3 className="text-2xl font-extrabold tracking-tight text-ink">{c.wa.title}</h3>
-
-            {whatsapp ? (
-              <>
-                <p className="mt-5">
-                  {/* `phone` is written for people and already carries its plus; `whatsapp` is bare digits. */}
-                  <a
-                    href={`tel:+${whatsapp}`}
-                    className="tabular text-[2rem] font-extrabold leading-none text-ink transition hover:text-brand-strong sm:text-[2.5rem]"
-                  >
-                    <bdi dir="ltr">{phone?.trim() || `+${whatsapp}`}</bdi>
-                  </a>
-                </p>
-                <div className="mt-6">
-                  <ButtonLink href={waHref(whatsapp, c.wa.defaultText)} external size="lg" className="w-full sm:w-auto">
-                    <WhatsAppIcon className="h-5 w-5 shrink-0" />
-                    {c.wa.cta}
-                  </ButtonLink>
-                </div>
-              </>
-            ) : null}
-          </div>
-
-          {/*
-           * The quieter ways, stacked under the panel rather than in a row of their own below the
-           * section. They are what fills the height the form takes on the other side, and one
-           * hairline between them is enough to separate three short facts.
-           */}
-          <dl className="divide-y divide-line">
-            <div className="py-4 first:pt-1">
-              <dt className={eyebrow}>{c.email}</dt>
-              <dd className="mt-1.5">
-                {/*
-                 * This link and the ones under "Already a customer?" are 44px tall (min-h-11), the
-                 * smallest target a thumb reliably hits on a phone. They stand on lines of their
-                 * own, not inside a sentence, so the inline-text exemption does not cover them.
-                 */}
-                <a
-                  href={`mailto:${contactEmail}`}
-                  className="flex min-h-11 items-center break-all font-bold text-brand-strong hover:underline"
-                  dir="ltr"
-                >
-                  {contactEmail}
+    <div className="space-y-8 sm:space-y-10">
+      <ContactStrip {...d} />
+      <div className="grid gap-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-start lg:gap-12">
+        <div>
+          {whatsapp ? (
+            <div className="border-b border-line pb-6">
+              <H className="flex items-center gap-2 text-xl font-extrabold text-ink">
+                <WhatsAppIcon className="shrink-0 text-brand" />
+                {c.wa.title}
+              </H>
+              <p className="mt-4">
+                {/* `phone` is written for people and already carries its plus; `whatsapp` is bare digits. */}
+                <a href={`tel:+${whatsapp}`} className="tabular text-[2rem] font-extrabold leading-none text-ink hover:text-brand-strong">
+                  <bdi dir="ltr">{phone?.trim() || `+${whatsapp}`}</bdi>
                 </a>
-                <p className="mt-1 text-sm text-muted">{c.emailBody}</p>
+              </p>
+              <div className="mt-5">
+                <WaLink
+                  number={whatsapp}
+                  text={c.wa.defaultText}
+                  planText={prefill ? c.wa.planText : undefined}
+                  className="btn-primary inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-6 text-base font-bold sm:w-auto"
+                >
+                  <WhatsAppIcon />
+                  {c.wa.cta}
+                </WaLink>
+              </div>
+            </div>
+          ) : null}
+          <dl className="divide-y divide-line">
+            <div className="py-5">
+              <dt className="flex items-center gap-2 text-sm font-bold text-ink">
+                <EnvelopeSimpleIcon size={18} weight="bold" aria-hidden="true" className="shrink-0 text-muted" />
+                {c.email}
+              </dt>
+              <dd className="mt-1">
+                <a href={`mailto:${d.contactEmail}`} className="flex min-h-11 items-center break-all font-bold text-brand-strong hover:underline" dir="ltr">
+                  {d.contactEmail}
+                </a>
+                <p className="text-sm text-muted">{c.emailBody}</p>
               </dd>
             </div>
-            <div className="py-4">
-              <dt className={eyebrow}>{c.address}</dt>
-              <dd className="mt-1.5">
-                <p className="font-bold text-ink">{legalName}</p>
-                <address className="mt-1 not-italic text-sm text-muted">{address}</address>
+            <div className="py-5">
+              <dt className="flex items-center gap-2 text-sm font-bold text-ink">
+                <MapPinIcon size={18} weight="bold" aria-hidden="true" className="shrink-0 text-muted" />
+                {c.address}
+              </dt>
+              <dd className="mt-2">
+                <p className="font-bold text-ink">{d.legalName}</p>
+                <address className="mt-1 text-sm not-italic text-muted">{d.address}</address>
                 <p className="mt-1 text-sm text-muted">{c.addressBody}</p>
               </dd>
             </div>
-            <div className="py-4 last:pb-0">
-              <dt className={eyebrow}>{c.existing}</dt>
-              <dd className="mt-1.5">
-                {/*
-                 * Through storeLink like every other store link on the site: the store keeps its
-                 * language in a cookie set from ?lang=, so a bare URL sent a first-time Arabic
-                 * visitor to an English login page. These two were the only bare ones.
-                 */}
-                <a
-                  href={storeLink(`${storeUrl}/login`, locale)}
-                  rel="noopener"
-                  className="inline-flex min-h-11 items-center text-sm font-bold text-brand-strong hover:text-brand"
-                >
-                  {c.existingCta}
-                </a>
-                {/*
-                 * The broken-site routes belong to this item, not to a strip of their own under the
-                 * section: everyone they are written for is already reading the words "Already a
-                 * customer?". Same three doors, one of them the same WhatsApp number as the panel
-                 * above but carrying the urgent first line.
-                 */}
-                <p className="mt-4 text-sm font-bold text-ink">{c.urgent.label}</p>
-                <ul className="mt-0.5 flex flex-wrap gap-x-4 text-sm font-bold">
-                  {whatsapp ? (
-                    <li>
-                      <a
-                        href={waHref(whatsapp, c.urgent.waText)}
-                        rel="noopener"
-                        target="_blank"
-                        className="inline-flex min-h-11 items-center text-brand-strong hover:text-brand"
-                      >
-                        {c.urgent.wa}
-                      </a>
-                    </li>
-                  ) : null}
-                  <li>
-                    <a href={storeLink(`${storeUrl}/tickets`, locale)} rel="noopener" className="inline-flex min-h-11 items-center text-brand-strong hover:text-brand">
-                      {c.urgent.ticket}
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href={`mailto:${supportEmail}?subject=${encodeURIComponent(c.urgent.emailSubject)}`}
-                      className="inline-flex min-h-11 items-center break-all text-brand-strong hover:text-brand"
-                      dir="ltr"
-                    >
-                      {supportEmail}
-                    </a>
-                  </li>
-                </ul>
-              </dd>
-            </div>
+            {/* The status page, only once it exists (S14): an empty STATUS_URL draws nothing. */}
+            {STATUS_URL ? (
+              <div className="py-5">
+                <dd>
+                  <a href={STATUS_URL} className="inline-flex min-h-11 items-center font-bold text-brand-strong hover:underline">
+                    {c.status}
+                  </a>
+                </dd>
+              </div>
+            ) : null}
           </dl>
         </div>
-
-        {/* The alternative: one hairline, so it sits back from the filled panel beside it. */}
-        <div className="rounded-2xl border border-line bg-panel p-6 sm:p-7">
-          <h3 className="text-xl font-extrabold tracking-tight text-ink">{c.form.title}</h3>
+        {/*
+         * On the home page a phone gets the heading and a link to the contact page instead of the form
+         * (`formOnPhone={false}`): the form was 665px of a page the owner wants at about seven phone
+         * screens (S1, verify), and the contact page opens with the same form. From sm the form is here.
+         */}
+        {formOnPhone ? null : (
+          <div className="border-t border-line pt-6 sm:hidden">
+            <H className="text-xl font-extrabold text-ink">{c.form.title}</H>
+            <ArrowLink href={contactHref(d.locale)} className="mt-2 text-base">
+              {c.formLink}
+            </ArrowLink>
+          </div>
+        )}
+        {/* A panel from sm up; on a phone a hairline instead, as the domain search does: a box inside a 350px screen costs the options their second column. */}
+        <div className={`border-t border-line pt-6 sm:rounded-lg sm:border sm:bg-panel sm:p-7 sm:shadow-[var(--card-shadow)] ${formOnPhone ? "" : "max-sm:hidden"}`}>
+          <H className="text-xl font-extrabold text-ink">{c.form.title}</H>
           <div className="mt-6">
             <LeadForm
-              endpoint={leadUrl}
+              endpoint={d.leadUrl}
               labels={labels}
-              locale={locale}
-              dir={dirFor(locale)}
-              turnstileSiteKey={turnstileSiteKey}
+              locale={d.locale}
+              dir={dirFor(d.locale)}
+              turnstileSiteKey={d.turnstileSiteKey}
               waHref={whatsapp ? waHref(whatsapp, c.wa.defaultText) : "#"}
+              source={source}
+              prefill={prefill}
             />
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+/** The home page's closing section: a statement heading, then the same block as the contact page. */
+export function ContactSection(d: ContactDetails) {
+  return (
+    <Section id="contact">
+      <SectionHeader title={d.t.contact.h2} />
+      <ContactBody {...d} formOnPhone={false} source="home-contact" />
     </Section>
   );
 }

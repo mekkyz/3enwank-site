@@ -3,7 +3,7 @@ import { cardFeatures, compareRows, localizedFeatures, localizedSummary, normalP
 import { storeLink, type Locale } from "@/lib/i18n";
 import { messagesFor } from "@/messages";
 import { Val } from "./bidi";
-import { ButtonLink, Card, Check } from "./blocks";
+import { ButtonLink, Card, Check, MostChosen } from "./blocks";
 import { Price, RenewalNote } from "./currency";
 
 /**
@@ -20,11 +20,13 @@ export function PlanCard({ product, locale, highlight = false, cycleLabel, cta, 
   const name = product.name[locale === "en" ? "en" : "ar"] || product.name.en;
   return (
     <Card highlight={highlight} className="flex h-full flex-col" as="article">
-      {/* Brand-strong on brand-soft, as the home page's pill: white on the dark theme's brand purple was 3.37:1 at 11px. */}
-      {highlight ? <p className="absolute -top-3.5 start-6 rounded-full bg-brand-soft px-2.5 py-1 text-[11px] font-extrabold uppercase tracking-wider text-brand-strong">{t.common.mostChosen}</p> : null}
-      <Heading className="text-2xl font-extrabold text-ink">
-        <Val>{name}</Val>
-      </Heading>
+      {/* The one badge, inline after the name as on the home tabs (S10); it was a label notched into the top border here. */}
+      <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+        <Heading className="text-xl font-extrabold text-ink">
+          <Val>{name}</Val>
+        </Heading>
+        {highlight ? <MostChosen>{t.common.mostChosen}</MostChosen> : null}
+      </div>
       {summary ? <p className="mt-1 text-sm text-muted">{summary}</p> : null}
       {/*
        * One line, at the longest price this catalogue can produce. EGP 19,999 beside a struck-out
@@ -44,8 +46,9 @@ export function PlanCard({ product, locale, highlight = false, cycleLabel, cta, 
        */}
       <RenewalNote prices={normalPrices(product)} locale={locale} label={t.common.renewsAt} className="mt-1.5 text-sm font-semibold text-muted" />
       {meta ? <p className="mt-1.5 text-sm text-muted">{meta}</p> : null}
+      {/* data-float-avoid: the assistant's corner button steps aside rather than sit on these values on a phone (S8). */}
       {features.length ? (
-        <ul className="mt-5 space-y-2.5 border-t border-line pt-5 text-[15px]">
+        <ul data-float-avoid="" className="mt-5 space-y-2.5 border-t border-line pt-5 text-[15px]">
           {features.map((f) =>
             "label" in f ? (
               <li key={f.label} className="flex justify-between gap-3">
@@ -83,7 +86,7 @@ export function CompareTable({ products, locale, caption, exclude = [], perYear,
        * stable on <html>), so the line is gone at the first width where there is nothing to swipe.
        */}
       <p className="mb-2 text-xs text-muted min-[784px]:hidden">{t.hosting.scrollHint}</p>
-      <div className="overflow-x-auto rounded-xl border border-line bg-panel">
+      <div className="overflow-x-auto rounded-lg border border-line bg-panel shadow-[var(--card-shadow)]">
       <table className="w-full min-w-[44rem] text-sm">
         <caption className="sr-only">{caption}</caption>
         <thead>
@@ -160,7 +163,7 @@ export function CompareTable({ products, locale, caption, exclude = [], perYear,
 /** Check-listed free-text features of a build package. */
 export function FeatureList({ items }: { items: string[] }) {
   return (
-    <ul className="mt-5 space-y-2.5 border-t border-line pt-5 text-[15px]">
+    <ul data-float-avoid="" className="mt-5 space-y-2.5 border-t border-line pt-5 text-[15px]">
       {items.map((f) => (
         <li key={f} className="flex gap-2.5">
           <Check />

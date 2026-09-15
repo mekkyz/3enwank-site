@@ -1,9 +1,9 @@
 import { ButtonLink, Card, PageIntro, Section, SectionHeader } from "@/components/blocks";
 import { Shell } from "@/components/shell";
 import { pageMetadata } from "@/lib/metadata";
-import { anchorFor, type Locale } from "@/lib/i18n";
+import { contactHref, type Locale } from "@/lib/i18n";
 import { fill, messagesFor } from "@/messages";
-import { screenContext } from "./shared";
+import { screenContext, whatsappNumber } from "./shared";
 
 export const about = {
   metadata(locale: Locale) {
@@ -13,15 +13,16 @@ export const about = {
   async render(locale: Locale) {
     const { t, catalogue, company, trust } = await screenContext(locale);
     return (
-      <Shell locale={locale} page="about" storeUrl={catalogue.store.url} legalName={company.legalName} supportEmail={company.contactEmail} trust={trust} assistantEnabled={catalogue.assistant.enabled} turnstileSiteKey={catalogue.assistant.turnstileSiteKey}>
-        <PageIntro kicker={t.about.title} title={t.about.h2} lede={fill(t.about.lede, { legalName: company.legalName })} />
+      <Shell locale={locale} page="about" storeUrl={catalogue.store.url} legalName={company.legalName} trust={trust} whatsapp={whatsappNumber(catalogue)} assistantEnabled={catalogue.assistant.enabled} turnstileSiteKey={catalogue.assistant.turnstileSiteKey}>
+        {/* No kicker above the heading (S13): the h1 names the page. */}
+        <PageIntro title={t.about.h2} lede={fill(t.about.lede, { legalName: company.legalName })} />
         <Section>
           <SectionHeader title={t.about.principlesTitle} />
           <ul className="grid gap-5 sm:grid-cols-2">
             {t.about.principles.map((p) => (
               <Card key={p.title} as="li">
                 <h3 className="text-xl font-extrabold text-ink">{p.title}</h3>
-                <p className="mt-2 text-[15px] leading-relaxed text-muted">{p.body}</p>
+                <p className="mt-2 text-base leading-relaxed text-muted">{p.body}</p>
               </Card>
             ))}
           </ul>
@@ -29,7 +30,7 @@ export const about = {
         <Section>
           <div className="grid gap-6 md:grid-cols-2">
             <Card>
-              <h2 className="text-lg font-extrabold text-ink">{t.about.companyTitle}</h2>
+              <h2 className="text-xl font-extrabold text-ink">{t.about.companyTitle}</h2>
               <dl className="mt-4 space-y-3 text-sm">
                 <div>
                   <dt className="text-muted">{t.about.companyTitle}</dt>
@@ -51,10 +52,10 @@ export const about = {
             </Card>
             <Card className="flex flex-col justify-between gap-5">
               <div>
-                <h2 className="text-lg font-extrabold text-ink">{t.about.ctaTitle}</h2>
+                <h2 className="text-xl font-extrabold text-ink">{t.about.ctaTitle}</h2>
                 <p className="mt-2 text-muted">{t.about.ctaBody}</p>
               </div>
-              <ButtonLink href={anchorFor("contact", locale)} className="self-start">
+              <ButtonLink href={contactHref(locale)} className="self-start">
                 {t.nav.contact}
               </ButtonLink>
             </Card>

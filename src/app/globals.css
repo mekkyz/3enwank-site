@@ -49,18 +49,25 @@
   --illus-label: #d7dbeb;
   /* The band and the primary button: one flat brand colour, white text, no gradient. */
   --color-band: #7b32e2;
+  /*
+   * Cards carry a shadow only in the light theme, where white on light grey needs one to read as a
+   * layer. A transparent zero shadow here rather than `none`, because the token lands inside
+   * Tailwind's comma-separated box-shadow list, where `none` would void the whole declaration.
+   */
+  --card-shadow: 0 0 #0000;
 }
 
 [data-theme="light"] {
   color-scheme: light;
-  --color-surface: #ffffff;
-  --color-surface-alt: #f6f4fb;
+  /* See the note in the prefers-color-scheme copy below: a grey ground, visible hairlines, neutral shadow. */
+  --color-surface: #f6f7f9;
+  --color-surface-alt: #eceef2;
   --color-panel: #ffffff;
   --color-panel-raised: #ffffff;
   --color-ink: #1c1f2e;
   --color-muted: #4b5169;
-  --color-faint: #6f7681;
-  --color-line: #d7d9e3;
+  --color-faint: #5f6672;
+  --color-line: #d3d7df;
   --color-line-strong: #7a80a0;
   --color-brand: #7024db;
   --color-brand-strong: #5e1eb8;
@@ -83,6 +90,7 @@
   --color-dark-muted: #c4c8dc;
   --color-danger: #b42318;
   --color-band: #7024db;
+  --card-shadow: 0 1px 2px rgba(16, 24, 40, 0.06), 0 1px 3px rgba(16, 24, 40, 0.05);
   --illus-bg: #f3effa;
   --illus-ring: #dcd3ea;
   --illus-link: #cfe7f2;
@@ -103,14 +111,20 @@
 @media (prefers-color-scheme: light) {
   :root:not([data-theme="dark"]) {
     color-scheme: light;
-    --color-surface: #ffffff;
-    --color-surface-alt: #f6f4fb;
+    /*
+     * Real layers (site review, 2026-09-15): white cards on white or #f6f4fb with a pale hairline made
+     * the sections blur into each other. A faintly grey ground, a darker alternate band, white panels
+     * with a hairline that can be seen and a soft neutral shadow (--card-shadow), never a coloured one.
+     */
+    --color-surface: #f6f7f9;
+    --color-surface-alt: #eceef2;
     --color-panel: #ffffff;
     --color-panel-raised: #ffffff;
     --color-ink: #1c1f2e;
     --color-muted: #4b5169;
-    --color-faint: #6f7681;
-    --color-line: #d7d9e3;
+    /* Darker than #6f7681, which was 4.0:1 on the new #eceef2 band; this is 5.1:1 there. */
+    --color-faint: #5f6672;
+    --color-line: #d3d7df;
     --color-line-strong: #7a80a0;
     --color-brand: #7024db;
     --color-brand-strong: #5e1eb8;
@@ -133,6 +147,7 @@
     --color-dark-muted: #c4c8dc;
     --color-danger: #b42318;
     --color-band: #7024db;
+    --card-shadow: 0 1px 2px rgba(16, 24, 40, 0.06), 0 1px 3px rgba(16, 24, 40, 0.05);
     --illus-bg: #f3effa;
     --illus-ring: #dcd3ea;
     --illus-link: #cfe7f2;
@@ -172,6 +187,21 @@
   /* The three "Manrope Fallback" families are the metric-matched stand-ins declared below the block. */
   --font-sans: "Manrope Variable", "Manrope Fallback Arial", "Manrope Fallback Roboto", "Manrope Fallback DejaVu", "IBM Plex Sans Arabic", ui-sans-serif, system-ui, sans-serif;
   --font-arabic: "IBM Plex Sans Arabic", "Manrope Variable", ui-sans-serif, system-ui, sans-serif;
+}
+
+/*
+ * The size floor (site review, 2026-09-15): no running text under 13px in English or 14px in Arabic.
+ * text-xs was 12px and carried renewal notes, hints, the footer line and the struck price. It is
+ * raised here once rather than at forty call sites, in a plain @theme block (not inline) so the
+ * utility reads var(--text-xs) and the Arabic rule below can lift it again.
+ */
+@theme {
+  --text-xs: 0.8125rem;
+  --text-xs--line-height: calc(1.125 / 0.8125);
+}
+html[dir="rtl"] {
+  --text-xs: 0.875rem;
+  --text-xs--line-height: calc(1.25 / 0.875);
 }
 
 /*
@@ -286,132 +316,27 @@ li {
 }
 
 /*
- * The primary action: one flat brand colour, lifting slightly on hover.
+ * The primary action: one flat brand colour that lightens on hover.
  *
- * It was a two-colour gradient that slid on hover. Flat reads as more deliberate, the colour is the
- * brand's own purple rather than an average of two, and there is nothing for the eye to track while
- * it is trying to read the label.
+ * It lifted a pixel on hover too. The owner's 2026-09-15 direction keeps hover colour changes and
+ * drops everything else that moves without explaining something, so the lift went, and with it the
+ * purple band (.band) and the card lift (.lift) that used to follow here.
  */
 .btn-primary {
   background-color: var(--color-brand-ink);
   color: #ffffff;
-  transition:
-    background-color 0.18s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: background-color 0.18s ease;
 }
 .btn-primary:hover {
   background-color: color-mix(in oklab, var(--color-brand-ink) 86%, #ffffff);
-  transform: translateY(-1px);
 }
 
 /*
- * Full-width call-to-action bands: one flat brand colour in both themes, so white text keeps its
- * contrast without a gradient sliding underneath it. The animated version drifted between purple and
- * blue on a sixteen-second loop, which moved in the corner of the eye on every page it appeared.
+ * No entrance, drift, spin, pulse or ring animations (owner, 2026-09-15: motion only where it explains
+ * something). The hero rise, the tiles' drift, the plan card's pulse-glow, the chat bubble's rings and
+ * the staggered domain rows were all here; what is left below is the tab pill, the FAQ opening, the
+ * theme and currency fades and the assistant's own typing marks.
  */
-.band {
-  background-color: var(--color-band);
-  color: #ffffff;
-}
-
-/* Cards rise slightly under the pointer. */
-.lift {
-  transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease,
-    border-color 0.25s ease;
-}
-.lift:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 24px 48px -28px rgba(0, 0, 0, 0.55);
-  border-color: color-mix(in oklab, var(--color-brand) 55%, var(--color-line));
-}
-
-/* Hero entrance and the drawing's slow drift. */
-@keyframes rise {
-  from {
-    opacity: 0;
-    transform: translateY(14px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-@keyframes drift {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
-}
-@keyframes spin-slow {
-  to {
-    transform: rotate(360deg);
-  }
-}
-.rise {
-  animation: rise 0.6s ease-out both;
-}
-.rise-2 {
-  animation: rise 0.6s 0.12s ease-out both;
-}
-.rise-3 {
-  animation: rise 0.6s 0.24s ease-out both;
-}
-.rise-4 {
-  animation: rise 0.6s 0.36s ease-out both;
-}
-.drift {
-  animation: drift 6s ease-in-out infinite;
-  transform-origin: center;
-}
-.drift-2 {
-  animation: drift 7s 1.2s ease-in-out infinite;
-}
-.spin-slow {
-  animation: spin-slow 60s linear infinite;
-  transform-origin: 300px 220px;
-}
-
-@keyframes pulse-glow {
-  0%,
-  100% {
-    box-shadow: 0 24px 50px -30px rgba(124, 95, 165, 0.6);
-  }
-  50% {
-    box-shadow:
-      0 28px 60px -26px rgba(124, 95, 165, 0.95),
-      0 0 0 4px color-mix(in oklab, var(--color-brand) 20%, transparent);
-  }
-}
-
-/* The chat bubble sends out two rings a few seconds after the page opens, then stays quiet. */
-.pulse-once {
-  position: relative;
-}
-.pulse-once::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  box-shadow: 0 0 0 0 rgba(124, 95, 165, 0.65);
-  animation: ring 1.8s ease-out 4s 2;
-  pointer-events: none;
-}
-@keyframes ring {
-  to {
-    box-shadow: 0 0 0 20px rgba(124, 95, 165, 0);
-  }
-}
-
-/* Search results slide in one after the other. */
-.row-in {
-  animation: rise 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-}
 
 /*
  * Switching the theme fades the colours instead of snapping. Only for readers who have not asked for
@@ -484,36 +409,11 @@ html[data-theme="light"] .theme-option[data-option="light"] {
   }
 }
 
-/*
- * The phone nav row scrolls sideways once its four links outgrow the screen (320px in English), and
- * a word cut at the edge looked like a layout fault rather than a row to swipe. The last 2rem fades
- * out instead, toward whichever edge the language runs to. Most of that 2rem is the row's own end
- * padding, which is empty whenever nothing overflows, so a row that fits shows no fade on any word.
- */
-/* The fade is exactly the row's end padding (px-5 below sm, px-8 from sm), so a row that fits fades no letter. */
-.nav-fade {
-  --nav-fade: 1.25rem;
-  mask-image: linear-gradient(to right, #000 calc(100% - var(--nav-fade)), transparent);
-}
-html[dir="rtl"] .nav-fade {
-  mask-image: linear-gradient(to left, #000 calc(100% - var(--nav-fade)), transparent);
-}
-@media (min-width: 40rem) {
-  .nav-fade {
-    --nav-fade: 2rem;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
-  /*
-   * Delays go too. With the duration alone at zero, .rise-2 to .rise-4 still waited out their
-   * 120 to 360ms before the zero-length run, and `both` holds the start frame meanwhile: the hero
-   * lede, the buttons and the facts line stayed invisible for a third of a second for exactly the
-   * reader who asked for nothing to move.
-   */
+  /* Delays go too, so nothing that does animate waits out a delay for a reader who asked for nothing to move. */
   *,
   *::before,
   *::after {
@@ -526,43 +426,17 @@ html[dir="rtl"] .nav-fade {
 }
 
 /*
- * The sticky bar, the same class the platform toggles. While the page is at the top the bar is not
- * there to look at: no panel, no hairline, so the hero starts at the first pixel of the page. Both
- * come back once the page has moved, and the blur comes and goes with them, because a blur over a bar
- * with nothing behind it smears the hero heading through what is meant to read as empty space.
- *
- * Written as a subtraction, not an addition: the panel and the hairline are the header's own classes
- * in shell.tsx, and this takes them away at the top. So a reader without JavaScript, who never gets
- * the class, keeps the solid bar rather than a transparent one with the page sliding under it.
- *
- * Nothing here changes the header's size. The hairline is always drawn and only loses its colour,
- * because a border switching between present and absent moves every pixel below it by 1px at the
- * threshold and takes the anchor offset with it. The blur goes to zero radius rather than to `none`
- * so it fades with the panel instead of snapping over a bar that is still half transparent.
- *
- * `is-scrolled` sits on <html>, set by BAR_SCRIPT in src/components/root.tsx before the header is
- * parsed. The reduced-motion block above already flattens the transition.
+ * The sticky bar is solid at every scroll position now. It turned transparent at the top so the
+ * hero's glow and grid showed through, and blurred what passed under it once scrolled; with the glow
+ * gone and "no glass" in the owner's 2026-09-15 direction, the panel and hairline in shell.tsx simply
+ * stay, and BAR_SCRIPT went from root.tsx.
  */
-header[data-bar] {
-  backdrop-filter: blur(8px);
-  transition:
-    background-color 0.3s ease,
-    border-color 0.3s ease,
-    backdrop-filter 0.3s ease;
-}
-html.js:not(.is-scrolled) header[data-bar] {
-  background-color: transparent;
-  border-color: transparent;
-  backdrop-filter: blur(0px);
-}
 
 /*
  * Anchored sections stop clear of the sticky header, hairline and all.
  *
- * The bar is two rows until lg, the logo row with the nav row under it, and one row from lg up:
- * measured on the real page it is 99px and 69px, in both locales. It was a flat 4.5rem here, 72px,
- * which is 27px short of the two-row bar, so at every phone and tablet width an anchored section's
- * top edge and its border-t hairline landed behind the bar instead of under it.
+ * The bar's height, hairline included, in both locales. It was a flat 4.5rem here once, and a
+ * two-row phone bar later, and each time an anchored section's top edge landed behind the bar.
  *
  * In @layer base rather than unlayered. `@import "tailwindcss"` puts scroll-mt-* in @layer
  * utilities, and an unlayered normal declaration beats a layered one whatever the specificity, so
@@ -570,24 +444,35 @@ html.js:not(.is-scrolled) header[data-bar] {
  * offset. Layered, this is a default a utility can still override.
  *
  * --header-h is the bar's own height, named once so the extra breathing room under it is written
- * once too. It has to move with the padding on <header data-bar> in shell.tsx; 64rem is Tailwind's
- * own lg, so the switch happens on the same pixel as the header's.
+ * once too. It has to move with the padding on the <header> in shell.tsx.
  */
 @layer base {
-  /* 101, not 99, since the phone nav links became 44px targets (shell.tsx). */
+  /*
+   * One height at every width: the phone nav row under the logo became the Menu sheet (S15), so the
+   * bar is the single 69px row it already was from lg up.
+   */
   :root {
-    --header-h: 101px;
-  }
-
-  @media (min-width: 64rem) {
-    :root {
-      --header-h: 69px;
-    }
+    --header-h: 69px;
   }
 
   section[id] {
     scroll-margin-top: calc(var(--header-h) + 0.75rem);
   }
+}
+
+/*
+ * The page behind the assistant's full sheet does not scroll on a phone either (S8). From md the panel
+ * is docked beside the page, which stays usable, so the lock is phones only.
+ */
+@media (max-width: 47.99rem) {
+  html:has([data-assistant-sheet]) {
+    overflow: hidden;
+  }
+}
+
+/* The page behind the open phone Menu sheet (mobile-menu.tsx) does not scroll; the gutter is reserved, so nothing shifts. */
+html:has(dialog[open]) {
+  overflow: hidden;
 }
 
 /* The assistant panel: the dots while it thinks, the caret while an answer streams, and the
@@ -616,27 +501,12 @@ html.js:not(.is-scrolled) header[data-bar] {
   }
 }
 
-@keyframes chat-in {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
 .chat-dot {
   animation: chat-dot 1.1s ease-in-out infinite;
 }
 
 .chat-caret {
   animation: chat-caret 1s step-end infinite;
-}
-
-.chat-in {
-  animation: chat-in 0.18s ease-out both;
 }
 
 /*
@@ -663,128 +533,25 @@ html.js:not(.is-scrolled) header[data-bar] {
 }
 
 /*
- * The hero's ground: a soft glow in the brand colours off to the end side, and a faint grid that
- * fades out toward the text, under the first screen of the home page. It fills the half of the
- * hero that carried nothing (owner, 2026-09-14) without a drawing. Both are decoration: the block
- * is aria-hidden and pointer-events: none, and neither moves, so reduced motion needs no rule. The
- * grid is drawn from the same hairline token as the cards and masked so it is loudest where the
- * text is not; the glow is quieter on white, where a purple haze reads as a stain.
- */
-.hero-bg {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-.hero-glow {
-  position: absolute;
-  inset-block: -30% -10%;
-  inset-inline-end: -8%;
-  width: 58%;
-  background:
-    radial-gradient(closest-side at 62% 38%, color-mix(in srgb, var(--color-brand-ink) 42%, transparent), transparent 72%),
-    radial-gradient(closest-side at 28% 74%, color-mix(in srgb, var(--color-accent) 26%, transparent), transparent 72%);
-  filter: blur(48px);
-  opacity: var(--glow-o);
-  will-change: transform, opacity;
-  animation: glow-breathe 20s ease-in-out infinite alternate;
-}
-/*
- * The glow breathes: it drifts a few percent and brightens and dims on a twenty-second loop (owner,
- * 2026-09-14). Slow enough not to pull the eye from the headline; the reduced-motion block stops it
- * on its first frame, which is the resting glow. --glow-o is the theme's resting strength.
- */
-.hero-glow {
-  --glow-o: 0.85;
-}
-@keyframes glow-breathe {
-  0% {
-    transform: translate3d(0, 0, 0) scale(1);
-    opacity: var(--glow-o);
-  }
-  50% {
-    transform: translate3d(-4%, 3%, 0) scale(1.08);
-    opacity: calc(var(--glow-o) * 1.2);
-  }
-  100% {
-    transform: translate3d(3%, -2%, 0) scale(0.96);
-    opacity: calc(var(--glow-o) * 0.8);
-  }
-}
-.hero-grid {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(var(--color-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--color-line) 1px, transparent 1px);
-  background-size: 44px 44px;
-  opacity: 0.32;
-  mask-image: radial-gradient(ellipse 60% 90% at 78% 40%, #000 30%, transparent 78%);
-}
-[dir="rtl"] .hero-grid {
-  mask-image: radial-gradient(ellipse 60% 90% at 22% 40%, #000 30%, transparent 78%);
-}
-[data-theme="light"] .hero-glow {
-  --glow-o: 0.45;
-}
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]) .hero-glow {
-    --glow-o: 0.45;
-  }
-  :root:not([data-theme="dark"]) .hero-grid {
-    opacity: 0.55;
-  }
-}
-[data-theme="light"] .hero-grid {
-  opacity: 0.55;
-}
-
-/*
  * Interaction and motion (owner, 2026-09-14). Every rule here is decoration on top of a page that
  * works without it, and the reduced-motion block above flattens all of it.
  */
 
 /* A domain search panel that was just chosen fades up (tabs.tsx HeightTween eases the height). */
+/* Opacity only: the 6px rise it had was movement for its own sake. */
 @keyframes tab-in {
   from {
     opacity: 0;
-    transform: translateY(6px);
   }
   to {
     opacity: 1;
-    transform: none;
   }
 }
 [data-tab-fade] > [role="tabpanel"]:not([hidden]) {
   animation: tab-in 0.3s cubic-bezier(0.2, 0.7, 0.2, 1) 0.06s backwards;
 }
 
-/* The chevron on a text link leans the way it points. `translate` composes with the RTL flip, which is `scale`. */
-.arrow-link svg {
-  transition: translate 0.18s ease;
-}
-.arrow-link:hover svg {
-  translate: 3px 0;
-}
-[dir="rtl"] .arrow-link:hover svg {
-  translate: -3px 0;
-}
-
-/* A card's icon disc fills with its colour and turns a little while the card lifts. */
-.card-icon {
-  transition:
-    transform 0.25s ease,
-    background-color 0.25s ease,
-    color 0.25s ease;
-}
-.lift:hover .card-icon {
-  transform: scale(1.08) rotate(-6deg);
-  background-color: var(--color-brand-ink);
-  color: #ffffff;
-}
-.lift:hover .card-icon[data-tone="accent"] {
-  background-color: var(--color-accent);
-}
+/* The text link's chevron no longer leans on hover, and the card icon discs that turned are gone (owner, 2026-09-15). */
 
 /* Prices fade in when the currency changes; the class is on <html> for 400ms only (currency.tsx stamp). */
 @keyframes price-in {
@@ -797,49 +564,6 @@ html.js:not(.is-scrolled) header[data-bar] {
 }
 html.currency-switching :has(> [data-currency]) {
   animation: price-in 0.3s ease-out;
-}
-
-/*
- * Reveal on scroll, driven by REVEAL_SCRIPT in root.tsx. "pending" is only ever set on something
- * below the first screen, by the script; "in" runs the fade with `backwards` fill, so the start
- * frame holds through the stagger delay and nothing is held after the end (a held transform would
- * beat the card's hover lift). The script sets "done" at animationend.
- */
-@keyframes reveal-up {
-  from {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-html.js [data-reveal-state="pending"] {
-  opacity: 0;
-}
-[data-reveal-state="in"] {
-  animation: reveal-up 0.65s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
-}
-[data-reveal-state="in"][data-reveal-i="1"] {
-  animation-delay: 70ms;
-}
-[data-reveal-state="in"][data-reveal-i="2"] {
-  animation-delay: 140ms;
-}
-[data-reveal-state="in"][data-reveal-i="3"] {
-  animation-delay: 210ms;
-}
-[data-reveal-state="in"][data-reveal-i="4"] {
-  animation-delay: 280ms;
-}
-[data-reveal-state="in"][data-reveal-i="5"] {
-  animation-delay: 350ms;
-}
-@media print {
-  [data-reveal-state="pending"] {
-    opacity: 1 !important;
-  }
 }
 
 /*

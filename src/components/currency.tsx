@@ -4,7 +4,7 @@ import { createContext, useContext, useRef, useState, useSyncExternalStore, type
 // From money.ts, not catalogue.ts: this is a client island, and the catalogue module carries zod.
 import { CURRENCY_KEY, DEFAULT_CURRENCY, currencies, type Currency, type Money } from "@/lib/money";
 import { formatPrice } from "@/lib/format";
-import { ltrRun } from "@/lib/bidi";
+import { isolateDir, ltrRun } from "@/lib/bidi";
 import type { Locale } from "@/lib/i18n";
 import { CurrencyIcon } from "./icons";
 
@@ -132,20 +132,41 @@ export function Price({
         const chosen = pick(prices, c)!;
         const money = prices[chosen]!;
         const was = normal?.[chosen] && normal[chosen]!.gross > money.gross ? normal[chosen] : undefined;
+        const wasText = was ? formatPrice(was, chosen, locale) : "";
+        const text = formatPrice(money, chosen, locale);
         return (
           <span key={c} data-currency={c} className="contents">
+            {/* isolateDir, not dir="ltr": an Arabic EGP price is "1,999 جنيه" now (S12), and forcing it left to right would put the word first. */}
             {was ? (
-              <bdi dir="ltr" className="tabular whitespace-nowrap text-xs font-medium text-faint line-through">
-                {formatPrice(was, chosen, locale)}
+              <bdi dir={isolateDir(wasText)} className="tabular whitespace-nowrap text-xs font-medium text-faint line-through">
+                {wasText}
               </bdi>
             ) : null}
-            <bdi dir="ltr" className="tabular whitespace-nowrap">
-              {formatPrice(money, chosen, locale)}
+            <bdi dir={isolateDir(text)} className="tabular whitespace-nowrap">
+              {text}
             </bdi>
           </span>
         );
       })}
     </span>
+  );
+}
+
+/**
+ * A sentence with one {price} in it, the price following the currency switch: the care, websites and
+ * domains intros ("Care plans: updates, scans and edits, from EGP 3,999 a year.", S13). With no price
+ * at all it renders `fallback`, the same statement without the clause, rather than a sentence with a
+ * hole in it.
+ */
+export function PricedText({ template, prices, locale, fallback }: { template: string; prices: Partial<Record<Currency, Money>>; locale: Locale; fallback: string }) {
+  const at = template.indexOf("{price}");
+  if (at < 0 || !currencies.some((c) => prices[c])) return <>{fallback}</>;
+  return (
+    <>
+      {template.slice(0, at)}
+      <Price prices={prices} locale={locale} fallback="" className="inline" />
+      {template.slice(at + "{price}".length)}
+    </>
   );
 }
 
@@ -186,14 +207,15 @@ export function CurrencySwitch({ label }: { label: string }) {
       >
         <CurrencyIcon />
       </summary>
-      <ul className="absolute end-0 z-50 mt-1 w-max rounded-2xl border border-line bg-panel p-1 text-sm shadow-lg">
+      {/* The menu is a container (rounded-lg) and its options are rows (rounded-md): pills are for buttons and tabs. */}
+      <ul className="absolute end-0 z-50 mt-1 w-max rounded-lg border border-line bg-panel p-1 text-sm shadow-lg">
         {currencies.map((c) => (
           <li key={c}>
             <button
               type="button"
               onClick={() => choose(c)}
               aria-pressed={currency === c}
-              className={`tabular flex min-h-11 w-full items-center whitespace-nowrap rounded-full px-3 text-start font-bold ${currency === c ? "bg-brand-soft text-brand-strong" : "text-muted hover:bg-brand-soft hover:text-ink"}`}
+              className={`tabular flex min-h-11 w-full items-center whitespace-nowrap rounded-md px-3 text-start font-bold ${currency === c ? "bg-brand-soft text-brand-strong" : "text-muted hover:bg-brand-soft hover:text-ink"}`}
             >
               {c}
             </button>

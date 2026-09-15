@@ -27,6 +27,8 @@ export const en: Messages = {
     cart: "Cart",
     language: "Language",
     menu: "Menu",
+    closeMenu: "Close menu",
+    status: "Status",
   },
   footer: {
     products: "Products",
@@ -83,52 +85,32 @@ export const en: Messages = {
     metaTitle: "Hosting, websites and domains, servers in Germany",
     ctaPlans: "See hosting plans",
     ctaBuild: "Build me a website",
-    reasonsTitle: "Why 3enwank",
-    reasons: [
-      { title: "Servers in Germany", body: "Hardware we own and run ourselves, in a German data centre. No reseller between you and the machine." },
-      { title: "Support in Arabic and English", body: "A person who can see your server reads your ticket and replies in the language you wrote in." },
-      /* {kinds} is filled from catalogue.payments (lib/payments.ts): a wallet and card are named only while the store takes them. */
-      { title: "Prices in Egyptian pounds", body: "Pay in EGP by {kinds}. Customers outside Egypt pay in dollars." },
-      { title: "Free migration", body: "We move your site and email from your current host, and the site stays online while we do it." },
-    ],
     /*
-     * Built from catalogue.payments (owner, 2026-09-15, D5): the line named Vodafone Cash and card
+     * Built from catalogue.payments (owner, 2026-09-15, D5): the copy named Vodafone Cash and card
      * while the store took neither. The platform publishes card and wallets as true once Paymob is
      * configured, and they appear here by themselves on the next publish.
      */
     payments: {
       methods: { bankTransfer: "bank transfer", instapay: "InstaPay", vodafoneCash: "Vodafone Cash", card: "card" },
-      kinds: { transfer: "transfer", wallet: "wallet", card: "card" },
       list: { separator: ", ", last: " or " },
-      line: "Pay by {methods}.",
     },
-    tiles: { hosting: "Simple yearly plans", websites: "Fixed price", domains: "Register or transfer", care: "Updates and fixes" },
-    productsTitle: "What we do",
-    products: {
-      /*
-       * No tier count and no disk range: the catalogue owns both, the store edits it, and the page
-       * shows three of the plans now. "A plan for each size" stays true whatever the store carries,
-       * and the sizes themselves are on the cards and in the comparison table.
-       */
-      hosting: { title: "Hosting", body: "A plan for each size of site, billed once a year. Email, databases, and SSL.", link: "Compare plans" },
-      websites: { title: "Websites", body: "From a one-page site to an online store. Fixed scope, fixed price, fixed date.", link: "See packages" },
-      care: { title: "Care plans", body: "Updates, malware scans, content changes, and fast replies.", link: "Choose a plan" },
-      /*
-       * "Search a name", not "Domain prices": /domains/ dropped its price table on purpose, so a label
-       * promising prices sent the reader to a page that has none. The card still carries a number, the
-       * cheapest ending's "From ...", which is where a price belongs.
-       */
-      domains: { title: "Domains", body: "Register or transfer your domain and manage it alongside your hosting.", link: "Search a name" },
-    },
-    whyTitle: "Included on every account",
-    why: [
-      { title: "Daily backups", body: "A copy of your account every day, kept for three months." },
-      { title: "SSL on every domain", body: "Issued when your domain points to us and renewed automatically." },
-      { title: "Firewall", body: "Attacks are blocked and malware is caught, from the first day." },
-      { title: "A real person answers", body: "Not a ticket robot. We read it, we reply in English or Arabic." },
+    /*
+     * One facts list (S4, 2026-09-15). "Why 3enwank" and "Included on every account" said the same
+     * kind of thing in two card grids; this is the six that are checkable. The payments row is titled
+     * by both currencies, so a visitor who switched to USD no longer reads "Prices in Egyptian pounds"
+     * over dollar prices (site review justDo).
+     */
+    factsTitle: "Six things that hold for every account.",
+    facts: [
+      { title: "Servers we own, in Germany", body: "Hardware we own and run ourselves in a German data centre. No reseller in between." },
+      { title: "Daily backups, kept three months", body: "A copy of every account is made off the server each day." },
+      { title: "Renewal price shown, no setup fees", body: "The price on a plan is the whole amount, and each plan shows what it renews at." },
+      { title: "Free migration", body: "We move your site and email from your current host." },
+      { title: "Support in Arabic or English", body: "Write in either language and the reply comes in the same one." },
+      { title: "Pay in EGP or USD", body: "Pounds by {methods}. Dollars by bank transfer from abroad." },
     ],
-    plansTitle: "Plans and prices",
-    plansLede: "Hosting by size, website packages by scope, and yearly care plans.",
+    /* A statement, not a label (S13): what the three tabs hold, said once. */
+    plansTitle: "Hosting and care by the year, websites at a fixed\u00a0price.",
     plansTabsLabel: "What we sell",
     /*
      * The fourth entry is the domain search section's link, in the same shape as the three families: it
@@ -136,18 +118,22 @@ export const en: Messages = {
      * section borrowed the product card's label and the same words appeared twice on one page.
      */
     allPlans: { hosting: "All hosting plans", websites: "All website packages", care: "All care plans", domains: "All domain endings" },
-    /*
-     * Two lines of chrome over the search instead of three. The kicker already says "Domains" and the
-     * widget labels its own field, so a heading reading "A domain name for your site" over a lede
-     * reading "Type a name" was one sentence said three times. The heading asks the reader's own
-     * question; the lede carries the two things the widget does not say, transfers and the renewal.
-     */
-    domainsTitle: "Is the name you want free?",
-    domainsLede: "Register a new name, or move the one you own. Every result shows the price for the year and what it renews at.",
-    moveTitle: "Hosted somewhere else?",
-    moveBody: "Free website & email migration. Your site stays online.",
-    moveCta: "See plans",
-    faqTitle: "Questions we get asked",
+    /* Statements, not labels or questions (S13); the lede keeps the one thing the heading does not say. */
+    domainsTitle: "Search a name to see if it is free and what it renews\u00a0at.",
+    domainsLede: "Register a new name, or move one you already own.",
+    move: {
+      title: "We move your site from your old host for\u00a0free.",
+      lede: "Your site stays online the whole time.",
+      steps: [
+        { title: "Order a plan", body: "Pick the hosting plan that fits your site and pay the first invoice." },
+        { title: "Send us your old host's login", body: "The login to the control panel at your current host is enough." },
+        { title: "We copy it and switch", body: "We copy the site, email and database, check that everything works, then switch the domain." },
+      ],
+      cta: "Ask us to move your site",
+      formCta: "Or use the contact form",
+      waText: "Hello 3enwank. Please move my site to your hosting. My domain is:",
+    },
+    faqTitle: "The questions people ask before they sign\u00a0up.",
     /*
      * Six, each answered in the words the terms use for the same thing, so the FAQ never promises
      * more than the contract does: the renewal price is "the normal price", VAT is "where it applies",
@@ -160,7 +146,8 @@ export const en: Messages = {
       { q: "Where are the servers?", a: "In a data centre in Germany, on hardware we own and run ourselves. Nobody sits between you and the machine your site runs on." },
       { q: "What do I pay from the second year?", a: "The normal price of the plan. It is printed on the plan next to the first-year price and on your first invoice, and the renewal invoice reaches you before the due date." },
       { q: "How do I pay, and is VAT included?", a: "By {methods}, in Egyptian pounds; customers outside Egypt pay in dollars by transfer. The price you see is the full amount. Where value added tax applies, it is included in it and stated on the invoice." },
-      { q: "Do you answer in Arabic?", a: "Yes. Write in Arabic or English and the reply comes in the same language, from a person who can see your account and your server." },
+      /* No "a person who can see your account": who answers is said once, in contact (S13). */
+      { q: "Do you answer in Arabic?", a: "Yes. Write in Arabic or English and the reply comes in the same language." },
       { q: "What if I want to leave?", a: "Cancel from the service's page in your account or by writing to us, and withdraw the request any time before the period ends. The service stays active until the end of the period you paid for, so there is time to take your own copy of the site and email from cPanel. A domain registered with us can be transferred out after its first 60 days, as with every registrar." },
     ],
   },
@@ -169,7 +156,7 @@ export const en: Messages = {
     /* No tier count: the catalogue owns it, and this page prints whatever the store carries. */
     h2: "Pick a size. Billed once a year.",
     lede: "Every plan runs on the same servers with the same protection.",
-    compareTitle: "Compare the plans",
+    compareTitle: "Every plan, feature by\u00a0feature.",
     compareCaption: "Hosting plans compared feature by feature",
     plan: "Plan",
     perYear: "Per year",
@@ -177,28 +164,44 @@ export const en: Messages = {
     renewsAt: "Renews at",
     scrollHint: "Swipe the table sideways to see every plan.",
     empty: "Hosting plans are being updated. Check the customer area or contact us.",
+    moveLine: "Hosted somewhere else? We move your site, email and database for free.",
+    /* S11: three situations a visitor recognises, each paired with a plan in hosting.tsx. */
+    guide: {
+      title: "Which size fits what you\u00a0run.",
+      rows: ["One site with few visitors", "A business site with email for the team", "A shop or a busy site"],
+      pick: "Pick",
+    },
   },
   websites: {
     title: "Websites",
-    h2: "Fixed scope. Fixed price. Fixed date.",
+    /* The intro names the offer and its starting price (S13); the price comes from the catalogue. */
+    h2: "Websites built to a fixed scope, price and\u00a0date.",
+    h2Price: "Websites built to a fixed scope, price and date, from {price}.",
     lede: "A deposit to start, the rest when you approve the work.",
+    needsHosting: "Needs hosting, from {price} a year.",
+    talkFirst: "Talk to us first",
+    stepsTitle: "How a build works, in four\u00a0steps.",
+    steps: [
+      { title: "Order and pay the deposit", body: "Pick a package and pay the deposit. Work starts when it is paid." },
+      { title: "Send your content", body: "Your text, images and logo. The delivery time starts when we have them." },
+      { title: "We build and show you", body: "You see the work before it goes live and tell us what to change." },
+      { title: "Approve and go live", body: "You approve and pay the rest, and we put the site live on your hosting." },
+    ],
     deposit: "{deposit}% to start, {rest}% on approval",
     delivery: "Delivery",
     customTitle: "Something custom",
     customBody: "A web app, an integration with software you already use, or something we have not built before. Tell us what it has to do; we scope it and quote it before anyone commits.",
     customMeta: "Quoted per project",
     customCta: "Describe your project",
-    notes: [
-      "Delivery time starts when we have your text, images and logo.",
-      "Time spent waiting on a payment provider, a domain transfer or Google is not counted.",
-      "Hosting and Care plans are separate.",
-    ],
+    /* The delivery clock is step 2 now, and "Hosting and Care plans are separate" is the hosting line on every package (S12). */
+    notes: ["Time spent waiting on a payment provider, a domain transfer or Google is not counted."],
     empty: "Website packages are being updated. Contact us for a quote.",
   },
   care: {
     title: "Care plans",
-    h2: "The part most people skip.",
-    lede: "Launch isn’t the finish line. Keep your website secure and running.",
+    h2: "Care plans: updates, scans and\u00a0edits.",
+    h2Price: "Care plans: updates, scans and edits, from {price} a year.",
+    lede: "We keep your site current, scan it for malware and make small edits when you ask.",
     notes: [
       { title: "Updates", body: "The software your site runs on and everything it depends on, kept current so known holes are closed." },
       { title: "Content changes", body: "One edit of half an hour or less. New pages and features are quoted separately." },
@@ -208,7 +211,8 @@ export const en: Messages = {
   },
   domains: {
     title: "Domains",
-    h2: "Register it, or bring it with you.",
+    h2: "Domains: register a new name or bring\u00a0yours.",
+    h2Price: "Domains: register a new name or bring yours, from {price} a year.",
     lede: "We connect your domain. Ready from day one.",
     renewsAt: "renews at",
     renewsSame: "same price every year",
@@ -268,21 +272,34 @@ export const en: Messages = {
     ideasUnavailable: "Name suggestions are not switched on yet.",
   },
   assistant: {
+    launcher: "Ask",
     open: "Ask a question",
     close: "Close",
     hide: "Close assistant",
     title: "3enwank assistant",
-    intro: "Ask about plans, domains, moving your site or billing. For anything about your own account, email us.",
+    /* No "email us" for account problems (S8): the way to a person is WhatsApp or a ticket, under the chat. */
+    intro: "Ask about plans, domains, moving your site or billing. For anything about your own account, use WhatsApp or a support ticket.",
     placeholder: "Write your question",
     send: "Send",
     thinking: "Writing",
-    error: "The assistant did not answer. Try again, or email us.",
-    unavailable: "The assistant is not switched on yet. Email us and a real person answers.",
+    error: "The assistant did not answer. Try again, or send your question to us below.",
+    unavailable: "The assistant is not switched on yet. Send your question to us below.",
     note: "Answers come from an AI assistant and can be wrong. Prices come from our price list.",
     stop: "Stop",
     retry: "Try again",
     clear: "Start over",
     suggestions: ["What hosting plans do you have?", "Can you move my site from another host?", "Is a domain name still free?"],
+    handoff: {
+      title: "Rather ask us directly?",
+      wa: "Continue on WhatsApp",
+      ticket: "Send as a support ticket",
+      form: "No account? Use the contact form",
+      waIntro: "Hello 3enwank. I was chatting with the assistant on your website.",
+      question: "My question",
+      alsoAsked: "Also asked",
+      assistantSaid: "The assistant said",
+      fromChat: "From the assistant chat",
+    },
   },
   about: {
     title: "About 3enwank",
@@ -297,7 +314,7 @@ export const en: Messages = {
      * in a German data centre is the truth, and it reads as a decision when each gets a clause of its own.
      */
     lede: "3enwank is the hosting and web brand of {legalName}, a company registered in Cairo. The servers are ours, and they are in Germany. We host and build websites for businesses in Egypt and abroad, and we answer our own email.",
-    principlesTitle: "How we work",
+    principlesTitle: "Four rules we work\u00a0by.",
     principles: [
       /*
        * The machines are placed, not just owned: "a data centre in Europe" was the only location on this
@@ -308,7 +325,7 @@ export const en: Messages = {
       /* "The whole amount you pay", not "with VAT included": true whether or not the business is VAT-registered, which the catalogue decides, not this file. */
       { title: "Prices are the whole price", body: "Every price is the whole amount you pay, billed once a year. No setup fees. Renewals are at the price on the invoice." },
       { title: "Moving in is free", body: "We move your site and your email, and check that everything works before your domain is switched over." },
-      { title: "Straight answers", body: "You write in English or Arabic and get a reply from a real person who can fix the problem." },
+      { title: "Straight answers", body: "You write in English or Arabic and the reply says what was wrong, what we did and what happens next." },
     ],
     companyTitle: "Company",
     address: "Address",
@@ -318,29 +335,32 @@ export const en: Messages = {
   },
   contact: {
     title: "Contact",
-    h2: "A real person answers, not a call centre.",
+    /* The one place "a real person" is said (S13), with the facts behind it: the language and the reply time the form promises. */
+    h2: "A real person answers, in Arabic or English, the same working\u00a0day.",
+    pageTitle: "Contact us",
+    pageLede: "WhatsApp is the quickest. The form and email reach the same people.",
+    status: "Something down for everyone? See the status page.",
+    strip: { customer: "Already a customer?", login: "Log in", down: "Site down?", wa: "WhatsApp us", ticket: "Open a ticket" },
     wa: {
       title: "Message us on WhatsApp",
       cta: "Open WhatsApp",
       defaultText: "Hello 3enwank. I came from your website and I have a question.",
+      planText: "Hello 3enwank. I have a question about {plan}.",
     },
     urgent: {
-      label: "Site down, or email not arriving?",
-      wa: "WhatsApp",
       waText: "URGENT. My site is down. My domain is:",
-      ticket: "Open a ticket",
       emailSubject: "Site down:",
     },
     email: "Email",
     emailBody: "Quotes and new projects.",
     address: "Visit",
     addressBody: "By appointment.",
-    existing: "Already a customer?",
-    existingCta: "Open the customer area",
+    formLink: "Open the contact form",
     form: {
       title: "Prefer to write?",
       needLegend: "What do you need?",
-      need: { hosting: "Hosting", website: "A new website", domains: "Domains", care: "A care plan", other: "Something else" },
+      need: { hosting: "Hosting", website: "A new website", domains: "Domains", care: "A care plan", move: "Move my site", other: "Something else" },
+      planNote: "About: {plan}",
       name: "Your name",
       reach: "WhatsApp number or email",
       note: "Anything we should know?",
@@ -447,6 +467,7 @@ export const en: Messages = {
     title: "Page not found",
     body: "The page you are looking for does not exist or has moved.",
     home: "Go to the home page",
+    elsewhere: "Or go to",
   },
   features: { labels: {}, values: {}, texts: {}, summaries: {} },
 };

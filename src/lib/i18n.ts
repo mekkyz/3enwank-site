@@ -61,12 +61,13 @@ export function localeParams(): Array<{ locale: Locale }> {
   return prefixedLocales().map((locale) => ({ locale }));
 }
 
-export type PageKey = "home" | "hosting" | "websites" | "care" | "domains" | "about" | "terms" | "privacy" | "delivery" | "refunds";
+// "contact" is a page of its own since 2026-09-15 (S7); it was a section at the foot of the home page, so every Contact link left the page a visitor was on.
+export type PageKey = "home" | "hosting" | "websites" | "care" | "domains" | "about" | "contact" | "terms" | "privacy" | "delivery" | "refunds";
 
 /** Sections of the home page that other pages link into. */
 export type SectionKey = "domains" | "contact";
 
-export const pageKeys: readonly PageKey[] = ["home", "hosting", "websites", "care", "domains", "about", "terms", "privacy", "delivery", "refunds"];
+export const pageKeys: readonly PageKey[] = ["home", "hosting", "websites", "care", "domains", "about", "contact", "terms", "privacy", "delivery", "refunds"];
 
 const SLUGS: Record<PageKey, string> = {
   home: "",
@@ -75,6 +76,7 @@ const SLUGS: Record<PageKey, string> = {
   care: "care",
   domains: "domains",
   about: "about",
+  contact: "contact",
   terms: "terms",
   privacy: "privacy",
   delivery: "delivery",
@@ -91,6 +93,25 @@ export function pathFor(page: PageKey, locale: Locale): string {
 /** Anchor into a section of the home page, e.g. "/ar/#contact". */
 export function anchorFor(section: SectionKey, locale: Locale): string {
   return `${pathFor("home", locale)}#${section}`;
+}
+
+/** What the contact form can be opened for; "move" is the "Move my site" option (S6). */
+export type ContactNeed = "hosting" | "website" | "domains" | "care" | "move" | "other";
+
+/**
+ * The contact page, optionally opened for one need and one plan or package, e.g.
+ * "/ar/contact/?need=website&plan=Business%20Website". The page is cached HTML, so the form and the
+ * WhatsApp link read these in the browser (lead-form.tsx, contact.tsx) rather than on the server,
+ * which would render the page per request.
+ */
+export function contactHref(locale: Locale, prefill: { need?: ContactNeed; plan?: string; note?: string } = {}): string {
+  const query = new URLSearchParams();
+  if (prefill.need) query.set("need", prefill.need);
+  if (prefill.plan) query.set("plan", prefill.plan);
+  // `note`: the assistant's "use the contact form" hands the visitor's question over as the form's note (S8).
+  if (prefill.note) query.set("note", prefill.note);
+  const qs = query.toString();
+  return `${pathFor("contact", locale)}${qs ? `?${qs}` : ""}`;
 }
 
 /** The same page in every locale, for the language menu (current one included, marked). */

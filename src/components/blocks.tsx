@@ -21,46 +21,33 @@ export function Section({
   className?: string;
 }) {
   return (
-    <section id={id} className={`py-12 sm:py-16 ${TONES[tone]} ${className}`}>
+    // 40px on a phone (was 48): seven sections on the home page, and the owner's budget is about seven phone screens (S1).
+    <section id={id} className={`py-10 sm:py-16 ${TONES[tone]} ${className}`}>
       <Container>{children}</Container>
     </section>
   );
 }
 
-/** Small-caps label above a heading. */
-export function Kicker({ children, tone = "brand" }: { children: ReactNode; tone?: "brand" | "light" }) {
-  return (
-    <p
-      className={`mb-3 text-xs font-extrabold uppercase tracking-[0.14em] ${tone === "light" ? "text-accent-soft" : "text-brand"}`}
-    >
-      {children}
-    </p>
-  );
-}
-
+/*
+ * No Kicker. The small uppercase label above a heading is removed everywhere (owner, 2026-09-15, S13):
+ * the heading says what the section is, as a statement, and a second label above it said it twice.
+ * H2 is 28px on a phone and 32px from sm, the scale the review asked for (30 to 32), well under the
+ * home H1 and the 44px page H1, so the three levels read as three.
+ */
 export function SectionHeader({
-  kicker,
   title,
   lede,
   right,
-  light = false,
 }: {
-  kicker?: string;
   title: string;
   lede?: string;
   right?: ReactNode;
-  light?: boolean;
 }) {
   return (
-    <header data-reveal="" className="mb-8 flex flex-wrap items-end justify-between gap-5 sm:mb-10">
+    <header className="mb-8 flex flex-wrap items-end justify-between gap-5 sm:mb-10">
       <div className="max-w-2xl">
-        {kicker ? <Kicker tone={light ? "light" : "brand"}>{kicker}</Kicker> : null}
-        <h2 className={`text-balance text-3xl font-extrabold tracking-tight sm:text-4xl ${light ? "text-white" : "text-ink"}`}>
-          {title}
-        </h2>
-        {lede ? (
-          <p className={`mt-3 text-balance text-base sm:text-lg ${light ? "text-dark-muted" : "text-muted"}`}>{lede}</p>
-        ) : null}
+        <h2 className="text-balance text-[1.75rem] font-extrabold leading-tight tracking-tight text-ink sm:text-[2rem]">{title}</h2>
+        {lede ? <p className="mt-3 text-balance text-base text-muted sm:text-lg">{lede}</p> : null}
       </div>
       {right ? <div className="shrink-0">{right}</div> : null}
     </header>
@@ -72,32 +59,29 @@ export function SectionHeader({
  * page: the fade was the third gradient a visitor met before reading anything.
  */
 export function PageIntro({
-  kicker,
   title,
   lede,
   children,
 }: {
-  kicker?: string;
-  title: string;
+  /** A node, not only a string: the care, websites and domains intros carry a live price (S13). */
+  title: ReactNode;
   lede?: string;
   children?: ReactNode;
 }) {
   return (
-    <header className="bg-surface-alt pt-14 pb-10 sm:pt-20 sm:pb-14">
+    <header className="border-b border-line bg-surface-alt pt-12 pb-10 sm:pt-16 sm:pb-12">
       <Container>
-        {kicker ? (
-          <div className="rise">
-            <Kicker>{kicker}</Kicker>
-          </div>
-        ) : null}
         {/*
          * Balanced, not ragged: a two-line heading breaks into two lines of the same length rather
          * than a long one and a short one. The copy binds the words inside each sentence with
          * non-breaking spaces, so the break can only land between sentences.
+         *
+         * 44px from sm (was 48) and no entrance animation: the page H1 sits one clear step under the
+         * home H1 and above the 32px H2, and nothing on a page waits to fade in (owner, 2026-09-15).
          */}
-        <h1 className="rise max-w-4xl text-balance text-4xl font-extrabold tracking-tight text-ink sm:text-5xl">{title}</h1>
-        {lede ? <p className="rise-2 mt-4 max-w-2xl text-pretty text-lg text-muted sm:text-xl">{lede}</p> : null}
-        <div className="rise-3">{children}</div>
+        <h1 className="max-w-4xl text-balance text-4xl font-extrabold tracking-tight text-ink sm:text-[2.75rem] sm:leading-[1.1]">{title}</h1>
+        {lede ? <p className="mt-4 max-w-2xl text-pretty text-lg text-muted">{lede}</p> : null}
+        {children}
       </Container>
     </header>
   );
@@ -114,15 +98,54 @@ export function Card({
   highlight?: boolean;
   as?: "div" | "li" | "article";
 }) {
-  // The halo followed the brand rather than a colour written down here, which had stayed the
-  // retired purple through the vibrancy pass.
+  /*
+   * One container radius for every card, panel and field on the site (rounded-lg, 8px), a visible
+   * hairline, and the light theme's neutral shadow from --card-shadow (none in dark). No hover lift,
+   * no reveal and no coloured halo on the highlighted plan: a static brand border marks it (owner,
+   * 2026-09-15). The badge that goes with it is its own decision (S10).
+   */
   return (
     <Tag
-      data-reveal=""
-      className={`lift relative rounded-xl border bg-panel p-6 sm:p-7 ${highlight ? "pulse-glow border-2 border-brand shadow-[0_24px_50px_-30px_var(--color-brand-ink)]" : "border-line"} ${className}`}
+      className={`relative rounded-lg border bg-panel p-6 shadow-[var(--card-shadow)] sm:p-7 ${highlight ? "border-2 border-brand" : "border-line"} ${className}`}
     >
       {children}
     </Tag>
+  );
+}
+
+/**
+ * The one "Most chosen" mark (owner, 2026-09-15, S10), the same on the home tabs, the hosting and care
+ * cards and the website packages. It was an 11px uppercase pill beside the name on the home page and
+ * a tracked uppercase label notched into the card's top border on the product pages: two designs for
+ * one idea. It sits inline after the plan's name everywhere now, in the 13px text-xs floor (14px in
+ * Arabic, globals.css), sentence case, and a tag shape rather than a pill, since pills are for buttons
+ * and tabs only. No glow and no pulse: the card's static brand border (Card highlight) does the rest.
+ */
+export function MostChosen({ children }: { children: ReactNode }) {
+  return <span className="inline-flex items-center whitespace-nowrap rounded-md bg-brand-soft px-2 py-0.5 text-xs font-bold text-brand-strong">{children}</span>;
+}
+
+/**
+ * Numbered steps on hairlines: the home page's moving section (S6) and the websites page's "How a build
+ * works" (S12). The number is the list's own numbering drawn in brand colour on the title's line, not an
+ * icon in a circle, and the <ol> carries the order for a screen reader.
+ */
+export function Steps({ steps, heading: H = "h3" }: { steps: ReadonlyArray<{ title: string; body: string }>; heading?: "h2" | "h3" }) {
+  return (
+    <ol className={`grid sm:gap-x-12 ${steps.length === 4 ? "sm:grid-cols-2 lg:grid-cols-4" : "sm:grid-cols-3"}`}>
+      {steps.map((step, i) => (
+        // Tighter on a phone, as the home facts rows beside them (S1, verify): 16px rows and an 18px title under sm.
+        <li key={step.title} className="border-t border-line py-4 sm:py-5">
+          <H className="flex items-baseline gap-3 text-lg font-extrabold text-ink sm:text-xl">
+            <span aria-hidden="true" className="tabular text-brand-strong">
+              {i + 1}
+            </span>
+            {step.title}
+          </H>
+          <p className="mt-1 text-base text-muted sm:mt-1.5">{step.body}</p>
+        </li>
+      ))}
+    </ol>
   );
 }
 
@@ -131,14 +154,11 @@ export function Fine({ children }: { children: ReactNode }) {
   return <p className="mt-8 max-w-prose text-pretty text-sm leading-relaxed text-muted">{children}</p>;
 }
 
-type ButtonVariant = "primary" | "secondary" | "white" | "outline";
+type ButtonVariant = "primary" | "secondary" | "outline";
 const VARIANTS: Record<ButtonVariant, string> = {
-  primary: "btn-primary shadow-[0_10px_24px_-14px_var(--color-brand-ink)]",
+  // No purple glow under the filled button; the "white" variant went with the purple band it sat on.
+  primary: "btn-primary",
   secondary: "border-[1.5px] border-line-strong bg-panel text-ink hover:border-brand hover:text-brand-strong",
-  // Its own focus ring. This variant only ever sits on the purple band, and the global ring
-  // (globals.css :focus-visible) is brand purple: 1.0:1 against the band in the light theme, so the
-  // only control in the band had no visible focus. White is what the band's text already is.
-  white: "bg-white text-[#5e1eb8] hover:bg-[#f2eafd] focus-visible:outline-white",
   outline: "border-[1.5px] border-brand text-brand-strong hover:bg-brand-soft",
 };
 
@@ -161,7 +181,8 @@ export function ButtonLink({
   return (
     <a
       href={href}
-      className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-full font-bold transition active:scale-[0.98] ${pad} ${VARIANTS[variant]} ${className}`}
+      // Colour transitions only: the press shrink was motion that explained nothing (owner, 2026-09-15).
+      className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-full font-bold transition-colors ${pad} ${VARIANTS[variant]} ${className}`}
       {...(external ? { rel: "noopener" } : {})}
     >
       {children}
@@ -182,7 +203,7 @@ export function ArrowLink({
   return (
     <a
       href={href}
-      className={`arrow-link inline-flex min-h-11 items-center gap-1.5 text-sm font-bold text-brand-strong hover:text-brand ${className}`}
+      className={`inline-flex min-h-11 items-center gap-1.5 text-sm font-bold text-brand-strong hover:text-brand ${className}`}
     >
       {children}
       {/*
@@ -198,7 +219,8 @@ export function ArrowLink({
 }
 
 export function Empty({ children }: { children: ReactNode }) {
-  return <p className="rounded-2xl border border-line bg-panel px-4 py-6 text-center text-sm text-muted">{children}</p>;
+  // rounded-lg: the one container radius (it was the only 16px box among 12px cards).
+  return <p className="rounded-lg border border-line bg-panel px-4 py-6 text-center text-sm text-muted">{children}</p>;
 }
 
 export function Check({ className = "text-accent" }: { className?: string }) {

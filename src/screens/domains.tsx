@@ -1,10 +1,13 @@
 import { ButtonLink, Card, PageIntro, Section } from "@/components/blocks";
 import { DomainSearch } from "@/components/domain-search";
+import { PricedText } from "@/components/currency";
+import { cheapestPrices } from "@/lib/format";
+import { currencies, type Currency, type Money } from "@/lib/catalogue";
 import { Shell } from "@/components/shell";
 import { pageMetadata } from "@/lib/metadata";
-import { anchorFor, pathFor, type Locale } from "@/lib/i18n";
+import { contactHref, pathFor, type Locale } from "@/lib/i18n";
 import { messagesFor } from "@/messages";
-import { assistantOn, domainSearchLabels, screenContext, searchDomainsOnServer, storeApi } from "./shared";
+import { assistantOn, domainSearchLabels, screenContext, searchDomainsOnServer, storeApi, whatsappNumber } from "./shared";
 
 export const domains = {
   metadata(locale: Locale) {
@@ -19,9 +22,23 @@ export const domains = {
     const initialResults = q ? await searchDomainsOnServer(q, "EGP") : null;
     const open = catalogue.domains.enabled && catalogue.tlds.length > 0;
     const api = storeApi(catalogue);
+    /*
+     * "from {price} a year" in the intro (S13): per ending, the dearer of its first year and its
+     * renewal, then the cheapest of those. A name that opens at 199 and renews at 3,199 would make
+     * "from 199 a year" true for one year only; this is a price that holds every year.
+     */
+    const yearly = catalogue.tlds.map((tld) => {
+      const out: Partial<Record<Currency, Money>> = {};
+      for (const c of currencies) {
+        const p = tld.prices[c];
+        if (p) out[c] = p.renew.gross > p.register.gross ? p.renew : p.register;
+      }
+      return out;
+    });
     return (
-      <Shell locale={locale} page="domains" storeUrl={catalogue.store.url} legalName={company.legalName} supportEmail={company.contactEmail} trust={trust} assistantEnabled={catalogue.assistant.enabled} turnstileSiteKey={catalogue.assistant.turnstileSiteKey}>
-        <PageIntro kicker={t.domains.title} title={t.domains.h2} lede={t.domains.lede} />
+      <Shell locale={locale} page="domains" storeUrl={catalogue.store.url} legalName={company.legalName} trust={trust} whatsapp={whatsappNumber(catalogue)} assistantEnabled={catalogue.assistant.enabled} turnstileSiteKey={catalogue.assistant.turnstileSiteKey}>
+        {/* The intro names the offer and a yearly price while registration is open (S13); closed, the statement alone. */}
+        <PageIntro title={open ? <PricedText template={t.domains.h2Price} prices={cheapestPrices(yearly)} locale={locale} fallback={t.domains.h2} /> : t.domains.h2} lede={t.domains.lede} />
         {/*
          * The search has a band of its own, like every other page's content. It used to sit inside
          * the title block, which made this the one page whose heading came with a form attached.
@@ -33,8 +50,8 @@ export const domains = {
          * VAT-inclusive, like every other figure on the site.
          */}
         <Section>
-          <div className="rounded-2xl border border-line bg-panel p-5 sm:p-8">
-            <DomainSearch locale={locale} searchPath={pathFor("domains", locale)} cartUrl={api.cartDomain} apiUrl={api.domainSearch} ideasUrl={api.domainIdeas} contactHref={anchorFor("contact", locale)} labels={domainSearchLabels(t)} ideas={assistantOn(catalogue)} tlds={catalogue.tlds.map((t) => t.tld)} turnstileSiteKey={catalogue.assistant.turnstileSiteKey} initialQuery={q} initialResults={initialResults as never} initialAdded={params.added ? [params.added] : []} initialError={params.error ?? null} resultHeading="h2" />
+          <div className="rounded-lg border border-line bg-panel p-5 shadow-[var(--card-shadow)] sm:p-8">
+            <DomainSearch locale={locale} searchPath={pathFor("domains", locale)} cartUrl={api.cartDomain} apiUrl={api.domainSearch} ideasUrl={api.domainIdeas} contactHref={contactHref(locale, { need: "domains" })} labels={domainSearchLabels(t)} ideas={assistantOn(catalogue)} tlds={catalogue.tlds.map((t) => t.tld)} turnstileSiteKey={catalogue.assistant.turnstileSiteKey} initialQuery={q} initialResults={initialResults as never} initialAdded={params.added ? [params.added] : []} initialError={params.error ?? null} resultHeading="h2" />
           </div>
         </Section>
         {/*
@@ -48,7 +65,7 @@ export const domains = {
           <Section>
             <Card className="grid gap-6 md:grid-cols-[1fr_auto] md:items-center">
               <p className="text-muted">{t.domains.notYet}</p>
-              <ButtonLink href={anchorFor("contact", locale)}>{t.domains.ask}</ButtonLink>
+              <ButtonLink href={contactHref(locale, { need: "domains" })}>{t.domains.ask}</ButtonLink>
             </Card>
           </Section>
         )}

@@ -46,7 +46,8 @@ server starts and during `next build`.
 | `CATALOGUE_AUTH` | empty | `user:password` sent as basic auth (staging behind nginx auth) |
 | `STORE_URL` | `https://my.3enwank.com` | Store origin for Log in links when the catalogue has none |
 | `SITE_URL` | `https://3enwank.com` | Canonical origin for sitemap, hreflang, OpenGraph |
-| `WHATSAPP_NUMBER` | empty | International format without `+`; empty hides the WhatsApp card |
+| `WHATSAPP_NUMBER` | empty | International format without `+`; the WhatsApp links (contact, moving, Talk to us first, the assistant's handoff) are built from it in `src/lib/whatsapp.ts`; without a number they fall back to the contact form |
+| `STATUS_URL` | empty | The status page. Empty renders no Status link; set, a Status link shows in the footer, the phone menu and on the contact page (read at start, so a restart is enough) |
 | `SITE_REVALIDATE_SECRET` | empty | Token for `POST /api/revalidate?token=…`; empty disables the endpoint |
 
 ## The catalogue and the fallback
@@ -84,8 +85,11 @@ src/app/(en)/…            English routes at the root, one thin page.tsx per sc
 src/app/[locale]/…        prefixed locales (generateStaticParams → ar), same screens
 src/app/global-not-found  the 404 page, every language
 src/app/sitemap.ts        sitemap.xml with hreflang alternates; robots.ts
-src/screens/*             one module per page: metadata(locale) + render(locale)
+src/screens/*             one module per page: metadata(locale) + render(locale); contact.tsx is /contact/
 src/components/*          shell (header, nav, footer), plan cards, tables, currency switch
+src/components/mobile-menu.tsx  the phone Menu sheet;  assistant.tsx the Ask button and its sheet
+src/components/contact-prefill.tsx  reads ?need=, ?plan= and ?note= into the contact form and WhatsApp text
+src/lib/handoff.ts        the assistant's WhatsApp, ticket and contact-form links;  whatsapp.ts wa.me links
 src/messages/{en,ar}.ts   all copy, one typed shape (types.ts)
 src/lib/catalogue.ts      fetch + validate + fallback;  format.ts prices and feature lines;  i18n.ts paths
 catalogue.fallback.json   full export of the endpoint (scripts/export-catalogue.ts), used when it is unreachable
@@ -97,6 +101,46 @@ Arabic bundled from `@fontsource-variable` (no font CDN), inline SVG logo, no UI
 The only third-party request is the spam check (`src/lib/turnstile.ts`), loaded when a visitor sends
 the contact form, a chat message or a name-ideas request, never on page load; the privacy policy
 says so. Arabic pages render with `dir="rtl"` and logical CSS properties.
+
+## Page structure (owner, 2026-09-15)
+
+The site has a plain engineering look: flat backgrounds, hairlines and tables, type doing the work.
+No glows, grids, glass, floating or drifting, and no icons in tinted circles. Buttons and tabs are
+pills; cards and fields share one container radius. `docs/TESTING.md` in the platform repository
+has a checklist line for each decision below.
+
+**Home page** (`src/screens/home.tsx`, S1). Each thing is said once, in this order: the hero; plans
+and prices in one tab strip (Hosting, Websites, Care; a family with nothing to sell has no tab); one
+facts list (six rows, a bold fact and a line each, two columns from `sm`, no cards or icons); moving
+to us (three numbered steps and "Ask us to move your site"); the domain search; the FAQ in one
+column; contact, which opens with the customer and site-down strip. There are no hero tiles and no
+"What we do" section, and a phone reads the page in about seven screens. Section headings are
+statements, with no small uppercase label above them.
+
+**Hero** (S2). One column: the headline "Everything you need to get online, in one place." large
+across the width, the lede under it, the two buttons below. No panel, glow, grid or tiles, and no
+`tracking-*` utility: Arabic zeroes letter-spacing, so the heading is set by size and leading only.
+
+**Header** (`src/components/shell.tsx`, S15). From `lg` one row: logo, navigation, currency, cart,
+language, log in, Contact. Below `lg` the row holds only the logo, the cart and one **Menu** button,
+which opens `MobileMenu`: a modal `<dialog>` docked to the end side (right in English, left in
+Arabic) holding the navigation, Contact, the language, the currency, log in and, when `STATUS_URL` is
+set, Status. Tab and Shift+Tab stay inside it, Escape closes it and focus returns to Menu. Contact goes
+to `/contact/` (S7), never to a section of the home page.
+
+**Assistant** (`src/components/assistant.tsx`, S8). A labelled corner pill, "Ask" / "اسأل" with an
+icon, with no rings. Below 768px it tucks away while the reader scrolls down and returns when
+scrolling stops or turns up, unless its spot would cover a table, a form or a field, a price, a row
+marked `data-float-avoid` (plan specs, feature lists, domain results), or a link, button, tab or FAQ
+question. It opens as a full modal sheet on a phone and as a panel docked full height on the end side
+from `md`; Escape closes it and focus returns to the button. Once the visitor has asked something it
+offers three ways to a person, built on the site by `src/lib/handoff.ts`: **Continue on WhatsApp**
+(the question and a short summary prefilled), **Send as a support ticket**
+(`{store}/tickets/new?subject=…&message=…`; a signed-out visitor passes through login) and the
+contact form with the question as its note. The site builds these links itself rather than calling
+the platform: that route refuses while the assistant is off, which is exactly when a person is the
+only way forward, and a window opened after an awaited request is a popup Safari blocks. The
+assistant's copy never tells visitors to email about their account.
 
 ## Hosting on the box
 
@@ -194,38 +238,48 @@ The theme follows the visitor's system setting until the footer switch is used; 
 stamps `data-theme` from the stored choice or `prefers-color-scheme` before the first paint. A
 visitor without JavaScript gets the `prefers-color-scheme: light` block in `globals.css`, which
 repeats the light tokens: the two blocks must stay identical. Every colour is a token in
-`src/app/globals.css` with a value per theme; components never hard-code a colour except the two
-brand hues in gradients. The home hero's glow and grid are CSS on those tokens (`.hero-glow`,
-`.hero-grid`), toned down in light.
+`src/app/globals.css` with a value per theme; components never hard-code a colour beyond the white label on the brand
+button. There are no gradients, glows or grids any more (owner, 2026-09-15); the light theme separates
+its layers with the surface, panel and hairline tokens rather than tinted shadows.
 
 ## Motion
 
-All decoration, all flattened by `prefers-reduced-motion`. The tab strip (`TabStrip` in
-`src/components/tabs.tsx`) is the only one on the site and slides a pill to the chosen tab; the
-plans' panels share a grid cell so the page never jumps, the domain search eases between panel
-heights. Section headings, cards, the FAQ and the band fade up once as they scroll into view
-(`REVEAL_SCRIPT` in `src/components/root.tsx`), which is skipped for anything on the first screen,
-for reduced motion and for automated browsers, so `pnpm check` screenshots the finished page.
-Prices fade on a currency change, FAQ answers slide open (Chromium), card icons fill on hover and
-the hero glow breathes on a 20 second loop.
+Functional only (owner, 2026-09-15, S3): motion stays where it explains something, and
+`prefers-reduced-motion` flattens all of it. What is left:
+
+- the tab strip (`TabStrip` in `src/components/tabs.tsx`) slides its pill to the chosen tab; the plans'
+  panels share a grid cell so the page never jumps, and the domain search's panels fade in and ease
+  between heights;
+- FAQ answers slide open and shut (`.faq-item::details-content`, Chromium; other browsers open at once),
+  and the caret turns;
+- hover changes colour, never position: no card lift, no leaning chevron;
+- the theme switch fades colours, and prices fade when the currency changes (`html.currency-switching`);
+- the assistant's typing dots and caret while an answer streams.
+
+Gone, with their CSS: the reveal-on-scroll fades and `REVEAL_SCRIPT`, the header's transparent bar
+over the hero, the hero glow's breathing and the grid, the tiles' drift, icon spin, card lifts, the
+plan card's pulse and the chat bubble's rings. Nothing on the site waits to be scrolled to before it
+shows, so in-page links land on finished sections and `pnpm check` screenshots the page as it is.
 
 ## Render check before a review
 
 `pnpm check` (`scripts/visual-check.mjs`) starts `next start` on the build, opens every page in every
 language at desktop and phone width with every `<details>` (the FAQ) opened, and fails on horizontal
 scroll, elements wider than the page, a header row wider than its own padding, wrapped table labels,
-empty sections, or Arabic text inside an LTR isolate. Screenshots land in `./shots/`. Modes:
+empty sections, or Arabic text inside an LTR isolate. On every phone page it also fails when the
+assistant's corner button, once scrolling has settled, sits over anything in its avoid list; and on the
+home page, once per language and width, when the button does not open the assistant full height (full
+width on a phone), move focus into it, close on Escape and return focus to the button. Screenshots land
+in `./shots/`. Modes:
 
 - `THEME=dark` (the default run) and `THEME=light` store that choice before each page loads.
 - `THEME=system` stores nothing and sets the browser's colour scheme instead (`SCHEME=light` by
   default, `SCHEME=dark` for the other), which is what a first-time visitor gets.
-- `REVEAL=1` hides `navigator.webdriver` from the page so the reveal-on-scroll script runs as it does
-  for a person, scrolls each home page to the bottom and fails if any `data-reveal-state="pending"`
-  element is left hidden. It checks the home pages only.
 - `BROWSER=firefox` or `BROWSER=webkit` runs any mode in that engine
   (`pnpm exec playwright install firefox webkit` once). WebKit on Linux is not iOS Safari.
 
-Run dark, light and system after every build that goes to a reviewer, and REVEAL=1 after any motion change.
+Run dark, light and system after every build that goes to a reviewer. (`REVEAL=1` went with the
+reveal script on 2026-09-15.)
 
 Two things about the widths it measures, both learned the hard way on 2026-09-12:
 

@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import type { Locale, PageKey } from "@/lib/i18n";
 import { about } from "./about";
 import { care } from "./care";
+import { contact } from "./contact";
 import { domains } from "./domains";
 import { home } from "./home";
 import { hosting } from "./hosting";
@@ -14,4 +15,4 @@ export type ScreenParams = { q?: string; added?: string; error?: string };
 /** `metadata` may be async: the legal pages read the company's legal name from the catalogue for their description. */
 export type Screen = { metadata(locale: Locale): Metadata | Promise<Metadata>; render(locale: Locale, params?: ScreenParams): Promise<ReactNode> };
 
-export const screens: Record<PageKey, Screen> = { home, hosting, websites, care, domains, about, terms, privacy, delivery, refunds };
+export const screens: Record<PageKey, Screen> = { home, hosting, websites, care, domains, about, contact, terms, privacy, delivery, refunds };

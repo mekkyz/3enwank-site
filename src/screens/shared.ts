@@ -1,11 +1,15 @@
 import { headers } from "next/headers";
-import { CATALOGUE_URL } from "@/lib/site";
+import { CATALOGUE_URL, WHATSAPP_NUMBER } from "@/lib/site";
 import type { DomainSearchLabels } from "@/components/domain-search";
 import type { TrustInfo } from "@/components/trust";
 import { loadCatalogue, type Catalogue } from "@/lib/catalogue";
 import { ASSISTANT_PREVIEW } from "@/lib/site";
 import { catalogueLocale, type Locale } from "@/lib/i18n";
-import { messagesFor, type Messages } from "@/messages";
+import { fill, messagesFor, type Messages } from "@/messages";
+import type { Product } from "@/lib/catalogue";
+import { deliveryFrom, depositSplit, localizedSummary } from "@/lib/format";
+import { contactHref } from "@/lib/i18n";
+import { waHref, withPlan } from "@/lib/whatsapp";
 
 /** Plans the pages single out, by catalogue slug; a slug that is not in the catalogue simply highlights nothing. */
 export const HIGHLIGHT: Record<"hosting" | "build" | "care", string> = { hosting: "hosting-m", build: "business-website", care: "care-plus" };
@@ -65,6 +69,34 @@ export async function searchDomainsOnServer(query: string, currency: "EGP" | "US
     // The widget re-asks from the browser the moment it hydrates; a failure here is not the end.
     return null;
   }
+}
+
+/**
+ * The WhatsApp number, from the store's own company settings unless this site is told otherwise.
+ * WHATSAPP_NUMBER stays as an override for the day the WhatsApp line is not the phone line, but it
+ * is not required: an empty one used to hide the entire WhatsApp panel silently. Moved here from the
+ * home screen, because the contact and hosting pages open WhatsApp too now (2026-09-15).
+ */
+export function whatsappNumber(catalogue: Catalogue): string | null {
+  return WHATSAPP_NUMBER || (catalogue.company.phone ?? "").replace(/[^0-9]/g, "") || null;
+}
+
+/**
+ * "Talk to us first" on a website package (S12): WhatsApp with the package named in the first line, or,
+ * without a number, the contact page opened on "A new website" with the package in the note.
+ */
+export function talkFirstHref(product: Product, locale: Locale, t: Messages, whatsapp: string | null): string {
+  const plan = loc(product.name, locale);
+  return whatsapp ? waHref(whatsapp, withPlan(t.contact.wa.planText, plan)) : contactHref(locale, { need: "website", plan });
+}
+
+/**
+ * A build package's two terms as lines, in the page's language: the delivery time its summary announces
+ * and the deposit split from the catalogue. Shared by the websites page and the home Websites tab (S12).
+ */
+export function buildTerms(product: Product, locale: Locale, t: Messages): string[] {
+  const delivery = deliveryFrom(localizedSummary(product, locale, t)) ?? deliveryFrom(product.summary?.en);
+  return [...(delivery ? [`${t.websites.delivery}: ${delivery}`] : []), fill(t.websites.deposit, depositSplit(product))];
 }
 
 /** Chat and name ideas: on when the store has its key, or forced on for a design review. */

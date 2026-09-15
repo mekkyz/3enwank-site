@@ -6,7 +6,8 @@ import { messagesFor } from "@/messages";
 describe("prices", () => {
   it("shows whole amounts without decimals and keeps Latin digits in Arabic", () => {
     expect(formatPrice({ gross: 199900, formatted: "EGP 1,999.00" }, "EGP", "en")).toBe("EGP 1,999");
-    expect(formatPrice({ gross: 199900, formatted: "EGP 1,999.00" }, "EGP", "ar")).toBe("1,999 EGP");
+    // Arabic writes the pound as a word (S12); the dollar keeps its code.
+    expect(formatPrice({ gross: 199900, formatted: "EGP 1,999.00" }, "EGP", "ar")).toBe("1,999 جنيه");
     expect(formatPrice({ gross: 4000, formatted: "USD 40.00" }, "USD", "en")).toBe("USD 40");
     expect(formatPrice({ gross: 1250, formatted: "USD 12.50" }, "USD", "ar")).toBe("12.50 USD");
     expect(formatPrice({ gross: 0, formatted: "EGP 0.00" }, "EGP", "en")).toBe("EGP 0");

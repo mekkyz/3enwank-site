@@ -8,9 +8,7 @@
 //   THEME=dark (default) | light   stores that choice in localStorage before every page loads.
 //   THEME=system                   stores nothing and sets the browser colour scheme instead, which is
 //                                  what a first-time visitor gets: SCHEME=light (default) or SCHEME=dark.
-//   REVEAL=1                       hides navigator.webdriver so REVEAL_SCRIPT (components/root.tsx)
-//                                  runs as it does for a person, scrolls each home page to the bottom
-//                                  and fails on any [data-reveal-state="pending"] left hidden.
+//   (REVEAL=1 is gone with REVEAL_SCRIPT: nothing on the site hides until scrolled to since 2026-09-15.)
 //   BROWSER=chromium (default) | firefox | webkit
 import { spawn } from "node:child_process";
 import { existsSync, mkdirSync } from "node:fs";
@@ -34,9 +32,7 @@ if (!base) {
 const origin = base || `http://127.0.0.1:${port}`;
 
 const locales = ["", "ar"];
-const reveal = process.env.REVEAL === "1";
-// The reveal pass is about the home page, where the sections, cards, band and FAQ reveal; the other pages keep their normal check.
-const pages = reveal ? [""] : ["", "hosting", "websites", "care", "domains", "about", "terms", "privacy", "delivery", "refunds"];
+const pages = ["", "hosting", "websites", "care", "domains", "about", "contact", "terms", "privacy", "delivery", "refunds"];
 const widths = [{ name: "desktop", width: 1440, height: 900 }, { name: "phone", width: 390, height: 844 }];
 const arabic = /[؀-ۿݐ-ݿࢠ-ࣿﭐ-﷿ﹰ-﻿]/;
 mkdirSync("shots", { recursive: true });
@@ -69,7 +65,7 @@ if (browserName === "chromium") {
 const themeMode = process.env.THEME === "light" || process.env.THEME === "system" ? process.env.THEME : "dark";
 const scheme = process.env.SCHEME === "dark" ? "dark" : "light";
 const expectedTheme = themeMode === "system" ? scheme : themeMode;
-const prefix = [browserName === "chromium" ? "" : `${browserName}-`, themeMode === "dark" ? "" : themeMode === "system" ? `system-${scheme}-` : "light-", reveal ? "reveal-" : ""].join("");
+const prefix = [browserName === "chromium" ? "" : `${browserName}-`, themeMode === "dark" ? "" : themeMode === "system" ? `system-${scheme}-` : "light-"].join("");
 const problems = [];
 let checked = 0;
 for (const w of widths) {
@@ -77,9 +73,12 @@ for (const w of widths) {
   const page = await ctx.newPage();
   if (themeMode !== "system") await page.addInitScript((t) => { try { localStorage.setItem("3enwank.theme", t); } catch {} }, themeMode);
   else await page.addInitScript(() => { try { localStorage.removeItem("3enwank.theme"); } catch {} });
-  // REVEAL_SCRIPT returns early for navigator.webdriver so ordinary runs screenshot the finished page;
-  // this pass takes that guard away on purpose, before any script on the page runs.
-  if (reveal) await page.addInitScript(() => { Object.defineProperty(Navigator.prototype, "webdriver", { configurable: true, get: () => false }); });
+  /*
+   * Per language on a phone: whether the assistant was on the page, and whether its button was ever out.
+   * The cover check below passed for a whole run while the button was tucked on every page (verify, S8).
+   */
+  const assistantSeen = new Set();
+  const assistantShown = new Set();
   for (const loc of locales) {
     for (const p of pages) {
       const path = `/${[loc, p].filter(Boolean).join("/")}${loc || p ? "/" : ""}`;
@@ -89,27 +88,17 @@ for (const w of widths) {
       // The theme the page actually painted with: a system run that stamps "dark" in a light context is a bug, not a pass.
       const painted = await page.evaluate(() => document.documentElement.dataset.theme);
       if (painted !== expectedTheme) problems.push(`${name}: data-theme=${painted}, expected ${expectedTheme}`);
-      // Scroll through once so sections that reveal on scroll are shown, then back to the top.
-      await page.evaluate(async (slow) => {
+      // Scroll through once, so anything that renders on the way down (the sticky bar, client islands) has, then back to the top.
+      await page.evaluate(async () => {
         const step = window.innerHeight * 0.8;
         // Instant, not smooth: a smooth scroll would still be moving when the next step starts.
         for (let y = 0; y < document.documentElement.scrollHeight; y += step) {
           window.scrollTo({ top: y, behavior: "instant" });
-          await new Promise((r) => setTimeout(r, slow ? 250 : 90));
+          await new Promise((r) => setTimeout(r, 90));
         }
         window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "instant" });
-        await new Promise((r) => setTimeout(r, slow ? 600 : 90));
-      }, reveal);
-      if (reveal) {
-        // Anything still pending after the whole page has passed through the viewport stays invisible for a real visitor too.
-        const state = await page.evaluate(() => ({
-          ran: document.querySelectorAll("[data-reveal-state]").length,
-          pending: [...document.querySelectorAll('[data-reveal-state="pending"]')].map((el) => `<${el.tagName.toLowerCase()} class="${(el.getAttribute("class") || "").slice(0, 50)}">`),
-        }));
-        // A run where the script never marked anything did not test the pending state at all.
-        if (state.ran === 0) problems.push(`${name}: reveal script did not run (no data-reveal-state anywhere)`);
-        for (const el of state.pending) problems.push(`${name}: still pending after scrolling to the bottom: ${el}`);
-      }
+        await new Promise((r) => setTimeout(r, 90));
+      });
       await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
       /*
        * Every <details> open before measuring. The FAQ answers sit in closed details, where they have
@@ -136,10 +125,9 @@ for (const w of widths) {
           const cs = getComputedStyle(el);
           if (cs.display === "none" || cs.visibility === "hidden" || el.closest("[data-scroll], .overflow-x-auto")) continue;
           /*
-           * Decoration that is clipped by its own box cannot push the page sideways: the home hero's
-           * glow (aria-hidden, inside .hero-bg with overflow hidden) is wider than the screen on
-           * purpose and drifts. Skipped only when BOTH hold, so real content that spills out of a
-           * clipping card is still reported.
+           * Decoration that is clipped by its own box cannot push the page sideways (the hero glow that
+           * needed this is gone, the rule stays for the next one). Skipped only when it is aria-hidden
+           * AND clipped, so real content that spills out of a clipping card is still reported.
            */
           if (el.closest('[aria-hidden="true"]')) {
             let clipped = false;
@@ -198,13 +186,90 @@ for (const w of widths) {
       for (const r of result) problems.push(`${name}: ${r}`);
       await page.screenshot({ path: `shots/${name}.png`, fullPage: true });
       checked++;
+      /*
+       * Nothing floating covers content on a phone (S8, site review justDo): once scrolling has settled,
+       * the assistant's corner button is either tucked away or over nothing in its avoid list.
+       */
+      if (w.name === "phone" && (await page.locator("[data-assistant-launcher]").count())) {
+        await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+        await page.waitForTimeout(750);
+        assistantSeen.add(loc);
+        const cover = await page.evaluate(() => {
+          const b = document.querySelector("[data-assistant-launcher]");
+          if (!b || b.hasAttribute("data-tucked")) return null;
+          window.__assistantOut = true;
+          const dock = b.parentElement;
+          const r = dock.getBoundingClientRect();
+          for (const [x, y] of [[r.left + r.width / 2, r.top + r.height / 2], [r.left + 4, r.top + 4], [r.right - 4, r.bottom - 4]]) {
+            const under = document.elementsFromPoint(x, y).find((el) => !dock.contains(el));
+            // The same list as AVOID in assistant.tsx, <html> excluded: it carries data-currency too.
+            const hit = under?.closest("table, form, input, select, textarea, [data-currency]:not(html), [data-float-avoid], a[href], button, summary, [role=tab]");
+            if (hit) return `<${hit.tagName.toLowerCase()} class="${(hit.getAttribute("class") || "").slice(0, 50)}">`;
+          }
+          return null;
+        });
+        if (cover) problems.push(`${name}: the assistant button covers ${cover}`);
+        if (await page.evaluate(() => window.__assistantOut === true)) assistantShown.add(loc);
+      }
+      /*
+       * The assistant (S8), once per language and width on the home page: the labelled button opens a full
+       * sheet on a phone and a full-height docked panel on a desktop, focus goes inside, Escape closes it
+       * and focus comes back to the button.
+       */
+      if (p === "" && (await page.locator("[data-assistant-launcher]").count())) {
+        await page.evaluate(() => document.querySelector("[data-assistant-launcher]").focus());
+        await page.keyboard.press("Enter");
+        await page.waitForSelector("[data-assistant-sheet]", { timeout: 3000 }).catch(() => {});
+        const sheet = await page.evaluate(() => {
+          const el = document.querySelector("[data-assistant-sheet]");
+          if (!el) return null;
+          const r = el.getBoundingClientRect();
+          return { inside: el.contains(document.activeElement), width: r.width, height: r.height, vw: window.innerWidth, vh: window.innerHeight };
+        });
+        if (!sheet) problems.push(`${name}: the assistant button did not open the assistant`);
+        else {
+          if (!sheet.inside) problems.push(`${name}: focus did not move into the assistant`);
+          if (sheet.height < sheet.vh - 1) problems.push(`${name}: the assistant is ${Math.round(sheet.height)}px tall, not the full ${sheet.vh}px`);
+          if (w.name === "phone" && sheet.width < sheet.vw - 16) problems.push(`${name}: the assistant is not a full sheet on a phone (${Math.round(sheet.width)}px of ${sheet.vw})`);
+          await page.screenshot({ path: `shots/${name}-assistant.png` });
+          await page.keyboard.press("Escape");
+          const after = await page.evaluate(() => ({ open: !!document.querySelector("[data-assistant-sheet]"), back: document.activeElement?.hasAttribute("data-assistant-launcher") ?? false }));
+          if (after.open) problems.push(`${name}: Escape did not close the assistant`);
+          if (!after.back) problems.push(`${name}: focus did not return to the assistant button`);
+        }
+      }
+      /*
+       * The phone Menu sheet (S15), once per language on the home page: it opens as a modal, focus
+       * goes inside it, Tab stays inside it, Escape closes it and focus returns to the Menu button.
+       */
+      if (w.name === "phone" && p === "") {
+        const button = page.locator("[data-menu-button]");
+        if (!(await button.count())) problems.push(`${name}: no Menu button in the phone header`);
+        else {
+          await button.click();
+          const opened = await page.evaluate(() => {
+            const d = document.querySelector("dialog");
+            return { open: !!d?.open, inside: !!d?.contains(document.activeElement) };
+          });
+          if (!opened.open) problems.push(`${name}: Menu button did not open the sheet`);
+          if (!opened.inside) problems.push(`${name}: focus did not move into the open Menu sheet`);
+          await page.screenshot({ path: `shots/${name}-menu.png` });
+          for (let i = 0; i < 20; i++) await page.keyboard.press("Tab");
+          if (!(await page.evaluate(() => !!document.querySelector("dialog")?.contains(document.activeElement)))) problems.push(`${name}: Tab left the open Menu sheet`);
+          await page.keyboard.press("Escape");
+          const closed = await page.evaluate(() => ({ open: !!document.querySelector("dialog")?.open, back: document.activeElement?.hasAttribute("data-menu-button") ?? false }));
+          if (closed.open) problems.push(`${name}: Escape did not close the Menu sheet`);
+          if (!closed.back) problems.push(`${name}: focus did not return to the Menu button`);
+        }
+      }
     }
   }
+  for (const loc of assistantSeen) if (!assistantShown.has(loc)) problems.push(`${prefix}${w.name}-${loc || "en"}: the assistant button stayed tucked at the top of every page`);
   await ctx.close();
 }
 await browser.close();
 child?.kill();
 const unique = [...new Set(problems)];
-console.log(`${checked} renders checked (${browserName}, theme ${themeMode === "system" ? `system/${scheme}` : themeMode}${reveal ? ", reveal" : ""}); ${unique.length} problem(s)`);
+console.log(`${checked} renders checked (${browserName}, theme ${themeMode === "system" ? `system/${scheme}` : themeMode}); ${unique.length} problem(s)`);
 for (const p of unique) console.log(" -", p);
 process.exit(unique.length ? 1 : 0);

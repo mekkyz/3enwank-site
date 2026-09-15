@@ -121,9 +121,20 @@ export function LeadForm({
         }),
       });
       if (res.status === 429) return setState("limited");
-      // A refused challenge is not a broken form, and telling someone to "try again" when their
-      // browser is blocking the challenge sends them round the same loop for ever.
-      if (res.status === 403) return setState("blocked");
+      /*
+       * A refused challenge is not a broken form, and telling someone to "try again" when their
+       * browser is blocking the challenge sends them round the same loop for ever. But the store
+       * answers 403 for two causes, {"error":"captcha"} from the spam check and {"error":"forbidden"}
+       * for an origin it does not accept, and the second is our misconfiguration, not the visitor's
+       * browser: it gets the generic failure. The body is read only on a 403.
+       */
+      if (res.status === 403) {
+        const code = await res
+          .json()
+          .then((b: unknown) => (b && typeof b === "object" && "error" in b ? String((b as { error: unknown }).error) : ""))
+          .catch(() => "");
+        return setState(code === "captcha" ? "blocked" : "failed");
+      }
       if (!res.ok) return setState("failed");
       setState("sent");
     } catch {

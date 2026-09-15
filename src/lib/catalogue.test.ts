@@ -20,6 +20,14 @@ describe("catalogue fallback", () => {
     }
   });
 
+  it("never names card or wallet payments from the snapshot, which cannot know whether Paymob is live", () => {
+    // D5: a stale snapshot said vodafoneCash true. Manual methods keep the snapshot's own value.
+    const c = fallbackCatalogue();
+    expect(c.payments.vodafoneCash).toBe(false);
+    expect(c.payments.card).toBe(false);
+    expect(c.payments.bankTransfer || c.payments.instapay).toBe(true);
+  });
+
   it("carries the catalogue's depositBp for build packages", () => {
     const c = fallbackCatalogue();
     for (const p of c.products.build) expect(p.depositBp, p.slug).toBe(5000);

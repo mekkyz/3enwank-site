@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import { fallbackCatalogue } from "@/lib/catalogue";
 import { locales } from "@/lib/i18n";
 import { vatLine } from "@/lib/vat";
+import { homePaymentsCopy } from "@/lib/payments";
 import { fill, messagesFor } from "./index";
 
 type Tree = { [k: string]: unknown };
@@ -180,12 +181,65 @@ describe("home page copy the layout depends on", () => {
     }
   });
 
-  it("states no VAT rate in the reasons, the payments line or the FAQ", () => {
-    // Whether VAT is charged is the catalogue's to say (lib/vat.ts); copy written by hand may only say "where it applies".
+  it("names the ways to pay only through placeholders the catalogue fills", () => {
+    // lib/payments.ts fills these from catalogue.payments (D5). A method typed straight into the copy is one the store may not take.
     for (const locale of locales) {
       const t = messagesFor(locale);
-      const copy = [t.home.paymentsLine, ...t.home.reasons.map((r) => r.body), ...t.home.faq.map((f) => f.a)].join(" ");
+      expect(t.home.payments.line.match(/\{methods\}/g), locale).toHaveLength(1);
+      expect(t.home.reasons.filter((r) => r.body.includes("{kinds}")), locale).toHaveLength(1);
+      expect(t.home.faq.filter((f) => f.a.includes("{methods}")), locale).toHaveLength(1);
+      const { payments, ...homeRest } = t.home;
+      void payments;
+      expect(JSON.stringify(homeRest), locale).not.toMatch(/Vodafone|فودافون|InstaPay|إنستاباي|\bcard\b|كارت/i);
+    }
+  });
+
+  it("states no VAT rate in the hero, the reasons, the payments line or the FAQ", () => {
+    // Whether VAT is charged is the catalogue's to say (lib/vat.ts); copy written by hand may only say "where it applies".
+    // The hero joined the check when it replaced heroFacts, which carried the old assertion (audit item).
+    const every = { ...fallbackCatalogue(), payments: { bankTransfer: true, instapay: true, vodafoneCash: true, card: true } };
+    for (const locale of locales) {
+      const t = messagesFor(locale);
+      const pay = homePaymentsCopy(t, every);
+      const hero = [t.home.h1, t.home.lede, t.home.metaTitle, ...Object.values(t.home.tiles), ...Object.values(t.home.products).map((p) => p.title)];
+      const copy = [...hero, pay.line, ...pay.reasons.map((r) => r.body), ...pay.faq.map((f) => f.a)].join(" ");
       expect(copy, locale).not.toMatch(/\d+\s*[%٪]/);
+    }
+  });
+});
+
+describe("legal pages say what the platform does", () => {
+  /*
+   * Each pattern is a sentence that once claimed more than the code: outbound mail goes through the
+   * box's own postfix, not the email provider; invoices have no cancellation grace period (removal is
+   * an admin terminate); anonymise.ts also refuses live domains and leftover credit and never edits a
+   * backup or the support mailbox; the off-site backups sit with a storage provider (D12).
+   */
+  const text = (locale: (typeof locales)[number], page: "terms" | "privacy") => JSON.stringify(messagesFor(locale)[page]);
+  const expected = {
+    en: {
+      terms: { absent: [/grace period/i], present: [/parked with its files kept until we terminate it/] },
+      privacy: {
+        absent: [/to and from our support address/],
+        present: [/receives the mail sent to our support address/, /storage provider in Europe that holds our backups/, /no domain still registered with us or in transfer/, /no account credit left/, /backups are not edited/, /deleted from our mailbox by hand/],
+      },
+    },
+    ar: {
+      terms: { absent: [/مهلة الإلغاء/], present: [/مع الاحتفاظ بملفاته إلى أن نُنهيه/] },
+      privacy: {
+        absent: [/من عنوان الدعم وإليه/],
+        present: [/تصل عبره الرسائل المرسلة إلى عنوان الدعم/, /مزوّد تخزين في أوروبا يحتفظ بنسخنا الاحتياطية/, /ولا نطاقات ما زالت مسجّلة لدينا أو قيد النقل/, /ولا رصيد متبقٍ في الحساب/, /ولا تُعدَّل نسخنا الاحتياطية/, /وتُحذف يدويًا من صندوق بريدنا/],
+      },
+    },
+  } as const;
+
+  it("matches the platform in both languages", () => {
+    for (const locale of locales) {
+      for (const page of ["terms", "privacy"] as const) {
+        const rules = expected[locale][page];
+        for (const re of rules.absent) expect(text(locale, page), `${locale} ${page}`).not.toMatch(re);
+        for (const re of rules.present) expect(text(locale, page), `${locale} ${page}`).toMatch(re);
+      }
     }
   });
 });

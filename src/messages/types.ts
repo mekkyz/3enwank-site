@@ -75,11 +75,23 @@ export type Messages = {
      * the hero. They were a 12px facts line under the buttons, the smallest text on the page for the
      * claims a visitor decides on (owner, 2026-09-14). Four entries, in the order the icons in
      * screens/home.tsx expect: servers in Germany, support in both languages, prices in pounds, free
-     * migration. `paymentsLine` names the ways to pay under the four cards.
+     * migration. The third card's body carries exactly one {kinds}, filled from catalogue.payments.
      */
     reasonsTitle: string;
     reasons: Fact[];
-    paymentsLine: string;
+    /**
+     * The ways to pay, named only when the store takes them (lib/payments.ts, owner 2026-09-15 D5).
+     * `line` carries one {methods}; the "Prices in Egyptian pounds" reason carries one {kinds} and the
+     * FAQ answer on paying one {methods}. Each method name carries whatever the sentence needs in
+     * front of it (the Arabic ones their preposition), so the list reads as a sentence once joined.
+     */
+    payments: {
+      methods: { bankTransfer: string; instapay: string; vodafoneCash: string; card: string };
+      kinds: { transfer: string; wallet: string; card: string };
+      /** Between list items, and before the last one (", " and " or " in English). */
+      list: { separator: string; last: string };
+      line: string;
+    };
     /**
      * The four tiles that fill the right half of the hero on a laptop: one caption each under the
      * product name (home.products.*.title). Decoration for the eye, not navigation; the cards under
@@ -111,7 +123,7 @@ export type Messages = {
     moveTitle: string;
     moveBody: string;
     moveCta: string;
-    /** Six questions and their answers, as a details/summary list near the foot of the page; also published as FAQPage JSON-LD. */
+    /** Six questions and their answers, as a details/summary list near the foot of the page; also published as FAQPage JSON-LD. The answer on paying carries one {methods}. */
     faqTitle: string;
     faq: Array<{ q: string; a: string }>;
   };
@@ -204,7 +216,11 @@ export type Messages = {
     ideasUnavailable: string;
   };
   /** The chat widget in the corner of every page. */
-  assistant: { open: string; close: string; title: string; intro: string; placeholder: string; send: string; thinking: string; error: string; unavailable: string; note: string; stop: string; retry: string; clear: string; suggestions: readonly [string, string, string] };
+  /**
+   * `close` names the panel's own X button; `hide` names the launcher while the panel is open. Both
+   * were "Close", so a screen reader listing the controls offered two identical names for two buttons.
+   */
+  assistant: { open: string; close: string; hide: string; title: string; intro: string; placeholder: string; send: string; thinking: string; error: string; unavailable: string; note: string; stop: string; retry: string; clear: string; suggestions: readonly [string, string, string] };
   about: {
     title: string;
     h2: string;

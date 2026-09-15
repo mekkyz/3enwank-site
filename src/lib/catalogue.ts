@@ -96,9 +96,19 @@ export type Tld = Catalogue["tlds"][number];
 export type CatalogueSource = "remote" | "fallback";
 export type LoadedCatalogue = { catalogue: Catalogue; source: CatalogueSource; reason: string | null };
 
-/** The checked-in copy, validated so a bad refresh fails the build loudly instead of shipping junk. */
+/**
+ * The checked-in copy, validated so a bad refresh fails the build loudly instead of shipping junk.
+ *
+ * Card and wallet payments are switched off in it (owner decision D5). The platform publishes them
+ * as true only while Paymob and its wallet integration are configured, which a snapshot taken on
+ * some earlier day cannot vouch for: the 2026-09-11 snapshot still says vodafoneCash true from
+ * before that rule. A build that falls back would then name a way to pay the store does not take.
+ * Bank transfer and InstaPay are manual settings and are kept as the snapshot says. The live
+ * catalogue is untouched, so card and wallets still appear by themselves once Paymob is live.
+ */
 export function fallbackCatalogue(): Catalogue {
-  return catalogueSchema.parse(fallbackJson);
+  const snapshot = catalogueSchema.parse(fallbackJson);
+  return { ...snapshot, payments: { ...snapshot.payments, vodafoneCash: false, card: false } };
 }
 
 export type FetchLike = (url: string, init?: RequestInit) => Promise<Response>;

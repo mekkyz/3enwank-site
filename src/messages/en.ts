@@ -87,11 +87,21 @@ export const en: Messages = {
     reasons: [
       { title: "Servers in Germany", body: "Hardware we own and run ourselves, in a German data centre. No reseller between you and the machine." },
       { title: "Support in Arabic and English", body: "A person who can see your server reads your ticket and replies in the language you wrote in." },
-      { title: "Prices in Egyptian pounds", body: "Pay in EGP by transfer, wallet or card. Customers outside Egypt pay in dollars." },
+      /* {kinds} is filled from catalogue.payments (lib/payments.ts): a wallet and card are named only while the store takes them. */
+      { title: "Prices in Egyptian pounds", body: "Pay in EGP by {kinds}. Customers outside Egypt pay in dollars." },
       { title: "Free migration", body: "We move your site and email from your current host, and the site stays online while we do it." },
     ],
-    /* Card is named at the owner's request (2026-09-14); the store offers it once Paymob is live. */
-    paymentsLine: "Pay by bank transfer, InstaPay, Vodafone Cash or card.",
+    /*
+     * Built from catalogue.payments (owner, 2026-09-15, D5): the line named Vodafone Cash and card
+     * while the store took neither. The platform publishes card and wallets as true once Paymob is
+     * configured, and they appear here by themselves on the next publish.
+     */
+    payments: {
+      methods: { bankTransfer: "bank transfer", instapay: "InstaPay", vodafoneCash: "Vodafone Cash", card: "card" },
+      kinds: { transfer: "transfer", wallet: "wallet", card: "card" },
+      list: { separator: ", ", last: " or " },
+      line: "Pay by {methods}.",
+    },
     tiles: { hosting: "Simple yearly plans", websites: "Fixed price", domains: "Register or transfer", care: "Updates and fixes" },
     productsTitle: "What we do",
     products: {
@@ -149,9 +159,9 @@ export const en: Messages = {
       { q: "Can you move my site from my current host?", a: "Yes, free. Send us the login to your current hosting and we copy the site, the email and the database, then switch the domain once everything checks out. The site stays online the whole time." },
       { q: "Where are the servers?", a: "In a data centre in Germany, on hardware we own and run ourselves. Nobody sits between you and the machine your site runs on." },
       { q: "What do I pay from the second year?", a: "The normal price of the plan. It is printed on the plan next to the first-year price and on your first invoice, and the renewal invoice reaches you before the due date." },
-      { q: "How do I pay, and is VAT included?", a: "By bank transfer, InstaPay, Vodafone Cash or card, in Egyptian pounds; customers outside Egypt pay in dollars by transfer. The price you see is the full amount. Where value added tax applies, it is included in it and stated on the invoice." },
+      { q: "How do I pay, and is VAT included?", a: "By {methods}, in Egyptian pounds; customers outside Egypt pay in dollars by transfer. The price you see is the full amount. Where value added tax applies, it is included in it and stated on the invoice." },
       { q: "Do you answer in Arabic?", a: "Yes. Write in Arabic or English and the reply comes in the same language, from a person who can see your account and your server." },
-      { q: "What if I want to leave?", a: "Cancel from your account or by writing to us. The service stays active until the end of the period you paid for, so there is time to take your own copy of the site and email from cPanel. A domain registered with us can be transferred out after its first 60 days, as with every registrar." },
+      { q: "What if I want to leave?", a: "Cancel from the service's page in your account or by writing to us, and withdraw the request any time before the period ends. The service stays active until the end of the period you paid for, so there is time to take your own copy of the site and email from cPanel. A domain registered with us can be transferred out after its first 60 days, as with every registrar." },
     ],
   },
   hosting: {
@@ -260,6 +270,7 @@ export const en: Messages = {
   assistant: {
     open: "Ask a question",
     close: "Close",
+    hide: "Close assistant",
     title: "3enwank assistant",
     intro: "Ask about plans, domains, moving your site or billing. For anything about your own account, email us.",
     placeholder: "Write your question",
@@ -362,11 +373,17 @@ export const en: Messages = {
        * that says VAT is charged would be false until then. This sentence is true in both states.
        */
       { title: "Prices and billing", body: ["Prices are shown in Egyptian pounds and US dollars and are the full amount payable. Where value added tax applies, it is included in the price shown and stated on the invoice. Invoices are paid by bank transfer, using the account details printed on the invoice. Hosting, care plans and domains are billed once a year in advance. Where a plan advertises a price below its normal price, that lower price buys the first year only and the plan renews at the normal price, which is shown on the plan and on your first invoice. The renewal invoice is issued before the due date.", "Website builds are invoiced in two parts: a deposit to start and the rest when you approve the work. Work starts when the deposit is paid."] },
-      { title: "Hosting", body: ["A hosting plan gives you one cPanel account with the storage, bandwidth, email and database limits of the plan. Accounts are for lawful content only. Spam, phishing, malware and anything that harms other customers on the server leads to suspension without refund.", "An unpaid hosting renewal is suspended five days after the due date and can be reactivated by paying the invoice. Care plans and website builds are never suspended for late payment; upkeep stops. We do not delete accounts automatically. A cancelled account is removed after you tell us, or after the cancellation grace period on your invoice."] },
+      { title: "Hosting", body: ["A hosting plan gives you one cPanel account with the storage, bandwidth, email and database limits of the plan. Accounts are for lawful content only. Spam, phishing, malware and anything that harms other customers on the server leads to suspension without refund.", "An unpaid hosting renewal is suspended five days after the due date and can be reactivated by paying the invoice. Care plans and website builds are never suspended for late payment; upkeep stops. We do not delete accounts automatically. A cancelled account is parked with its files kept until we terminate it; tell us if you want it removed."] },
       { title: "Backups", body: ["Every account is copied off the server daily and kept for three months. Backups are a safety net, not a substitute for your own copy. Keep one of anything you cannot afford to lose."] },
       { title: "Care plans", body: ["A care plan covers updates, malware scanning, the number of content changes on the plan and a first-response time for requests. A content change is one clear edit that takes half an hour or less with the existing design and content. New pages, new features and design work are quoted separately."] },
       { title: "Domains", body: ["Domain names are registered in your name through our registrar and are subject to the registry’s rules for the extension. A name that is not renewed by its expiry date expires at the registry. Recovering an expired name may be impossible or cost extra. Transfer codes are sent to your account email on request."] },
-      { title: "Cancellation and refunds", body: ["Write to us to cancel a service. It stays active until the end of the paid period and is not renewed. A period you have already paid for is not refunded, except when we cannot deliver what you bought. The refund and cancellation policy has the detail."] },
+      /*
+       * The Cancel button on the service page (platform e911683) and the owner's 2026-09-15 decisions:
+       * withdrawable until the period ends, an open renewal invoice closed with the request (D2), and
+       * the hosting account parked rather than deleted until it is terminated (D8). The button names are
+       * the customer area's own (platform messages services.detail.cancelTitle and cancelSubmit).
+       */
+      { title: "Cancellation and refunds", body: ["A hosting plan or a care plan is cancelled from the customer area: open the service and press Request cancellation under Cancel at the end of the period. You can also write to us. The service stays active until the end of the paid period and is not renewed. Until that day the request can be withdrawn on the same page, and the service then renews as usual.", "If a renewal invoice for the service is open when you cancel, it is closed with the request: an unpaid invoice is cancelled, and a partly paid invoice is closed with a credit note and the amount already paid becomes credit on your account. When the paid period ends the service is closed. A hosting account is then parked, not deleted: the site and its email stop, and the files are kept on the server until the account is terminated.", "A period you have already paid for is not refunded, except when we cannot deliver what you bought. The refund and cancellation policy has the detail."] },
       { title: "Liability", body: ["We keep the servers running and patched, but no host can promise zero downtime. Our liability for any failure is limited to the amount you paid for the affected service in the current period. We are not liable for loss of business or data beyond the backups described above."] },
       { title: "Changes", body: ["We may update these terms. The version you accepted is recorded with your order, and the current version is always published here."] },
     ],
@@ -375,18 +392,31 @@ export const en: Messages = {
     title: "Privacy policy",
     intro: "How {legalName} (\"3enwank\") handles personal data on this website and in the customer area. Version {version}.",
     sections: [
-      { title: "This website", body: ["These pages run no analytics and load nothing from third parties. The only requests your browser makes are to this site itself. They set no cookies of their own, but the customer area at 3enwank.com/account is part of the same address, so if you are signed in your session cookie and your cart cookie travel with every request here too. Your session and the contents of your cart are read only by the customer area. These pages read one thing: how many items are in your cart, which the customer area publishes separately for the basket in the menu bar. Your choice of currency and of light or dark is kept in your browser and is never sent anywhere."] },
-      { title: "The customer area", body: ["When you open an account at 3enwank.com/account we store your name, email address, phone or WhatsApp number, address and, for businesses, the company name and tax registration number, because invoices reported to the tax authority require them. The customer area uses one session cookie to keep you signed in and nothing else."] },
+      /*
+       * Rewritten on 2026-09-15 (owner decision D6). The old text said these pages load nothing from
+       * third parties and the customer area uses one cookie; neither was true. Providers are named by
+       * what they do, not by brand, and every sentence says only what the code does: the spam check is
+       * loaded by lib/turnstile.ts on a send, not on page load; the chat keeps its conversation in
+       * sessionStorage; the cookies are the customer area's own (session, cart, cart_count, locale,
+       * currency, totp-setup for 15 minutes); the page keeps the theme and the currency in localStorage.
+       */
+      { title: "This website", body: ["These pages run no analytics and set no cookies of their own. Almost everything your browser fetches here comes from this site itself. The exceptions are tools you choose to use: when you send the contact form, send a message to the chat assistant or ask for name ideas, your browser loads a spam check from a separate provider, which tells people from automated traffic and receives your IP address and technical details of your browser to do so. Nothing is loaded from that provider before you send.", "What you type to the chat assistant or into name ideas is sent to an AI provider, which writes the reply, so do not put passwords or payment details in it. The conversation is kept in this browser tab only and is gone when the tab is closed. What you send through the contact form becomes a support request that our staff read."] },
+      { title: "Cookies and your browser", body: ["The customer area at 3enwank.com/account is part of the same address, so its cookies are sent with requests to these pages too. It sets a session cookie that keeps you signed in, a cart cookie that holds what you have put in your cart, a cart count cookie with the number of items in it, a language cookie with the language you chose, a currency cookie with the currency you chose in the store, and, only while you set up two-step sign-in, a cookie that holds that setup for fifteen minutes. These pages read one of them, the cart count, to show the basket in the menu bar; the others are read only by the customer area.", "These pages keep two choices in your browser's own storage, light or dark and the currency, and never send them anywhere."] },
+      { title: "The customer area", body: ["When you open an account at 3enwank.com/account we store your name, email address, phone or WhatsApp number, address and, for businesses, the company name and tax registration number, because invoices reported to the tax authority require them; a national ID is stored where an invoice requires one. We also keep your orders, invoices and payments, your support tickets and their attachments, copies of the emails we sent you for a limited time, and a record of sign-ins and of changes made to your account."] },
       /*
        * Where the data lives, which this policy never said. It is worth a section of its own now that
        * the site names a country in public: the servers and the backups on one side, and Egypt on the
        * other, because the people who administer both work from Cairo and the tax authority is Egyptian.
        */
       { title: "Where your data is held", body: ["Customer websites, their databases and their email run on servers we own in a data centre in Germany. The daily copy of each account is kept off those servers and inside Europe. The company itself is registered in Cairo, and the people who administer the servers and answer support requests work from Egypt, so your data is read from there as well. Invoice data also reaches the Egyptian Tax Authority, as described below."] },
+      { title: "Service providers", body: ["We use a few outside providers, each for one job, and each receives only what that job needs.", "A spam-check provider, loaded only when you send a form, a chat message or a request for name ideas, as described above.", "An AI provider, which receives the text of assistant chats and name-idea requests.", "Our email provider, which receives the mail sent to our support address.", "The domain registrar we work with and the registry of each extension, which receive the name, organisation, address, email address and phone number that every domain registration requires for its WHOIS record. Where the extension allows WHOIS privacy and it is switched on, those details are hidden from the public record.", "The data centre in Germany where our servers stand.", "A storage provider in Europe that holds our backups, encrypted with a key it does not have."] },
       { title: "Invoices and the tax authority", body: ["Invoices are reported to the Egyptian Tax Authority’s e-invoicing system, which receives the invoice details and the receiver’s name, address and tax number or national ID where the law requires it."] },
-      { title: "Payments", body: ["Invoices are paid by bank transfer and matched by invoice number, so we hold no card details of any kind. If we add card payment later, it will be handled by a payment provider that receives your card details directly, and this policy will say so before that happens."] },
+      { title: "Payments", body: ["Bank transfers and InstaPay payments are matched to the invoice by its number, so they involve no card details. Where checkout offers card or wallet payment, it is handled by a payment provider: your card details go straight to that provider and never pass through our servers, and we receive the result of the payment. If you choose to save a card for later payments, we keep the provider's reference to it, encrypted, with the card brand, the masked card number and the expiry date, so that you can recognise the card and remove it."] },
       { title: "Email", body: ["We send transactional email only: order confirmations, invoices, renewal reminders, service notices and replies to your support requests. Support mail is read by a real person."] },
-      { title: "Your rights", body: ["You can see and correct your details in the customer area at any time. You can ask us to close your account and delete what the law does not oblige us to keep; invoices are kept for the legal retention period. Write to the support address below."] },
+      /* Account deletion as the platform carries it out (owner decision D7): only for a closed account, irreversible, invoices kept. */
+      /* The blockers are closedBlockers() in the platform's anonymise.ts: domains and leftover credit refuse it too. It edits rows and files, */
+      /* never a backup or the support mailbox, so the policy says how those copies go (dumps age out; the mailbox is cleared by hand). */
+      { title: "Your rights", body: ["You can see and correct your details in the customer area at any time.", "To have your account deleted, write to the support address below. We carry it out once nothing is running or owed on the account: no active, suspended or pending services, no open invoices, no domain still registered with us or in transfer, and no account credit left (we refund it first). We then erase your name, company name, phone and WhatsApp numbers, address, tax registration number and national ID; replace the email address you sign in with by an address that receives no mail; switch off the login and end every session; and erase the text of your support tickets, delete their attachments and erase the content of the emails we sent you. Invoices and credit notes, with the name and address printed on them, are kept for the period the law requires, and so is our internal record of the actions taken on the account. Our backups are not edited: the copies of your details inside them are deleted as those backups expire, within about three months, and the messages you emailed to our support address are deleted from our mailbox by hand. Deletion cannot be undone."] },
     ],
   },
   delivery: {
@@ -405,7 +435,8 @@ export const en: Messages = {
     title: "Refund policy",
     intro: "How to cancel a service bought from {legalName} (\"3enwank\"), and when money is returned. Version {version}.",
     sections: [
-      { title: "Cancelling", body: ["Write to the support address below, or open a ticket in the customer area, and say which service you want to cancel. It stays active until the end of the period you have paid for and is not renewed after that. Nothing is deleted on the day you cancel."] },
+      /* Same facts as the terms' "Cancellation and refunds" (D2, D8), told as the steps a customer takes. */
+      { title: "Cancelling", body: ["Open the service in the customer area and press Request cancellation under Cancel at the end of the period. You can also write to the support address below, or open a ticket, and say which service you want to cancel. The service stays active until the end of the period you have paid for and is not renewed after that.", "You can withdraw the request on the same page at any time before the period ends, and the service then renews as usual. A renewal invoice that is open for the service when you cancel is closed with the request: if nothing has been paid on it, it is cancelled; if part of it has been paid, it is closed with a credit note and the amount paid becomes credit on your account.", "Nothing is deleted on the day you cancel. When the period ends, a hosting account is parked with its files kept until it is terminated, and your account itself stays open."] },
       { title: "Refunds", body: ["A period you have already paid for is not refunded. If we cannot deliver what you bought, you get the unused amount back, either to the way you paid or as credit on your account, whichever you prefer.", "Invoices are reported to the tax authority and cannot be altered after they are issued, so a correction is made with a credit note."] },
       { title: "Domain names", body: ["A domain is registered in your name at the registry on the day you pay, and the registry does not take it back, so a registered name is not refunded. If the registration fails, that line is refunded in full."] },
       { title: "Website builds", body: ["The deposit pays for the work that starts when you pay it. If you stop a build after work has started, the deposit stays with us, and anything invoiced but not yet started is refunded."] },

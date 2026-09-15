@@ -5,7 +5,8 @@ import { CURRENCY_KEY, DEFAULT_CURRENCY, currencies } from "@/lib/money";
 import { THEME_KEY } from "@/lib/theme";
 
 /**
- * Applied before paint: the stored theme, dark by default, and the stored currency, EGP by default.
+ * Applied before paint: the stored theme, else the system setting (prefers-color-scheme; dark when the
+ * browser reports nothing), and the stored currency, EGP by default.
  * Exported for the 404 page, which has an <html> of its own.
  *
  * The currency is here for the same reason the theme is. Every <Price> carries both currencies and

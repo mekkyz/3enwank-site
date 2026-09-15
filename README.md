@@ -93,8 +93,10 @@ public/og.png             share image;  ops/                      systemd unit, 
 ```
 
 Design: Tailwind 4 with the platform's colour tokens (`src/app/globals.css`), Inter and Noto Naskh
-Arabic bundled from `@fontsource-variable` (no font CDN), inline SVG logo, no UI kit, no analytics,
-no third-party requests. Arabic pages render with `dir="rtl"` and logical CSS properties.
+Arabic bundled from `@fontsource-variable` (no font CDN), inline SVG logo, no UI kit, no analytics.
+The only third-party request is the spam check (`src/lib/turnstile.ts`), loaded when a visitor sends
+the contact form, a chat message or a name-ideas request, never on page load; the privacy policy
+says so. Arabic pages render with `dir="rtl"` and logical CSS properties.
 
 ## Hosting on the box
 
@@ -161,9 +163,11 @@ A locale: add it to `locales` in `src/lib/i18n.ts` and a dictionary in `src/mess
 
 ## Legal copy
 
-`terms` and `privacy` describe how the platform actually bills, suspends, backs up and reports to the
-tax authority, in both languages. They are a starting point for HANDOFF H2 (the operator's own terms,
-refund and privacy policies) and should be reviewed before go-live; the version string is
+`terms`, `privacy`, `delivery` and `refunds` describe how the platform actually bills, suspends,
+cancels, backs up, deletes an account and reports to the tax authority, in both languages. The
+privacy policy names providers by what they do, not by brand, and lists every cookie by purpose.
+They are a starting point for HANDOFF H2 (the operator's own terms, refund and privacy policies)
+and should be reviewed before go-live; the version string is
 `TERMS_VERSION` in `src/screens/legal.tsx` and matches `settings.legal.termsVersion` on the platform.
 
 ## Languages and copy
@@ -207,11 +211,21 @@ the hero glow breathes on a 20 second loop.
 
 ## Render check before a review
 
-`pnpm check` (`scripts/visual-check.mjs`) serves `./out`, opens every page in every language at
-desktop and phone width, and fails on horizontal scroll, elements wider than the page, a header row
-wider than its own padding, wrapped table labels, empty sections, or Arabic text inside an LTR
-isolate. Screenshots land in `./shots/`. `THEME=light pnpm check` repeats it for the light theme. Run
-both after every build that goes to a reviewer.
+`pnpm check` (`scripts/visual-check.mjs`) starts `next start` on the build, opens every page in every
+language at desktop and phone width with every `<details>` (the FAQ) opened, and fails on horizontal
+scroll, elements wider than the page, a header row wider than its own padding, wrapped table labels,
+empty sections, or Arabic text inside an LTR isolate. Screenshots land in `./shots/`. Modes:
+
+- `THEME=dark` (the default run) and `THEME=light` store that choice before each page loads.
+- `THEME=system` stores nothing and sets the browser's colour scheme instead (`SCHEME=light` by
+  default, `SCHEME=dark` for the other), which is what a first-time visitor gets.
+- `REVEAL=1` hides `navigator.webdriver` from the page so the reveal-on-scroll script runs as it does
+  for a person, scrolls each home page to the bottom and fails if any `data-reveal-state="pending"`
+  element is left hidden. It checks the home pages only.
+- `BROWSER=firefox` or `BROWSER=webkit` runs any mode in that engine
+  (`pnpm exec playwright install firefox webkit` once). WebKit on Linux is not iOS Safari.
+
+Run dark, light and system after every build that goes to a reviewer, and REVEAL=1 after any motion change.
 
 Two things about the widths it measures, both learned the hard way on 2026-09-12:
 
@@ -223,6 +237,6 @@ Two things about the widths it measures, both learned the hard way on 2026-09-12
   bar's own padding box, because a row that has eaten its padding is broken even while it clears the
   page edge.
 
-It uses the first Chromium it finds in `CHROME_PATH` or the distro locations, and otherwise the one
+With the default Chromium it uses the first one it finds in `CHROME_PATH` or the distro locations, and otherwise the one
 Playwright downloaded (`pnpm exec playwright install chromium`), which is what a machine without a
 distro Chromium ends up using.

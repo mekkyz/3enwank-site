@@ -169,8 +169,57 @@
   --color-dark-line: var(--color-dark-line);
   --color-dark-muted: var(--color-dark-muted);
   --color-danger: var(--color-danger);
-  --font-sans: "Manrope Variable", "IBM Plex Sans Arabic", ui-sans-serif, system-ui, sans-serif;
+  /* The three "Manrope Fallback" families are the metric-matched stand-ins declared below the block. */
+  --font-sans: "Manrope Variable", "Manrope Fallback Arial", "Manrope Fallback Roboto", "Manrope Fallback DejaVu", "IBM Plex Sans Arabic", ui-sans-serif, system-ui, sans-serif;
   --font-arabic: "IBM Plex Sans Arabic", "Manrope Variable", ui-sans-serif, system-ui, sans-serif;
+}
+
+/*
+ * Manrope's stand-in while the web font is still on its way (it loads with font-display: swap).
+ * Measured on 2026-09-15 at 360x800 with 6x CPU throttling and 1.6 Mbps: /hosting/ scored CLS 0.153,
+ * one shift at the moment Manrope arrived, because the system face is wider and the page heading
+ * wrapped onto one more line in it, then pulled the whole page up by 40px when the real font
+ * swapped in. These faces are the phone's own Arial (iOS, desktops), Roboto (Android) or DejaVu Sans
+ * (Linux) scaled to Manrope's average width and line box, so the text takes the same room before
+ * and after the swap. Arial and Roboto use next/font's formula on the Capsize metrics Next ships
+ * (node_modules/next/dist/server/capsize-font-metrics.json: Manrope xWidthAvg 920/2000, ascent
+ * 2132, descent 600); DejaVu Sans was measured in Chromium against the loaded Manrope, per weight,
+ * because its bold is much wider than its regular. A local() that does not exist on a device is
+ * simply skipped for the next family.
+ */
+@font-face {
+  font-family: "Manrope Fallback Arial";
+  src: local("Arial");
+  size-adjust: 103.19%;
+  ascent-override: 103.31%;
+  descent-override: 29.07%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Manrope Fallback Roboto";
+  src: local("Roboto");
+  size-adjust: 103.41%;
+  ascent-override: 103.08%;
+  descent-override: 29.01%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Manrope Fallback DejaVu";
+  src: local("DejaVu Sans");
+  font-weight: 100 600;
+  size-adjust: 89.44%;
+  ascent-override: 119.19%;
+  descent-override: 33.54%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Manrope Fallback DejaVu";
+  src: local("DejaVu Sans Bold");
+  font-weight: 700 900;
+  size-adjust: 84.93%;
+  ascent-override: 125.52%;
+  descent-override: 35.32%;
+  line-gap-override: 0%;
 }
 
 html {
@@ -364,15 +413,21 @@ li {
   animation: rise 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
-/* Switching the theme fades the colours instead of snapping. */
-html.theme-switching,
-html.theme-switching *,
-html.theme-switching *::before,
-html.theme-switching *::after {
-  transition:
-    background-color 0.35s ease,
-    color 0.35s ease,
-    border-color 0.35s ease !important;
+/*
+ * Switching the theme fades the colours instead of snapping. Only for readers who have not asked for
+ * reduced motion: this rule is !important at specificity 0,1,1, so it beat the reduced-motion reset
+ * below (`*`, 0,0,0, also !important) and the whole page still faded for exactly those readers.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  html.theme-switching,
+  html.theme-switching *,
+  html.theme-switching *::before,
+  html.theme-switching *::after {
+    transition:
+      background-color 0.35s ease,
+      color 0.35s ease,
+      border-color 0.35s ease !important;
+  }
 }
 
 :focus-visible {

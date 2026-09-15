@@ -5,8 +5,12 @@ import { pathFor, type Locale } from "@/lib/i18n";
 import { fill } from "@/messages";
 import { screenContext } from "./shared";
 
-/** The catalogue does not carry a terms version; this matches settings.legal.termsVersion on the platform. */
-const TERMS_VERSION = "2026-09-10";
+/**
+ * The catalogue does not carry a terms version; this matches settings.legal.termsVersion on the platform.
+ * 2026-09-15 (owner decision D8): cancelling from the service page, withdrawing, the open renewal
+ * invoice closed with the request, and the privacy policy's providers, cookies and account deletion.
+ */
+const TERMS_VERSION = "2026-09-15";
 
 /** The policy pages, which cross-reference each other in prose and link to each other at the foot. */
 const LEGAL_PAGES = ["terms", "privacy", "delivery", "refunds"] as const;

@@ -9,6 +9,8 @@ import { parseRichText, type Inline } from "@/lib/rich-text";
 export type AssistantLabels = {
   open: string;
   close: string;
+  /** The launcher's name while the panel is open; the panel's X button keeps `close`. */
+  hide: string;
   title: string;
   intro: string;
   placeholder: string;
@@ -421,8 +423,8 @@ export function Assistant({
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
-        aria-label={open ? labels.close : labels.open}
-        title={open ? labels.close : labels.open}
+        aria-label={open ? labels.hide : labels.open}
+        title={open ? labels.hide : labels.open}
         className="btn-primary pulse-once flex h-14 w-14 items-center justify-center rounded-full shadow-[0_16px_32px_-12px_rgba(124,95,165,0.9)]"
       >
         {open ? (

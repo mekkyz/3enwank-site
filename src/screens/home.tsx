@@ -17,6 +17,7 @@ import type { Catalogue, Product } from "@/lib/catalogue";
 import type { Currency, Money } from "@/lib/money";
 import { HIGHLIGHT, assistantOn, domainSearchLabels, loc, screenContext, storeApi } from "./shared";
 import { vatLine } from "@/lib/vat";
+import { homePaymentsCopy } from "@/lib/payments";
 import { MapPinIcon, HeadsetIcon, WalletIcon, ArrowsLeftRightIcon, CloudArrowUpIcon, LockKeyIcon, WallIcon, UserSoundIcon, CaretDownIcon, HardDrivesIcon, BrowserIcon, GlobeIcon, ShieldCheckIcon } from "@phosphor-icons/react/dist/ssr";
 
 /**
@@ -33,6 +34,8 @@ export const home = {
   async render(locale: Locale) {
     const { t, catalogue, company, trust } = await screenContext(locale);
     const vat = vatLine(t, catalogue);
+    // The payments line, the "Prices in Egyptian pounds" card and the FAQ answer on paying name only what the store takes now (D5).
+    const pay = homePaymentsCopy(t, catalogue);
     /*
      * The three families, in the order a visitor meets them in the menu, three plans each and three
      * specs on each plan. Every tier used to be listed here, which put six hosting plans on the page
@@ -151,7 +154,7 @@ export const home = {
     return (
       <Shell locale={locale} page="home" storeUrl={catalogue.store.url} legalName={company.legalName} supportEmail={company.contactEmail} trust={trust} assistantEnabled={catalogue.assistant.enabled} turnstileSiteKey={catalogue.assistant.turnstileSiteKey}>
         {/* Who the company is and what this site is, for search engines; the plan pages add a Product per plan. */}
-        <JsonLd data={graph([organizationLd(catalogue, locale), websiteLd(catalogue, locale), faqLd(t.home.faq)])} />
+        <JsonLd data={graph([organizationLd(catalogue, locale), websiteLd(catalogue, locale), faqLd(pay.faq)])} />
         {/*
          * The hero: one statement, the line under it, and the two ways in, over a glow and a grid.
          *
@@ -237,7 +240,7 @@ export const home = {
         <Section className="border-t border-line">
           <SectionHeader title={t.home.reasonsTitle} />
           <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {t.home.reasons.map((r, i) => {
+            {pay.reasons.map((r, i) => {
               const Glyph = REASON_ICONS[i] ?? REASON_ICONS[0]!;
               return (
                 <Card key={r.title} as="li" className="flex h-full flex-col">
@@ -250,7 +253,7 @@ export const home = {
               );
             })}
           </ul>
-          <p className="mt-6 text-sm font-semibold text-muted">{t.home.paymentsLine}</p>
+          <p className="mt-6 text-sm font-semibold text-muted">{pay.line}</p>
         </Section>
 
         <Section tone="alt">
@@ -369,7 +372,7 @@ export const home = {
         <Section tone="alt">
           <SectionHeader title={t.home.faqTitle} />
           <div className="grid gap-4 md:grid-cols-2">
-            {t.home.faq.map((item) => (
+            {pay.faq.map((item) => (
               <details key={item.q} data-reveal="" className="faq-item group rounded-2xl border border-line bg-panel px-5 py-1">
                 <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-4 py-3 text-base font-bold text-ink [&::-webkit-details-marker]:hidden">
                   {item.q}

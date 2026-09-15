@@ -27,7 +27,11 @@ import { messagesFor } from "@/messages";
  * or <section>, and the card is a plain <div>. THEME_SCRIPT runs in <head>, so a visitor who chose
  * the light theme gets it here too.
  */
-export const metadata: Metadata = { title: "404 · 3enwank", robots: { index: false, follow: false } };
+/*
+ * No `robots` here: Next already writes <meta name="robots" content="noindex"> on its not-found
+ * response, and a second tag from this metadata put two robots metas on every 404 (audit item).
+ */
+export const metadata: Metadata = { title: "404 · 3enwank" };
 
 const LOCALE_SCRIPT = `(function(){var p=location.pathname,r=document.documentElement,l=${JSON.stringify(prefixedLocales().map((code) => ({ code, lang: localeInfo(code).lang, dir: localeInfo(code).dir })))};for(var i=0;i<l.length;i++){if(p==="/"+l[i].code||p.indexOf("/"+l[i].code+"/")===0){r.lang=l[i].lang;r.dir=l[i].dir;r.dataset.locale=l[i].code;break}}})();`;
 

@@ -320,6 +320,44 @@ export type Messages = {
   /** `elsewhere` introduces the row of links to the main pages under each language (site review justDo). */
   notFound: { title: string; body: string; home: string; elsewhere: string };
   /**
+   * The status page's own chrome (status.3enwank.com; platform repo docs/design/status-page.md 6.7).
+   * State labels, service names and every sentence about a service come from the feed, not from here,
+   * so the platform's wording.ts stays their only copy. {percent} is the bare number ("99.98"): the
+   * sign is written in the template, so the Arabic one can carry ٪ where fill() keeps it with its number.
+   */
+  status: {
+    metaTitle: string;
+    description: string;
+    heading: string;
+    header: string;
+    updated: string;
+    unavailable: string;
+    services: string;
+    trackingSince: string;
+    daysAgo: string;
+    today: string;
+    todaySoFar: string;
+    uptime: string;
+    noUptime: string;
+    barDay: string;
+    /** A day with a state but nothing measured (a whole day of maintenance): no percentage to print. */
+    barState: string;
+    barNoData: string;
+    barSummary: string;
+    problemDays: string;
+    incidents: string;
+    noIncidents: string;
+    ongoing: string;
+    resolved: string;
+    maintenance: string;
+    inProgress: string;
+    sameDay: string;
+    acrossDays: string;
+    since: string;
+    back: string;
+    support: string;
+  };
+  /**
    * Translations for catalogue feature lines ("Storage: 1 GB NVMe") used while the catalogue's
    * Arabic copy still equals the English (the import seeded both with English text).
    */

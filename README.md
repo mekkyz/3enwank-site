@@ -47,7 +47,8 @@ server starts and during `next build`.
 | `STORE_URL` | `https://my.3enwank.com` | Store origin for Log in links when the catalogue has none |
 | `SITE_URL` | `https://3enwank.com` | Canonical origin for sitemap, hreflang, OpenGraph |
 | `WHATSAPP_NUMBER` | empty | International format without `+`; the WhatsApp links (contact, moving, Talk to us first, the assistant's handoff) are built from it in `src/lib/whatsapp.ts`; without a number they fall back to the contact form |
-| `STATUS_URL` | empty | The status page. Empty renders no Status link; set, a Status link shows in the footer, the phone menu and on the contact page (read at start, so a restart is enough) |
+| `STATUS_URL` | empty | The status page's public address, `https://status.3enwank.com` once that name has DNS and a certificate. Empty renders no Status link and marks the status page `noindex`; set, a Status link shows in the footer, the phone menu and on the contact page (read at start, so a restart is enough) |
+| `STATUS_FEED_URL` | `STORE_URL` + `/api/public/status` | The platform's status feed the status page reads on every request (on the box: `http://127.0.0.1:3000/account/api/public/status`; the `/account` is required) |
 | `SITE_REVALIDATE_SECRET` | empty | Token for `POST /api/revalidate?token=…`; empty disables the endpoint |
 
 ## The catalogue and the fallback
@@ -141,6 +142,26 @@ contact form with the question as its note. The site builds these links itself r
 the platform: that route refuses while the assistant is off, which is exactly when a person is the
 only way forward, and a window opened after an awaited request is a popup Safari blocks. The
 assistant's copy never tells visitors to email about their account.
+
+**Status page** (`src/screens/status.tsx`, `src/components/status/*`, `src/lib/status.ts`; platform repo
+`docs/design/status-page.md`, owner decisions of 2026-09-15). `/status/` and `/ar/status/`, served to
+customers as `https://status.3enwank.com/` and `/ar/` by their own nginx server
+(`ops/nginx/enwank-status.conf`). Not a `PageKey`: not in the sitemap or the navigation, and with a
+small shell of its own (wordmark, "Status", the language link; footer with the way back to the site,
+Contact support, the theme switch). It uses plain `<a>` links, never Next `<Link>`, because on the
+status name only those two addresses exist. Top to bottom: one overall line; five services
+(Websites, Email, Control panel, FTP, Customer portal), each with its state, a line when it is not
+running, 90 daily bars and the uptime; recent incidents; planned maintenance, when there is any.
+A service with no fresh reading is left out of the feed, so it has no row, and a feed with no rows
+shows only its top line.
+Rendered on every request (`force-dynamic`) from `STATUS_FEED_URL`, never from the catalogue, with
+no fallback copy. A feed that fails, answers anything but a valid version 1, or is older than
+5 minutes shows only "Status is temporarily unavailable". State labels, service names and every
+sentence about a service come from the feed; only the page's own words are in `messages.status`.
+The page never shows a server name, address, port or anything technical, because the feed carries
+none. Look at it locally with `node scripts/status-fixture.mjs` (invented feeds: running, issues,
+incident, maintenance, upcoming, short, hidden, allHidden, unavailable, old) and `STATUS_FEED_URL` pointed at one
+of them; `pnpm check` renders it from the `check` feed.
 
 ## Hosting on the box
 

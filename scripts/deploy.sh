@@ -43,7 +43,11 @@ wait_healthy() {
     # is healthy.
     if curl -fsS -o /dev/null http://127.0.0.1:3001/api/health/ &&
        curl -fsS -o /dev/null http://127.0.0.1:3001/ &&
-       curl -fsS -o /dev/null http://127.0.0.1:3001/ar/; then return 0; fi
+       curl -fsS -o /dev/null http://127.0.0.1:3001/ar/ &&
+       # The status page in both languages. Both answer 200 even while the platform's feed is down
+       # (the page then says status is unavailable), so this checks the routes exist, not the feed.
+       curl -fsS -o /dev/null http://127.0.0.1:3001/status/ &&
+       curl -fsS -o /dev/null http://127.0.0.1:3001/ar/status/; then return 0; fi
     sleep 1
   done
   return 1

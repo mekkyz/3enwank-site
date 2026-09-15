@@ -25,7 +25,14 @@ export const ASSISTANT_PREVIEW = (process.env.ASSISTANT_PREVIEW ?? "").trim() ==
  * link at all rather than one that goes nowhere. Read from the environment so the day it is live
  * needs a restart, not a code change.
  */
-export const STATUS_URL = (process.env.STATUS_URL ?? "").trim();
+// Trailing slashes trimmed: the status page appends "/" and "/ar/" to it (src/lib/status.ts statusHref).
+export const STATUS_URL = (process.env.STATUS_URL ?? "").trim().replace(/\/+$/, "");
+/**
+ * The platform's status feed (platform repo, docs/design/status-page.md section 6.2). Over loopback on
+ * the box, like CATALOGUE_URL; defaults to the store's public address. Read per request by the status
+ * page (src/lib/status.ts), never at build time, so a restart is enough to change it.
+ */
+export const STATUS_FEED_URL = (process.env.STATUS_FEED_URL ?? "").trim() || `${STORE_URL}/api/public/status`;
 /** Secret the platform's Publish button sends to /api/revalidate; empty disables the endpoint. */
 export const SITE_REVALIDATE_SECRET = (process.env.SITE_REVALIDATE_SECRET ?? "").trim();
 

@@ -13,12 +13,21 @@
 import { spawn } from "node:child_process";
 import { existsSync, mkdirSync } from "node:fs";
 import { chromium, firefox, webkit } from "playwright";
+import { serveStatusFixtures } from "./status-fixture.mjs";
 
 const port = 8790;
 const base = (process.env.BASE_URL ?? "").replace(/\/+$/, "");
 let child;
+let fixtures;
 if (!base) {
-  child = spawn(process.execPath, ["node_modules/next/dist/bin/next", "start", "-p", String(port), "-H", "127.0.0.1"], { stdio: ["ignore", "ignore", "inherit"], env: { ...process.env, NODE_ENV: "production", NEXT_TELEMETRY_DISABLED: "1" } });
+  /*
+   * The status pages read the platform's feed on every request. The check serves them the invented
+   * "check" feed (scripts/status-fixture.mjs: an issue, an open incident, maintenance in progress and
+   * ahead, a short history), so every section renders; against BASE_URL they get whatever feed that
+   * server has, and only the checks that hold for any feed run.
+   */
+  fixtures = await serveStatusFixtures();
+  child = spawn(process.execPath, ["node_modules/next/dist/bin/next", "start", "-p", String(port), "-H", "127.0.0.1"], { stdio: ["ignore", "ignore", "inherit"], env: { ...process.env, NODE_ENV: "production", NEXT_TELEMETRY_DISABLED: "1", STATUS_FEED_URL: `${fixtures.url}/check` } });
   const deadline = Date.now() + 30_000;
   for (;;) {
     try {
@@ -32,7 +41,8 @@ if (!base) {
 const origin = base || `http://127.0.0.1:${port}`;
 
 const locales = ["", "ar"];
-const pages = ["", "hosting", "websites", "care", "domains", "about", "contact", "terms", "privacy", "delivery", "refunds"];
+// "status" is the status page (status.3enwank.com is /status/ and /ar/status/ here); it has its own checks below.
+const pages = ["", "hosting", "websites", "care", "domains", "about", "contact", "terms", "privacy", "delivery", "refunds", "status"];
 const widths = [{ name: "desktop", width: 1440, height: 900 }, { name: "phone", width: 390, height: 844 }];
 const arabic = /[؀-ۿݐ-ݿࢠ-ࣿﭐ-﷿ﹰ-﻿]/;
 mkdirSync("shots", { recursive: true });
@@ -187,6 +197,44 @@ for (const w of widths) {
       await page.screenshot({ path: `shots/${name}.png`, fullPage: true });
       checked++;
       /*
+       * The status page's bars (design 6.5): 90 per service, one tab stop per row, every bar hidden from
+       * assistive tech behind the row's own label, none squeezed under 2px on a phone, and the keyboard
+       * moving the detail line from today to the first day. After the screenshot, so the focus outline
+       * is not in it.
+       */
+      if (p === "status") {
+        const s = await page.evaluate(() => {
+          const out = [];
+          const rows = [...document.querySelectorAll("ol[data-bars]")];
+          for (const ol of rows) {
+            const bars = [...ol.querySelectorAll(":scope > li")];
+            if (bars.length !== 90) out.push(`a bar row has ${bars.length} bars, not 90`);
+            if (!ol.getAttribute("aria-label")) out.push("a bar row has no aria-label");
+            if (ol.tabIndex !== 0) out.push("a bar row is not one tab stop");
+            if (bars.some((li) => li.getAttribute("aria-hidden") !== "true")) out.push("a bar is not aria-hidden");
+            const narrow = bars.filter((li) => li.getBoundingClientRect().width < 2).length;
+            if (narrow) out.push(`${narrow} bars narrower than 2px`);
+          }
+          return { out, rows: rows.length, unavailable: !document.querySelector("[data-status-unavailable]")?.hidden };
+        });
+        for (const r of s.out) problems.push(`${name}: ${r}`);
+        if (!base && (s.rows !== 5 || s.unavailable)) problems.push(`${name}: expected the fixture's five services, got ${s.rows} bar rows${s.unavailable ? " and the unavailable line" : ""}`);
+        if (s.rows) {
+          const detail = () => page.evaluate(() => {
+            const ol = document.querySelector("ol[data-bars]");
+            const bars = ol.querySelectorAll(":scope > li");
+            return { text: ol.parentElement.querySelector("p[aria-live]")?.textContent ?? "", first: bars[0].title, last: bars[bars.length - 1].title };
+          });
+          await page.focus("ol[data-bars]");
+          const focused = await detail();
+          if (focused.text !== focused.last) problems.push(`${name}: focusing a bar row did not name today ("${focused.text}")`);
+          await page.keyboard.press("Home");
+          const home = await detail();
+          if (home.text !== home.first) problems.push(`${name}: Home did not move the detail line to the first day ("${home.text}")`);
+          await page.evaluate(() => document.activeElement?.blur());
+        }
+      }
+      /*
        * Nothing floating covers content on a phone (S8, site review justDo): once scrolling has settled,
        * the assistant's corner button is either tucked away or over nothing in its avoid list.
        */
@@ -269,6 +317,7 @@ for (const w of widths) {
 }
 await browser.close();
 child?.kill();
+fixtures?.server.close();
 const unique = [...new Set(problems)];
 console.log(`${checked} renders checked (${browserName}, theme ${themeMode === "system" ? `system/${scheme}` : themeMode}); ${unique.length} problem(s)`);
 for (const p of unique) console.log(" -", p);

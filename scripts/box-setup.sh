@@ -19,6 +19,9 @@ add_var STORE_URL https://3enwank.com/account
 add_var SITE_URL https://3enwank.com
 add_var WHATSAPP_NUMBER ""
 add_var ASSISTANT_PREVIEW ""
+# The status page's feed over loopback; STATUS_URL stays empty (no Status link) until status.3enwank.com is live.
+add_var STATUS_FEED_URL http://127.0.0.1:3000/account/api/public/status
+add_var STATUS_URL ""
 add_var SITE_REVALIDATE_SECRET "$(openssl rand -hex 24)"
 
 install -m 0644 "$REPO/ops/systemd/enwank-site.service" /etc/systemd/system/enwank-site.service
